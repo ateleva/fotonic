@@ -1,0 +1,164 @@
+# Copyright (C) 2026 Alessandro Bonacina
+# This file is distributed under the GPL v2 or later.
+# https://www.gnu.org/licenses/gpl-2.0.html
+msgid ""
+msgstr ""
+"Project-Id-Version: Fotonic 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fotonic\n"
+"POT-Creation-Date: 2026-05-02T00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: WP-CLI 2.x\n"
+"X-Domain: fotonic\n"
+
+#. Plugin Name of the plugin
+msgid "Fotonic"
+msgstr ""
+
+#. Description of the plugin
+msgid "CRM and workflow manager for professional event photographers."
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Customers"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Customer"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Add New"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Add New Customer"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Edit Customer"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "New Customer"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "View Customer"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Search Customers"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "No customers found."
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "No customers found in trash."
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "All Customers"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Services"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Service"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Add New Service"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Edit Service"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "New Service"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "View Service"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Search Services"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "No services found."
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "No services found in trash."
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "All Services"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Works"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Work"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Add New Work"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Edit Work"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "New Work"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "View Work"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Search Works"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "No works found."
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "No works found in trash."
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "All Works"
+msgstr ""
+
+#: includes/class-cpt-registry.php
+msgid "Payment Status"
+msgstr ""
+
+#: includes/class-rest-api.php
+msgid "Invalid vault password or OTP code."
+msgstr ""
+
+#: includes/class-rest-api.php
+msgid "File not found."
+msgstr ""
+
+#: includes/class-admin-page.php
+msgid "Fotonic"
+msgstr ""

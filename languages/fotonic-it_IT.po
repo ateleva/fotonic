@@ -1,0 +1,125 @@
+# Italian translation of Fotonic
+# Copyright (C) 2026 Alessandro Bonacina
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Fotonic 0.1.0\n"
+"POT-Creation-Date: 2026-05-02T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-05-02T00:00:00+00:00\n"
+"Last-Translator: Alessandro Bonacina <hello@alessandrobonacina.com>\n"
+"Language-Team: Italian <LL@li.org>\n"
+"Language: it_IT\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Manual\n"
+"X-Domain: fotonic\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Fotonic"
+msgstr "Fotonic"
+
+msgid "CRM and workflow manager for professional event photographers."
+msgstr "CRM e gestore del flusso di lavoro per fotografi di eventi professionisti."
+
+msgid "Customers"
+msgstr "Clienti"
+
+msgid "Customer"
+msgstr "Cliente"
+
+msgid "Add New"
+msgstr "Aggiungi nuovo"
+
+msgid "Add New Customer"
+msgstr "Aggiungi nuovo cliente"
+
+msgid "Edit Customer"
+msgstr "Modifica cliente"
+
+msgid "New Customer"
+msgstr "Nuovo cliente"
+
+msgid "View Customer"
+msgstr "Visualizza cliente"
+
+msgid "Search Customers"
+msgstr "Cerca clienti"
+
+msgid "No customers found."
+msgstr "Nessun cliente trovato."
+
+msgid "No customers found in trash."
+msgstr "Nessun cliente trovato nel cestino."
+
+msgid "All Customers"
+msgstr "Tutti i clienti"
+
+msgid "Services"
+msgstr "Servizi"
+
+msgid "Service"
+msgstr "Servizio"
+
+msgid "Add New Service"
+msgstr "Aggiungi nuovo servizio"
+
+msgid "Edit Service"
+msgstr "Modifica servizio"
+
+msgid "New Service"
+msgstr "Nuovo servizio"
+
+msgid "View Service"
+msgstr "Visualizza servizio"
+
+msgid "Search Services"
+msgstr "Cerca servizi"
+
+msgid "No services found."
+msgstr "Nessun servizio trovato."
+
+msgid "No services found in trash."
+msgstr "Nessun servizio trovato nel cestino."
+
+msgid "All Services"
+msgstr "Tutti i servizi"
+
+msgid "Works"
+msgstr "Lavori"
+
+msgid "Work"
+msgstr "Lavoro"
+
+msgid "Add New Work"
+msgstr "Aggiungi nuovo lavoro"
+
+msgid "Edit Work"
+msgstr "Modifica lavoro"
+
+msgid "New Work"
+msgstr "Nuovo lavoro"
+
+msgid "View Work"
+msgstr "Visualizza lavoro"
+
+msgid "Search Works"
+msgstr "Cerca lavori"
+
+msgid "No works found."
+msgstr "Nessun lavoro trovato."
+
+msgid "No works found in trash."
+msgstr "Nessun lavoro trovato nel cestino."
+
+msgid "All Works"
+msgstr "Tutti i lavori"
+
+msgid "Payment Status"
+msgstr "Stato pagamento"
+
+msgid "Invalid vault password or OTP code."
+msgstr "Password vault o codice OTP non valido."
+
+msgid "File not found."
+msgstr "File non trovato."
