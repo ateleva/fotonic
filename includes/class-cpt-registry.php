@@ -5,8 +5,9 @@ class Fotonic_CPT_Registry {
     public static function register(): void {
         self::register_customer_cpt();
         self::register_service_cpt();
+        self::register_payment_status_taxonomy(); // must register before CPT
         self::register_work_cpt();
-        self::register_payment_status_taxonomy();
+        add_action( 'save_post_ftnc_work', [ __CLASS__, 'auto_assign_payment_status' ] );
     }
 
     private static function register_customer_cpt(): void {
@@ -82,6 +83,7 @@ class Fotonic_CPT_Registry {
             'show_ui'      => true,
             'show_in_menu' => false,
             'supports'     => [ 'title', 'editor' ],
+            'taxonomies'   => [ 'ftnc_work_payment_status' ],
             'show_in_rest' => false,
             'rewrite'      => false,
         ] );
@@ -91,14 +93,42 @@ class Fotonic_CPT_Registry {
         $labels = [
             'name'          => __( 'Payment Status', 'fotonic' ),
             'singular_name' => __( 'Payment Status', 'fotonic' ),
+            'all_items'     => __( 'All Payment Statuses', 'fotonic' ),
+            'edit_item'     => __( 'Edit Payment Status', 'fotonic' ),
+            'update_item'   => __( 'Update Payment Status', 'fotonic' ),
+            'add_new_item'  => __( 'Add New Payment Status', 'fotonic' ),
+            'new_item_name' => __( 'New Payment Status Name', 'fotonic' ),
+            'search_items'  => __( 'Search Payment Statuses', 'fotonic' ),
         ];
-        register_taxonomy( 'work_payment_status', 'ftnc_work', [
-            'labels'        => $labels,
-            'public'        => false,
-            'show_ui'       => false,
-            'show_in_rest'  => false,
-            'rewrite'       => false,
-            'hierarchical'  => false,
+        register_taxonomy( 'ftnc_work_payment_status', 'ftnc_work', [
+            'labels'            => $labels,
+            'public'            => false,
+            'show_ui'           => true,
+            'show_in_menu'      => true,
+            'show_admin_column' => true,
+            'show_in_rest'      => false,
+            'rewrite'           => false,
+            'hierarchical'      => false,
         ] );
+    }
+
+    public static function auto_assign_payment_status( int $post_id ): void {
+        if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+            return;
+        }
+        $installments = get_post_meta( $post_id, '_fotonic_installments', true );
+        if ( empty( $installments ) || ! is_array( $installments ) ) {
+            return;
+        }
+        $total = count( $installments );
+        $paid  = count( array_filter( $installments, function( $i ) { return ( $i['status'] ?? '' ) === 'paid'; } ) );
+        if ( $paid === $total ) {
+            $term = 'paid';
+        } elseif ( $paid > 0 ) {
+            $term = 'partial';
+        } else {
+            $term = 'to-be-paid';
+        }
+        wp_set_object_terms( $post_id, $term, 'ftnc_work_payment_status' );
     }
 }

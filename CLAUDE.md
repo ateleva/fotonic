@@ -57,4 +57,4 @@ cd plugins/fotonic/src && npm run watch   # auto-rebuilds dist/ on save
 - `dist/` IS committed — don't gitignore it
 - `enqueue_assets` fires on all admin pages — always check `$hook !== 'toplevel_page_fotonic'`
 - Pro Vite build: lib/iife mode + React as external global
-- `work_payment_status` taxonomy is auto-assigned by plugin logic only
+- `ftnc_work_payment_status` taxonomy is auto-assigned by `auto_assign_payment_status()` — do not set it manually

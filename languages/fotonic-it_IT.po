@@ -153,6 +153,30 @@ msgstr "Tutti i lavori"
 msgid "Payment Status"
 msgstr "Stato pagamento"
 
+#: includes/class-cpt-registry.php
+msgid "All Payment Statuses"
+msgstr "Tutti gli stati di pagamento"
+
+#: includes/class-cpt-registry.php
+msgid "Edit Payment Status"
+msgstr "Modifica stato pagamento"
+
+#: includes/class-cpt-registry.php
+msgid "Update Payment Status"
+msgstr "Aggiorna stato pagamento"
+
+#: includes/class-cpt-registry.php
+msgid "Add New Payment Status"
+msgstr "Aggiungi nuovo stato pagamento"
+
+#: includes/class-cpt-registry.php
+msgid "New Payment Status Name"
+msgstr "Nuovo nome stato pagamento"
+
+#: includes/class-cpt-registry.php
+msgid "Search Payment Statuses"
+msgstr "Cerca stati di pagamento"
+
 #: includes/class-rest-api.php
 msgid "Invalid vault password or OTP code."
 msgstr "Password vault o codice OTP non valido."
