@@ -4,6 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Fotonic 0.1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fotonic\n"
 "POT-Creation-Date: 2026-05-02T00:00:00+00:00\n"
 "PO-Revision-Date: 2026-05-02T00:00:00+00:00\n"
 "Last-Translator: Alessandro Bonacina <hello@alessandrobonacina.com>\n"
@@ -16,110 +17,146 @@ msgstr ""
 "X-Domain: fotonic\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#. Plugin Name of the plugin
 msgid "Fotonic"
 msgstr "Fotonic"
 
+#. Description of the plugin
 msgid "CRM and workflow manager for professional event photographers."
 msgstr "CRM e gestore del flusso di lavoro per fotografi di eventi professionisti."
 
+#: includes/class-cpt-registry.php
 msgid "Customers"
 msgstr "Clienti"
 
+#: includes/class-cpt-registry.php
 msgid "Customer"
 msgstr "Cliente"
 
+#: includes/class-cpt-registry.php
 msgid "Add New"
 msgstr "Aggiungi nuovo"
 
+#: includes/class-cpt-registry.php
 msgid "Add New Customer"
 msgstr "Aggiungi nuovo cliente"
 
+#: includes/class-cpt-registry.php
 msgid "Edit Customer"
 msgstr "Modifica cliente"
 
+#: includes/class-cpt-registry.php
 msgid "New Customer"
 msgstr "Nuovo cliente"
 
+#: includes/class-cpt-registry.php
 msgid "View Customer"
 msgstr "Visualizza cliente"
 
+#: includes/class-cpt-registry.php
 msgid "Search Customers"
 msgstr "Cerca clienti"
 
+#: includes/class-cpt-registry.php
 msgid "No customers found."
 msgstr "Nessun cliente trovato."
 
+#: includes/class-cpt-registry.php
 msgid "No customers found in trash."
 msgstr "Nessun cliente trovato nel cestino."
 
+#: includes/class-cpt-registry.php
 msgid "All Customers"
 msgstr "Tutti i clienti"
 
+#: includes/class-cpt-registry.php
 msgid "Services"
 msgstr "Servizi"
 
+#: includes/class-cpt-registry.php
 msgid "Service"
 msgstr "Servizio"
 
+#: includes/class-cpt-registry.php
 msgid "Add New Service"
 msgstr "Aggiungi nuovo servizio"
 
+#: includes/class-cpt-registry.php
 msgid "Edit Service"
 msgstr "Modifica servizio"
 
+#: includes/class-cpt-registry.php
 msgid "New Service"
 msgstr "Nuovo servizio"
 
+#: includes/class-cpt-registry.php
 msgid "View Service"
 msgstr "Visualizza servizio"
 
+#: includes/class-cpt-registry.php
 msgid "Search Services"
 msgstr "Cerca servizi"
 
+#: includes/class-cpt-registry.php
 msgid "No services found."
 msgstr "Nessun servizio trovato."
 
+#: includes/class-cpt-registry.php
 msgid "No services found in trash."
 msgstr "Nessun servizio trovato nel cestino."
 
+#: includes/class-cpt-registry.php
 msgid "All Services"
 msgstr "Tutti i servizi"
 
+#: includes/class-cpt-registry.php
 msgid "Works"
 msgstr "Lavori"
 
+#: includes/class-cpt-registry.php
 msgid "Work"
 msgstr "Lavoro"
 
+#: includes/class-cpt-registry.php
 msgid "Add New Work"
 msgstr "Aggiungi nuovo lavoro"
 
+#: includes/class-cpt-registry.php
 msgid "Edit Work"
 msgstr "Modifica lavoro"
 
+#: includes/class-cpt-registry.php
 msgid "New Work"
 msgstr "Nuovo lavoro"
 
+#: includes/class-cpt-registry.php
 msgid "View Work"
 msgstr "Visualizza lavoro"
 
+#: includes/class-cpt-registry.php
 msgid "Search Works"
 msgstr "Cerca lavori"
 
+#: includes/class-cpt-registry.php
 msgid "No works found."
 msgstr "Nessun lavoro trovato."
 
+#: includes/class-cpt-registry.php
 msgid "No works found in trash."
 msgstr "Nessun lavoro trovato nel cestino."
 
+#: includes/class-cpt-registry.php
 msgid "All Works"
 msgstr "Tutti i lavori"
 
+#: includes/class-cpt-registry.php
 msgid "Payment Status"
 msgstr "Stato pagamento"
 
+#: includes/class-rest-api.php
 msgid "Invalid vault password or OTP code."
 msgstr "Password vault o codice OTP non valido."
 
+#: includes/class-rest-api.php
 msgid "File not found."
 msgstr "File non trovato."
