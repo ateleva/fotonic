@@ -1,6 +1,7 @@
 # Node / Vite
 src/node_modules/
 src/.vite/
+src/dist/
 
 # OS
 .DS_Store
@@ -12,10 +13,22 @@ Thumbs.db
 
 # WordPress
 *.log
+*.log.*
 
 # Secrets
 .env
 .env.local
+*.pem
+*.key
+
+# AI Agent
+CLAUDE.md
+
+# Temp / Editor backups
+*.bak
+*.swp
+*.swo
+*~
 
 # NOTE: dist/ IS committed — it is the WP deployment artifact
 # dist/fotonic-app.js and dist/fotonic-app.css are intentionally tracked

@@ -19,8 +19,16 @@ msgstr ""
 msgid "Fotonic"
 msgstr ""
 
+#. Plugin URI of the plugin
+msgid "https://github.com/ateleva/fotonic"
+msgstr ""
+
 #. Description of the plugin
 msgid "CRM and workflow manager for professional event photographers."
+msgstr ""
+
+#. Author of the plugin
+msgid "Alessandro Bonacina"
 msgstr ""
 
 #: includes/class-cpt-registry.php

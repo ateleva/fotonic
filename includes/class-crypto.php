@@ -28,10 +28,11 @@ class Fotonic_Crypto {
     }
 
     /**
-     * Deterministic encryption: same input always produces same output.
+     * Deterministic encryption: same input always → same output.
      * Use ONLY for searchable fields (email, phone). Not for sensitive free-text.
      */
     public static function deterministic_encrypt( string $value, string $key ): string {
+        // Fixed IV derived from key — deterministic but key-dependent
         $iv = substr( hash( 'sha256', $key . 'fotonic_det_iv_v1', true ), 0, 16 );
         $ct = openssl_encrypt( $value, self::CIPHER, $key, OPENSSL_RAW_DATA, $iv );
         return ( false === $ct ) ? '' : base64_encode( $ct );
