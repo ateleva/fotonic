@@ -112,23 +112,18 @@ class Fotonic_CPT_Registry {
         ] );
     }
 
+    public static function ensure_payment_terms(): void {
+        $terms = [ 'paid' => 'Paid', 'partial' => 'Partial', 'unpaid' => 'Unpaid' ];
+        foreach ( $terms as $slug => $name ) {
+            if ( ! term_exists( $slug, 'ftnc_work_payment_status' ) ) {
+                wp_insert_term( $name, 'ftnc_work_payment_status', [ 'slug' => $slug ] );
+            }
+        }
+    }
+
     public static function auto_assign_payment_status( int $post_id ): void {
-        if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
-            return;
+        if ( class_exists( 'Fotonic_Meta_Boxes' ) ) {
+            Fotonic_Meta_Boxes::auto_assign_payment_status( $post_id );
         }
-        $installments = get_post_meta( $post_id, '_fotonic_installments', true );
-        if ( empty( $installments ) || ! is_array( $installments ) ) {
-            return;
-        }
-        $total = count( $installments );
-        $paid  = count( array_filter( $installments, function( $i ) { return ( $i['status'] ?? '' ) === 'paid'; } ) );
-        if ( $paid === $total ) {
-            $term = 'paid';
-        } elseif ( $paid > 0 ) {
-            $term = 'partial';
-        } else {
-            $term = 'to-be-paid';
-        }
-        wp_set_object_terms( $post_id, $term, 'ftnc_work_payment_status' );
     }
 }
