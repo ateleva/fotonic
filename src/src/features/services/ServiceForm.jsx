@@ -11,14 +11,10 @@ export default function ServiceForm() {
   const { id } = useParams()
   const isEdit = !!id
   const navigate = useNavigate()
-
   const { data: service, isLoading } = useService(id)
   const createService = useCreateService()
   const updateService = useUpdateService()
-
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({
-    defaultValues: { title: '', base_price: '', notes: '' },
-  })
+  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm({ defaultValues: { title: '', base_price: '', notes: '' } })
 
   useEffect(() => {
     if (service) reset({ title: service.title ?? '', base_price: service.base_price ?? '', notes: service.notes ?? '' })
@@ -29,8 +25,7 @@ export default function ServiceForm() {
   async function onSubmit(data) {
     const payload = { ...data, base_price: data.base_price !== '' ? parseFloat(data.base_price) : null }
     try {
-      if (isEdit) await updateService.mutateAsync({ id, ...payload })
-      else await createService.mutateAsync(payload)
+      if (isEdit) { await updateService.mutateAsync({ id, ...payload }) } else { await createService.mutateAsync(payload) }
       navigate('/services')
     } catch {}
   }

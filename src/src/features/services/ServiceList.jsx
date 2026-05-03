@@ -11,6 +11,7 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 function formatPrice(amount) {
   return '€' + Number(amount || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
+
 function truncate(text, max = 60) {
   if (!text) return '—'
   return text.length > max ? text.slice(0, max) + '…' : text

@@ -4,9 +4,7 @@ import Button from '../../components/Button'
 const BASE = window.FotonicApp?.restUrl ?? '/wp-json/fotonic/v1/'
 
 export default function FilesSection({ value = [], onChange }) {
-  function removeFile(id) {
-    onChange(value.filter((f) => f.id !== id))
-  }
+  function removeFile(id) { onChange(value.filter((f) => f.id !== id)) }
 
   return (
     <div className="space-y-4">
@@ -36,9 +34,7 @@ export default function FilesSection({ value = [], onChange }) {
             </tbody>
           </table>
         </div>
-      ) : (
-        <p className="text-sm text-gray-400">No files attached.</p>
-      )}
+      ) : <p className="text-sm text-gray-400">No files attached.</p>}
       <div>
         <Button type="button" variant="secondary" size="sm" disabled><Upload size={14} />Upload File — Phase C (Vault)</Button>
         <p className="text-xs text-gray-400 mt-1">Encrypted file upload will be available in Phase C.</p>

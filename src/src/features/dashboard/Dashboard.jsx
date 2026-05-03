@@ -17,66 +17,44 @@ function StatCard({ label, value, sub }) {
 }
 
 function formatPrice(amount) {
-  return '€' + Number(amount || 0).toLocaleString('it-IT', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+  return '€' + Number(amount || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
 
 function formatDate(dateStr) {
   if (!dateStr) return '—'
-  try {
-    return format(parseISO(dateStr), 'dd MMM yyyy')
-  } catch {
-    return dateStr
-  }
+  try { return format(parseISO(dateStr), 'dd MMM yyyy') } catch { return dateStr }
 }
 
 export default function Dashboard() {
   const navigate = useNavigate()
   const { data, isLoading } = useWorks({ per_page: 100 })
   const works = Array.isArray(data) ? data : data?.data ?? []
-
   const now = new Date()
   const currentYear = getYear(now)
 
   const stats = useMemo(() => {
     const thisYearWorks = works.filter((w) => {
       if (!w.event_date) return false
-      try {
-        return getYear(parseISO(w.event_date)) === currentYear
-      } catch {
-        return false
-      }
+      try { return getYear(parseISO(w.event_date)) === currentYear } catch { return false }
     })
-
     const revenueThisYear = thisYearWorks.reduce((sum, w) => {
       const paid = (w.installments ?? []).filter((i) => i.status === 'paid')
       return sum + paid.reduce((s, i) => s + parseFloat(i.amount || 0), 0)
     }, 0)
-
     const upcoming = works.filter((w) => {
       if (!w.event_date) return false
-      try {
-        return isAfter(parseISO(w.event_date), now)
-      } catch {
-        return false
-      }
+      try { return isAfter(parseISO(w.event_date), now) } catch { return false }
     })
-
     const unpaidBalance = works.reduce((sum, w) => {
       const unpaid = (w.installments ?? []).filter((i) => i.status === 'unpaid')
       return sum + unpaid.reduce((s, i) => s + parseFloat(i.amount || 0), 0)
     }, 0)
-
     return {
       totalWorksThisYear: thisYearWorks.length,
       revenueThisYear,
       upcomingCount: upcoming.length,
       unpaidBalance,
-      next5: [...upcoming]
-        .sort((a, b) => (a.event_date ?? '').localeCompare(b.event_date ?? ''))
-        .slice(0, 5),
+      next5: [...upcoming].sort((a, b) => (a.event_date ?? '').localeCompare(b.event_date ?? '')).slice(0, 5),
     }
   }, [works, currentYear])
 

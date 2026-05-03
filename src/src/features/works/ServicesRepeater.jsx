@@ -23,12 +23,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
       {value.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
-            <thead className="bg-gray-50"><tr>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Service</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-32">Price (€)</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Notes</th>
-              <th className="px-3 py-2 w-10"></th>
-            </tr></thead>
+            <thead className="bg-gray-50"><tr><th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Service</th><th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-32">Price (€)</th><th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Notes</th><th className="px-3 py-2 w-10"></th></tr></thead>
             <tbody className="divide-y divide-gray-100">
               {value.map((row, index) => (
                 <tr key={index}>

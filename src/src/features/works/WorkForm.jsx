@@ -1,0 +1,99 @@
+import { useEffect } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { useForm, Controller } from 'react-hook-form'
+import { useWork, useCreateWork, useUpdateWork } from '../../api/works'
+import { useCustomers } from '../../api/customers'
+import { useServices } from '../../api/services'
+import PageHeader from '../../components/PageHeader'
+import FormField from '../../components/FormField'
+import Button from '../../components/Button'
+import Spinner from '../../components/Spinner'
+import ServicesRepeater from './ServicesRepeater'
+import InstallmentsRepeater from './InstallmentsRepeater'
+import FilesSection from './FilesSection'
+
+function SectionHeading({ children }) {
+  return <div className="border-b border-gray-200 pb-2 mb-4"><h2 className="text-base font-semibold text-gray-800">{children}</h2></div>
+}
+
+const defaultValues = { title: '', event_date: '', event_time: '', event_address: '', customer_id: '', services: [], files: [], notes: '', total_price: '', installments: [] }
+
+export default function WorkForm() {
+  const { id } = useParams()
+  const isEdit = !!id
+  const navigate = useNavigate()
+  const { data: work, isLoading: workLoading } = useWork(id)
+  const { data: customersData } = useCustomers({ per_page: 100 })
+  const { data: servicesData } = useServices()
+  const createWork = useCreateWork()
+  const updateWork = useUpdateWork()
+  const customers = Array.isArray(customersData) ? customersData : customersData?.data ?? []
+  const services = Array.isArray(servicesData) ? servicesData : servicesData?.data ?? []
+  const { register, handleSubmit, reset, control, formState: { errors, isSubmitting } } = useForm({ defaultValues })
+
+  useEffect(() => {
+    if (work) reset({ title: work.title ?? '', event_date: work.event_date ?? '', event_time: work.event_time ?? '', event_address: work.event_address ?? '', customer_id: work.customer_id ? String(work.customer_id) : '', services: work.services ?? [], files: work.files ?? [], notes: work.notes ?? '', total_price: work.total_price ?? '', installments: work.installments ?? [] })
+  }, [work, reset])
+
+  const mutation = isEdit ? updateWork : createWork
+
+  async function onSubmit(data) {
+    const payload = { ...data, customer_id: data.customer_id ? parseInt(data.customer_id, 10) : null, total_price: data.total_price !== '' ? parseFloat(data.total_price) : null, installments: data.installments.map((inst) => ({ ...inst, amount: inst.amount !== '' ? parseFloat(inst.amount) : 0 })), services: data.services.map((svc) => ({ ...svc, service_id: svc.service_id ? parseInt(svc.service_id, 10) : null, price_override: svc.price_override !== '' ? parseFloat(svc.price_override) : null })), file_ids: data.files.map((f) => f.id) }
+    try {
+      if (isEdit) { await updateWork.mutateAsync({ id, ...payload }) } else { await createWork.mutateAsync(payload) }
+      navigate('/works')
+    } catch {}
+  }
+
+  if (isEdit && workLoading) return <div className="flex justify-center py-12"><Spinner /></div>
+
+  return (
+    <div className="p-6 max-w-3xl">
+      <PageHeader title={isEdit ? 'Edit Work' : 'New Work'} />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <section>
+          <SectionHeading>Event Details</SectionHeading>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2"><FormField label="Title" htmlFor="title" required error={errors.title?.message}><input id="title" type="text" placeholder="e.g. Matrimonio Rossi" className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full" {...register('title', { required: 'Title is required' })} /></FormField></div>
+            <FormField label="Event Date" htmlFor="event_date"><input id="event_date" type="date" className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full" {...register('event_date')} /></FormField>
+            <FormField label="Event Time" htmlFor="event_time"><input id="event_time" type="time" className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full" {...register('event_time')} /></FormField>
+            <div className="col-span-2"><FormField label="Event Address" htmlFor="event_address"><input id="event_address" type="text" placeholder="Via Roma 1, Milano" className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full" {...register('event_address')} /></FormField></div>
+          </div>
+        </section>
+        <section>
+          <SectionHeading>Customer</SectionHeading>
+          <FormField label="Customer" htmlFor="customer_id">
+            <select id="customer_id" className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full" {...register('customer_id')}>
+              <option value="">— Select customer —</option>
+              {customers.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+            </select>
+          </FormField>
+        </section>
+        <section>
+          <SectionHeading>Services Included</SectionHeading>
+          <Controller name="services" control={control} render={({ field }) => <ServicesRepeater value={field.value} onChange={field.onChange} services={services} />} />
+        </section>
+        <section>
+          <SectionHeading>Files</SectionHeading>
+          <Controller name="files" control={control} render={({ field }) => <FilesSection value={field.value} onChange={field.onChange} />} />
+        </section>
+        <section>
+          <SectionHeading>Notes</SectionHeading>
+          <textarea rows={5} placeholder="Additional notes..." className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full resize-y" {...register('notes')} />
+        </section>
+        <section>
+          <SectionHeading>Payments</SectionHeading>
+          <div className="space-y-4">
+            <FormField label="Total Price (€)" htmlFor="total_price"><input id="total_price" type="number" min="0" step="0.01" placeholder="0.00" className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48" {...register('total_price')} /></FormField>
+            <div><p className="text-sm font-medium text-gray-700 mb-3">Installments</p><Controller name="installments" control={control} render={({ field }) => <InstallmentsRepeater value={field.value} onChange={field.onChange} />} /></div>
+          </div>
+        </section>
+        {mutation.error && <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{mutation.error.message ?? 'An error occurred. Please try again.'}</p>}
+        <div className="flex items-center gap-3 pt-2">
+          <Button type="submit" disabled={isSubmitting || mutation.isPending}>{mutation.isPending ? 'Saving...' : isEdit ? 'Update Work' : 'Create Work'}</Button>
+          <Button type="button" variant="secondary" onClick={() => navigate('/works')}>Cancel</Button>
+        </div>
+      </form>
+    </div>
+  )
+}

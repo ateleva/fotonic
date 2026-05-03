@@ -43,7 +43,6 @@ export const router = createHashRouter([
       { path: 'works',           element: <Lazy component={WorkList} /> },
       { path: 'works/new',       element: <Lazy component={WorkForm} /> },
       { path: 'works/:id',       element: <Lazy component={WorkForm} /> },
-      // Pro routes — only active when FotonicPro bundle is loaded
       ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.KanbanBoard ? [{
         path: 'kanban',
         element: (

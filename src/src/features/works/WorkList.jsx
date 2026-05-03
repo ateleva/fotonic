@@ -13,6 +13,7 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 function formatPrice(amount) {
   return '€' + Number(amount || 0).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 }
+
 function formatDate(dateStr) {
   if (!dateStr) return '—'
   try { return format(parseISO(dateStr), 'dd MMM yyyy') } catch { return dateStr }
@@ -23,11 +24,9 @@ export default function WorkList() {
   const [search, setSearch] = useState('')
   const [paymentStatus, setPaymentStatus] = useState('')
   const [deleteTarget, setDeleteTarget] = useState(null)
-
   const params = {}
   if (search) params.search = search
   if (paymentStatus) params.payment_status = paymentStatus
-
   const { data, isLoading } = useWorks(params)
   const deleteWork = useDeleteWork()
   const rawWorks = Array.isArray(data) ? data : data?.data ?? []
