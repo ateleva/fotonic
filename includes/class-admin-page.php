@@ -24,7 +24,7 @@ class Fotonic_Admin_Page {
      * only accept inside <script type="module"> tags.
      */
     public static function add_module_type( string $tag, string $handle ): string {
-        if ( 'fotonic-app-js' !== $handle ) {
+        if ( 'fotonic-app-js' !== $handle && 'fotonic-pro-js' !== $handle ) {
             return $tag;
         }
         return str_replace( '<script ', '<script type="module" ', $tag );
@@ -36,6 +36,8 @@ class Fotonic_Admin_Page {
         }
 
         add_filter( 'script_loader_tag', [ __CLASS__, 'add_module_type' ], 10, 2 );
+
+        wp_enqueue_editor();
 
         wp_enqueue_script(
             'fotonic-app-js',
@@ -65,6 +67,8 @@ class Fotonic_Admin_Page {
                 'collaborators' => defined( 'FOTO_PRO_VERSION' ),
                 'analytics'     => defined( 'FOTO_PRO_VERSION' ),
                 'notifications' => defined( 'FOTO_PRO_VERSION' ),
+                'products'      => defined( 'FOTO_PRO_VERSION' ),
+                'suppliers'     => defined( 'FOTO_PRO_VERSION' ),
             ],
         ] );
     }

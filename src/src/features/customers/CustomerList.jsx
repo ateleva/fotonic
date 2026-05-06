@@ -1,12 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Pencil, Trash2, UserPlus } from 'lucide-react'
-import { useCustomers, useDeleteCustomer } from '../../api/customers'
+import { Pencil, UserPlus } from 'lucide-react'
+import { useCustomers } from '../../api/customers'
 import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Spinner from '../../components/Spinner'
-import ConfirmDialog from '../../components/ConfirmDialog'
 
 function useDebounce(value, delay = 300) {
   const [debounced, setDebounced] = useState(value)
@@ -20,13 +19,11 @@ function useDebounce(value, delay = 300) {
 export default function CustomerList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
-  const [deleteTarget, setDeleteTarget] = useState(null)
   const debouncedSearch = useDebounce(search)
 
   const { data, isLoading } = useCustomers(
     debouncedSearch ? { search: debouncedSearch } : {}
   )
-  const deleteCustomer = useDeleteCustomer()
 
   const customers = Array.isArray(data) ? data : data?.data ?? []
 
@@ -89,15 +86,6 @@ export default function CustomerList() {
             <Pencil size={14} />
             Edit
           </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setDeleteTarget(row)}
-            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-            aria-label="Delete customer"
-          >
-            <Trash2 size={14} />
-          </Button>
         </div>
       ),
     },
@@ -137,12 +125,6 @@ export default function CustomerList() {
         />
       )}
 
-      <ConfirmDialog
-        open={!!deleteTarget}
-        onClose={() => setDeleteTarget(null)}
-        onConfirm={() => deleteCustomer.mutate(deleteTarget?.id)}
-        message={`Delete customer "${deleteTarget?.title}"? This cannot be undone.`}
-      />
     </div>
   )
 }

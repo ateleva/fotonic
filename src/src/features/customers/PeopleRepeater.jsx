@@ -7,6 +7,9 @@ const emptyPerson = () => ({
   email: '',
   phone: '',
   nationality: '',
+  instagram_username: '',
+  address: '',
+  tin: '',
   is_main: false,
 })
 
@@ -31,6 +34,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
   function removePerson(index) {
     if (people.length <= 1) return
     const next = people.filter((_, i) => i !== index)
+    // If removed person was main, assign main to first
     const hasMain = next.some((p) => p.is_main)
     if (!hasMain) next[0] = { ...next[0], is_main: true }
     onChange(next)
@@ -72,24 +76,100 @@ export default function PeopleRepeater({ value = [], onChange }) {
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">First Name</label>
-              <input type="text" value={person.first_name} onChange={(e) => update(index, 'first_name', e.target.value)} className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="First name" />
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                First Name
+              </label>
+              <input
+                type="text"
+                value={person.first_name}
+                onChange={(e) => update(index, 'first_name', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="First name"
+              />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Last Name</label>
-              <input type="text" value={person.last_name} onChange={(e) => update(index, 'last_name', e.target.value)} className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Last name" />
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Last Name
+              </label>
+              <input
+                type="text"
+                value={person.last_name}
+                onChange={(e) => update(index, 'last_name', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Last name"
+              />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Email</label>
-              <input type="email" value={person.email} onChange={(e) => update(index, 'email', e.target.value)} className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="email@example.com" />
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Email
+              </label>
+              <input
+                type="email"
+                value={person.email}
+                onChange={(e) => update(index, 'email', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="email@example.com"
+              />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Phone</label>
-              <input type="tel" value={person.phone} onChange={(e) => update(index, 'phone', e.target.value)} className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="+39..." />
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Phone
+              </label>
+              <input
+                type="tel"
+                value={person.phone}
+                onChange={(e) => update(index, 'phone', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="+39..."
+              />
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Nationality</label>
-              <input type="text" value={person.nationality} onChange={(e) => update(index, 'nationality', e.target.value)} className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="IT" />
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Nationality
+              </label>
+              <input
+                type="text"
+                value={person.nationality}
+                onChange={(e) => update(index, 'nationality', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="IT"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Instagram
+              </label>
+              <input
+                type="text"
+                value={person.instagram_username ?? ''}
+                onChange={(e) => update(index, 'instagram_username', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="@username"
+              />
+            </div>
+            <div className="col-span-2">
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                Address
+              </label>
+              <input
+                type="text"
+                value={person.address ?? ''}
+                onChange={(e) => update(index, 'address', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Via Roma 1, Milano"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">
+                TIN
+              </label>
+              <input
+                type="text"
+                value={person.tin ?? ''}
+                onChange={(e) => update(index, 'tin', e.target.value)}
+                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="RSSMRA80A01H501U"
+              />
             </div>
           </div>
         </div>

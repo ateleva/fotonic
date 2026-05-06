@@ -112,6 +112,10 @@ class Fotonic_CPT_Registry {
         ] );
     }
 
+    /**
+     * Ensure the three canonical payment-status terms exist.
+     * Safe to call on every init — term_exists() prevents duplicates.
+     */
     public static function ensure_payment_terms(): void {
         $terms = [ 'paid' => 'Paid', 'partial' => 'Partial', 'unpaid' => 'Unpaid' ];
         foreach ( $terms as $slug => $name ) {
@@ -121,6 +125,13 @@ class Fotonic_CPT_Registry {
         }
     }
 
+    /**
+     * Delegates to Fotonic_Meta_Boxes::auto_assign_payment_status().
+     * Kept here because the hook was originally registered in register().
+     * The meta-boxes class is the single source of truth for this logic.
+     *
+     * @param int $post_id Post ID.
+     */
     public static function auto_assign_payment_status( int $post_id ): void {
         if ( class_exists( 'Fotonic_Meta_Boxes' ) ) {
             Fotonic_Meta_Boxes::auto_assign_payment_status( $post_id );

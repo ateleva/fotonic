@@ -20,11 +20,21 @@ class Fotonic_TOTP {
 	// Base32 alphabet (RFC 4648).
 	const BASE32_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 
+	// ---------------------------------------------------------------------------
+	// Public API
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Generate a random 16-character base32 secret suitable for TOTP setup.
+	 *
+	 * @return string 16-char uppercase base32 string.
+	 */
 	public static function generate_secret(): string {
 		$alphabet = self::BASE32_CHARS;
 		$secret   = '';
-		$bytes    = random_bytes( 10 );
+		$bytes    = random_bytes( 10 ); // 10 bytes → 80 bits → 16 base32 chars.
 
+		// Encode 10 bytes → 16 base32 characters.
 		$n = 0;
 		$bits = 0;
 		$value = 0;
@@ -37,6 +47,7 @@ class Fotonic_TOTP {
 				$n++;
 			}
 		}
+		// Pad remaining bits if needed.
 		if ( $bits > 0 ) {
 			$secret .= $alphabet[ ( $value << ( 5 - $bits ) ) & 0x1F ];
 		}
@@ -44,6 +55,14 @@ class Fotonic_TOTP {
 		return strtoupper( substr( $secret, 0, 16 ) );
 	}
 
+	/**
+	 * Build an otpauth:// URI for use in QR codes.
+	 *
+	 * @param string $secret  Base32-encoded TOTP secret.
+	 * @param string $label   Account label (e.g. user email or site name).
+	 * @param string $issuer  Issuer name shown in authenticator apps.
+	 * @return string otpauth://totp/... URI.
+	 */
 	public static function get_uri( string $secret, string $label, string $issuer = 'Fotonic' ): string {
 		$params = http_build_query( [
 			'secret' => strtoupper( $secret ),
@@ -56,9 +75,18 @@ class Fotonic_TOTP {
 		return 'otpauth://totp/' . rawurlencode( $label ) . '?' . $params;
 	}
 
+	/**
+	 * Verify a 6-digit TOTP code with ±window tolerance.
+	 *
+	 * @param string $code   6-digit code to verify.
+	 * @param string $secret Base32-encoded TOTP secret.
+	 * @param int    $window Number of steps to check on each side (default 1 → prev/current/next).
+	 * @return bool True if the code is valid within the tolerance window.
+	 */
 	public static function verify( string $code, string $secret, int $window = 1 ): bool {
 		$code = trim( $code );
 
+		// Must be exactly 6 digits.
 		if ( ! preg_match( '/^\d{6}$/', $code ) ) {
 			return false;
 		}
@@ -76,13 +104,28 @@ class Fotonic_TOTP {
 		return false;
 	}
 
+	// ---------------------------------------------------------------------------
+	// Private helpers
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Compute an HMAC-based OTP (HOTP) for a given secret and counter.
+	 * RFC 4226 — HMAC-SHA1 truncation to 6 digits.
+	 *
+	 * @param string $secret  Base32-encoded secret.
+	 * @param int    $counter Counter value (time step).
+	 * @return string 6-digit zero-padded OTP string.
+	 */
 	private static function hotp( string $secret, int $counter ): string {
 		$key = self::base32_decode( $secret );
 
+		// Pack counter as 64-bit big-endian (8 bytes).
 		$counter_bytes = pack( 'N*', 0 ) . pack( 'N*', $counter );
 
+		// HMAC-SHA1.
 		$hash = hash_hmac( 'sha1', $counter_bytes, $key, true );
 
+		// Dynamic truncation.
 		$offset = ord( $hash[19] ) & 0x0F;
 		$code   =
 			( ( ord( $hash[ $offset ] )     & 0x7F ) << 24 ) |
@@ -95,9 +138,17 @@ class Fotonic_TOTP {
 		return str_pad( (string) $otp, self::DIGITS, '0', STR_PAD_LEFT );
 	}
 
+	/**
+	 * Decode a base32-encoded string into raw binary.
+	 *
+	 * Handles uppercase, strips padding ('='), ignores invalid characters.
+	 *
+	 * @param string $secret Base32-encoded input.
+	 * @return string Raw binary string.
+	 */
 	private static function base32_decode( string $secret ): string {
 		$secret = strtoupper( trim( $secret ) );
-		$secret = rtrim( $secret, '=' );
+		$secret = rtrim( $secret, '=' ); // Strip padding.
 
 		$alphabet = self::BASE32_CHARS;
 		$map      = array_flip( str_split( $alphabet ) );
@@ -109,7 +160,7 @@ class Fotonic_TOTP {
 		for ( $i = 0; $i < strlen( $secret ); $i++ ) {
 			$char = $secret[ $i ];
 			if ( ! isset( $map[ $char ] ) ) {
-				continue;
+				continue; // Skip invalid characters.
 			}
 			$buffer = ( $buffer << 5 ) | $map[ $char ];
 			$bits  += 5;

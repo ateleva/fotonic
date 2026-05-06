@@ -1,11 +1,14 @@
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
-import { useCustomer, useCreateCustomer, useUpdateCustomer } from '../../api/customers'
+import { useCustomer, useCreateCustomer, useUpdateCustomer, useDeleteCustomer } from '../../api/customers'
+import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
 import FormField from '../../components/FormField'
 import Button from '../../components/Button'
 import Spinner from '../../components/Spinner'
+import ConfirmDialog from '../../components/ConfirmDialog'
+import Modal from '../../components/Modal'
 import PeopleRepeater from './PeopleRepeater'
 
 export default function CustomerForm() {
@@ -13,9 +16,31 @@ export default function CustomerForm() {
   const isEdit = !!id
   const navigate = useNavigate()
 
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [blockReason, setBlockReason] = useState(null)
+  const [checkingDelete, setCheckingDelete] = useState(false)
+
   const { data: customer, isLoading } = useCustomer(id)
   const createCustomer = useCreateCustomer()
   const updateCustomer = useUpdateCustomer()
+  const deleteCustomer = useDeleteCustomer()
+
+  async function handleDeleteClick() {
+    if (checkingDelete) return
+    setCheckingDelete(true)
+    try {
+      const res = await apiFetch(`customers/${id}/can-delete`)
+      if (res.can_delete) {
+        setShowConfirm(true)
+      } else {
+        setBlockReason(res.reason)
+      }
+    } catch {
+      setBlockReason('Unable to check references. Please try again.')
+    } finally {
+      setCheckingDelete(false)
+    }
+  }
 
   const {
     register,
@@ -85,8 +110,13 @@ export default function CustomerForm() {
   }
 
   return (
+    <>
     <div className="p-6 max-w-2xl">
-      <PageHeader title={isEdit ? 'Edit Customer' : 'New Customer'} />
+      <PageHeader
+        title={isEdit ? 'Edit Customer' : 'New Customer'}
+        backTo="/customers"
+        onDelete={isEdit ? handleDeleteClick : undefined}
+      />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <FormField
@@ -138,5 +168,19 @@ export default function CustomerForm() {
         </div>
       </form>
     </div>
+
+    <ConfirmDialog
+      open={showConfirm}
+      onClose={() => setShowConfirm(false)}
+      onConfirm={() => deleteCustomer.mutate(id, { onSuccess: () => navigate('/customers') })}
+      message="Delete this customer? This action cannot be undone."
+    />
+    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title="Cannot Delete">
+      <p className="text-sm text-gray-600 mb-6">{blockReason}</p>
+      <div className="flex justify-end">
+        <Button onClick={() => setBlockReason(null)}>OK</Button>
+      </div>
+    </Modal>
+    </>
   )
 }

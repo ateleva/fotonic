@@ -27,7 +27,7 @@ function Lazy({ component: Component }) {
   )
 }
 
-export const router = createHashRouter([
+export function createRouter() { return createHashRouter([
   {
     path: '/',
     element: <Layout />,
@@ -43,6 +43,7 @@ export const router = createHashRouter([
       { path: 'works',           element: <Lazy component={WorkList} /> },
       { path: 'works/new',       element: <Lazy component={WorkForm} /> },
       { path: 'works/:id',       element: <Lazy component={WorkForm} /> },
+      // Pro routes — only active when FotonicPro bundle is loaded
       ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.KanbanBoard ? [{
         path: 'kanban',
         element: (
@@ -59,6 +60,84 @@ export const router = createHashRouter([
           </Suspense>
         )
       }] : []),
+      ...(window.FotonicApp?.features?.collaborators && window.FotonicProComponents?.CollaboratorList ? [
+        {
+          path: 'collaborators',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.CollaboratorList />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'collaborators/new',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.CollaboratorForm />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'collaborators/:id',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.CollaboratorForm />
+            </Suspense>
+          ),
+        },
+      ] : []),
+      ...(window.FotonicApp?.features?.products && window.FotonicProComponents?.ProductList ? [
+        {
+          path: 'products',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.ProductList />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'products/new',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.ProductForm />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'products/:id',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.ProductForm />
+            </Suspense>
+          ),
+        },
+      ] : []),
+      ...(window.FotonicApp?.features?.suppliers && window.FotonicProComponents?.SupplierList ? [
+        {
+          path: 'suppliers',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.SupplierList />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'suppliers/new',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.SupplierForm />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'suppliers/:id',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.SupplierForm />
+            </Suspense>
+          ),
+        },
+      ] : []),
     ],
   },
-])
+]) }

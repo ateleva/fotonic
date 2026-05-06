@@ -4,7 +4,9 @@ import Button from '../../components/Button'
 const BASE = window.FotonicApp?.restUrl ?? '/wp-json/fotonic/v1/'
 
 export default function FilesSection({ value = [], onChange }) {
-  function removeFile(id) { onChange(value.filter((f) => f.id !== id)) }
+  function removeFile(id) {
+    onChange(value.filter((f) => f.id !== id))
+  }
 
   return (
     <div className="space-y-4">
@@ -25,8 +27,23 @@ export default function FilesSection({ value = [], onChange }) {
                   <td className="px-4 py-2 text-gray-500 text-xs">{file.mime}</td>
                   <td className="px-4 py-2">
                     <div className="flex items-center gap-2">
-                      <a href={`${BASE}vault-download/${file.id}`} target="_blank" rel="noreferrer" className="text-indigo-600 hover:text-indigo-800 transition-colors" aria-label="Download file"><Download size={15} /></a>
-                      <button type="button" onClick={() => removeFile(file.id)} className="text-gray-400 hover:text-red-500 transition-colors" aria-label="Remove file"><Trash2 size={15} /></button>
+                      <a
+                        href={`${BASE}vault-download/${file.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                        aria-label="Download file"
+                      >
+                        <Download size={15} />
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(file.id)}
+                        className="text-gray-400 hover:text-red-500 transition-colors"
+                        aria-label="Remove file"
+                      >
+                        <Trash2 size={15} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -34,10 +51,18 @@ export default function FilesSection({ value = [], onChange }) {
             </tbody>
           </table>
         </div>
-      ) : <p className="text-sm text-gray-400">No files attached.</p>}
+      ) : (
+        <p className="text-sm text-gray-400">No files attached.</p>
+      )}
+
       <div>
-        <Button type="button" variant="secondary" size="sm" disabled><Upload size={14} />Upload File — Phase C (Vault)</Button>
-        <p className="text-xs text-gray-400 mt-1">Encrypted file upload will be available in Phase C.</p>
+        <Button type="button" variant="secondary" size="sm" disabled>
+          <Upload size={14} />
+          Upload File — Phase C (Vault)
+        </Button>
+        <p className="text-xs text-gray-400 mt-1">
+          Encrypted file upload will be available in Phase C.
+        </p>
       </div>
     </div>
   )
