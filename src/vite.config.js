@@ -14,7 +14,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         entryFileNames: 'fotonic-app.js',
-        chunkFileNames: 'fotonic-chunk-[name].js',
+        chunkFileNames: 'fotonic-chunk-[name]-[hash].js',
         assetFileNames: (info) => info.name?.endsWith('.css') ? 'fotonic-app.css' : (info.name ?? 'asset'),
       }
     }

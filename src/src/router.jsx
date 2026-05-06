@@ -10,6 +10,7 @@ const ServiceList  = lazy(() => import('./features/services/ServiceList'))
 const ServiceForm  = lazy(() => import('./features/services/ServiceForm'))
 const WorkList     = lazy(() => import('./features/works/WorkList'))
 const WorkForm     = lazy(() => import('./features/works/WorkForm'))
+const SettingsPage = lazy(() => import('./features/settings/SettingsPage'))
 
 function Fallback() {
   return (
@@ -43,6 +44,7 @@ export function createRouter() { return createHashRouter([
       { path: 'works',           element: <Lazy component={WorkList} /> },
       { path: 'works/new',       element: <Lazy component={WorkForm} /> },
       { path: 'works/:id',       element: <Lazy component={WorkForm} /> },
+      { path: 'settings',        element: <Lazy component={SettingsPage} /> },
       // Pro routes — only active when FotonicPro bundle is loaded
       ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.KanbanBoard ? [{
         path: 'kanban',

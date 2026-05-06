@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { apiFetch } from '../api/client'
 
@@ -89,7 +89,21 @@ export default function Layout() {
           )}
         </nav>
 
-        <div className="px-3 py-3 border-t border-gray-100 space-y-2">
+        <div className="px-3 py-3 border-t border-gray-100 space-y-1">
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              [
+                'flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                isActive
+                  ? 'bg-indigo-50 text-indigo-700'
+                  : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700',
+              ].join(' ')
+            }
+          >
+            <Settings size={14} />
+            Settings
+          </NavLink>
           <button
             onClick={handleLock}
             className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"

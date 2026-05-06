@@ -50,6 +50,18 @@ class Fotonic_REST_API {
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
+		register_rest_route( self::NAMESPACE, '/vault/change-password', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_change_password' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/reset-totp', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_reset_totp' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
 		register_rest_route( self::NAMESPACE, '/vault-download/(?P<id>\d+)', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'vault_download' ],
@@ -336,6 +348,241 @@ class Fotonic_REST_API {
 
 		readfile( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
 		exit;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Vault management (Phase G)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * POST /vault/change-password
+	 * Body: { current_password, otp, new_password }
+	 * Re-derives the vault key from a new password and re-encrypts all PII postmeta.
+	 */
+	public static function vault_change_password( \WP_REST_Request $req ): \WP_REST_Response {
+		$body             = $req->get_json_params();
+		$current_password = isset( $body['current_password'] ) ? (string) $body['current_password'] : '';
+		$otp              = isset( $body['otp'] )              ? (string) $body['otp']              : '';
+		$new_password     = isset( $body['new_password'] )     ? (string) $body['new_password']     : '';
+
+		if ( empty( $current_password ) || empty( $otp ) || empty( $new_password ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'missing_fields', 'message' => __( 'All fields are required.', 'fotonic' ) ],
+				400
+			);
+		}
+
+		if ( ! Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'fotonic' ) ],
+				400
+			);
+		}
+
+		$old_salt       = (string) get_option( Fotonic_Vault::OPTION_SALT, '' );
+		$encrypted_totp = (string) get_option( Fotonic_Vault::OPTION_TOTP, '' );
+
+		if ( empty( $old_salt ) || empty( $encrypted_totp ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'vault_error', 'message' => __( 'Vault configuration error.', 'fotonic' ) ],
+				500
+			);
+		}
+
+		$old_key     = Fotonic_Crypto::derive_key( $current_password, $old_salt );
+		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $old_key );
+
+		if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
+				401
+			);
+		}
+
+		$new_salt           = base64_encode( random_bytes( 32 ) );
+		$new_key            = Fotonic_Crypto::derive_key( $new_password, $new_salt );
+		$new_encrypted_totp = Fotonic_Crypto::encrypt( $totp_secret, $new_key );
+
+		if ( empty( $new_encrypted_totp ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'fotonic' ) ],
+				500
+			);
+		}
+
+		self::reencrypt_customers( $old_key, $new_key );
+		self::reencrypt_works( $old_key, $new_key );
+
+		update_option( Fotonic_Vault::OPTION_SALT, $new_salt,           false );
+		update_option( Fotonic_Vault::OPTION_TOTP, $new_encrypted_totp, false );
+
+		Fotonic_Vault::update_session_key( $new_key );
+
+		return new \WP_REST_Response( [ 'changed' => true ], 200 );
+	}
+
+	/**
+	 * POST /vault/reset-totp
+	 * Body: { password, otp }
+	 * Generates a new TOTP secret (keeping the same vault password/key).
+	 * Returns: { reset: true, qr_uri: string }
+	 */
+	public static function vault_reset_totp( \WP_REST_Request $req ): \WP_REST_Response {
+		$body     = $req->get_json_params();
+		$password = isset( $body['password'] ) ? (string) $body['password'] : '';
+		$otp      = isset( $body['otp'] )      ? (string) $body['otp']      : '';
+
+		if ( empty( $password ) || empty( $otp ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'missing_fields', 'message' => __( 'Password and OTP are required.', 'fotonic' ) ],
+				400
+			);
+		}
+
+		if ( ! Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'fotonic' ) ],
+				400
+			);
+		}
+
+		$salt           = (string) get_option( Fotonic_Vault::OPTION_SALT, '' );
+		$encrypted_totp = (string) get_option( Fotonic_Vault::OPTION_TOTP, '' );
+
+		if ( empty( $salt ) || empty( $encrypted_totp ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'vault_error', 'message' => __( 'Vault configuration error.', 'fotonic' ) ],
+				500
+			);
+		}
+
+		$key         = Fotonic_Crypto::derive_key( $password, $salt );
+		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $key );
+
+		if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
+				401
+			);
+		}
+
+		$new_totp_secret    = Fotonic_TOTP::generate_secret();
+		$new_encrypted_totp = Fotonic_Crypto::encrypt( strtoupper( $new_totp_secret ), $key );
+
+		if ( empty( $new_encrypted_totp ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'fotonic' ) ],
+				500
+			);
+		}
+
+		update_option( Fotonic_Vault::OPTION_TOTP, $new_encrypted_totp, false );
+
+		$site_name = get_bloginfo( 'name' ) ?: 'Fotonic';
+		$label     = $site_name . ':' . wp_get_current_user()->user_email;
+		$qr_uri    = Fotonic_TOTP::get_uri( $new_totp_secret, $label );
+
+		return new \WP_REST_Response( [
+			'reset'  => true,
+			'qr_uri' => $qr_uri,
+		], 200 );
+	}
+
+	/**
+	 * Re-encrypt all customer PII postmeta with a new key.
+	 *
+	 * @param string $old_key 32-byte old derived key.
+	 * @param string $new_key 32-byte new derived key.
+	 */
+	private static function reencrypt_customers( string $old_key, string $new_key ): void {
+		$posts = get_posts( [
+			'post_type'      => 'ftnc_customer',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		] );
+
+		foreach ( $posts as $post_id ) {
+			$raw = get_post_meta( $post_id, '_ftnc_people', true );
+			if ( empty( $raw ) ) {
+				continue;
+			}
+			$people = json_decode( $raw, true );
+			if ( ! is_array( $people ) ) {
+				continue;
+			}
+
+			$changed = false;
+			foreach ( $people as &$person ) {
+				foreach ( [ 'first_name', 'last_name', 'nationality', 'instagram_username', 'address', 'tin' ] as $field ) {
+					if ( ! empty( $person[ $field ] ) && self::looks_encrypted( $person[ $field ] ) ) {
+						$plain = Fotonic_Crypto::decrypt( $person[ $field ], $old_key );
+						if ( '' !== $plain ) {
+							$person[ $field ] = Fotonic_Crypto::encrypt( $plain, $new_key );
+							$changed          = true;
+						}
+					}
+				}
+				foreach ( [ 'email', 'phone' ] as $field ) {
+					if ( ! empty( $person[ $field ] ) && self::looks_encrypted( $person[ $field ] ) ) {
+						$plain = Fotonic_Crypto::decrypt( $person[ $field ], $old_key );
+						if ( '' !== $plain ) {
+							$person[ $field ] = Fotonic_Crypto::deterministic_encrypt( $plain, $new_key );
+							$changed          = true;
+						}
+					}
+				}
+			}
+			unset( $person );
+
+			if ( $changed ) {
+				update_post_meta( $post_id, '_ftnc_people', wp_json_encode( $people ) );
+			}
+		}
+	}
+
+	/**
+	 * Re-encrypt all work event address postmeta with a new key.
+	 *
+	 * @param string $old_key 32-byte old derived key.
+	 * @param string $new_key 32-byte new derived key.
+	 */
+	private static function reencrypt_works( string $old_key, string $new_key ): void {
+		$posts = get_posts( [
+			'post_type'      => 'ftnc_work',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_query'     => [ [ 'key' => '_ftnc_event_addresses', 'compare' => 'EXISTS' ] ], // phpcs:ignore WordPress.DB.SlowDBQuery
+		] );
+
+		foreach ( $posts as $post_id ) {
+			$raw = get_post_meta( $post_id, '_ftnc_event_addresses', true );
+			if ( empty( $raw ) ) {
+				continue;
+			}
+			$addresses = json_decode( $raw, true );
+			if ( ! is_array( $addresses ) ) {
+				continue;
+			}
+
+			$changed = false;
+			foreach ( $addresses as &$addr ) {
+				$street = $addr['street'] ?? '';
+				if ( self::looks_encrypted( $street ) ) {
+					$plain = Fotonic_Crypto::decrypt( $street, $old_key );
+					if ( '' !== $plain ) {
+						$addr['street'] = Fotonic_Crypto::encrypt( $plain, $new_key );
+						$changed        = true;
+					}
+				}
+			}
+			unset( $addr );
+
+			if ( $changed ) {
+				update_post_meta( $post_id, '_ftnc_event_addresses', wp_json_encode( $addresses ) );
+			}
+		}
 	}
 
 	// ---------------------------------------------------------------------------

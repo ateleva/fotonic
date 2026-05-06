@@ -177,6 +177,20 @@ class Fotonic_Vault {
 	}
 
 	// ---------------------------------------------------------------------------
+	// Session management
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Replace the current session cookie with a new derived key.
+	 * Called after a vault password change to keep the session alive.
+	 *
+	 * @param string $key 32-byte raw derived key.
+	 */
+	public static function update_session_key( string $key ): void {
+		self::set_session_cookie( $key );
+	}
+
+	// ---------------------------------------------------------------------------
 	// Private helpers
 	// ---------------------------------------------------------------------------
 
