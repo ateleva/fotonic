@@ -40,6 +40,8 @@ const defaultValues = {
   installments: [],
 }
 
+const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?? null
+
 export default function WorkForm() {
   const { id } = useParams()
   const isEdit = !!id
@@ -297,6 +299,14 @@ export default function WorkForm() {
             </div>
           </div>
         </section>
+
+        {/* Section 7 — Notifications (Pro only, edit mode only) */}
+        {isEdit && NotificationsSection && window.FotonicApp?.features?.notifications && (
+          <section>
+            <SectionHeading>{__('Scheduled Notifications', 'fotonic')}</SectionHeading>
+            <NotificationsSection workId={id} />
+          </section>
+        )}
 
         {mutation.error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
