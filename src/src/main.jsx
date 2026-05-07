@@ -7,6 +7,7 @@ import * as ReactRouter from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createRouter } from './router'
 import VaultGate from './features/vault/VaultGate'
+import { VaultProvider } from './context/VaultContext'
 import './index.css'
 
 // Pin globals to THIS bundle's copies so fotonic-pro.js (which externalizes react/react-dom)
@@ -27,7 +28,9 @@ setTimeout(() => {
   createRoot(document.getElementById('fotonic-app-root')).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <VaultGate router={router} />
+        <VaultProvider>
+          <VaultGate router={router} />
+        </VaultProvider>
       </QueryClientProvider>
     </StrictMode>
   )

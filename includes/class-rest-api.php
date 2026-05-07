@@ -308,6 +308,7 @@ class Fotonic_REST_API {
 		return new \WP_REST_Response( [
 			'setup'    => Fotonic_Vault::is_setup(),
 			'unlocked' => Fotonic_Vault::is_unlocked(),
+			'salt'     => (string) get_option( Fotonic_Vault::OPTION_SALT, '' ),
 		], 200 );
 	}
 

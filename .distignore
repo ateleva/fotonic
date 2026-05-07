@@ -1,8 +1,11 @@
 /.git
 /.gitignore
 /.distignore
+/.github
+/.claude
 /CLAUDE.md
 /src
+/tests
 /.vscode
 /.idea
 *.log
@@ -15,3 +18,5 @@ Thumbs.db
 *.swp
 *.swo
 *~
+phpunit.xml
+phpcs.xml

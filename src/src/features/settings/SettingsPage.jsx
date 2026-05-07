@@ -228,7 +228,8 @@ function ResetTotpForm() {
 // Main SettingsPage
 // ---------------------------------------------------------------------------
 
-const SmtpSettingsSection = window.FotonicProComponents?.SmtpSettingsSection ?? null
+const SmtpSettingsSection    = window.FotonicProComponents?.SmtpSettingsSection    ?? null
+const LicenseSettingsSection = window.FotonicProComponents?.LicenseSettingsSection ?? null
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false)
@@ -255,6 +256,12 @@ export default function SettingsPage() {
 
     <div className="p-6 max-w-2xl space-y-6">
       <PageHeader title={__('Settings')} />
+
+      {LicenseSettingsSection && (
+        <SectionCard title={__('Fotonic Pro License')} icon={Key}>
+          <LicenseSettingsSection />
+        </SectionCard>
+      )}
 
       <SectionCard title={__('Vault')} icon={Shield}>
         <div className="space-y-4">

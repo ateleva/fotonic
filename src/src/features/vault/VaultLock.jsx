@@ -1,13 +1,14 @@
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { Lock } from 'lucide-react'
-import { apiFetch } from '../../api/client'
+import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
 
 export default function VaultLock() {
   const queryClient = useQueryClient()
+  const { unlock } = useVault()
   const {
     register,
     handleSubmit,
@@ -17,12 +18,10 @@ export default function VaultLock() {
 
   const onSubmit = async ({ password, otp }) => {
     try {
-      await apiFetch('vault/unlock', {
-        method: 'POST',
-        body: JSON.stringify({ password, otp }),
-      })
+      // unlock() calls vault/unlock + vault/status + derives browser CryptoKey
+      await unlock(password, otp)
       await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
-      // VaultGate will re-render with unlocked=true → <RouterProvider>
+      // VaultGate re-renders with unlocked=true → <RouterProvider>
     } catch (err) {
       setError('root', {
         type: 'manual',
