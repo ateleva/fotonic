@@ -288,7 +288,12 @@ class Fotonic_REST_API {
 			);
 		}
 
-		return new \WP_REST_Response( [ 'unlocked' => true ], 200 );
+		// Return the PBKDF2 salt so the browser can derive its own AES-GCM key (Phase C+).
+		// Sent only on successful authentication — never on status polls.
+		return new \WP_REST_Response( [
+			'unlocked' => true,
+			'salt'     => (string) get_option( Fotonic_Vault::OPTION_SALT, '' ),
+		], 200 );
 	}
 
 	/**
@@ -308,33 +313,53 @@ class Fotonic_REST_API {
 		return new \WP_REST_Response( [
 			'setup'    => Fotonic_Vault::is_setup(),
 			'unlocked' => Fotonic_Vault::is_unlocked(),
-			'salt'     => (string) get_option( Fotonic_Vault::OPTION_SALT, '' ),
 		], 200 );
 	}
 
 	/**
 	 * GET /vault-download/{id}
 	 * Streams WP attachment file. Permission callback already checks vault + capability.
+	 *
+	 * Returns WP_REST_Response for error cases. For the success path, outputs headers
+	 * and calls readfile() + exit() — this is required for binary file streaming and
+	 * is a recognised exception to the "return WP_REST_Response" convention.
+	 *
+	 * @return \WP_REST_Response On error only; success path terminates via exit().
 	 */
-	public static function vault_download( \WP_REST_Request $req ): void {
+	public static function vault_download( \WP_REST_Request $req ): \WP_REST_Response {
 		$id   = (int) $req->get_param( 'id' );
 		$post = get_post( $id );
 
-		if ( ! $post || strpos( $post->post_mime_type, '/' ) === false ) {
-			status_header( 404 );
-			wp_send_json( [ 'code' => 'not_found', 'message' => __( 'File not found.', 'fotonic' ) ], 404 );
-			exit;
+		if ( ! $post || ! is_a( $post, 'WP_Post' ) || strpos( $post->post_mime_type, '/' ) === false ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_found', 'message' => __( 'File not found.', 'fotonic' ) ],
+				404
+			);
 		}
 
 		$file = get_attached_file( $id );
 		if ( ! $file || ! file_exists( $file ) ) {
-			status_header( 404 );
-			wp_send_json( [ 'code' => 'file_missing', 'message' => __( 'File not found on disk.', 'fotonic' ) ], 404 );
-			exit;
+			return new \WP_REST_Response(
+				[ 'code' => 'file_missing', 'message' => __( 'File not found on disk.', 'fotonic' ) ],
+				404
+			);
 		}
 
-		$mime     = $post->post_mime_type;
-		$filename = basename( $file );
+		// Verify the resolved path is inside the uploads directory (path traversal guard).
+		$real_file    = realpath( $file );
+		$real_basedir = realpath( wp_upload_dir()['basedir'] );
+		if ( ! $real_file || ! $real_basedir || strpos( $real_file, $real_basedir ) !== 0 ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'forbidden', 'message' => __( 'Access denied.', 'fotonic' ) ],
+				403
+			);
+		}
+
+		// Sanitize headers before output.
+		$mime     = sanitize_mime_type( $post->post_mime_type );
+		$filename = sanitize_file_name( basename( $real_file ) );
+		// Strip any CRLF that could cause header injection.
+		$filename = str_replace( [ "\r", "\n" ], '', $filename );
 
 		// Disable output buffering to stream efficiently.
 		if ( ob_get_level() ) {
@@ -342,13 +367,15 @@ class Fotonic_REST_API {
 		}
 
 		nocache_headers();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- MIME and filename sanitized above.
 		header( 'Content-Type: ' . $mime );
-		header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-		header( 'Content-Length: ' . filesize( $file ) );
+		header( 'Content-Disposition: attachment; filename="' . esc_attr( $filename ) . '"' );
+		header( 'Content-Length: ' . (int) filesize( $real_file ) );
 		header( 'X-Content-Type-Options: nosniff' );
 
-		readfile( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
-		exit;
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
+		readfile( $real_file );
+		exit; // Required to stop WP from appending HTML after the binary stream.
 	}
 
 	// ---------------------------------------------------------------------------

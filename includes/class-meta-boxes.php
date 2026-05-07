@@ -114,7 +114,7 @@ class Fotonic_Meta_Boxes {
 
 		<script>
 		(function() {
-			var people = <?php echo $people_json; // already escaped as JSON ?>;
+			var people = <?php echo wp_json_encode( $people, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 
 			function render() {
 				var tbody = document.getElementById('ftnc-people-rows');
@@ -522,11 +522,11 @@ class Fotonic_Meta_Boxes {
 		<script>
 		(function() {
 			// --- Data ---
-			var workServices  = <?php echo $services_json; ?>;
-			var workFiles     = <?php echo $files_json; ?>;
-			var installments    = <?php echo $installments_json; ?>;
-			var eventAddresses  = <?php echo $event_addresses_json; ?>;
-			var servicesMap     = <?php echo $services_map_json; ?>;
+			var workServices  = <?php echo wp_json_encode( json_decode( $services_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var workFiles     = <?php echo wp_json_encode( json_decode( $files_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var installments    = <?php echo wp_json_encode( json_decode( $installments_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var eventAddresses  = <?php echo wp_json_encode( json_decode( $event_addresses_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var servicesMap     = <?php echo wp_json_encode( json_decode( $services_map_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 
 			function esc(v) {
 				if (!v && v !== 0) return '';
@@ -1061,6 +1061,7 @@ class Fotonic_Meta_Boxes {
 
 		$term = '%' . $wpdb->esc_like( $wp_query->query_vars['s'] ) . '%';
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $wpdb->postmeta is a trusted WP core property, not user input.
 		$search .= $wpdb->prepare(
 			" OR ({$wpdb->postmeta}.meta_value LIKE %s)",
 			$term
@@ -1088,6 +1089,7 @@ class Fotonic_Meta_Boxes {
 			return $join;
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from WP core globals, not user input.
 		$join .= " LEFT JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)";
 
 		return $join;

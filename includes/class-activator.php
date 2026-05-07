@@ -8,7 +8,10 @@ class Fotonic_Activator {
 
         if ( ! file_exists( $vault_dir ) ) {
             wp_mkdir_p( $vault_dir );
-            // Block direct HTTP access to vault uploads
+            // Direct file write used intentionally: WP_Filesystem requires form-based authentication
+            // prompts that are unavailable during activation hooks. The path is fully controlled
+            // (built from wp_upload_dir()), contains no user input, and is a one-time write.
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
             file_put_contents( $vault_dir . '/.htaccess', "Require all denied\n# Block direct access to Fotonic vault files\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order deny,allow\n    Deny from all\n</IfModule>" );
         }
 

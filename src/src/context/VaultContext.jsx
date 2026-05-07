@@ -9,13 +9,13 @@ export function VaultProvider({ children }) {
   const [isUnlocked, setIsUnlocked] = useState(false)
 
   const unlock = useCallback(async (password, otp) => {
-    await apiFetch('vault/unlock', {
+    // Salt returned only on successful unlock — never exposed on status polls.
+    const data = await apiFetch('vault/unlock', {
       method: 'POST',
       body: JSON.stringify({ password, otp }),
     })
-    const status = await apiFetch('vault/status')
-    if (!status.salt) throw new Error('Vault salt not returned by server')
-    const key = await deriveKey(password, status.salt)
+    if (!data.salt) throw new Error('Vault salt not returned by server')
+    const key = await deriveKey(password, data.salt)
     setDerivedKey(key)
     setIsUnlocked(true)
     setVaultKey(key)
