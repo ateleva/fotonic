@@ -38,6 +38,7 @@ class Fotonic_Admin_Page {
         add_filter( 'script_loader_tag', [ __CLASS__, 'add_module_type' ], 10, 2 );
 
         wp_enqueue_editor();
+        wp_enqueue_media();
 
         wp_enqueue_script(
             'fotonic-app-js',

@@ -3,9 +3,53 @@ import Button from '../../components/Button'
 
 const BASE = window.FotonicApp?.restUrl ?? '/wp-json/fotonic/v1/'
 
+const ALLOWED_TYPES = [
+  'image',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+]
+const MAX_BYTES = 10 * 1024 * 1024 // 10 MB
+
 export default function FilesSection({ value = [], onChange }) {
   function removeFile(id) {
     onChange(value.filter((f) => f.id !== id))
+  }
+
+  function openMediaFrame() {
+    if (!window.wp || !window.wp.media) return
+
+    const frame = window.wp.media({
+      title: 'Select Files',
+      button: { text: 'Add to Work' },
+      multiple: true,
+      library: { type: ALLOWED_TYPES },
+    })
+
+    frame.on('select', () => {
+      const selected = frame.state().get('selection').toJSON()
+
+      const oversized = selected.filter((a) => (a.filesizeInBytes ?? 0) > MAX_BYTES)
+      if (oversized.length > 0) {
+        const names = oversized.map((a) => a.filename).join(', ')
+        // eslint-disable-next-line no-alert
+        window.alert(`These files exceed the 10 MB limit and were skipped:\n${names}`)
+      }
+
+      const valid = selected.filter((a) => (a.filesizeInBytes ?? 0) <= MAX_BYTES)
+      const newFiles = valid.map((a) => ({
+        id: a.id,
+        url: a.url,
+        filename: a.filename,
+        mime: a.mime,
+      }))
+
+      const existingIds = new Set(value.map((f) => f.id))
+      const merged = [...value, ...newFiles.filter((f) => !existingIds.has(f.id))]
+      onChange(merged)
+    })
+
+    frame.open()
   }
 
   return (
@@ -56,12 +100,12 @@ export default function FilesSection({ value = [], onChange }) {
       )}
 
       <div>
-        <Button type="button" variant="secondary" size="sm" disabled>
+        <Button type="button" variant="secondary" size="sm" onClick={openMediaFrame}>
           <Upload size={14} />
-          Upload File — Phase C (Vault)
+          Upload File
         </Button>
         <p className="text-xs text-gray-400 mt-1">
-          Encrypted file upload will be available in Phase C.
+          Images, PDF, DOC, DOCX · max 10 MB each
         </p>
       </div>
     </div>
