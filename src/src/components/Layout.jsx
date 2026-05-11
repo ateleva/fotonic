@@ -1,5 +1,5 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { apiFetch } from '../api/client'
 
@@ -11,11 +11,12 @@ const navItems = [
 ]
 
 const proNavItems = [
-  { to: '/kanban',        label: 'Kanban',        icon: Kanban,     feature: 'kanban' },
-  { to: '/analytics',     label: 'Analytics',     icon: BarChart2,  feature: 'analytics' },
-  { to: '/collaborators', label: 'Collaborators', icon: UserCheck,  feature: 'collaborators' },
-  { to: '/products',      label: 'Products',      icon: Package,    feature: 'products' },
-  { to: '/suppliers',     label: 'Suppliers',     icon: Store,      feature: 'suppliers' },
+  { to: '/kanban',        label: 'Kanban',        icon: Kanban,       feature: 'kanban' },
+  { to: '/analytics',     label: 'Analytics',     icon: BarChart2,    feature: 'analytics' },
+  { to: '/calendar',      label: 'Calendar',      icon: CalendarDays, feature: 'calendar' },
+  { to: '/collaborators', label: 'Collaborators', icon: UserCheck,    feature: 'collaborators' },
+  { to: '/products',      label: 'Products',      icon: Package,      feature: 'products' },
+  { to: '/suppliers',     label: 'Suppliers',     icon: Store,        feature: 'suppliers' },
 ]
 
 const features = window.FotonicApp?.features ?? {}

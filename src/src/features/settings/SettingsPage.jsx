@@ -230,6 +230,7 @@ function ResetTotpForm() {
 
 const SmtpSettingsSection    = window.FotonicProComponents?.SmtpSettingsSection    ?? null
 const LicenseSettingsSection = window.FotonicProComponents?.LicenseSettingsSection ?? null
+const GCalSettings           = window.FotonicProComponents?.GCalSettings           ?? null
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false)
@@ -295,6 +296,12 @@ export default function SettingsPage() {
           )}
         </div>
       </SectionCard>
+
+      {GCalSettings && (
+        <SectionCard title={__('Google Calendar')} icon={Key}>
+          <GCalSettings />
+        </SectionCard>
+      )}
 
       {SmtpSettingsSection && (
         <SectionCard title={__('Email Notifications')} icon={Key}>

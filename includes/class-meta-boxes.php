@@ -48,6 +48,36 @@ class Fotonic_Meta_Boxes {
 			'normal',
 			'high'
 		);
+
+		add_action( 'edit_form_after_title', [ __CLASS__, 'render_work_quick_notes' ] );
+	}
+
+	public static function render_work_quick_notes( WP_Post $post ): void {
+		if ( 'ftnc_work' !== $post->post_type ) {
+			return;
+		}
+		$quick_notes = get_post_meta( $post->ID, '_ftnc_quick_notes', true );
+		?>
+		<div style="margin:16px 0 0;">
+			<label style="display:block;font-weight:600;margin-bottom:6px;font-size:13px;color:#1d2327;">
+				<?php esc_html_e( 'Quick Notes', 'fotonic' ); ?>
+			</label>
+			<?php
+			wp_editor(
+				$quick_notes ?: '',
+				'ftnc_quick_notes',
+				[
+					'textarea_name' => 'ftnc_quick_notes',
+					'media_buttons' => false,
+					'teeny'         => false,
+					'textarea_rows' => 5,
+					'tinymce'       => true,
+					'quicktags'     => true,
+				]
+			);
+			?>
+		</div>
+		<?php
 	}
 
 	// ---------------------------------------------------------------------------
@@ -263,6 +293,7 @@ class Fotonic_Meta_Boxes {
 		$customer_id   = get_post_meta( $post->ID, '_ftnc_customer_id', true );
 		$owner_id      = get_post_meta( $post->ID, '_ftnc_owner_id', true );
 		$total_price   = get_post_meta( $post->ID, '_ftnc_total_price', true );
+		$color         = get_post_meta( $post->ID, '_ftnc_color', true );
 
 		$raw_event_addresses  = get_post_meta( $post->ID, '_ftnc_event_addresses', true );
 		$event_addresses      = [];
@@ -356,6 +387,11 @@ class Fotonic_Meta_Boxes {
 		.ftnc-file-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
 		.ftnc-type-default { background: #e8f4fd; color: #1565c0; }
 		.ftnc-type-coupon  { background: #fff3e0; color: #e65100; }
+		.ftnc-color-palette { display:flex; flex-wrap:wrap; gap:8px; }
+		.ftnc-color-swatch { cursor:pointer; display:inline-block; }
+		.ftnc-color-swatch input[type=radio] { position:absolute; opacity:0; width:0; height:0; }
+		.ftnc-color-circle { display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:50%; font-size:14px; color:#fff; font-weight:700; transition:transform 0.1s; }
+		.ftnc-color-swatch:hover .ftnc-color-circle { transform:scale(1.15); }
 		</style>
 
 		<div class="ftnc-work-wrap">
@@ -422,9 +458,44 @@ class Fotonic_Meta_Boxes {
 			</table>
 		</fieldset>
 
-		<!-- Section 3: Owner -->
+		<!-- Section 3: Calendar Color -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '3. Owner', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '3. Calendar Color', 'fotonic' ); ?></legend>
+			<p style="margin:0 0 10px;font-size:12px;color:#646970;"><?php esc_html_e( 'Choose the event card color shown in the calendar view.', 'fotonic' ); ?></p>
+			<div class="ftnc-color-palette">
+				<?php
+				$palette = [
+					''         => [ 'label' => __( 'Default', 'fotonic' ), 'bg' => '#e5e7eb', 'dashed' => true ],
+					'#D50000'  => [ 'label' => __( 'Tomato', 'fotonic' ),    'bg' => '#D50000' ],
+					'#E67C73'  => [ 'label' => __( 'Flamingo', 'fotonic' ),  'bg' => '#E67C73' ],
+					'#F4511E'  => [ 'label' => __( 'Tangerine', 'fotonic' ), 'bg' => '#F4511E' ],
+					'#F6BF26'  => [ 'label' => __( 'Banana', 'fotonic' ),    'bg' => '#F6BF26' ],
+					'#33B679'  => [ 'label' => __( 'Sage', 'fotonic' ),      'bg' => '#33B679' ],
+					'#0B8043'  => [ 'label' => __( 'Basil', 'fotonic' ),     'bg' => '#0B8043' ],
+					'#039BE5'  => [ 'label' => __( 'Peacock', 'fotonic' ),   'bg' => '#039BE5' ],
+					'#3F51B5'  => [ 'label' => __( 'Blueberry', 'fotonic' ), 'bg' => '#3F51B5' ],
+					'#7986CB'  => [ 'label' => __( 'Lavender', 'fotonic' ),  'bg' => '#7986CB' ],
+					'#8E24AA'  => [ 'label' => __( 'Grape', 'fotonic' ),     'bg' => '#8E24AA' ],
+					'#616161'  => [ 'label' => __( 'Graphite', 'fotonic' ),  'bg' => '#616161' ],
+				];
+				foreach ( $palette as $hex => $info ) :
+					$is_selected  = ( $color === $hex );
+					$extra_border = ! empty( $info['dashed'] ) ? 'border:2px dashed #9ca3af;' : '';
+					$txt_color    = ! empty( $info['dashed'] ) ? 'color:#374151;' : '';
+					?>
+					<label class="ftnc-color-swatch" title="<?php echo esc_attr( $info['label'] ); ?>">
+						<input type="radio" name="ftnc_color" value="<?php echo esc_attr( $hex ); ?>"<?php checked( $color, $hex ); ?>>
+						<span class="ftnc-color-circle" style="background:<?php echo esc_attr( $info['bg'] ); ?>;<?php echo $extra_border; ?><?php echo $txt_color; ?>">
+							<?php echo $is_selected ? '✓' : ''; ?>
+						</span>
+					</label>
+				<?php endforeach; ?>
+			</div>
+		</fieldset>
+
+		<!-- Section 4: Owner -->
+		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '4. Owner', 'fotonic' ); ?></legend>
 			<table class="form-table">
 				<tr>
 					<th><?php esc_html_e( 'Owner Type', 'fotonic' ); ?></th>
@@ -445,9 +516,9 @@ class Fotonic_Meta_Boxes {
 			</table>
 		</fieldset>
 
-		<!-- Section 4: Services Included -->
+		<!-- Section 5: Services Included -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '4. Services Included', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '5. Services Included', 'fotonic' ); ?></legend>
 			<table class="widefat ftnc-work-table" id="ftnc-services-table">
 				<thead>
 					<tr>
@@ -475,9 +546,9 @@ class Fotonic_Meta_Boxes {
 			<input type="hidden" id="ftnc_work_services_json" name="ftnc_work_services_json" value="<?php echo esc_attr( $services_json ); ?>">
 		</fieldset>
 
-		<!-- Section 5: Files -->
+		<!-- Section 6: Files -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '5. Files', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '6. Files', 'fotonic' ); ?></legend>
 			<div id="ftnc-files-list"></div>
 			<p>
 				<button type="button" id="ftnc-add-file" class="button">
@@ -487,9 +558,9 @@ class Fotonic_Meta_Boxes {
 			<input type="hidden" id="ftnc_work_files_json" name="ftnc_work_files_json" value="<?php echo esc_attr( $files_json ); ?>">
 		</fieldset>
 
-		<!-- Section 6: Payments -->
+		<!-- Section 7: Payments -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '6. Payments', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '7. Payments', 'fotonic' ); ?></legend>
 			<table class="form-table">
 				<tr>
 					<th><label for="ftnc_total_price"><?php esc_html_e( 'Total Price (€)', 'fotonic' ); ?></label></th>
@@ -725,6 +796,15 @@ class Fotonic_Meta_Boxes {
 				syncInstallments();
 			});
 
+			// --- Color palette ---
+			document.querySelectorAll('.ftnc-color-swatch input[type=radio]').forEach(function(radio) {
+				radio.addEventListener('change', function() {
+					document.querySelectorAll('.ftnc-color-circle').forEach(function(c) { c.textContent = ''; });
+					var circle = this.closest('.ftnc-color-swatch').querySelector('.ftnc-color-circle');
+					if (circle) circle.textContent = '✓';
+				});
+			});
+
 			// --- Init ---
 			renderAddresses();
 			renderServices();
@@ -732,7 +812,54 @@ class Fotonic_Meta_Boxes {
 			renderInstallments();
 		})();
 		</script>
-		<?php
+		<?php if ( defined( 'FOTO_PRO_VERSION' ) && $post->ID > 0 ) :
+			$tasks = get_posts( [
+				'post_type'      => 'ftnc_task',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'ASC',
+				'meta_query'     => [
+					[
+						'key'   => '_ftnc_task_work_id',
+						'value' => $post->ID,
+						'type'  => 'NUMERIC',
+					],
+				],
+			] );
+			$status_labels = [
+				'todo'        => __( 'To Do', 'fotonic' ),
+				'in_progress' => __( 'In Progress', 'fotonic' ),
+				'done'        => __( 'Done', 'fotonic' ),
+			];
+		?>
+		<div style="margin-top:24px;border-top:1px solid #dcdcde;padding-top:16px;">
+			<h3 style="margin:0 0 12px;font-size:13px;font-weight:600;color:#1d2327;"><?php esc_html_e( 'Tasks', 'fotonic' ); ?></h3>
+			<?php if ( empty( $tasks ) ) : ?>
+				<p style="color:#646970;font-style:italic;margin:0;"><?php esc_html_e( 'No tasks yet. Create tasks from the Kanban board.', 'fotonic' ); ?></p>
+			<?php else : ?>
+				<table style="width:100%;border-collapse:collapse;">
+					<thead>
+						<tr style="border-bottom:1px solid #dcdcde;">
+							<th style="text-align:left;padding:6px 8px;font-size:12px;color:#646970;font-weight:600;"><?php esc_html_e( 'Title', 'fotonic' ); ?></th>
+							<th style="text-align:left;padding:6px 8px;font-size:12px;color:#646970;font-weight:600;"><?php esc_html_e( 'Status', 'fotonic' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php foreach ( $tasks as $task ) :
+						$task_status = get_post_meta( $task->ID, '_ftnc_task_status', true ) ?: 'todo';
+						$task_label  = $status_labels[ $task_status ] ?? $task_status;
+					?>
+						<tr style="border-bottom:1px solid #f0f0f1;">
+							<td style="padding:6px 8px;font-size:13px;"><?php echo esc_html( $task->post_title ); ?></td>
+							<td style="padding:6px 8px;font-size:12px;color:#646970;"><?php echo esc_html( $task_label ); ?></td>
+						</tr>
+					<?php endforeach; ?>
+					</tbody>
+				</table>
+			<?php endif; ?>
+		</div>
+		<?php endif; // FOTO_PRO_VERSION tasks section
 	}
 
 	// ---------------------------------------------------------------------------
@@ -983,6 +1110,21 @@ class Fotonic_Meta_Boxes {
 			}
 			update_post_meta( $post_id, '_ftnc_installments', wp_json_encode( $clean ) );
 		}
+
+		// Section 7 — Calendar Color.
+		if ( isset( $_POST['ftnc_color'] ) ) {
+			$color = sanitize_hex_color( wp_unslash( $_POST['ftnc_color'] ) );
+			if ( $color ) {
+				update_post_meta( $post_id, '_ftnc_color', $color );
+			} else {
+				delete_post_meta( $post_id, '_ftnc_color' );
+			}
+		}
+
+		// Quick Notes (rendered via edit_form_after_title, saved here).
+		if ( isset( $_POST['ftnc_quick_notes'] ) ) {
+			update_post_meta( $post_id, '_ftnc_quick_notes', wp_kses_post( wp_unslash( $_POST['ftnc_quick_notes'] ) ) );
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1103,7 +1245,7 @@ class Fotonic_Meta_Boxes {
 	 * Common save-guard: nonce check, autosave check, capability check.
 	 *
 	 * @param int     $post_id    Post ID.
-	 * @param WP_Post $post       Post object.
+	 * @param WP_Post $_post      Post object.
 	 * @param string  $nonce_name Nonce field name.
 	 * @param string  $nonce_action Nonce action.
 	 * @return bool True if we should proceed with saving.

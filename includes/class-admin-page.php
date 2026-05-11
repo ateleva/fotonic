@@ -83,6 +83,8 @@ class Fotonic_Admin_Page {
                 'notifications' => $license_valid,
                 'products'      => $license_valid,
                 'suppliers'     => $license_valid,
+                'calendar'      => $license_valid,
+                'gcal'          => $license_valid && class_exists( 'Fotonic_Google_OAuth' ) && Fotonic_Google_OAuth::is_connected(),
             ],
         ] );
     }

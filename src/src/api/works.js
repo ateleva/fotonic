@@ -34,7 +34,10 @@ export function useCreateWork() {
         method: 'POST',
         body: JSON.stringify(data),
       }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['works'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['works'] })
+      qc.invalidateQueries({ queryKey: ['calendar'] })
+    },
   })
 }
 
@@ -46,7 +49,10 @@ export function useUpdateWork() {
         method: 'PUT',
         body: JSON.stringify(data),
       }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['works'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['works'] })
+      qc.invalidateQueries({ queryKey: ['calendar'] })
+    },
   })
 }
 

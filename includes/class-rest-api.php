@@ -1322,6 +1322,21 @@ class Fotonic_REST_API {
 			}
 			update_post_meta( $post_id, '_ftnc_installments', wp_json_encode( $clean ) );
 		}
+
+		// Calendar color.
+		if ( array_key_exists( 'color', $body ) ) {
+			$color = sanitize_hex_color( (string) ( $body['color'] ?? '' ) );
+			if ( $color ) {
+				update_post_meta( $post_id, '_ftnc_color', $color );
+			} else {
+				delete_post_meta( $post_id, '_ftnc_color' );
+			}
+		}
+
+		// Quick notes.
+		if ( isset( $body['quick_notes'] ) ) {
+			update_post_meta( $post_id, '_ftnc_quick_notes', wp_kses_post( $body['quick_notes'] ) );
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1540,6 +1555,8 @@ class Fotonic_REST_API {
 			'installments'   => $installments,
 			'payment_status' => $payment_status,
 			'notes'          => $notes,
+			'quick_notes'    => (string) get_post_meta( $post->ID, '_ftnc_quick_notes', true ),
+			'color'          => (string) get_post_meta( $post->ID, '_ftnc_color', true ),
 		];
 	}
 

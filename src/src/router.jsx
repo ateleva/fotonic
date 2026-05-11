@@ -140,6 +140,14 @@ export function createRouter() { return createHashRouter([
           ),
         },
       ] : []),
+      ...(window.FotonicApp?.features?.calendar && window.FotonicProComponents?.CalendarView ? [{
+        path: 'calendar',
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <window.FotonicProComponents.CalendarView />
+          </Suspense>
+        )
+      }] : []),
     ],
   },
 ]) }

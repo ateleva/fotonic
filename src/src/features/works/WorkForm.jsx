@@ -18,6 +18,63 @@ import EventAddressesRepeater from './EventAddressesRepeater'
 import WpEditor from '../../components/WpEditor'
 import { __ } from '../../utils/i18n'
 
+const COLOR_PALETTE = [
+  { label: 'Default',   hex: '' },
+  { label: 'Tomato',    hex: '#D50000' },
+  { label: 'Flamingo',  hex: '#E67C73' },
+  { label: 'Tangerine', hex: '#F4511E' },
+  { label: 'Banana',    hex: '#F6BF26' },
+  { label: 'Sage',      hex: '#33B679' },
+  { label: 'Basil',     hex: '#0B8043' },
+  { label: 'Peacock',   hex: '#039BE5' },
+  { label: 'Blueberry', hex: '#3F51B5' },
+  { label: 'Lavender',  hex: '#7986CB' },
+  { label: 'Grape',     hex: '#8E24AA' },
+  { label: 'Graphite',  hex: '#616161' },
+]
+
+function ColorPicker({ value, onChange }) {
+  return (
+    <div>
+      <p className="text-sm text-gray-500 mb-3">Choose the event card color in the calendar view.</p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+        {COLOR_PALETTE.map(({ label, hex }) => {
+          const isSelected = value === hex
+          const isDefault  = hex === ''
+          return (
+            <button
+              key={label}
+              type="button"
+              title={label}
+              onClick={() => onChange(hex)}
+              style={{
+                width: 30,
+                height: 30,
+                borderRadius: '50%',
+                background: isDefault ? '#e5e7eb' : hex,
+                border: isSelected ? '3px solid #1d2327' : isDefault ? '2px dashed #9ca3af' : '2px solid transparent',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 14,
+                color: isDefault ? '#374151' : '#fff',
+                fontWeight: 700,
+                transition: 'transform 0.1s',
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.15)' }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}
+            >
+              {isSelected ? '✓' : ''}
+            </button>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
+
 function SectionHeading({ children }) {
   return (
     <div className="border-b border-gray-200 pb-2 mb-4">
@@ -38,6 +95,7 @@ const defaultValues = {
   notes: '',
   total_price: '',
   installments: [],
+  color: '',
 }
 
 const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?? null
@@ -100,6 +158,7 @@ export default function WorkForm() {
         notes: work.notes ?? '',
         total_price: work.total_price ?? '',
         installments: work.installments ?? [],
+        color: work.color ?? '',
       })
     }
   }, [work, reset])
@@ -231,7 +290,17 @@ export default function WorkForm() {
           </FormField>
         </section>
 
-        {/* Section 3 — Services */}
+        {/* Section 3 — Calendar Color */}
+        <section>
+          <SectionHeading>Calendar Color</SectionHeading>
+          <Controller
+            name="color"
+            control={control}
+            render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
+          />
+        </section>
+
+        {/* Section 4 — Services */}
         <section>
           <SectionHeading>Services Included</SectionHeading>
           <Controller
