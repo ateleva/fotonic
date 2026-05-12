@@ -8,6 +8,7 @@ import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Badge from '../../components/Badge'
 import Spinner from '../../components/Spinner'
+import { __ } from '../../utils/i18n'
 
 function formatPrice(amount) {
   return '€' + Number(amount || 0).toLocaleString('it-IT', {
@@ -48,34 +49,34 @@ export default function WorkList() {
   const columns = [
     {
       key: 'title',
-      label: 'Title',
+      label: __('Title'),
       render: (row) => (
         <span className="font-medium text-gray-900">{row.title}</span>
       ),
     },
     {
       key: 'event_date',
-      label: 'Event Date',
+      label: __('Event Date'),
       render: (row) => formatDate(row.event_date),
     },
     {
       key: 'customer',
-      label: 'Customer',
+      label: __('Customer'),
       render: (row) => row.customer_title ?? <span className="text-gray-400">—</span>,
     },
     {
       key: 'payment_status',
-      label: 'Payment Status',
+      label: __('Payment Status'),
       render: (row) => <Badge status={row.payment_status ?? 'unpaid'} />,
     },
     {
       key: 'total_price',
-      label: 'Total Price',
+      label: __('Total Price'),
       render: (row) => formatPrice(row.total_price),
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: __('Actions'),
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
@@ -84,7 +85,7 @@ export default function WorkList() {
             onClick={() => navigate(`/works/${row.id}`)}
           >
             <Pencil size={14} />
-            Edit
+            {__('Edit')}
           </Button>
         </div>
       ),
@@ -94,11 +95,11 @@ export default function WorkList() {
   return (
     <div className="p-6">
       <PageHeader
-        title="Works"
+        title={__('Works')}
         action={
           <Button onClick={() => navigate('/works/new')}>
             <PlusCircle size={15} />
-            Add Work
+            {__('Add Work')}
           </Button>
         }
       />
@@ -108,7 +109,7 @@ export default function WorkList() {
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search works..."
+          placeholder={__('Search works...')}
           className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64"
         />
         <select
@@ -116,10 +117,10 @@ export default function WorkList() {
           onChange={(e) => setPaymentStatus(e.target.value)}
           className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          <option value="">All Statuses</option>
-          <option value="paid">Paid</option>
-          <option value="partial">Partial</option>
-          <option value="unpaid">Unpaid</option>
+          <option value="">{__('All Statuses')}</option>
+          <option value="paid">{__('Paid')}</option>
+          <option value="partial">{__('Partial')}</option>
+          <option value="unpaid">{__('Unpaid')}</option>
         </select>
       </div>
 
@@ -131,7 +132,7 @@ export default function WorkList() {
         <Table
           columns={columns}
           data={works}
-          emptyMessage="No works found. Add your first work."
+          emptyMessage={__('No works found. Add your first work.')}
         />
       )}
 

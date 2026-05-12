@@ -1,5 +1,6 @@
 import { Download, Trash2, Upload } from 'lucide-react'
 import Button from '../../components/Button'
+import { __ } from '../../utils/i18n'
 
 const BASE = window.FotonicApp?.restUrl ?? '/wp-json/fotonic/v1/'
 
@@ -20,8 +21,8 @@ export default function FilesSection({ value = [], onChange }) {
     if (!window.wp || !window.wp.media) return
 
     const frame = window.wp.media({
-      title: 'Select Files',
-      button: { text: 'Add to Work' },
+      title: __('Select Files'),
+      button: { text: __('Add to Work') },
       multiple: true,
       library: { type: ALLOWED_TYPES },
     })
@@ -33,7 +34,8 @@ export default function FilesSection({ value = [], onChange }) {
       if (oversized.length > 0) {
         const names = oversized.map((a) => a.filename).join(', ')
         // eslint-disable-next-line no-alert
-        window.alert(`These files exceed the 10 MB limit and were skipped:\n${names}`)
+        window.alert(`${__('These files exceed the 10 MB limit and were skipped:')}
+${names}`)
       }
 
       const valid = selected.filter((a) => (a.filesizeInBytes ?? 0) <= MAX_BYTES)
@@ -59,8 +61,8 @@ export default function FilesSection({ value = [], onChange }) {
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Filename</th>
-                <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Type</th>
+                <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Filename')}</th>
+                <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Type')}</th>
                 <th className="px-4 py-2 w-24"></th>
               </tr>
             </thead>
@@ -76,7 +78,7 @@ export default function FilesSection({ value = [], onChange }) {
                         target="_blank"
                         rel="noreferrer"
                         className="text-indigo-600 hover:text-indigo-800 transition-colors"
-                        aria-label="Download file"
+                        aria-label={__('Download file')}
                       >
                         <Download size={15} />
                       </a>
@@ -84,7 +86,7 @@ export default function FilesSection({ value = [], onChange }) {
                         type="button"
                         onClick={() => removeFile(file.id)}
                         className="text-gray-400 hover:text-red-500 transition-colors"
-                        aria-label="Remove file"
+                        aria-label={__('Remove file')}
                       >
                         <Trash2 size={15} />
                       </button>
@@ -96,16 +98,16 @@ export default function FilesSection({ value = [], onChange }) {
           </table>
         </div>
       ) : (
-        <p className="text-sm text-gray-400">No files attached.</p>
+        <p className="text-sm text-gray-400">{__('No files attached.')}</p>
       )}
 
       <div>
         <Button type="button" variant="secondary" size="sm" onClick={openMediaFrame}>
           <Upload size={14} />
-          Upload File
+          {__('Upload File')}
         </Button>
         <p className="text-xs text-gray-400 mt-1">
-          Images, PDF, DOC, DOCX · max 10 MB each
+          {__('Images, PDF, DOC, DOCX · max 10 MB each')}
         </p>
       </div>
     </div>

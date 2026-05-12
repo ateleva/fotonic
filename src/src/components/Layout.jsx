@@ -1,35 +1,33 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
-import { apiFetch } from '../api/client'
-
-const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/customers', label: 'Customers',  icon: Users },
-  { to: '/services',  label: 'Services',   icon: Briefcase },
-  { to: '/works',     label: 'Works',      icon: Camera },
-]
-
-const proNavItems = [
-  { to: '/kanban',        label: 'Kanban',        icon: Kanban,       feature: 'kanban' },
-  { to: '/analytics',     label: 'Analytics',     icon: BarChart2,    feature: 'analytics' },
-  { to: '/calendar',      label: 'Calendar',      icon: CalendarDays, feature: 'calendar' },
-  { to: '/collaborators', label: 'Collaborators', icon: UserCheck,    feature: 'collaborators' },
-  { to: '/products',      label: 'Products',      icon: Package,      feature: 'products' },
-  { to: '/suppliers',     label: 'Suppliers',     icon: Store,        feature: 'suppliers' },
-]
+import { useVault } from '../context/VaultContext'
+import { __ } from '../utils/i18n'
 
 const features = window.FotonicApp?.features ?? {}
 
 export default function Layout() {
   const queryClient = useQueryClient()
+  const { isUnlocked, lock } = useVault()
+
+  const navItems = [
+    { to: '/dashboard', label: __('Dashboard'), icon: LayoutDashboard },
+    { to: '/customers', label: __('Customers'),  icon: Users },
+    { to: '/services',  label: __('Services'),   icon: Briefcase },
+    { to: '/works',     label: __('Works'),      icon: Camera },
+  ]
+
+  const proNavItems = [
+    { to: '/kanban',        label: __('Kanban'),        icon: Kanban,       feature: 'kanban' },
+    { to: '/analytics',     label: __('Analytics'),     icon: BarChart2,    feature: 'analytics' },
+    { to: '/calendar',      label: __('Calendar'),      icon: CalendarDays, feature: 'calendar' },
+    { to: '/collaborators', label: __('Collaborators'), icon: UserCheck,    feature: 'collaborators' },
+    { to: '/products',      label: __('Products'),      icon: Package,      feature: 'products' },
+    { to: '/suppliers',     label: __('Suppliers'),     icon: Store,        feature: 'suppliers' },
+  ]
 
   const handleLock = async () => {
-    try {
-      await apiFetch('vault/lock', { method: 'POST' })
-    } catch {
-      // best-effort — lock even if request fails
-    }
+    await lock()
     queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
 
@@ -67,7 +65,7 @@ export default function Layout() {
           {proNavItems.some(({ feature }) => features[feature]) && (
             <>
               <div className="pt-3 pb-1 px-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">Pro</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">{__('Pro')}</span>
               </div>
               {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon }) => (
                 <NavLink
@@ -103,16 +101,23 @@ export default function Layout() {
             }
           >
             <Settings size={14} />
-            Settings
+            {__('Settings')}
           </NavLink>
-          <button
-            onClick={handleLock}
-            className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
-          >
-            <Lock size={14} />
-            Lock Vault
-          </button>
-          <p className="px-3 text-xs text-gray-400">Fotonic v1.0</p>
+          {isUnlocked && (
+            <button
+              onClick={handleLock}
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors cursor-pointer"
+            >
+              <Lock size={14} />
+              {__('Lock Vault')}
+            </button>
+          )}
+          <div className="px-3 space-y-0.5">
+            <p className="text-xs text-gray-400">Fotonic v{window.FotonicApp?.version ?? '–'}</p>
+            {window.FotonicApp?.proVersion && (
+              <p className="text-xs text-indigo-400">Fotonic Pro v{window.FotonicApp.proVersion}</p>
+            )}
+          </div>
         </div>
       </aside>
 

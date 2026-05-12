@@ -5,6 +5,7 @@ import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
+import { __ } from '../../utils/i18n'
 
 export default function VaultLock() {
   const queryClient = useQueryClient()
@@ -25,7 +26,7 @@ export default function VaultLock() {
     } catch (err) {
       setError('root', {
         type: 'manual',
-        message: err.message || 'Invalid password or code',
+        message: err.message || __('Invalid password or code'),
       })
     }
   }
@@ -37,15 +38,15 @@ export default function VaultLock() {
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-50 mb-3">
             <Lock size={28} className="text-indigo-600" />
           </div>
-          <h1 className="text-xl font-bold text-gray-900">Vault Locked</h1>
+          <h1 className="text-xl font-bold text-gray-900">{__('Vault Locked')}</h1>
           <p className="text-sm text-gray-500 mt-1">
-            Enter your vault password and authenticator code to access your data.
+            {__('Enter your vault password and authenticator code to access your data.')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <FormField
-            label="Vault Password"
+            label={__('Vault Password')}
             required
             htmlFor="password"
             error={errors.password?.message}
@@ -55,12 +56,12 @@ export default function VaultLock() {
               type="password"
               autoComplete="current-password"
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              {...register('password', { required: 'Password is required' })}
+              {...register('password', { required: __('Password is required') })}
             />
           </FormField>
 
           <FormField
-            label="Authenticator Code"
+            label={__('Authenticator Code')}
             required
             htmlFor="otp"
             error={errors.otp?.message}
@@ -74,8 +75,8 @@ export default function VaultLock() {
               placeholder="000000"
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
               {...register('otp', {
-                required: 'Code is required',
-                pattern: { value: /^\d{6}$/, message: 'Enter a 6-digit code' },
+                required: __('Code is required'),
+                pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code') },
               })}
             />
           </FormField>
@@ -90,7 +91,7 @@ export default function VaultLock() {
             className="w-full mt-2"
             disabled={isSubmitting}
           >
-            {isSubmitting ? <Spinner size="sm" /> : 'Unlock Vault'}
+            {isSubmitting ? <Spinner size="sm" /> : __('Unlock Vault')}
           </Button>
         </form>
       </div>

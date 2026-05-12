@@ -10,6 +10,7 @@ import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import PeopleRepeater from './PeopleRepeater'
+import { __ } from '../../utils/i18n'
 
 export default function CustomerForm() {
   const { id } = useParams()
@@ -36,7 +37,7 @@ export default function CustomerForm() {
         setBlockReason(res.reason)
       }
     } catch {
-      setBlockReason('Unable to check references. Please try again.')
+      setBlockReason(__('Unable to check references. Please try again.'))
     } finally {
       setCheckingDelete(false)
     }
@@ -113,14 +114,14 @@ export default function CustomerForm() {
     <>
     <div className="p-6 max-w-2xl">
       <PageHeader
-        title={isEdit ? 'Edit Customer' : 'New Customer'}
+        title={isEdit ? __('Edit Customer') : __('New Customer')}
         backTo="/customers"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <FormField
-          label="Title"
+          label={__('Title')}
           htmlFor="title"
           required
           error={errors.title?.message}
@@ -128,14 +129,14 @@ export default function CustomerForm() {
           <input
             id="title"
             type="text"
-            placeholder="e.g. Elisa & Edoardo"
+            placeholder={__('e.g. Elisa & Edoardo')}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-            {...register('title', { required: 'Title is required' })}
+            {...register('title', { required: __('Title is required') })}
           />
         </FormField>
 
         <div>
-          <p className="text-sm font-medium text-gray-700 mb-3">People</p>
+          <p className="text-sm font-medium text-gray-700 mb-3">{__('People')}</p>
           <Controller
             name="people"
             control={control}
@@ -147,7 +148,7 @@ export default function CustomerForm() {
 
         {mutationError && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-            {mutationError.message ?? 'An error occurred. Please try again.'}
+            {mutationError.message ?? __('An error occurred. Please try again.')}
           </p>
         )}
 
@@ -156,14 +157,14 @@ export default function CustomerForm() {
             type="submit"
             disabled={isSubmitting || mutation.isPending}
           >
-            {mutation.isPending ? 'Saving...' : isEdit ? 'Update Customer' : 'Create Customer'}
+            {mutation.isPending ? __('Saving...') : isEdit ? __('Update Customer') : __('Create Customer')}
           </Button>
           <Button
             type="button"
             variant="secondary"
             onClick={() => navigate('/customers')}
           >
-            Cancel
+            {__('Cancel')}
           </Button>
         </div>
       </form>
@@ -173,12 +174,12 @@ export default function CustomerForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteCustomer.mutate(id, { onSuccess: () => navigate('/customers') })}
-      message="Delete this customer? This action cannot be undone."
+      message={__('Delete this customer? This action cannot be undone.')}
     />
-    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title="Cannot Delete">
+    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete')}>
       <p className="text-sm text-gray-600 mb-6">{blockReason}</p>
       <div className="flex justify-end">
-        <Button onClick={() => setBlockReason(null)}>OK</Button>
+        <Button onClick={() => setBlockReason(null)}>{__('OK')}</Button>
       </div>
     </Modal>
     </>

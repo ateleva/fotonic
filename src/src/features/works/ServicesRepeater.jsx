@@ -1,5 +1,6 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import Button from '../../components/Button'
+import { __ } from '../../utils/i18n'
 
 const emptyRow = () => ({
   service_id: '',
@@ -41,9 +42,9 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Service</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-32">Price (€)</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">Notes</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Service')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-32">{__('Price (€)')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Notes')}</th>
                 <th className="px-3 py-2 w-10"></th>
               </tr>
             </thead>
@@ -56,7 +57,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                       onChange={(e) => updateRow(index, 'service_id', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      <option value="">— Select service —</option>
+                      <option value="">{__('— Select service —')}</option>
                       {services.map((svc) => (
                         <option key={svc.id} value={svc.id}>
                           {svc.title}
@@ -81,7 +82,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                       value={row.notes_override}
                       onChange={(e) => updateRow(index, 'notes_override', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder="Optional notes..."
+                      placeholder={__('Optional notes...')}
                     />
                   </td>
                   <td className="px-3 py-2">
@@ -89,7 +90,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                       type="button"
                       onClick={() => removeRow(index)}
                       className="text-gray-400 hover:text-red-500 transition-colors"
-                      aria-label="Remove service"
+                      aria-label={__('Remove service')}
                     >
                       <Trash2 size={15} />
                     </button>
@@ -103,7 +104,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
 
       <Button type="button" variant="secondary" size="sm" onClick={addRow}>
         <PlusCircle size={14} />
-        Add Service
+        {__('Add Service')}
       </Button>
     </div>
   )

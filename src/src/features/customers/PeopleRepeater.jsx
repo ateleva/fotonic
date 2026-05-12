@@ -1,5 +1,6 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import Button from '../../components/Button'
+import { __ } from '../../utils/i18n'
 
 const emptyPerson = () => ({
   first_name: '',
@@ -49,7 +50,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
         >
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">
-              Person {index + 1}
+              {__('Person')} {index + 1}
             </span>
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
@@ -60,14 +61,14 @@ export default function PeopleRepeater({ value = [], onChange }) {
                   onChange={() => update(index, 'is_main', true)}
                   className="text-indigo-600"
                 />
-                Main Contact
+                {__('Main Contact')}
               </label>
               <button
                 type="button"
                 onClick={() => removePerson(index)}
                 disabled={people.length <= 1}
                 className="text-gray-400 hover:text-red-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                aria-label="Remove person"
+                aria-label={__('Remove person')}
               >
                 <Trash2 size={16} />
               </button>
@@ -77,31 +78,31 @@ export default function PeopleRepeater({ value = [], onChange }) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                First Name
+                {__('First Name')}
               </label>
               <input
                 type="text"
                 value={person.first_name}
                 onChange={(e) => update(index, 'first_name', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="First name"
+                placeholder={__('First name')}
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Last Name
+                {__('Last Name')}
               </label>
               <input
                 type="text"
                 value={person.last_name}
                 onChange={(e) => update(index, 'last_name', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Last name"
+                placeholder={__('Last name')}
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Email
+                {__('Email')}
               </label>
               <input
                 type="email"
@@ -113,7 +114,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Phone
+                {__('Phone')}
               </label>
               <input
                 type="tel"
@@ -125,7 +126,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Nationality
+                {__('Nationality')}
               </label>
               <input
                 type="text"
@@ -137,7 +138,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Instagram
+                {__('Instagram')}
               </label>
               <input
                 type="text"
@@ -149,19 +150,19 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                Address
+                {__('Address')}
               </label>
               <input
                 type="text"
                 value={person.address ?? ''}
                 onChange={(e) => update(index, 'address', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Via Roma 1, Milano"
+                placeholder={__('Via Roma 1, Milano')}
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                TIN
+                {__('TIN')}
               </label>
               <input
                 type="text"
@@ -177,7 +178,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
 
       <Button type="button" variant="secondary" size="sm" onClick={addPerson}>
         <PlusCircle size={14} />
-        Add Person
+        {__('Add Person')}
       </Button>
     </div>
   )

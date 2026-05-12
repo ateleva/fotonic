@@ -36,7 +36,7 @@ const COLOR_PALETTE = [
 function ColorPicker({ value, onChange }) {
   return (
     <div>
-      <p className="text-sm text-gray-500 mb-3">Choose the event card color in the calendar view.</p>
+      <p className="text-sm text-gray-500 mb-3">{__('Choose the event card color in the calendar view.')}</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
         {COLOR_PALETTE.map(({ label, hex }) => {
           const isSelected = value === hex
@@ -127,7 +127,7 @@ export default function WorkForm() {
         setBlockReason(res.reason)
       }
     } catch {
-      setBlockReason('Unable to check references. Please try again.')
+      setBlockReason(__('Unable to check references. Please try again.'))
     } finally {
       setCheckingDelete(false)
     }
@@ -207,7 +207,7 @@ export default function WorkForm() {
     <>
     <div className="p-6 max-w-3xl">
       <PageHeader
-        title={isEdit ? 'Edit Work' : 'New Work'}
+        title={isEdit ? __('Edit Work') : __('New Work')}
         backTo="/works"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
@@ -215,11 +215,11 @@ export default function WorkForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* Section 1 — Event */}
         <section>
-          <SectionHeading>Event Details</SectionHeading>
+          <SectionHeading>{__('Event Details')}</SectionHeading>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <FormField
-                label="Title"
+                label={__('Title')}
                 htmlFor="title"
                 required
                 error={errors.title?.message}
@@ -227,13 +227,13 @@ export default function WorkForm() {
                 <input
                   id="title"
                   type="text"
-                  placeholder="e.g. Matrimonio Rossi"
+                  placeholder={__('e.g. Matrimonio Rossi')}
                   className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                  {...register('title', { required: 'Title is required' })}
+                  {...register('title', { required: __('Title is required') })}
                 />
               </FormField>
             </div>
-            <FormField label="Event Date" htmlFor="event_date">
+            <FormField label={__('Event Date')} htmlFor="event_date">
               <input
                 id="event_date"
                 type="date"
@@ -241,7 +241,7 @@ export default function WorkForm() {
                 {...register('event_date')}
               />
             </FormField>
-            <FormField label={__('Event Time From', 'fotonic')} htmlFor="event_time_from">
+            <FormField label={__('Event Time From')} htmlFor="event_time_from">
               <input
                 id="event_time_from"
                 type="time"
@@ -249,7 +249,7 @@ export default function WorkForm() {
                 {...register('event_time_from')}
               />
             </FormField>
-            <FormField label={__('Event Time To', 'fotonic')} htmlFor="event_time_to">
+            <FormField label={__('Event Time To')} htmlFor="event_time_to">
               <input
                 id="event_time_to"
                 type="time"
@@ -258,7 +258,7 @@ export default function WorkForm() {
               />
             </FormField>
             <div className="col-span-2">
-              <FormField label={__('Addresses', 'fotonic')}>
+              <FormField label={__('Addresses')}>
                 <Controller
                   name="event_addresses"
                   control={control}
@@ -273,14 +273,14 @@ export default function WorkForm() {
 
         {/* Section 2 — Customer */}
         <section>
-          <SectionHeading>Customer</SectionHeading>
-          <FormField label="Customer" htmlFor="customer_id">
+          <SectionHeading>{__('Customer')}</SectionHeading>
+          <FormField label={__('Customer')} htmlFor="customer_id">
             <select
               id="customer_id"
               className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
               {...register('customer_id')}
             >
-              <option value="">— Select customer —</option>
+              <option value="">{__('— Select customer —')}</option>
               {customers.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.title}
@@ -292,7 +292,7 @@ export default function WorkForm() {
 
         {/* Section 3 — Calendar Color */}
         <section>
-          <SectionHeading>Calendar Color</SectionHeading>
+          <SectionHeading>{__('Calendar Color')}</SectionHeading>
           <Controller
             name="color"
             control={control}
@@ -302,7 +302,7 @@ export default function WorkForm() {
 
         {/* Section 4 — Services */}
         <section>
-          <SectionHeading>Services Included</SectionHeading>
+          <SectionHeading>{__('Services Included')}</SectionHeading>
           <Controller
             name="services"
             control={control}
@@ -318,7 +318,7 @@ export default function WorkForm() {
 
         {/* Section 4 — Files */}
         <section>
-          <SectionHeading>Files</SectionHeading>
+          <SectionHeading>{__('Files')}</SectionHeading>
           <Controller
             name="files"
             control={control}
@@ -330,7 +330,7 @@ export default function WorkForm() {
 
         {/* Section 5 — Notes */}
         <section>
-          <SectionHeading>{__('Notes', 'fotonic')}</SectionHeading>
+          <SectionHeading>{__('Notes')}</SectionHeading>
           <Controller
             name="notes"
             control={control}
@@ -342,9 +342,9 @@ export default function WorkForm() {
 
         {/* Section 6 — Payments */}
         <section>
-          <SectionHeading>Payments</SectionHeading>
+          <SectionHeading>{__('Payments')}</SectionHeading>
           <div className="space-y-4">
-            <FormField label="Total Price (€)" htmlFor="total_price">
+            <FormField label={__('Total Price (€)')} htmlFor="total_price">
               <input
                 id="total_price"
                 type="number"
@@ -357,7 +357,7 @@ export default function WorkForm() {
             </FormField>
 
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-3">Installments</p>
+              <p className="text-sm font-medium text-gray-700 mb-3">{__('Installments')}</p>
               <Controller
                 name="installments"
                 control={control}
@@ -372,31 +372,31 @@ export default function WorkForm() {
         {/* Section 7 — Notifications (Pro only, edit mode only) */}
         {isEdit && NotificationsSection && window.FotonicApp?.features?.notifications && (
           <section>
-            <SectionHeading>{__('Scheduled Notifications', 'fotonic')}</SectionHeading>
+            <SectionHeading>{__('Scheduled Notifications')}</SectionHeading>
             <NotificationsSection workId={id} />
           </section>
         )}
 
         {mutation.error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-            {mutation.error.message ?? 'An error occurred. Please try again.'}
+            {mutation.error.message ?? __('An error occurred. Please try again.')}
           </p>
         )}
 
         <div className="flex items-center gap-3 pt-2">
           <Button type="submit" disabled={isSubmitting || mutation.isPending}>
             {mutation.isPending
-              ? 'Saving...'
+              ? __('Saving...')
               : isEdit
-              ? 'Update Work'
-              : 'Create Work'}
+              ? __('Update Work')
+              : __('Create Work')}
           </Button>
           <Button
             type="button"
             variant="secondary"
             onClick={() => navigate('/works')}
           >
-            Cancel
+            {__('Cancel')}
           </Button>
         </div>
       </form>
@@ -406,12 +406,12 @@ export default function WorkForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteWork.mutate(id, { onSuccess: () => navigate('/works') })}
-      message="Delete this work? This action cannot be undone."
+      message={__('Delete this work? This action cannot be undone.')}
     />
-    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title="Cannot Delete">
+    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete')}>
       <p className="text-sm text-gray-600 mb-6">{blockReason}</p>
       <div className="flex justify-end">
-        <Button onClick={() => setBlockReason(null)}>OK</Button>
+        <Button onClick={() => setBlockReason(null)}>{__('OK')}</Button>
       </div>
     </Modal>
     </>

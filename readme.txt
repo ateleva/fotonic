@@ -136,6 +136,8 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 * Fotonic Pro: Google Tasks API integration — tasks without an end time sync as Google Calendar Activities.
 * Fotonic Pro: task color picker (12-color palette matching Google Calendar named colors).
 * Fotonic Pro: Show in Calendar toggle on tasks with date and optional time fields.
+* Full i18n/l10n support: all React UI strings wrapped in gettext functions; Italian (it_IT) translation covers 100% of PHP and JavaScript strings.
+* Regenerated POT template; added JSON translation file for React components (`wp_set_script_translations`).
 
 = 1.0.0 =
 * Initial public release.

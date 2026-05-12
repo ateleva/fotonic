@@ -25,10 +25,10 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-40">
-                  {__('Label', 'fotonic')}
+                  {__('Label')}
                 </th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">
-                  {__('Street', 'fotonic')}
+                  {__('Street')}
                 </th>
                 <th className="px-3 py-2 w-10"></th>
               </tr>
@@ -42,7 +42,7 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
                       value={row.label ?? ''}
                       onChange={(e) => updateRow(index, 'label', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder={__('e.g. Church', 'fotonic')}
+                      placeholder={__('e.g. Church')}
                     />
                   </td>
                   <td className="px-3 py-2">
@@ -51,7 +51,7 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
                       value={row.street ?? ''}
                       onChange={(e) => updateRow(index, 'street', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder={__('Via Roma 1, Milano', 'fotonic')}
+                      placeholder={__('Via Roma 1, Milano')}
                     />
                   </td>
                   <td className="px-3 py-2">
@@ -59,7 +59,7 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
                       type="button"
                       onClick={() => removeRow(index)}
                       className="text-gray-400 hover:text-red-500 transition-colors"
-                      aria-label={__('Remove address', 'fotonic')}
+                      aria-label={__('Remove address')}
                     >
                       <Trash2 size={15} />
                     </button>
@@ -73,7 +73,7 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
 
       <Button type="button" variant="secondary" size="sm" onClick={addRow}>
         <PlusCircle size={14} />
-        {__('Add Address', 'fotonic')}
+        {__('Add Address')}
       </Button>
     </div>
   )

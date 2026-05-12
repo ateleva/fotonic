@@ -1,186 +1,1161 @@
-# Italian translation of Fotonic
+# Italian translation of fotonic
 # Copyright (C) 2026 Alessandro Bonacina
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Fotonic 0.1.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fotonic\n"
-"POT-Creation-Date: 2026-05-02T00:00:00+00:00\n"
-"PO-Revision-Date: 2026-05-02T00:00:00+00:00\n"
-"Last-Translator: Alessandro Bonacina <hello@alessandrobonacina.com>\n"
+"Project-Id-Version: fotonic 1.1.0\n"
+"POT-Creation-Date: 2026-05-12T00:00:00+00:00\n"
+"PO-Revision-Date: 2026-05-12T00:00:00+00:00\n"
+"Last-Translator: Alessandro Bonacina <bonacina.ale@gmail.com>\n"
 "Language-Team: Italian <LL@li.org>\n"
 "Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Manual\n"
+"X-Generator: Claude Code\n"
 "X-Domain: fotonic\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#. Plugin Name of the plugin
+#: includes/class-admin-page.php:7 includes/class-admin-page.php:8
 msgid "Fotonic"
 msgstr "Fotonic"
 
-#. Description of the plugin
-msgid "CRM and workflow manager for professional event photographers."
-msgstr "CRM e gestore del flusso di lavoro per fotografi di eventi professionisti."
-
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:15 includes/class-cpt-registry.php:26
 msgid "Customers"
 msgstr "Clienti"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:16 includes/class-meta-boxes.php:444
 msgid "Customer"
 msgstr "Cliente"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:17 includes/class-cpt-registry.php:43
+#: includes/class-cpt-registry.php:69
 msgid "Add New"
 msgstr "Aggiungi nuovo"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:18
 msgid "Add New Customer"
 msgstr "Aggiungi nuovo cliente"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:19
 msgid "Edit Customer"
 msgstr "Modifica cliente"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:20
 msgid "New Customer"
 msgstr "Nuovo cliente"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:21
 msgid "View Customer"
 msgstr "Visualizza cliente"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:22
 msgid "Search Customers"
 msgstr "Cerca clienti"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:23
 msgid "No customers found."
 msgstr "Nessun cliente trovato."
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:24
 msgid "No customers found in trash."
 msgstr "Nessun cliente trovato nel cestino."
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:25
 msgid "All Customers"
 msgstr "Tutti i clienti"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:41 includes/class-cpt-registry.php:52
 msgid "Services"
 msgstr "Servizi"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:42 includes/class-meta-boxes.php:525
 msgid "Service"
 msgstr "Servizio"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:44
 msgid "Add New Service"
 msgstr "Aggiungi nuovo servizio"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:45
 msgid "Edit Service"
 msgstr "Modifica servizio"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:46
 msgid "New Service"
 msgstr "Nuovo servizio"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:47
 msgid "View Service"
 msgstr "Visualizza servizio"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:48
 msgid "Search Services"
 msgstr "Cerca servizi"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:49
 msgid "No services found."
 msgstr "Nessun servizio trovato."
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:50
 msgid "No services found in trash."
 msgstr "Nessun servizio trovato nel cestino."
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:51
 msgid "All Services"
 msgstr "Tutti i servizi"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:67 includes/class-cpt-registry.php:78
 msgid "Works"
 msgstr "Lavori"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:68
 msgid "Work"
 msgstr "Lavoro"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:70
 msgid "Add New Work"
 msgstr "Aggiungi nuovo lavoro"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:71
 msgid "Edit Work"
 msgstr "Modifica lavoro"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:72
 msgid "New Work"
 msgstr "Nuovo lavoro"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:73
 msgid "View Work"
 msgstr "Visualizza lavoro"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:74
 msgid "Search Works"
 msgstr "Cerca lavori"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:75
 msgid "No works found."
 msgstr "Nessun lavoro trovato."
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:76
 msgid "No works found in trash."
 msgstr "Nessun lavoro trovato nel cestino."
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:77
 msgid "All Works"
 msgstr "Tutti i lavori"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:94 includes/class-cpt-registry.php:95
 msgid "Payment Status"
 msgstr "Stato pagamento"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:96
 msgid "All Payment Statuses"
 msgstr "Tutti gli stati di pagamento"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:97
 msgid "Edit Payment Status"
 msgstr "Modifica stato pagamento"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:98
 msgid "Update Payment Status"
 msgstr "Aggiorna stato pagamento"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:99
 msgid "Add New Payment Status"
 msgstr "Aggiungi nuovo stato pagamento"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:100
 msgid "New Payment Status Name"
 msgstr "Nuovo nome stato pagamento"
 
-#: includes/class-cpt-registry.php
+#: includes/class-cpt-registry.php:101
 msgid "Search Payment Statuses"
 msgstr "Cerca stati di pagamento"
 
-#: includes/class-rest-api.php
-msgid "Invalid vault password or OTP code."
-msgstr "Password vault o codice OTP non valido."
+#: includes/class-meta-boxes.php:27
+msgid "People"
+msgstr "Persone"
 
-#: includes/class-rest-api.php
+#: includes/class-meta-boxes.php:36
+msgid "Service Details"
+msgstr "Dettagli servizio"
+
+#: includes/class-meta-boxes.php:45
+msgid "Work Details"
+msgstr "Dettagli lavoro"
+
+#: includes/class-meta-boxes.php:63
+msgid "Quick Notes"
+msgstr "Note veloci"
+
+#: includes/class-meta-boxes.php:123
+msgid "First Name"
+msgstr "Nome"
+
+#: includes/class-meta-boxes.php:124
+msgid "Last Name"
+msgstr "Cognome"
+
+#: includes/class-meta-boxes.php:125
+msgid "Email"
+msgstr "Email"
+
+#: includes/class-meta-boxes.php:126
+msgid "Phone"
+msgstr "Telefono"
+
+#: includes/class-meta-boxes.php:127
+msgid "Nationality"
+msgstr "Nazionalità"
+
+#: includes/class-meta-boxes.php:128
+msgid "Instagram"
+msgstr "Instagram"
+
+#: includes/class-meta-boxes.php:129
+msgid "Address"
+msgstr "Indirizzo"
+
+#: includes/class-meta-boxes.php:130
+msgid "TIN"
+msgstr "CF/P.IVA"
+
+#: includes/class-meta-boxes.php:131
+msgid "Main"
+msgstr "Principale"
+
+#: includes/class-meta-boxes.php:139
+msgid "+ Add Person"
+msgstr "+ Aggiungi persona"
+
+#: includes/class-meta-boxes.php:164 includes/class-meta-boxes.php:620
+#: includes/class-meta-boxes.php:657 includes/class-meta-boxes.php:700
+#: includes/class-meta-boxes.php:752
+msgid "Remove"
+msgstr "Rimuovi"
+
+#: includes/class-meta-boxes.php:204
+msgid "At least one person is required."
+msgstr "È richiesta almeno una persona."
+
+#: includes/class-meta-boxes.php:246
+msgid "Base Price (€)"
+msgstr "Prezzo base (€)"
+
+#: includes/class-meta-boxes.php:256
+msgid "Notes"
+msgstr "Note"
+
+#: includes/class-meta-boxes.php:401
+msgid "1. Event Details"
+msgstr "1. Dettagli evento"
+
+#: includes/class-meta-boxes.php:404
+msgid "Event Date"
+msgstr "Data evento"
+
+#: includes/class-meta-boxes.php:408
+msgid "Event Time From"
+msgstr "Orario inizio"
+
+#: includes/class-meta-boxes.php:412
+msgid "Event Time To"
+msgstr "Orario fine"
+
+#: includes/class-meta-boxes.php:416
+msgid "Addresses"
+msgstr "Indirizzi"
+
+#: includes/class-meta-boxes.php:421
+msgid "Label"
+msgstr "Etichetta"
+
+#: includes/class-meta-boxes.php:422
+msgid "Street"
+msgstr "Via"
+
+#: includes/class-meta-boxes.php:430
+msgid "+ Add Address"
+msgstr "+ Aggiungi indirizzo"
+
+#: includes/class-meta-boxes.php:441
+msgid "2. Customer"
+msgstr "2. Cliente"
+
+#: includes/class-meta-boxes.php:447
+msgid "— Select customer —"
+msgstr "— Seleziona cliente —"
+
+#: includes/class-meta-boxes.php:463
+msgid "3. Calendar Color"
+msgstr "3. Colore calendario"
+
+#: includes/class-meta-boxes.php:464
+msgid "Choose the event card color shown in the calendar view."
+msgstr "Scegli il colore della scheda evento mostrato nella vista calendario."
+
+#: includes/class-meta-boxes.php:468 includes/class-meta-boxes.php:744
+msgid "Default"
+msgstr "Predefinito"
+
+#: includes/class-meta-boxes.php:469
+msgid "Tomato"
+msgstr "Pomodoro"
+
+#: includes/class-meta-boxes.php:470
+msgid "Flamingo"
+msgstr "Fenicottero"
+
+#: includes/class-meta-boxes.php:471
+msgid "Tangerine"
+msgstr "Mandarino"
+
+#: includes/class-meta-boxes.php:472
+msgid "Banana"
+msgstr "Banana"
+
+#: includes/class-meta-boxes.php:473
+msgid "Sage"
+msgstr "Salvia"
+
+#: includes/class-meta-boxes.php:474
+msgid "Basil"
+msgstr "Basilico"
+
+#: includes/class-meta-boxes.php:475
+msgid "Peacock"
+msgstr "Pavone"
+
+#: includes/class-meta-boxes.php:476
+msgid "Blueberry"
+msgstr "Mirtillo"
+
+#: includes/class-meta-boxes.php:477
+msgid "Lavender"
+msgstr "Lavanda"
+
+#: includes/class-meta-boxes.php:478
+msgid "Grape"
+msgstr "Uva"
+
+#: includes/class-meta-boxes.php:479
+msgid "Graphite"
+msgstr "Grafite"
+
+#: includes/class-meta-boxes.php:498
+msgid "4. Owner"
+msgstr "4. Responsabile"
+
+#: includes/class-meta-boxes.php:501
+msgid "Owner Type"
+msgstr "Tipo responsabile"
+
+#: includes/class-meta-boxes.php:505
+msgid "Admin (free plan)"
+msgstr "Amministratore (piano gratuito)"
+
+#: includes/class-meta-boxes.php:510
+msgid "Owner"
+msgstr "Responsabile"
+
+#: includes/class-meta-boxes.php:521
+msgid "5. Services Included"
+msgstr "5. Servizi inclusi"
+
+#: includes/class-meta-boxes.php:526
+msgid "Price Override (€)"
+msgstr "Prezzo personalizzato (€)"
+
+#: includes/class-meta-boxes.php:527
+msgid "Notes Override"
+msgstr "Note personalizzate"
+
+#: includes/class-meta-boxes.php:535
+msgid "— Add a service —"
+msgstr "— Aggiungi un servizio —"
+
+#: includes/class-meta-boxes.php:544
+msgid "Add"
+msgstr "Aggiungi"
+
+#: includes/class-meta-boxes.php:551
+msgid "6. Files"
+msgstr "6. File"
+
+#: includes/class-meta-boxes.php:555
+msgid "+ Add File"
+msgstr "+ Aggiungi file"
+
+#: includes/class-meta-boxes.php:563
+msgid "7. Payments"
+msgstr "7. Pagamenti"
+
+#: includes/class-meta-boxes.php:566
+msgid "Total Price (€)"
+msgstr "Prezzo totale (€)"
+
+#: includes/class-meta-boxes.php:570
+msgid "Installments"
+msgstr "Rate"
+
+#: includes/class-meta-boxes.php:574
+msgid "Type"
+msgstr "Tipo"
+
+#: includes/class-meta-boxes.php:575 includes/class-meta-boxes.php:844
+msgid "Title"
+msgstr "Titolo"
+
+#: includes/class-meta-boxes.php:576
+msgid "Amount (€)"
+msgstr "Importo (€)"
+
+#: includes/class-meta-boxes.php:577 includes/class-meta-boxes.php:845
+msgid "Status"
+msgstr "Stato"
+
+#: includes/class-meta-boxes.php:585
+msgid "+ Add Installment"
+msgstr "+ Aggiungi rata"
+
+#: includes/class-meta-boxes.php:618
+msgid "e.g. Church"
+msgstr "es. Chiesa"
+
+#: includes/class-meta-boxes.php:619
+msgid "Via Roma 1, Milano"
+msgstr "Via Roma 1, Milano"
+
+#: includes/class-meta-boxes.php:699
+msgid "Attachment ID"
+msgstr "ID allegato"
+
+#: includes/class-meta-boxes.php:714
+msgid "Media library not available."
+msgstr "Libreria media non disponibile."
+
+#: includes/class-meta-boxes.php:718
+msgid "Select Files"
+msgstr "Seleziona file"
+
+#: includes/class-meta-boxes.php:719
+msgid "Add to Work"
+msgstr "Aggiungi al lavoro"
+
+#: includes/class-meta-boxes.php:742
+msgid "Paid"
+msgstr "Pagato"
+
+#: includes/class-meta-boxes.php:742
+msgid "Unpaid"
+msgstr "Non pagato"
+
+#: includes/class-meta-boxes.php:744
+msgid "Coupon"
+msgstr "Buono sconto"
+
+#: includes/class-meta-boxes.php:831
+msgid "To Do"
+msgstr "Da fare"
+
+#: includes/class-meta-boxes.php:832
+msgid "In Progress"
+msgstr "In corso"
+
+#: includes/class-meta-boxes.php:833
+msgid "Done"
+msgstr "Fatto"
+
+#: includes/class-meta-boxes.php:837
+msgid "Tasks"
+msgstr "Compiti"
+
+#: includes/class-meta-boxes.php:839
+msgid "No tasks yet. Create tasks from the Kanban board."
+msgstr "Nessun compito ancora. Crea compiti dalla bacheca Kanban."
+
+#: includes/class-rest-api.php:238
+msgid "Password is required."
+msgstr "La password è obbligatoria."
+
+#: includes/class-rest-api.php:251
+msgid "Vault setup failed."
+msgstr "Configurazione vault non riuscita."
+
+#: includes/class-rest-api.php:278 includes/class-rest-api.php:465
+msgid "Password and OTP are required."
+msgstr "Password e OTP sono obbligatori."
+
+#: includes/class-rest-api.php:286 includes/class-rest-api.php:425
+#: includes/class-rest-api.php:492
+msgid "Invalid password or OTP code."
+msgstr "Password o codice OTP non valido."
+
+#: includes/class-rest-api.php:335
 msgid "File not found."
 msgstr "File non trovato."
+
+#: includes/class-rest-api.php:343
+msgid "File not found on disk."
+msgstr "File non trovato sul disco."
+
+#: includes/class-rest-api.php:353
+msgid "Access denied."
+msgstr "Accesso negato."
+
+#: includes/class-rest-api.php:398
+msgid "All fields are required."
+msgstr "Tutti i campi sono obbligatori."
+
+#: includes/class-rest-api.php:405 includes/class-rest-api.php:472
+msgid "Vault is not set up."
+msgstr "Il vault non è configurato."
+
+#: includes/class-rest-api.php:415 includes/class-rest-api.php:482
+msgid "Vault configuration error."
+msgstr "Errore di configurazione vault."
+
+#: includes/class-rest-api.php:436 includes/class-rest-api.php:502
+msgid "Encryption error."
+msgstr "Errore di cifratura."
+
+#: includes/class-rest-api.php:658 includes/class-rest-api.php:705
+#: includes/class-rest-api.php:730 includes/class-rest-api.php:1009
+msgid "Customer not found."
+msgstr "Cliente non trovato."
+
+#: includes/class-rest-api.php:676 includes/class-rest-api.php:789
+#: includes/class-rest-api.php:925
+msgid "Title is required."
+msgstr "Il titolo è obbligatorio."
+
+#: includes/class-rest-api.php:771 includes/class-rest-api.php:818
+#: includes/class-rest-api.php:843 includes/class-rest-api.php:1045
+msgid "Service not found."
+msgstr "Servizio non trovato."
+
+#: includes/class-rest-api.php:907 includes/class-rest-api.php:956
+#: includes/class-rest-api.php:989 includes/class-rest-api.php:1097
+msgid "Work not found."
+msgstr "Lavoro non trovato."
+
+#: includes/class-rest-api.php:1029 includes/class-rest-api.php:1081
+#, php-format
+msgid "Linked to %d work: %s"
+msgid_plural "Linked to %d works: %s"
+msgstr[0] "Collegato a %d lavoro: %s"
+msgstr[1] "Collegato a %d lavori: %s"
+
+#: src/src/components/Layout.jsx:14
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: src/src/components/Layout.jsx:21
+msgid "Kanban"
+msgstr "Kanban"
+
+#: src/src/components/Layout.jsx:22
+msgid "Analytics"
+msgstr "Analisi"
+
+#: src/src/components/Layout.jsx:23
+msgid "Calendar"
+msgstr "Calendario"
+
+#: src/src/components/Layout.jsx:24
+msgid "Collaborators"
+msgstr "Collaboratori"
+
+#: src/src/components/Layout.jsx:25
+msgid "Products"
+msgstr "Prodotti"
+
+#: src/src/components/Layout.jsx:26
+msgid "Suppliers"
+msgstr "Fornitori"
+
+#: src/src/components/Layout.jsx:68
+msgid "Pro"
+msgstr "Pro"
+
+#: src/src/components/Layout.jsx:104
+msgid "Settings"
+msgstr "Impostazioni"
+
+#: src/src/components/Layout.jsx:112
+msgid "Lock Vault"
+msgstr "Blocca Vault"
+
+#: src/src/features/customers/CustomerForm.jsx:40
+msgid "Unable to check references. Please try again."
+msgstr "Impossibile verificare i riferimenti. Riprova."
+
+#: src/src/features/customers/CustomerForm.jsx:132
+msgid "e.g. Elisa & Edoardo"
+msgstr "es. Elisa & Edoardo"
+
+#: src/src/features/customers/CustomerForm.jsx:134
+msgid "Title is required"
+msgstr "Il titolo è obbligatorio"
+
+#: src/src/features/customers/CustomerForm.jsx:151
+msgid "An error occurred. Please try again."
+msgstr "Si è verificato un errore. Riprova."
+
+#: src/src/features/customers/CustomerForm.jsx:160
+msgid "Saving..."
+msgstr "Salvataggio..."
+
+#: src/src/features/customers/CustomerForm.jsx:160
+msgid "Update Customer"
+msgstr "Aggiorna cliente"
+
+#: src/src/features/customers/CustomerForm.jsx:160
+msgid "Create Customer"
+msgstr "Crea cliente"
+
+#: src/src/features/customers/CustomerForm.jsx:167
+msgid "Cancel"
+msgstr "Annulla"
+
+#: src/src/features/customers/CustomerForm.jsx:177
+msgid "Delete this customer? This action cannot be undone."
+msgstr "Eliminare questo cliente? Questa azione non può essere annullata."
+
+#: src/src/features/customers/CustomerForm.jsx:179
+msgid "Cannot Delete"
+msgstr "Impossibile eliminare"
+
+#: src/src/features/customers/CustomerForm.jsx:182
+msgid "OK"
+msgstr "OK"
+
+#: src/src/features/customers/CustomerList.jsx:41
+msgid "Main Contact"
+msgstr "Contatto principale"
+
+#: src/src/features/customers/CustomerList.jsx:78
+msgid "Actions"
+msgstr "Azioni"
+
+#: src/src/features/customers/CustomerList.jsx:85
+msgid "Edit customer"
+msgstr "Modifica cliente"
+
+#: src/src/features/customers/CustomerList.jsx:88
+msgid "Edit"
+msgstr "Modifica"
+
+#: src/src/features/customers/CustomerList.jsx:102
+msgid "Add Customer"
+msgstr "Aggiungi cliente"
+
+#: src/src/features/customers/CustomerList.jsx:112
+msgid "Search customers..."
+msgstr "Cerca clienti..."
+
+#: src/src/features/customers/CustomerList.jsx:125
+msgid "No customers found. Add your first customer."
+msgstr "Nessun cliente trovato. Aggiungi il primo cliente."
+
+#: src/src/features/customers/PeopleRepeater.jsx:53
+msgid "Person"
+msgstr "Persona"
+
+#: src/src/features/customers/PeopleRepeater.jsx:71
+msgid "Remove person"
+msgstr "Rimuovi persona"
+
+#: src/src/features/customers/PeopleRepeater.jsx:88
+msgid "First name"
+msgstr "Nome"
+
+#: src/src/features/customers/PeopleRepeater.jsx:100
+msgid "Last name"
+msgstr "Cognome"
+
+#: src/src/features/customers/PeopleRepeater.jsx:181
+msgid "Add Person"
+msgstr "Aggiungi persona"
+
+#: src/src/features/dashboard/Dashboard.jsx:122
+msgid "Date"
+msgstr "Data"
+
+#: src/src/features/dashboard/Dashboard.jsx:132
+msgid "Revenue"
+msgstr "Ricavi"
+
+#: src/src/features/dashboard/Dashboard.jsx:157
+msgid "Works This Year"
+msgstr "Lavori quest'anno"
+
+#: src/src/features/dashboard/Dashboard.jsx:159
+msgid "Year"
+msgstr "Anno"
+
+#: src/src/features/dashboard/Dashboard.jsx:162
+msgid "Revenue This Year"
+msgstr "Ricavi quest'anno"
+
+#: src/src/features/dashboard/Dashboard.jsx:164
+msgid "From paid installments"
+msgstr "Da rate pagate"
+
+#: src/src/features/dashboard/Dashboard.jsx:167
+msgid "Unpaid Balance"
+msgstr "Saldo non pagato"
+
+#: src/src/features/dashboard/Dashboard.jsx:169
+msgid "All works combined"
+msgstr "Tutti i lavori combinati"
+
+#: src/src/features/dashboard/Dashboard.jsx:172
+msgid "Coupon vs Default Revenue"
+msgstr "Ricavi buoni sconto vs standard"
+
+#: src/src/features/dashboard/Dashboard.jsx:174
+msgid "coupon"
+msgstr "buono sconto"
+
+#: src/src/features/dashboard/Dashboard.jsx:174
+msgid "default"
+msgstr "predefinito"
+
+#: src/src/features/dashboard/Dashboard.jsx:181
+msgid "Next Upcoming Works"
+msgstr "Prossimi lavori"
+
+#: src/src/features/dashboard/Dashboard.jsx:184
+msgid "No upcoming events scheduled."
+msgstr "Nessun evento in programma."
+
+#: src/src/features/dashboard/Dashboard.jsx:189
+msgid "No upcoming events."
+msgstr "Nessun evento in arrivo."
+
+#: src/src/features/services/ServiceForm.jsx:110
+msgid "e.g. Wedding Photography"
+msgstr "es. Fotografia matrimonio"
+
+#: src/src/features/services/ServiceForm.jsx:129
+msgid "Price must be 0 or more"
+msgstr "Il prezzo deve essere 0 o superiore"
+
+#: src/src/features/services/ServiceForm.jsx:138
+msgid "Optional notes about this service..."
+msgstr "Note opzionali su questo servizio..."
+
+#: src/src/features/services/ServiceForm.jsx:155
+msgid "Update Service"
+msgstr "Aggiorna servizio"
+
+#: src/src/features/services/ServiceForm.jsx:156
+msgid "Create Service"
+msgstr "Crea servizio"
+
+#: src/src/features/services/ServiceForm.jsx:173
+msgid "Delete this service? This action cannot be undone."
+msgstr "Eliminare questo servizio? Questa azione non può essere annullata."
+
+#: src/src/features/services/ServiceList.jsx:32
+msgid "Name"
+msgstr "Nome"
+
+#: src/src/features/services/ServiceList.jsx:39
+msgid "Base Price"
+msgstr "Prezzo base"
+
+#: src/src/features/services/ServiceList.jsx:76
+msgid "Add Service"
+msgstr "Aggiungi servizio"
+
+#: src/src/features/services/ServiceList.jsx:89
+msgid "No services found. Add your first service."
+msgstr "Nessun servizio trovato. Aggiungi il primo servizio."
+
+#: src/src/features/settings/SettingsPage.jsx:57
+msgid "Loading…"
+msgstr "Caricamento…"
+
+#: src/src/features/settings/SettingsPage.jsx:66
+msgid "Vault configured"
+msgstr "Vault configurato"
+
+#: src/src/features/settings/SettingsPage.jsx:66
+msgid "Not configured"
+msgstr "Non configurato"
+
+#: src/src/features/settings/SettingsPage.jsx:73
+msgid "Unlocked"
+msgstr "Sbloccato"
+
+#: src/src/features/settings/SettingsPage.jsx:73
+msgid "Locked"
+msgstr "Bloccato"
+
+#: src/src/features/settings/SettingsPage.jsx:107
+msgid "New passwords do not match."
+msgstr "Le nuove password non corrispondono."
+
+#: src/src/features/settings/SettingsPage.jsx:111
+msgid "New password must be at least 8 characters."
+msgstr "La nuova password deve essere di almeno 8 caratteri."
+
+#: src/src/features/settings/SettingsPage.jsx:122
+msgid "Current Password"
+msgstr "Password attuale"
+
+#: src/src/features/settings/SettingsPage.jsx:125
+msgid "Current OTP Code"
+msgstr "Codice OTP attuale"
+
+#: src/src/features/settings/SettingsPage.jsx:128
+msgid "New Password"
+msgstr "Nuova password"
+
+#: src/src/features/settings/SettingsPage.jsx:131
+msgid "Confirm New Password"
+msgstr "Conferma nuova password"
+
+#: src/src/features/settings/SettingsPage.jsx:136
+msgid "Password changed successfully."
+msgstr "Password cambiata con successo."
+
+#: src/src/features/settings/SettingsPage.jsx:139
+msgid "Saving…"
+msgstr "Salvataggio…"
+
+#: src/src/features/settings/SettingsPage.jsx:139
+msgid "Change Password"
+msgstr "Cambia password"
+
+#: src/src/features/settings/SettingsPage.jsx:170
+msgid "Password and OTP code are required."
+msgstr "Password e codice OTP sono obbligatori."
+
+#: src/src/features/settings/SettingsPage.jsx:180
+msgid "Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity."
+msgstr "Usa questo se hai perso l'accesso all'app autenticatore. Avrai bisogno della password del vault e del codice OTP per confermare la tua identità."
+
+#: src/src/features/settings/SettingsPage.jsx:184
+msgid "New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm."
+msgstr "Nuovo codice autenticatore generato. Scansiona il codice QR con l'app, poi sblocca il vault per confermare."
+
+#: src/src/features/settings/SettingsPage.jsx:189
+msgid "TOTP QR Code"
+msgstr "Codice QR TOTP"
+
+#: src/src/features/settings/SettingsPage.jsx:195
+msgid "Or enter this key manually:"
+msgstr "O inserisci questa chiave manualmente:"
+
+#: src/src/features/settings/SettingsPage.jsx:201
+msgid "Reset again"
+msgstr "Reimposta di nuovo"
+
+#: src/src/features/settings/SettingsPage.jsx:208
+msgid "Vault Password"
+msgstr "Password vault"
+
+#: src/src/features/settings/SettingsPage.jsx:218
+msgid "Generating…"
+msgstr "Generazione…"
+
+#: src/src/features/settings/SettingsPage.jsx:218
+msgid "Generate New Code"
+msgstr "Genera nuovo codice"
+
+#: src/src/features/settings/SettingsPage.jsx:262
+msgid "Fotonic Pro License"
+msgstr "Licenza Fotonic Pro"
+
+#: src/src/features/settings/SettingsPage.jsx:267
+msgid "Vault"
+msgstr "Vault"
+
+#: src/src/features/settings/SettingsPage.jsx:273
+msgid "Change Vault Password"
+msgstr "Cambia password vault"
+
+#: src/src/features/settings/SettingsPage.jsx:276
+msgid "Reset Authenticator App"
+msgstr "Reimposta app autenticatore"
+
+#: src/src/features/settings/SettingsPage.jsx:285
+msgid "Enable the Vault to encrypt sensitive customer data (names, emails, addresses). The key is protected by a password + one-time code from your authenticator app."
+msgstr "Abilita il Vault per cifrare i dati sensibili dei clienti (nomi, email, indirizzi). La chiave è protetta da una password + codice monouso dell'app autenticatore."
+
+#: src/src/features/settings/SettingsPage.jsx:293
+msgid "Set Up Vault"
+msgstr "Configura vault"
+
+#: src/src/features/settings/SettingsPage.jsx:301
+msgid "Google Calendar"
+msgstr "Google Calendar"
+
+#: src/src/features/settings/SettingsPage.jsx:307
+msgid "Email Notifications"
+msgstr "Notifiche email"
+
+#: src/src/features/settings/SettingsPage.jsx:314
+msgid "Reload the page to load email settings."
+msgstr "Ricarica la pagina per caricare le impostazioni email."
+
+#: src/src/features/vault/VaultGate.jsx:29
+msgid "Could not reach the vault. Please reload the page."
+msgstr "Impossibile raggiungere il vault. Ricarica la pagina."
+
+#: src/src/features/vault/VaultLock.jsx:29
+msgid "Invalid password or code"
+msgstr "Password o codice non valido"
+
+#: src/src/features/vault/VaultLock.jsx:41
+msgid "Vault Locked"
+msgstr "Vault bloccato"
+
+#: src/src/features/vault/VaultLock.jsx:43
+msgid "Enter your vault password and authenticator code to access your data."
+msgstr "Inserisci la password del vault e il codice autenticatore per accedere ai dati."
+
+#: src/src/features/vault/VaultLock.jsx:59
+msgid "Password is required"
+msgstr "La password è obbligatoria"
+
+#: src/src/features/vault/VaultLock.jsx:64
+msgid "Authenticator Code"
+msgstr "Codice autenticatore"
+
+#: src/src/features/vault/VaultLock.jsx:78
+msgid "Code is required"
+msgstr "Il codice è obbligatorio"
+
+#: src/src/features/vault/VaultLock.jsx:79
+msgid "Enter a 6-digit code"
+msgstr "Inserisci un codice a 6 cifre"
+
+#: src/src/features/vault/VaultLock.jsx:94
+msgid "Unlock Vault"
+msgstr "Sblocca vault"
+
+#: src/src/features/vault/VaultSetup.jsx:84
+msgid "Set Vault Password"
+msgstr "Imposta password vault"
+
+#: src/src/features/vault/VaultSetup.jsx:86
+msgid "Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault."
+msgstr "Scegli una password robusta per proteggere i tuoi dati cifrati. Ti servirà ogni volta che sblocchi il vault."
+
+#: src/src/features/vault/VaultSetup.jsx:90
+msgid "Password"
+msgstr "Password"
+
+#: src/src/features/vault/VaultSetup.jsx:102
+msgid "Minimum 8 characters"
+msgstr "Minimo 8 caratteri"
+
+#: src/src/features/vault/VaultSetup.jsx:108
+msgid "Confirm Password"
+msgstr "Conferma password"
+
+#: src/src/features/vault/VaultSetup.jsx:119
+msgid "Please confirm your password"
+msgstr "Conferma la password"
+
+#: src/src/features/vault/VaultSetup.jsx:121
+msgid "Passwords do not match"
+msgstr "Le password non corrispondono"
+
+#: src/src/features/vault/VaultSetup.jsx:128
+msgid "Next"
+msgstr "Avanti"
+
+#: src/src/features/vault/VaultSetup.jsx:164
+msgid "Setting up vault…"
+msgstr "Configurazione vault in corso…"
+
+#: src/src/features/vault/VaultSetup.jsx:174
+msgid "Try again"
+msgstr "Riprova"
+
+#: src/src/features/vault/VaultSetup.jsx:182
+msgid "Scan QR Code"
+msgstr "Scansiona il codice QR"
+
+#: src/src/features/vault/VaultSetup.jsx:184
+msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below."
+msgstr "Apri l'app autenticatore (Google Authenticator, Authy, ecc.) e scansiona il codice QR qui sotto."
+
+#: src/src/features/vault/VaultSetup.jsx:197
+msgid "Manual entry key:"
+msgstr "Chiave di inserimento manuale:"
+
+#: src/src/features/vault/VaultSetup.jsx:206
+msgid "I've scanned the code — Next"
+msgstr "Ho scansionato il codice — Avanti"
+
+#: src/src/features/vault/VaultSetup.jsx:233
+msgid "Invalid code — check your authenticator app"
+msgstr "Codice non valido — verifica l'app autenticatore"
+
+#: src/src/features/vault/VaultSetup.jsx:240
+msgid "Confirm Authenticator Code"
+msgstr "Conferma il codice autenticatore"
+
+#: src/src/features/vault/VaultSetup.jsx:242
+msgid "Enter the 6-digit code shown in your authenticator app to complete setup."
+msgstr "Inserisci il codice a 6 cifre mostrato nell'app autenticatore per completare la configurazione."
+
+#: src/src/features/vault/VaultSetup.jsx:246
+msgid "One-Time Code"
+msgstr "Codice monouso"
+
+#: src/src/features/vault/VaultSetup.jsx:272
+msgid "Verify & Unlock"
+msgstr "Verifica e sblocca"
+
+#: src/src/features/vault/VaultSetup.jsx:303
+msgid "Vault Setup"
+msgstr "Configurazione vault"
+
+#: src/src/features/vault/VaultSetup.jsx:304
+msgid "Step"
+msgstr "Passaggio"
+
+#: src/src/features/vault/VaultSetup.jsx:304
+msgid "of"
+msgstr "di"
+
+#: src/src/features/works/EventAddressesRepeater.jsx:62
+msgid "Remove address"
+msgstr "Rimuovi indirizzo"
+
+#: src/src/features/works/EventAddressesRepeater.jsx:76
+msgid "Add Address"
+msgstr "Aggiungi indirizzo"
+
+#: src/src/features/works/FilesSection.jsx:37
+msgid "These files exceed the 10 MB limit and were skipped:"
+msgstr "Questi file superano il limite di 10 MB e sono stati saltati:"
+
+#: src/src/features/works/FilesSection.jsx:64
+msgid "Filename"
+msgstr "Nome file"
+
+#: src/src/features/works/FilesSection.jsx:81
+msgid "Download file"
+msgstr "Scarica file"
+
+#: src/src/features/works/FilesSection.jsx:89
+msgid "Remove file"
+msgstr "Rimuovi file"
+
+#: src/src/features/works/FilesSection.jsx:101
+msgid "No files attached."
+msgstr "Nessun file allegato."
+
+#: src/src/features/works/FilesSection.jsx:107
+msgid "Upload File"
+msgstr "Carica file"
+
+#: src/src/features/works/FilesSection.jsx:110
+msgid "Images, PDF, DOC, DOCX · max 10 MB each"
+msgstr "Immagini, PDF, DOC, DOCX · max 10 MB ciascuno"
+
+#: src/src/features/works/InstallmentsRepeater.jsx:80
+msgid "e.g. Deposit"
+msgstr "es. Acconto"
+
+#: src/src/features/works/InstallmentsRepeater.jsx:113
+msgid "Remove installment"
+msgstr "Rimuovi rata"
+
+#: src/src/features/works/InstallmentsRepeater.jsx:127
+msgid "Add Installment"
+msgstr "Aggiungi rata"
+
+#: src/src/features/works/ServicesRepeater.jsx:46
+msgid "Price (€)"
+msgstr "Prezzo (€)"
+
+#: src/src/features/works/ServicesRepeater.jsx:60
+msgid "— Select service —"
+msgstr "— Seleziona servizio —"
+
+#: src/src/features/works/ServicesRepeater.jsx:85
+msgid "Optional notes..."
+msgstr "Note opzionali..."
+
+#: src/src/features/works/ServicesRepeater.jsx:93
+msgid "Remove service"
+msgstr "Rimuovi servizio"
+
+#: src/src/features/works/WorkForm.jsx:39
+msgid "Choose the event card color in the calendar view."
+msgstr "Scegli il colore della scheda evento nella vista calendario."
+
+#: src/src/features/works/WorkForm.jsx:218
+msgid "Event Details"
+msgstr "Dettagli evento"
+
+#: src/src/features/works/WorkForm.jsx:230
+msgid "e.g. Matrimonio Rossi"
+msgstr "es. Matrimonio Rossi"
+
+#: src/src/features/works/WorkForm.jsx:295
+msgid "Calendar Color"
+msgstr "Colore calendario"
+
+#: src/src/features/works/WorkForm.jsx:305
+msgid "Services Included"
+msgstr "Servizi inclusi"
+
+#: src/src/features/works/WorkForm.jsx:321
+msgid "Files"
+msgstr "File"
+
+#: src/src/features/works/WorkForm.jsx:345
+msgid "Payments"
+msgstr "Pagamenti"
+
+#: src/src/features/works/WorkForm.jsx:375
+msgid "Scheduled Notifications"
+msgstr "Notifiche programmate"
+
+#: src/src/features/works/WorkForm.jsx:391
+msgid "Update Work"
+msgstr "Aggiorna lavoro"
+
+#: src/src/features/works/WorkForm.jsx:392
+msgid "Create Work"
+msgstr "Crea lavoro"
+
+#: src/src/features/works/WorkForm.jsx:409
+msgid "Delete this work? This action cannot be undone."
+msgstr "Eliminare questo lavoro? Questa azione non può essere annullata."
+
+#: src/src/features/works/WorkList.jsx:74
+msgid "Total Price"
+msgstr "Prezzo totale"
+
+#: src/src/features/works/WorkList.jsx:102
+msgid "Add Work"
+msgstr "Aggiungi lavoro"
+
+#: src/src/features/works/WorkList.jsx:112
+msgid "Search works..."
+msgstr "Cerca lavori..."
+
+#: src/src/features/works/WorkList.jsx:120
+msgid "All Statuses"
+msgstr "Tutti gli stati"
+
+#: src/src/features/works/WorkList.jsx:122
+msgid "Partial"
+msgstr "Parziale"
+
+#: src/src/features/works/WorkList.jsx:135
+msgid "No works found. Add your first work."
+msgstr "Nessun lavoro trovato. Aggiungi il primo lavoro."
+

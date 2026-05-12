@@ -6,6 +6,7 @@ import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Spinner from '../../components/Spinner'
+import { __ } from '../../utils/i18n'
 
 function useDebounce(value, delay = 300) {
   const [debounced, setDebounced] = useState(value)
@@ -30,14 +31,14 @@ export default function CustomerList() {
   const columns = [
     {
       key: 'title',
-      label: 'Title',
+      label: __('Title'),
       render: (row) => (
         <span className="font-medium text-gray-900">{row.title}</span>
       ),
     },
     {
       key: 'main_contact',
-      label: 'Main Contact',
+      label: __('Main Contact'),
       render: (row) => {
         const main = (row.people ?? []).find((p) => p.is_main)
         if (!main) return <span className="text-gray-400">—</span>
@@ -50,7 +51,7 @@ export default function CustomerList() {
     },
     {
       key: 'email',
-      label: 'Email',
+      label: __('Email'),
       render: (row) => {
         const main = (row.people ?? []).find((p) => p.is_main)
         return main?.email ? (
@@ -62,7 +63,7 @@ export default function CustomerList() {
     },
     {
       key: 'phone',
-      label: 'Phone',
+      label: __('Phone'),
       render: (row) => {
         const main = (row.people ?? []).find((p) => p.is_main)
         return main?.phone ? (
@@ -74,17 +75,17 @@ export default function CustomerList() {
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: __('Actions'),
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => navigate(`/customers/${row.id}`)}
-            aria-label="Edit customer"
+            aria-label={__('Edit customer')}
           >
             <Pencil size={14} />
-            Edit
+            {__('Edit')}
           </Button>
         </div>
       ),
@@ -94,11 +95,11 @@ export default function CustomerList() {
   return (
     <div className="p-6">
       <PageHeader
-        title="Customers"
+        title={__('Customers')}
         action={
           <Button onClick={() => navigate('/customers/new')}>
             <UserPlus size={15} />
-            Add Customer
+            {__('Add Customer')}
           </Button>
         }
       />
@@ -108,7 +109,7 @@ export default function CustomerList() {
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search customers..."
+          placeholder={__('Search customers...')}
           className="w-full max-w-sm rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
@@ -121,7 +122,7 @@ export default function CustomerList() {
         <Table
           columns={columns}
           data={customers}
-          emptyMessage="No customers found. Add your first customer."
+          emptyMessage={__('No customers found. Add your first customer.')}
         />
       )}
 

@@ -72,10 +72,12 @@ class Fotonic_Admin_Page {
         }
 
         wp_localize_script( 'fotonic-app-js', 'FotonicApp', [
-            'restUrl'  => rest_url( 'fotonic/v1/' ),
-            'nonce'    => wp_create_nonce( 'wp_rest' ),
-            'isPro'    => $pro_installed,
-            'locale'   => get_locale(),
+            'restUrl'    => rest_url( 'fotonic/v1/' ),
+            'nonce'      => wp_create_nonce( 'wp_rest' ),
+            'isPro'      => $pro_installed,
+            'version'    => FOTONIC_VERSION,
+            'proVersion' => $pro_installed ? FOTO_PRO_VERSION : null,
+            'locale'     => get_locale(),
             'features' => [
                 'kanban'        => $license_valid,
                 'collaborators' => $license_valid,

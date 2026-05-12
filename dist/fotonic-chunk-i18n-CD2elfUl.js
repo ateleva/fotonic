@@ -1,1 +1,0 @@
-function e(e){return typeof window<`u`&&window.wp&&window.wp.i18n?window.wp.i18n.__(e,`fotonic`):e}export{e as t};

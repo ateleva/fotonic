@@ -5,6 +5,7 @@ import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Spinner from '../../components/Spinner'
+import { __ } from '../../utils/i18n'
 
 function formatPrice(amount) {
   return '€' + Number(amount || 0).toLocaleString('it-IT', {
@@ -28,28 +29,28 @@ export default function ServiceList() {
   const columns = [
     {
       key: 'title',
-      label: 'Name',
+      label: __('Name'),
       render: (row) => (
         <span className="font-medium text-gray-900">{row.title}</span>
       ),
     },
     {
       key: 'base_price',
-      label: 'Base Price',
+      label: __('Base Price'),
       render: (row) => (
         <span className="text-gray-700">{formatPrice(row.base_price)}</span>
       ),
     },
     {
       key: 'notes',
-      label: 'Notes',
+      label: __('Notes'),
       render: (row) => (
         <span className="text-gray-500">{truncate(row.notes)}</span>
       ),
     },
     {
       key: 'actions',
-      label: 'Actions',
+      label: __('Actions'),
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
@@ -58,7 +59,7 @@ export default function ServiceList() {
             onClick={() => navigate(`/services/${row.id}`)}
           >
             <Pencil size={14} />
-            Edit
+            {__('Edit')}
           </Button>
         </div>
       ),
@@ -68,11 +69,11 @@ export default function ServiceList() {
   return (
     <div className="p-6">
       <PageHeader
-        title="Services"
+        title={__('Services')}
         action={
           <Button onClick={() => navigate('/services/new')}>
             <PlusCircle size={15} />
-            Add Service
+            {__('Add Service')}
           </Button>
         }
       />
@@ -85,7 +86,7 @@ export default function ServiceList() {
         <Table
           columns={columns}
           data={services}
-          emptyMessage="No services found. Add your first service."
+          emptyMessage={__('No services found. Add your first service.')}
         />
       )}
 

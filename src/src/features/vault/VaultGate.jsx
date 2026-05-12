@@ -4,6 +4,7 @@ import { apiFetch } from '../../api/client'
 import Spinner from '../../components/Spinner'
 import VaultSetup from './VaultSetup'
 import VaultLock from './VaultLock'
+import { __ } from '../../utils/i18n'
 
 export default function VaultGate({ router }) {
   const { data, isLoading, isError } = useQuery({
@@ -25,7 +26,7 @@ export default function VaultGate({ router }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <p className="text-sm text-red-600">
-          Could not reach the vault. Please reload the page.
+          {__('Could not reach the vault. Please reload the page.')}
         </p>
       </div>
     )

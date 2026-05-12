@@ -5,6 +5,7 @@ import { apiFetch } from '../../api/client'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
+import { __ } from '../../utils/i18n'
 
 // --- base32 encoding (RFC 4648, no external lib) ---
 const BASE32_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
@@ -80,13 +81,13 @@ function StepPassword({ onNext }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">Set Vault Password</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Set Vault Password')}</h2>
       <p className="text-sm text-gray-500">
-        Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault.
+        {__('Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault.')}
       </p>
 
       <FormField
-        label="Password"
+        label={__('Password')}
         required
         htmlFor="password"
         error={errors.password?.message}
@@ -97,14 +98,14 @@ function StepPassword({ onNext }) {
           autoComplete="new-password"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('password', {
-            required: 'Password is required',
-            minLength: { value: 8, message: 'Minimum 8 characters' },
+            required: __('Password is required'),
+            minLength: { value: 8, message: __('Minimum 8 characters') },
           })}
         />
       </FormField>
 
       <FormField
-        label="Confirm Password"
+        label={__('Confirm Password')}
         required
         htmlFor="confirm"
         error={errors.confirm?.message}
@@ -115,16 +116,16 @@ function StepPassword({ onNext }) {
           autoComplete="new-password"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('confirm', {
-            required: 'Please confirm your password',
+            required: __('Please confirm your password'),
             validate: (val) =>
-              val === watch('password') || 'Passwords do not match',
+              val === watch('password') || __('Passwords do not match'),
           })}
         />
       </FormField>
 
       <div className="pt-2">
         <Button type="submit" variant="primary" className="w-full">
-          Next
+          {__('Next')}
         </Button>
       </div>
     </form>
@@ -160,7 +161,7 @@ function StepQR({ password, totpSecret, onNext }) {
     return (
       <div className="flex flex-col items-center gap-4 py-8">
         <Spinner size="lg" />
-        <p className="text-sm text-gray-500">Setting up vault…</p>
+        <p className="text-sm text-gray-500">{__('Setting up vault…')}</p>
       </div>
     )
   }
@@ -170,7 +171,7 @@ function StepQR({ password, totpSecret, onNext }) {
       <div className="space-y-4">
         <p className="text-sm text-red-600">{error}</p>
         <Button variant="secondary" onClick={() => window.location.reload()}>
-          Try again
+          {__('Try again')}
         </Button>
       </div>
     )
@@ -178,22 +179,22 @@ function StepQR({ password, totpSecret, onNext }) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">Scan QR Code</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Scan QR Code')}</h2>
       <p className="text-sm text-gray-500">
-        Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below.
+        {__('Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below.')}
       </p>
 
       {qrUri && (
         <div className="flex flex-col items-center gap-3">
           <img
             src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUri)}`}
-            alt="TOTP QR Code"
+            alt={__('TOTP QR Code')}
             width={200}
             height={200}
             className="rounded-md border border-gray-200 p-2"
           />
           <div className="w-full rounded-md bg-gray-50 border border-gray-200 p-3">
-            <p className="text-xs text-gray-500 mb-1">Manual entry key:</p>
+            <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:')}</p>
             <p className="text-sm font-mono font-semibold text-gray-800 break-all">
               {totpSecret}
             </p>
@@ -202,7 +203,7 @@ function StepQR({ password, totpSecret, onNext }) {
       )}
 
       <Button variant="primary" className="w-full" onClick={onNext}>
-        I've scanned the code — Next
+        {__("I've scanned the code — Next")}
       </Button>
     </div>
   )
@@ -229,20 +230,20 @@ function StepOTP({ password, onSuccess }) {
     } catch (err) {
       setError('otp', {
         type: 'manual',
-        message: 'Invalid code — check your authenticator app',
+        message: __('Invalid code — check your authenticator app'),
       })
     }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">Confirm Authenticator Code</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Confirm Authenticator Code')}</h2>
       <p className="text-sm text-gray-500">
-        Enter the 6-digit code shown in your authenticator app to complete setup.
+        {__('Enter the 6-digit code shown in your authenticator app to complete setup.')}
       </p>
 
       <FormField
-        label="One-Time Code"
+        label={__('One-Time Code')}
         required
         htmlFor="otp"
         error={errors.otp?.message}
@@ -256,8 +257,8 @@ function StepOTP({ password, onSuccess }) {
           placeholder="000000"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('otp', {
-            required: 'Code is required',
-            pattern: { value: /^\d{6}$/, message: 'Enter a 6-digit code' },
+            required: __('Code is required'),
+            pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code') },
           })}
         />
       </FormField>
@@ -268,7 +269,7 @@ function StepOTP({ password, onSuccess }) {
         className="w-full"
         disabled={isSubmitting}
       >
-        {isSubmitting ? <Spinner size="sm" /> : 'Verify & Unlock'}
+        {isSubmitting ? <Spinner size="sm" /> : __('Verify & Unlock')}
       </Button>
     </form>
   )
@@ -299,8 +300,8 @@ export default function VaultSetup() {
       <div className="bg-white rounded-xl shadow-md w-full max-w-md p-8">
         <div className="text-center mb-6">
           <span className="text-3xl">🔐</span>
-          <h1 className="mt-2 text-xl font-bold text-gray-900">Vault Setup</h1>
-          <p className="text-xs text-gray-400 mt-1">Step {step} of 3</p>
+          <h1 className="mt-2 text-xl font-bold text-gray-900">{__('Vault Setup')}</h1>
+          <p className="text-xs text-gray-400 mt-1">{__('Step')} {step} {__('of')} 3</p>
         </div>
 
         <StepIndicator current={step} total={3} />

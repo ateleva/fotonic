@@ -107,7 +107,7 @@ export default function Dashboard() {
   const upcomingColumns = [
     {
       key: 'title',
-      label: __('Title', 'fotonic'),
+      label: __('Title'),
       render: (row) => (
         <button
           className="text-indigo-600 hover:underline font-medium text-left"
@@ -119,22 +119,22 @@ export default function Dashboard() {
     },
     {
       key: 'event_date',
-      label: __('Date', 'fotonic'),
+      label: __('Date'),
       render: (row) => formatDate(row.event_date),
     },
     {
       key: 'customer',
-      label: __('Customer', 'fotonic'),
+      label: __('Customer'),
       render: (row) => row.customer_title ?? <span className="text-gray-400">—</span>,
     },
     {
       key: 'revenue',
-      label: __('Revenue', 'fotonic'),
+      label: __('Revenue'),
       render: (row) => formatPrice(workRevenue(row)),
     },
     {
       key: 'payment_status',
-      label: __('Payment Status', 'fotonic'),
+      label: __('Payment Status'),
       render: (row) => <Badge status={row.payment_status ?? 'unpaid'} />,
     },
   ]
@@ -149,44 +149,44 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 space-y-8">
-      <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
+      <h1 className="text-xl font-semibold text-gray-900">{__('Dashboard')}</h1>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          label={__('Works This Year', 'fotonic')}
+          label={__('Works This Year')}
           value={stats.totalWorksThisYear}
-          sub={`Year ${currentYear}`}
+          sub={`${__('Year')} ${currentYear}`}
         />
         <StatCard
-          label={__('Revenue This Year', 'fotonic')}
+          label={__('Revenue This Year')}
           value={formatPrice(stats.revenueThisYear)}
-          sub={__('From paid installments', 'fotonic')}
+          sub={__('From paid installments')}
         />
         <StatCard
-          label={__('Unpaid Balance', 'fotonic')}
+          label={__('Unpaid Balance')}
           value={formatPrice(stats.unpaidBalance)}
-          sub={__('All works combined', 'fotonic')}
+          sub={__('All works combined')}
         />
         <StatCard
-          label={__('Coupon vs Default Revenue', 'fotonic')}
+          label={__('Coupon vs Default Revenue')}
           value={`${stats.couponPct}% / ${stats.defaultPct}%`}
-          sub={`${formatPrice(stats.couponRevenue)} coupon · ${formatPrice(stats.defaultRevenue)} default`}
+          sub={`${formatPrice(stats.couponRevenue)} ${__('coupon')} · ${formatPrice(stats.defaultRevenue)} ${__('default')}`}
         />
       </div>
 
       {/* Next 5 Upcoming */}
       <div>
         <h2 className="text-base font-semibold text-gray-800 mb-3">
-          {__('Next Upcoming Works', 'fotonic')}
+          {__('Next Upcoming Works')}
         </h2>
         {stats.next5.length === 0 ? (
-          <p className="text-sm text-gray-400">{__('No upcoming events scheduled.', 'fotonic')}</p>
+          <p className="text-sm text-gray-400">{__('No upcoming events scheduled.')}</p>
         ) : (
           <Table
             columns={upcomingColumns}
             data={stats.next5}
-            emptyMessage="No upcoming events."
+            emptyMessage={__('No upcoming events.')}
           />
         )}
       </div>
