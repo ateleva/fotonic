@@ -1142,16 +1142,17 @@ class Fotonic_REST_API {
 			$tin                = sanitize_text_field( $person['tin'] ?? '' );
 
 			if ( $encrypt ) {
-				// Random-IV encryption for free-text PII.
-				$first_name         = Fotonic_Crypto::encrypt( $first_name,         $vault_key );
-				$last_name          = Fotonic_Crypto::encrypt( $last_name,          $vault_key );
-				$nationality        = Fotonic_Crypto::encrypt( $nationality,        $vault_key );
-				$instagram_username = Fotonic_Crypto::encrypt( $instagram_username, $vault_key );
-				$address            = Fotonic_Crypto::encrypt( $address,            $vault_key );
-				$tin                = Fotonic_Crypto::encrypt( $tin,                $vault_key );
+				// Random-IV encryption for free-text PII. Skip empty strings — encrypting
+				// empty produces a short ciphertext that bypasses looks_encrypted() checks.
+				if ( '' !== $first_name )         { $first_name         = Fotonic_Crypto::encrypt( $first_name,         $vault_key ); }
+				if ( '' !== $last_name )          { $last_name          = Fotonic_Crypto::encrypt( $last_name,          $vault_key ); }
+				if ( '' !== $nationality )        { $nationality        = Fotonic_Crypto::encrypt( $nationality,        $vault_key ); }
+				if ( '' !== $instagram_username ) { $instagram_username = Fotonic_Crypto::encrypt( $instagram_username, $vault_key ); }
+				if ( '' !== $address )            { $address            = Fotonic_Crypto::encrypt( $address,            $vault_key ); }
+				if ( '' !== $tin )                { $tin                = Fotonic_Crypto::encrypt( $tin,                $vault_key ); }
 				// Deterministic encryption for searchable fields.
-				$email = Fotonic_Crypto::deterministic_encrypt( $email, $vault_key );
-				$phone = Fotonic_Crypto::deterministic_encrypt( $phone, $vault_key );
+				if ( '' !== $email ) { $email = Fotonic_Crypto::deterministic_encrypt( $email, $vault_key ); }
+				if ( '' !== $phone ) { $phone = Fotonic_Crypto::deterministic_encrypt( $phone, $vault_key ); }
 			}
 
 			$sanitized[] = [
@@ -1580,11 +1581,9 @@ class Fotonic_REST_API {
 		// If decrypt returns empty string for a non-empty input, the data may be
 		// encrypted with a different key or be deterministic-encrypted; fall back.
 		if ( '' === $decrypted && '' !== $value ) {
-			// Try deterministic decrypt path (same function — decrypt handles both).
-			// Actually Fotonic_Crypto::decrypt works for both random-IV and det-enc
-			// because det-enc stores only ciphertext (no IV prefix), so it will
-			// return '' on failure. Return the raw value as a safe fallback.
-			return $value;
+			// Decrypt returned empty — either wrong key or the original plaintext was
+			// empty. Either way, return empty rather than leaking raw ciphertext.
+			return '';
 		}
 		return $decrypted;
 	}
@@ -1606,6 +1605,7 @@ class Fotonic_REST_API {
 		}
 		// Decoded length must be at least 16 bytes (IV) + 16 bytes (one AES block).
 		$decoded = base64_decode( $value, true );
-		return ( false !== $decoded && strlen( $decoded ) >= 32 );
+		// 16 bytes covers deterministic-encrypted fields (no IV prefix, one AES block).
+		return ( false !== $decoded && strlen( $decoded ) >= 16 );
 	}
 }
