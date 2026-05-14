@@ -112,7 +112,7 @@ export default function CustomerForm() {
 
   return (
     <>
-    <div className="p-6 max-w-2xl">
+    <div className="p-6 max-w-4xl">
       <PageHeader
         title={isEdit ? __('Edit Customer') : __('New Customer')}
         backTo="/customers"

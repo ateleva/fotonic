@@ -7,6 +7,7 @@ const emptyInstallment = () => ({
   amount: '',
   status: 'unpaid',
   type: 'default',
+  date: '',
 })
 
 export default function InstallmentsRepeater({ value = [], onChange }) {
@@ -50,6 +51,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-28">{__('Type')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Title')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Amount (€)')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Date')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-28">{__('Status')}</th>
                 <th className="px-3 py-2 w-10"></th>
               </tr>
@@ -89,6 +91,14 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                       onChange={(e) => updateRow(index, 'amount', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                       placeholder="0.00"
+                    />
+                  </td>
+                  <td className="px-3 py-2">
+                    <input
+                      type="date"
+                      value={row.date ?? ''}
+                      onChange={(e) => updateRow(index, 'date', e.target.value)}
+                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
                   </td>
                   <td className="px-3 py-2">

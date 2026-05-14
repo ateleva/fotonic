@@ -90,7 +90,7 @@ export default function ServiceForm() {
 
   return (
     <>
-    <div className="p-6 max-w-lg">
+    <div className="p-6 max-w-2xl">
       <PageHeader
         title={isEdit ? __('Edit Service') : __('New Service')}
         backTo="/services"

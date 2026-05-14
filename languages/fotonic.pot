@@ -1160,3 +1160,23 @@ msgstr ""
 #: src/src/features/works/WorkList.jsx:135
 msgid "No works found. Add your first work."
 msgstr ""
+
+#: src/src/components/Layout.jsx:39
+msgid "Collaborator Services"
+msgstr ""
+
+#: src/src/components/PageHeader.jsx:13
+msgid "← Back"
+msgstr ""
+
+#: src/src/components/PageHeader.jsx:24
+msgid "Delete"
+msgstr ""
+
+#: src/src/components/ConfirmDialog.jsx:10
+msgid "Are you sure you want to delete this item? This action cannot be undone."
+msgstr ""
+
+#: src/src/components/ConfirmDialog.jsx:10
+msgid "Confirm Delete"
+msgstr ""

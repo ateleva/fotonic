@@ -3,7 +3,7 @@ Contributors: ateleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,14 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 
 == Changelog ==
 
+= 1.2.0 =
+* Added collaborators repeater on Work edit form: assign collaborators with individual price and payment status per entry.
+* Added owner dropdown on Work edit form: select yourself or any collaborator as the work owner.
+* Added REST endpoint GET /collaborator-options for work owner and collaborator dropdowns.
+* Work REST API now saves collaborators[] and full owner type/id fields.
+* Added Collaborator Services nav item in sidebar (Pro feature).
+* Fixed: sticky layout shell with dynamic viewport height; sidebar and main content scroll independently.
+
 = 1.1.0 =
 * Added Quick Notes WYSIWYG field to Work edit screen, placed above the main notes editor.
 * Added Calendar Color picker (12-color palette) to Work edit screen; color syncs to Google Calendar when Pro integration is enabled.
@@ -143,6 +151,9 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Adds collaborators repeater and owner dropdown to Work edit form. No breaking changes to existing data.
 
 = 1.1.0 =
 Adds Quick Notes and Calendar Color fields to Works. Fotonic Pro gains task management, Calendar view, Google Calendar sync, and Google Tasks integration. No breaking changes to existing data.

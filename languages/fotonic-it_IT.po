@@ -1159,3 +1159,31 @@ msgstr "Parziale"
 msgid "No works found. Add your first work."
 msgstr "Nessun lavoro trovato. Aggiungi il primo lavoro."
 
+
+#: includes/class-meta-boxes.php
+msgid "Servizi"
+msgstr "Servizi"
+
+#: includes/class-meta-boxes.php
+msgid "Nessun servizio"
+msgstr "Nessun servizio"
+
+#: src/src/components/Layout.jsx:39
+msgid "Collaborator Services"
+msgstr "Servizi collaboratore"
+
+#: src/src/components/PageHeader.jsx:13
+msgid "← Back"
+msgstr "← Indietro"
+
+#: src/src/components/PageHeader.jsx:24
+msgid "Delete"
+msgstr "Elimina"
+
+#: src/src/components/ConfirmDialog.jsx:10
+msgid "Are you sure you want to delete this item? This action cannot be undone."
+msgstr "Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata."
+
+#: src/src/components/ConfirmDialog.jsx:10
+msgid "Confirm Delete"
+msgstr "Conferma eliminazione"

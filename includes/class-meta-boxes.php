@@ -291,7 +291,6 @@ class Fotonic_Meta_Boxes {
 		$event_time_from = get_post_meta( $post->ID, '_ftnc_event_time_from', true );
 		$event_time_to   = get_post_meta( $post->ID, '_ftnc_event_time_to', true );
 		$customer_id   = get_post_meta( $post->ID, '_ftnc_customer_id', true );
-		$owner_id      = get_post_meta( $post->ID, '_ftnc_owner_id', true );
 		$total_price   = get_post_meta( $post->ID, '_ftnc_total_price', true );
 		$color         = get_post_meta( $post->ID, '_ftnc_color', true );
 
@@ -308,6 +307,16 @@ class Fotonic_Meta_Boxes {
 		$raw_services     = get_post_meta( $post->ID, '_ftnc_work_services', true );
 		$raw_files        = get_post_meta( $post->ID, '_ftnc_work_files', true );
 		$raw_installments = get_post_meta( $post->ID, '_ftnc_installments', true );
+		$owner_type       = get_post_meta( $post->ID, '_ftnc_owner_type', true ) ?: 'admin';
+
+		$raw_collabs  = get_post_meta( $post->ID, '_ftnc_collaborators', true );
+		$work_collabs = [];
+		if ( ! empty( $raw_collabs ) ) {
+			$dec = json_decode( $raw_collabs, true );
+			if ( is_array( $dec ) ) {
+				$work_collabs = $dec;
+			}
+		}
 
 		$work_services = [];
 		if ( ! empty( $raw_services ) ) {
@@ -362,15 +371,56 @@ class Fotonic_Meta_Boxes {
 			}
 		}
 
+		// Build collaborators list for owner dropdown + collabs repeater.
+		$collaborators_query = new WP_Query( [
+			'post_type'      => 'ftnc_collaborator',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		] );
+		$collaborators_list = [];
+		if ( $collaborators_query->have_posts() ) {
+			foreach ( $collaborators_query->posts as $collab ) {
+				$collaborators_list[] = [
+					'id'   => $collab->ID,
+					'name' => $collab->post_title,
+				];
+			}
+		}
+		// Build collaborator → services map for the repeater services dropdown.
+		$collab_services_map = [];
+		if ( post_type_exists( 'ftnc_collaborator' ) ) {
+			foreach ( $collaborators_list as $cl ) {
+				$terms = wp_get_object_terms( $cl['id'], 'ftnc_collaborator_service', [ 'fields' => 'all' ] );
+				$collab_services_map[ $cl['id'] ] = [];
+				if ( ! is_wp_error( $terms ) ) {
+					foreach ( $terms as $term ) {
+						$collab_services_map[ $cl['id'] ][] = [ 'id' => $term->term_id, 'name' => $term->name ];
+					}
+				}
+			}
+		}
+
 		// Current admin user.
 		$current_user    = wp_get_current_user();
 		$owner_display   = $current_user->display_name ?: $current_user->user_login;
-		$effective_owner = $owner_id ? (int) $owner_id : $current_user->ID;
+		$admin_user_id   = $current_user->ID;
 
-		$services_json     = wp_json_encode( $work_services );
-		$files_json        = wp_json_encode( $work_files );
-		$installments_json = wp_json_encode( $installments );
-		$services_map_json = wp_json_encode( $services_map );
+		// Determine current owner select value.
+		$saved_owner_id  = get_post_meta( $post->ID, '_ftnc_owner_id', true );
+		if ( 'collaborator' === $owner_type && $saved_owner_id ) {
+			$current_owner_val = 'collaborator:' . (int) $saved_owner_id;
+		} else {
+			$current_owner_val = 'admin:' . $admin_user_id;
+		}
+
+		$services_json          = wp_json_encode( $work_services );
+		$files_json             = wp_json_encode( $work_files );
+		$installments_json      = wp_json_encode( $installments );
+		$services_map_json      = wp_json_encode( $services_map );
+		$collabs_json           = wp_json_encode( $work_collabs );
+		$collab_services_map_json = wp_json_encode( $collab_services_map );
 
 		$fieldset_style = 'border:1px solid #ccd0d4;border-radius:4px;padding:12px 16px;margin-bottom:16px;';
 		$legend_style   = 'font-weight:600;font-size:13px;color:#1d2327;padding:0 6px;';
@@ -495,30 +545,52 @@ class Fotonic_Meta_Boxes {
 
 		<!-- Section 4: Owner -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '4. Owner', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '4. Titolare del Lavoro', 'fotonic' ); ?></legend>
 			<table class="form-table">
 				<tr>
-					<th><?php esc_html_e( 'Owner Type', 'fotonic' ); ?></th>
+					<th><label for="ftnc_owner_select"><?php esc_html_e( 'Titolare', 'fotonic' ); ?></label></th>
 					<td>
-						<label>
-							<input type="radio" name="ftnc_owner_type" value="admin" checked>
-							<?php esc_html_e( 'Admin (free plan)', 'fotonic' ); ?>
-						</label>
-					</td>
-				</tr>
-				<tr>
-					<th><?php esc_html_e( 'Owner', 'fotonic' ); ?></th>
-					<td>
-						<strong><?php echo esc_html( $owner_display ); ?></strong>
-						<input type="hidden" name="ftnc_owner_id" value="<?php echo esc_attr( $effective_owner ); ?>">
+						<select id="ftnc_owner_select" name="ftnc_owner_select" class="regular-text">
+							<option value="<?php echo esc_attr( 'admin:' . $admin_user_id ); ?>"<?php selected( $current_owner_val, 'admin:' . $admin_user_id ); ?>>
+								<?php echo esc_html( sprintf( __( 'Io (%s)', 'fotonic' ), $owner_display ) ); ?>
+							</option>
+							<?php foreach ( $collaborators_list as $collab ) : ?>
+								<option value="<?php echo esc_attr( 'collaborator:' . $collab['id'] ); ?>"<?php selected( $current_owner_val, 'collaborator:' . $collab['id'] ); ?>>
+									<?php echo esc_html( $collab['name'] ); ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+						<p class="description"><?php esc_html_e( 'Chi è il titolare/autore di questo lavoro? Seleziona te stesso o un collaboratore.', 'fotonic' ); ?></p>
 					</td>
 				</tr>
 			</table>
 		</fieldset>
 
-		<!-- Section 5: Services Included -->
+		<!-- Section 5: Collaboratori -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '5. Services Included', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '5. Collaboratori', 'fotonic' ); ?></legend>
+			<p style="margin:0 0 10px;font-size:12px;color:#646970;"><?php esc_html_e( 'Aggiungi i collaboratori coinvolti in questo lavoro con il relativo compenso.', 'fotonic' ); ?></p>
+			<table class="widefat ftnc-work-table" id="ftnc-collabs-table">
+				<thead>
+					<tr>
+						<th><?php esc_html_e( 'Collaboratore', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Servizi', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Prezzo (€)', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Stato pagamento', 'fotonic' ); ?></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody id="ftnc-collabs-rows"></tbody>
+			</table>
+			<p style="margin-top:8px;">
+				<button type="button" id="ftnc-add-collab" class="button"><?php esc_html_e( '+ Aggiungi collaboratore', 'fotonic' ); ?></button>
+			</p>
+			<input type="hidden" id="ftnc_collaborators_json" name="ftnc_collaborators_json" value="<?php echo esc_attr( $collabs_json ); ?>">
+		</fieldset>
+
+		<!-- Section 6: Services Included -->
+		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '6. Services Included', 'fotonic' ); ?></legend>
 			<table class="widefat ftnc-work-table" id="ftnc-services-table">
 				<thead>
 					<tr>
@@ -546,9 +618,9 @@ class Fotonic_Meta_Boxes {
 			<input type="hidden" id="ftnc_work_services_json" name="ftnc_work_services_json" value="<?php echo esc_attr( $services_json ); ?>">
 		</fieldset>
 
-		<!-- Section 6: Files -->
+		<!-- Section 7: Files -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '6. Files', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '7. Files', 'fotonic' ); ?></legend>
 			<div id="ftnc-files-list"></div>
 			<p>
 				<button type="button" id="ftnc-add-file" class="button">
@@ -558,9 +630,9 @@ class Fotonic_Meta_Boxes {
 			<input type="hidden" id="ftnc_work_files_json" name="ftnc_work_files_json" value="<?php echo esc_attr( $files_json ); ?>">
 		</fieldset>
 
-		<!-- Section 7: Payments -->
+		<!-- Section 8: Payments -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '7. Payments', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '8. Payments', 'fotonic' ); ?></legend>
 			<table class="form-table">
 				<tr>
 					<th><label for="ftnc_total_price"><?php esc_html_e( 'Total Price (€)', 'fotonic' ); ?></label></th>
@@ -598,6 +670,11 @@ class Fotonic_Meta_Boxes {
 			var installments    = <?php echo wp_json_encode( json_decode( $installments_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 			var eventAddresses  = <?php echo wp_json_encode( json_decode( $event_addresses_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 			var servicesMap     = <?php echo wp_json_encode( json_decode( $services_map_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var workCollabs        = <?php echo wp_json_encode( json_decode( $collabs_json, true ), JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var collabsList        = <?php echo wp_json_encode( $collaborators_list, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var collabServicesMap  = <?php echo wp_json_encode( $collab_services_map, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
+			var adminUserId     = <?php echo (int) $admin_user_id; ?>;
+			var adminLabel      = <?php echo wp_json_encode( sprintf( __( 'Io (%s)', 'fotonic' ), $owner_display ) ); ?>;
 
 			function esc(v) {
 				if (!v && v !== 0) return '';
@@ -607,6 +684,7 @@ class Fotonic_Meta_Boxes {
 			function syncFiles()        { document.getElementById('ftnc_work_files_json').value = JSON.stringify(workFiles); }
 			function syncInstallments() { document.getElementById('ftnc_installments_json').value = JSON.stringify(installments); }
 			function syncAddresses()    { document.getElementById('ftnc_event_addresses_json').value = JSON.stringify(eventAddresses); }
+			function syncCollabs()      { document.getElementById('ftnc_collaborators_json').value = JSON.stringify(workCollabs); }
 
 			// --- Addresses repeater ---
 			function renderAddresses() {
@@ -805,11 +883,135 @@ class Fotonic_Meta_Boxes {
 				});
 			});
 
+			// --- Collaborators repeater ---
+			function buildCollabOptions(ownerVal, selectedVal) {
+				var opts = '<option value=""><?php echo esc_js( __( '— Seleziona —', 'fotonic' ) ); ?></option>';
+				// If owner is a collaborator, also show admin as option
+				if (ownerVal && ownerVal.indexOf('collaborator:') === 0) {
+					var adminOptVal = 'admin:' + adminUserId;
+					opts += '<option value="' + adminOptVal + '"' + (selectedVal === adminOptVal ? ' selected' : '') + '>' + esc(adminLabel) + '</option>';
+				}
+				collabsList.forEach(function(c) {
+					var val = 'collaborator:' + c.id;
+					if (val === ownerVal) { return; } // exclude owner from collab list
+					opts += '<option value="' + val + '"' + (selectedVal === val ? ' selected' : '') + '>' + esc(c.name) + '</option>';
+				});
+				return opts;
+			}
+
+			function buildServicesSelect(collabId, selectedIds, rowIdx) {
+				var services = collabServicesMap[collabId] || [];
+				if (services.length === 0) {
+					return '<span style="color:#999;font-size:12px;"><?php echo esc_js( __( 'Nessun servizio', 'fotonic' ) ); ?></span>';
+				}
+				var html = '<select multiple data-collabfield="services" data-collabidx="' + rowIdx + '" style="min-width:120px;max-width:180px;">';
+				services.forEach(function(s) {
+					var sel = (selectedIds && selectedIds.indexOf(s.id) !== -1) ? ' selected' : '';
+					html += '<option value="' + s.id + '"' + sel + '>' + esc(s.name) + '</option>';
+				});
+				html += '</select>';
+				return html;
+			}
+
+			function renderCollabs() {
+				var tbody = document.getElementById('ftnc-collabs-rows');
+				tbody.innerHTML = '';
+				var ownerVal = document.getElementById('ftnc_owner_select').value;
+				workCollabs.forEach(function(c, i) {
+					var selectedVal  = c.type + ':' + c.id;
+					var selectedSvcs = Array.isArray(c.services) ? c.services : [];
+					var isPaid   = c.status === 'paid';
+					var btnClass = isPaid ? 'ftnc-status-paid' : 'ftnc-status-unpaid';
+					var btnLabel = isPaid ? <?php echo wp_json_encode( __( 'Pagato', 'fotonic' ) ); ?> : <?php echo wp_json_encode( __( 'Da pagare', 'fotonic' ) ); ?>;
+					var collabId = (c.type === 'collaborator') ? c.id : 0;
+					var tr = document.createElement('tr');
+					tr.innerHTML =
+						'<td><select data-collabfield="person" data-collabidx="' + i + '" class="regular-text">' + buildCollabOptions(ownerVal, selectedVal) + '</select></td>' +
+						'<td>' + buildServicesSelect(collabId, selectedSvcs, i) + '</td>' +
+						'<td><input type="number" step="0.01" min="0" value="' + esc(c.price) + '" data-collabfield="price" data-collabidx="' + i + '" class="small-text"></td>' +
+						'<td><button type="button" class="ftnc-status-toggle ' + btnClass + '" data-collabidx="' + i + '" style="border-radius:12px;padding:3px 10px;font-size:12px;border:none;cursor:pointer;">' + btnLabel + '</button></td>' +
+						'<td><button type="button" class="button-link ftnc-remove-collab" data-collabidx="' + i + '" style="color:#a00">' + <?php echo wp_json_encode( __( 'Rimuovi', 'fotonic' ) ); ?> + '</button></td>';
+					tbody.appendChild(tr);
+				});
+				attachCollabListeners();
+			}
+
+			function attachCollabListeners() {
+				document.querySelectorAll('#ftnc-collabs-rows select[data-collabfield="person"]').forEach(function(sel) {
+					sel.addEventListener('change', function() {
+						var idx   = parseInt(this.dataset.collabidx, 10);
+						var val   = this.value;
+						var parts = val.split(':');
+						if (parts.length === 2) {
+							workCollabs[idx].type     = parts[0];
+							workCollabs[idx].id       = parseInt(parts[1], 10);
+							workCollabs[idx].services = [];
+						}
+						// Re-render to update services dropdown for this row.
+						renderCollabs();
+						syncCollabs();
+					});
+				});
+				document.querySelectorAll('#ftnc-collabs-rows select[data-collabfield="services"]').forEach(function(sel) {
+					sel.addEventListener('change', function() {
+						var idx = parseInt(this.dataset.collabidx, 10);
+						var selected = [];
+						for (var i = 0; i < this.options.length; i++) {
+							if (this.options[i].selected) {
+								selected.push(parseInt(this.options[i].value, 10));
+							}
+						}
+						workCollabs[idx].services = selected;
+						syncCollabs();
+					});
+				});
+				document.querySelectorAll('#ftnc-collabs-rows input[data-collabfield="price"]').forEach(function(el) {
+					el.addEventListener('input', function() {
+						var idx = parseInt(this.dataset.collabidx, 10);
+						workCollabs[idx].price = parseFloat(this.value) || 0;
+						syncCollabs();
+					});
+				});
+				document.querySelectorAll('#ftnc-collabs-rows .ftnc-status-toggle').forEach(function(btn) {
+					btn.addEventListener('click', function() {
+						var idx = parseInt(this.dataset.collabidx, 10);
+						workCollabs[idx].status = workCollabs[idx].status === 'paid' ? 'to_pay' : 'paid';
+						renderCollabs();
+						syncCollabs();
+					});
+				});
+				document.querySelectorAll('.ftnc-remove-collab').forEach(function(btn) {
+					btn.addEventListener('click', function() {
+						workCollabs.splice(parseInt(this.dataset.collabidx, 10), 1);
+						renderCollabs();
+						syncCollabs();
+					});
+				});
+			}
+
+			document.getElementById('ftnc-add-collab').addEventListener('click', function() {
+				workCollabs.push({ type: 'collaborator', id: 0, services: [], price: 0, status: 'to_pay' });
+				renderCollabs();
+				syncCollabs();
+			});
+
+			// When owner changes, rebuild collab options (must exclude new owner).
+			document.getElementById('ftnc_owner_select').addEventListener('change', function() {
+				// Remove any collab row that was previously the owner (now invalid).
+				var ownerVal = this.value;
+				workCollabs = workCollabs.filter(function(c) {
+					return (c.type + ':' + c.id) !== ownerVal;
+				});
+				renderCollabs();
+				syncCollabs();
+			});
+
 			// --- Init ---
 			renderAddresses();
 			renderServices();
 			renderFiles();
 			renderInstallments();
+			renderCollabs();
 		})();
 		</script>
 		<?php if ( defined( 'FOTO_PRO_VERSION' ) && $post->ID > 0 ) :
@@ -1043,10 +1245,51 @@ class Fotonic_Meta_Boxes {
 			}
 		}
 
-		// Section 3 — Owner.
-		if ( isset( $_POST['ftnc_owner_id'] ) ) {
-			update_post_meta( $post_id, '_ftnc_owner_type', 'admin' );
-			update_post_meta( $post_id, '_ftnc_owner_id', (int) $_POST['ftnc_owner_id'] );
+		// Section 4 — Owner (dropdown: "admin:{user_id}" or "collaborator:{post_id}").
+		if ( isset( $_POST['ftnc_owner_select'] ) ) {
+			$owner_select = sanitize_text_field( wp_unslash( $_POST['ftnc_owner_select'] ) );
+			if ( preg_match( '/^(admin|collaborator):(\d+)$/', $owner_select, $m ) ) {
+				$o_type = $m[1];
+				$o_id   = (int) $m[2];
+				if ( 'collaborator' === $o_type && 'ftnc_collaborator' === get_post_type( $o_id ) ) {
+					update_post_meta( $post_id, '_ftnc_owner_type', 'collaborator' );
+					update_post_meta( $post_id, '_ftnc_owner_id', $o_id );
+				} else {
+					update_post_meta( $post_id, '_ftnc_owner_type', 'admin' );
+					update_post_meta( $post_id, '_ftnc_owner_id', get_current_user_id() );
+				}
+			}
+		}
+
+		// Section 8 — Collaborators.
+		if ( isset( $_POST['ftnc_collaborators_json'] ) ) {
+			$raw = wp_unslash( $_POST['ftnc_collaborators_json'] );
+			$dec = json_decode( $raw, true );
+			if ( ! is_array( $dec ) ) {
+				$dec = [];
+			}
+			$clean_collabs = [];
+			foreach ( $dec as $item ) {
+				if ( ! is_array( $item ) ) {
+					continue;
+				}
+				$c_type       = in_array( $item['type'] ?? '', [ 'admin', 'collaborator' ], true ) ? $item['type'] : '';
+				$c_id         = (int) ( $item['id'] ?? 0 );
+				$c_price      = (float) ( $item['price'] ?? 0 );
+				$c_status     = in_array( $item['status'] ?? '', [ 'paid', 'to_pay' ], true ) ? $item['status'] : 'to_pay';
+				$c_services   = isset( $item['services'] ) ? (array) $item['services'] : [];
+				$c_services   = array_values( array_filter( array_map( 'absint', $c_services ) ) );
+				if ( $c_type && $c_id > 0 ) {
+					$clean_collabs[] = [
+						'type'     => $c_type,
+						'id'       => $c_id,
+						'services' => $c_services,
+						'price'    => $c_price >= 0 ? $c_price : 0,
+						'status'   => $c_status,
+					];
+				}
+			}
+			update_post_meta( $post_id, '_ftnc_collaborators', wp_json_encode( $clean_collabs ) );
 		}
 
 		// Section 4 — Work Services JSON.
@@ -1101,11 +1344,13 @@ class Fotonic_Meta_Boxes {
 				}
 				$status  = ( isset( $item['status'] ) && $item['status'] === 'paid' ) ? 'paid' : 'unpaid';
 				$type    = ( isset( $item['type'] ) && $item['type'] === 'coupon' ) ? 'coupon' : 'default';
-				$clean[] = [
+				$raw_date = sanitize_text_field( $item['date'] ?? '' );
+				$clean[]  = [
 					'title'  => sanitize_text_field( $item['title'] ?? '' ),
 					'amount' => (float) ( $item['amount'] ?? 0 ),
 					'status' => $status,
 					'type'   => $type,
+					'date'   => preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw_date ) ? $raw_date : '',
 				];
 			}
 			update_post_meta( $post_id, '_ftnc_installments', wp_json_encode( $clean ) );

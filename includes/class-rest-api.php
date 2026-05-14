@@ -205,6 +205,15 @@ class Fotonic_REST_API {
 			'callback'            => [ __CLASS__, 'can_delete_work' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
+
+		// ------------------------------------------------------------------
+		// Collaborator options (for work owner/collab dropdowns)
+		// ------------------------------------------------------------------
+		register_rest_route( self::NAMESPACE, '/collaborator-options', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'get_collaborator_options' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1102,6 +1111,46 @@ class Fotonic_REST_API {
 		return new \WP_REST_Response( [ 'can_delete' => true ], 200 );
 	}
 
+	/**
+	 * GET /collaborator-options
+	 * Returns admin user + all published ftnc_collaborator posts for owner/collab dropdowns.
+	 */
+	public static function get_collaborator_options( \WP_REST_Request $req ): \WP_REST_Response {
+		$current_user = wp_get_current_user();
+		$admin        = [
+			'id'   => $current_user->ID,
+			'name' => $current_user->display_name ?: $current_user->user_login,
+		];
+
+		$collaborators = [];
+		$query         = new \WP_Query( [
+			'post_type'      => 'ftnc_collaborator',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		] );
+		foreach ( $query->posts as $post ) {
+			$terms    = wp_get_post_terms( $post->ID, 'ftnc_collaborator_service' );
+			$services = [];
+			if ( ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$services[] = [ 'id' => $term->term_id, 'name' => $term->name ];
+				}
+			}
+			$collaborators[] = [
+				'id'       => $post->ID,
+				'name'     => $post->post_title,
+				'services' => $services,
+			];
+		}
+
+		return new \WP_REST_Response( [
+			'admin'         => $admin,
+			'collaborators' => $collaborators,
+		], 200 );
+	}
+
 	// ---------------------------------------------------------------------------
 	// Meta helpers
 	// ---------------------------------------------------------------------------
@@ -1259,15 +1308,46 @@ class Fotonic_REST_API {
 			}
 		}
 
-		// Owner (free = admin).
-		update_post_meta( $post_id, '_ftnc_owner_type', 'admin' );
-		if ( isset( $body['owner_id'] ) ) {
-			update_post_meta( $post_id, '_ftnc_owner_id', (int) $body['owner_id'] );
-		} else {
-			$uid = get_current_user_id();
-			if ( $uid ) {
-				update_post_meta( $post_id, '_ftnc_owner_id', $uid );
+		// Owner.
+		if ( isset( $body['owner_type'] ) && isset( $body['owner_id'] ) ) {
+			$o_type = sanitize_text_field( $body['owner_type'] );
+			$o_id   = (int) $body['owner_id'];
+			if ( 'collaborator' === $o_type && 'ftnc_collaborator' === get_post_type( $o_id ) ) {
+				update_post_meta( $post_id, '_ftnc_owner_type', 'collaborator' );
+				update_post_meta( $post_id, '_ftnc_owner_id', $o_id );
+			} else {
+				update_post_meta( $post_id, '_ftnc_owner_type', 'admin' );
+				update_post_meta( $post_id, '_ftnc_owner_id', get_current_user_id() );
 			}
+		} elseif ( ! get_post_meta( $post_id, '_ftnc_owner_type', true ) ) {
+			update_post_meta( $post_id, '_ftnc_owner_type', 'admin' );
+			update_post_meta( $post_id, '_ftnc_owner_id', get_current_user_id() );
+		}
+
+		// Collaborators.
+		if ( isset( $body['collaborators'] ) && is_array( $body['collaborators'] ) ) {
+			$clean_collabs = [];
+			foreach ( $body['collaborators'] as $c ) {
+				if ( ! is_array( $c ) ) {
+					continue;
+				}
+				$c_type     = in_array( $c['type'] ?? '', [ 'admin', 'collaborator' ], true ) ? $c['type'] : '';
+				$c_id       = (int) ( $c['id'] ?? 0 );
+				$c_price    = (float) ( $c['price'] ?? 0 );
+				$c_status   = in_array( $c['status'] ?? '', [ 'paid', 'to_pay' ], true ) ? $c['status'] : 'to_pay';
+				$c_svcs_raw = isset( $c['services'] ) ? (array) $c['services'] : [];
+				$c_services = array_values( array_filter( array_map( 'absint', $c_svcs_raw ) ) );
+				if ( $c_type && $c_id > 0 ) {
+					$clean_collabs[] = [
+						'type'     => $c_type,
+						'id'       => $c_id,
+						'services' => $c_services,
+						'price'    => $c_price >= 0 ? $c_price : 0,
+						'status'   => $c_status,
+					];
+				}
+			}
+			update_post_meta( $post_id, '_ftnc_collaborators', wp_json_encode( $clean_collabs ) );
 		}
 
 		// Services.
@@ -1314,11 +1394,13 @@ class Fotonic_REST_API {
 				}
 				$status  = ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid';
 				$type    = ( isset( $inst['type'] ) && $inst['type'] === 'coupon' ) ? 'coupon' : 'default';
-				$clean[] = [
+				$raw_date = sanitize_text_field( $inst['date'] ?? '' );
+				$clean[]  = [
 					'title'  => sanitize_text_field( $inst['title'] ?? '' ),
 					'amount' => (float) ( $inst['amount'] ?? 0 ),
 					'status' => $status,
 					'type'   => $type,
+					'date'   => preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw_date ) ? $raw_date : '',
 				];
 			}
 			update_post_meta( $post_id, '_ftnc_installments', wp_json_encode( $clean ) );
@@ -1504,6 +1586,7 @@ class Fotonic_REST_API {
 						'amount' => (float) ( $inst['amount'] ?? 0 ),
 						'status' => ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid',
 						'type'   => ( isset( $inst['type'] ) && $inst['type'] === 'coupon' ) ? 'coupon' : 'default',
+						'date'   => (string) ( $inst['date'] ?? '' ),
 					];
 				}
 			}
@@ -1541,23 +1624,79 @@ class Fotonic_REST_API {
 			}
 		}
 
+		// Owner.
+		$owner_type  = (string) get_post_meta( $post->ID, '_ftnc_owner_type', true ) ?: 'admin';
+		$owner_id    = (int) get_post_meta( $post->ID, '_ftnc_owner_id', true );
+		$owner_label = '';
+		if ( 'collaborator' === $owner_type && $owner_id ) {
+			$owner_post  = get_post( $owner_id );
+			$owner_label = $owner_post ? $owner_post->post_title : '';
+		} else {
+			$owner_user  = $owner_id ? get_user_by( 'id', $owner_id ) : null;
+			if ( $owner_user ) {
+				$owner_label = $owner_user->display_name ?: $owner_user->user_login;
+			}
+		}
+
+		// Collaborators.
+		$raw_collabs      = get_post_meta( $post->ID, '_ftnc_collaborators', true );
+		$collaborators    = [];
+		if ( ! empty( $raw_collabs ) ) {
+			$dec = json_decode( $raw_collabs, true );
+			if ( is_array( $dec ) ) {
+				foreach ( $dec as $c ) {
+					if ( ! is_array( $c ) ) {
+						continue;
+					}
+					$c_name = '';
+					if ( 'collaborator' === ( $c['type'] ?? '' ) ) {
+						$c_post = get_post( (int) ( $c['id'] ?? 0 ) );
+						$c_name = $c_post ? $c_post->post_title : '';
+					} else {
+						$c_user = get_user_by( 'id', (int) ( $c['id'] ?? 0 ) );
+						$c_name = $c_user ? ( $c_user->display_name ?: $c_user->user_login ) : '';
+					}
+					$c_service_ids = isset( $c['services'] ) ? (array) $c['services'] : [];
+						$c_services    = [];
+						foreach ( $c_service_ids as $term_id ) {
+							$term = get_term( (int) $term_id, 'ftnc_collaborator_service' );
+							if ( $term && ! is_wp_error( $term ) ) {
+								$c_services[] = [ 'id' => $term->term_id, 'name' => $term->name ];
+							}
+						}
+						$collaborators[] = [
+							'type'     => (string) ( $c['type'] ?? 'collaborator' ),
+							'id'       => (int) ( $c['id'] ?? 0 ),
+							'name'     => $c_name,
+							'services' => $c_services,
+							'price'    => (float) ( $c['price'] ?? 0 ),
+							'status'   => in_array( $c['status'] ?? '', [ 'paid', 'to_pay' ], true ) ? $c['status'] : 'to_pay',
+						];
+				}
+			}
+		}
+
 		return [
-			'id'             => $post->ID,
-			'title'          => $post->post_title,
-			'event_date'     => (string) get_post_meta( $post->ID, '_ftnc_event_date', true ),
+			'id'              => $post->ID,
+			'title'           => $post->post_title,
+			'event_date'      => (string) get_post_meta( $post->ID, '_ftnc_event_date', true ),
 			'event_time_from' => (string) get_post_meta( $post->ID, '_ftnc_event_time_from', true ),
 			'event_time_to'   => (string) get_post_meta( $post->ID, '_ftnc_event_time_to', true ),
 			'event_addresses' => $event_addresses,
-			'customer_id'    => $customer_id,
-			'customer_title' => $customer_title,
-			'services'       => $services,
-			'files'          => $files,
-			'total_price'    => (float) get_post_meta( $post->ID, '_ftnc_total_price', true ),
-			'installments'   => $installments,
-			'payment_status' => $payment_status,
-			'notes'          => $notes,
-			'quick_notes'    => (string) get_post_meta( $post->ID, '_ftnc_quick_notes', true ),
-			'color'          => (string) get_post_meta( $post->ID, '_ftnc_color', true ),
+			'customer_id'     => $customer_id,
+			'customer_title'  => $customer_title,
+			'owner_type'      => $owner_type,
+			'owner_id'        => $owner_id,
+			'owner_label'     => $owner_label,
+			'collaborators'   => $collaborators,
+			'services'        => $services,
+			'files'           => $files,
+			'total_price'     => (float) get_post_meta( $post->ID, '_ftnc_total_price', true ),
+			'installments'    => $installments,
+			'payment_status'  => $payment_status,
+			'notes'           => $notes,
+			'quick_notes'     => (string) get_post_meta( $post->ID, '_ftnc_quick_notes', true ),
+			'color'           => (string) get_post_meta( $post->ID, '_ftnc_color', true ),
 		];
 	}
 

@@ -62,6 +62,16 @@ export function createRouter() { return createHashRouter([
           </Suspense>
         )
       }] : []),
+      ...(window.FotonicApp?.features?.collaborators && window.FotonicProComponents?.CollaboratorServiceList ? [
+        {
+          path: 'collaborator-services',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.CollaboratorServiceList />
+            </Suspense>
+          ),
+        },
+      ] : []),
       ...(window.FotonicApp?.features?.collaborators && window.FotonicProComponents?.CollaboratorList ? [
         {
           path: 'collaborators',

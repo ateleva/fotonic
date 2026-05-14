@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { __ } from '../utils/i18n'
 
 export default function PageHeader({ title, action, backTo, onDelete }) {
   const navigate = useNavigate()
@@ -10,7 +11,7 @@ export default function PageHeader({ title, action, backTo, onDelete }) {
           onClick={() => navigate(backTo)}
           className="text-sm border border-gray-300 rounded px-3 py-1.5 text-gray-700 hover:bg-gray-50"
         >
-          ← Back
+          {__('← Back')}
         </button>
       )}
       <h1 className="text-xl font-semibold text-gray-900">{title}</h1>
@@ -21,7 +22,7 @@ export default function PageHeader({ title, action, backTo, onDelete }) {
           onClick={onDelete}
           className="ml-auto text-sm border border-red-300 rounded px-3 py-1.5 text-red-600 hover:bg-red-50"
         >
-          Delete
+          {__('Delete')}
         </button>
       )}
     </div>

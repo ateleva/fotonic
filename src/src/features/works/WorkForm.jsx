@@ -13,10 +13,12 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import ServicesRepeater from './ServicesRepeater'
 import InstallmentsRepeater from './InstallmentsRepeater'
+import CollaboratorsRepeater from './CollaboratorsRepeater'
 import FilesSection from './FilesSection'
 import EventAddressesRepeater from './EventAddressesRepeater'
 import WpEditor from '../../components/WpEditor'
 import { __ } from '../../utils/i18n'
+import { useCollaboratorOptions } from '../../api/collaboratorOptions'
 
 const COLOR_PALETTE = [
   { label: 'Default',   hex: '' },
@@ -90,6 +92,9 @@ const defaultValues = {
   event_time_to: '',
   event_addresses: [],
   customer_id: '',
+  owner_type: 'admin',
+  owner_id: null,
+  collaborators: [],
   services: [],
   files: [],
   notes: '',
@@ -112,6 +117,7 @@ export default function WorkForm() {
   const { data: work, isLoading: workLoading } = useWork(id)
   const { data: customersData } = useCustomers({ per_page: 100 })
   const { data: servicesData } = useServices()
+  const { data: collabOptions } = useCollaboratorOptions()
   const createWork = useCreateWork()
   const updateWork = useUpdateWork()
   const deleteWork = useDeleteWork()
@@ -153,6 +159,12 @@ export default function WorkForm() {
         event_time_to: work.event_time_to ?? '',
         event_addresses: work.event_addresses ?? [],
         customer_id: work.customer_id ? String(work.customer_id) : '',
+        owner_type: work.owner_type ?? 'admin',
+        owner_id: work.owner_id ?? null,
+        collaborators: (work.collaborators ?? []).map((c) => ({
+          ...c,
+          services: (c.services ?? []).map((s) => (typeof s === 'object' ? s.id : s)),
+        })),
         services: work.services ?? [],
         files: work.files ?? [],
         notes: work.notes ?? '',
@@ -169,6 +181,15 @@ export default function WorkForm() {
     const payload = {
       ...data,
       customer_id: data.customer_id ? parseInt(data.customer_id, 10) : null,
+      owner_type: data.owner_type ?? 'admin',
+      owner_id: data.owner_id ? parseInt(data.owner_id, 10) : null,
+      collaborators: (data.collaborators ?? []).map((c) => ({
+        type: c.type,
+        id: parseInt(c.id, 10),
+        services: Array.isArray(c.services) ? c.services.map(Number) : [],
+        price: c.price !== '' ? parseFloat(c.price) : 0,
+        status: c.status,
+      })),
       total_price: data.total_price !== '' ? parseFloat(data.total_price) : null,
       installments: data.installments.map((inst) => ({
         ...inst,
@@ -205,7 +226,7 @@ export default function WorkForm() {
 
   return (
     <>
-    <div className="p-6 max-w-3xl">
+    <div className="p-6 max-w-5xl">
       <PageHeader
         title={isEdit ? __('Edit Work') : __('New Work')}
         backTo="/works"
@@ -288,6 +309,76 @@ export default function WorkForm() {
               ))}
             </select>
           </FormField>
+        </section>
+
+        {/* Section — Owner */}
+        <section>
+          <SectionHeading>{__('Titolare del Lavoro')}</SectionHeading>
+          <p className="text-sm text-gray-500 mb-3">{__('Chi è il titolare/autore di questo lavoro?')}</p>
+          <Controller
+            name="owner_type"
+            control={control}
+            render={({ field: ownerTypeField }) => (
+              <Controller
+                name="owner_id"
+                control={control}
+                render={({ field: ownerIdField }) => {
+                  const admin = collabOptions?.admin
+                  const collaborators = collabOptions?.collaborators ?? []
+                  return (
+                    <select
+                      className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full max-w-sm"
+                      value={ownerTypeField.value === 'collaborator' ? `collaborator:${ownerIdField.value}` : `admin:${admin?.id ?? ''}`}
+                      onChange={(e) => {
+                        const val = e.target.value
+                        const [type, rawId] = val.split(':')
+                        ownerTypeField.onChange(type)
+                        ownerIdField.onChange(rawId ? parseInt(rawId, 10) : null)
+                      }}
+                    >
+                      {admin && (
+                        <option value={`admin:${admin.id}`}>{__('Io')} ({admin.name})</option>
+                      )}
+                      {collaborators.map((c) => (
+                        <option key={c.id} value={`collaborator:${c.id}`}>{c.name}</option>
+                      ))}
+                    </select>
+                  )
+                }}
+              />
+            )}
+          />
+        </section>
+
+        {/* Section — Collaboratori */}
+        <section>
+          <SectionHeading>{__('Collaboratori')}</SectionHeading>
+          <p className="text-sm text-gray-500 mb-3">{__('Aggiungi i collaboratori coinvolti con il relativo compenso.')}</p>
+          <Controller
+            name="owner_type"
+            control={control}
+            render={({ field: ownerTypeField }) => (
+              <Controller
+                name="owner_id"
+                control={control}
+                render={({ field: ownerIdField }) => (
+                  <Controller
+                    name="collaborators"
+                    control={control}
+                    render={({ field }) => (
+                      <CollaboratorsRepeater
+                        value={field.value}
+                        onChange={field.onChange}
+                        ownerType={ownerTypeField.value}
+                        ownerId={ownerIdField.value}
+                        options={collabOptions}
+                      />
+                    )}
+                  />
+                )}
+              />
+            )}
+          />
         </section>
 
         {/* Section 3 — Calendar Color */}

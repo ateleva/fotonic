@@ -1,5 +1,6 @@
+import { useEffect, useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Tag } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
 import { __ } from '../utils/i18n'
@@ -9,6 +10,19 @@ const features = window.FotonicApp?.features ?? {}
 export default function Layout() {
   const queryClient = useQueryClient()
   const { isUnlocked, lock } = useVault()
+  const shellRef = useRef(null)
+
+  useEffect(() => {
+    const measure = () => {
+      if (!shellRef.current) return
+      const top = shellRef.current.getBoundingClientRect().top + window.scrollY
+      shellRef.current.style.height = `${window.innerHeight - top}px`
+      shellRef.current.style.top = `${top}px`
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
 
   const navItems = [
     { to: '/dashboard', label: __('Dashboard'), icon: LayoutDashboard },
@@ -18,12 +32,13 @@ export default function Layout() {
   ]
 
   const proNavItems = [
-    { to: '/kanban',        label: __('Kanban'),        icon: Kanban,       feature: 'kanban' },
-    { to: '/analytics',     label: __('Analytics'),     icon: BarChart2,    feature: 'analytics' },
-    { to: '/calendar',      label: __('Calendar'),      icon: CalendarDays, feature: 'calendar' },
-    { to: '/collaborators', label: __('Collaborators'), icon: UserCheck,    feature: 'collaborators' },
-    { to: '/products',      label: __('Products'),      icon: Package,      feature: 'products' },
-    { to: '/suppliers',     label: __('Suppliers'),     icon: Store,        feature: 'suppliers' },
+    { to: '/kanban',                 label: __('Kanban'),                        icon: Kanban,       feature: 'kanban' },
+    { to: '/analytics',              label: __('Analytics'),                     icon: BarChart2,    feature: 'analytics' },
+    { to: '/calendar',               label: __('Calendar'),                      icon: CalendarDays, feature: 'calendar' },
+    { to: '/collaborators',          label: __('Collaborators'),                 icon: UserCheck,    feature: 'collaborators' },
+    { to: '/collaborator-services',  label: __('Collaborator Services', 'fotonic'), icon: Tag,       feature: 'collaborators' },
+    { to: '/products',               label: __('Products'),                      icon: Package,      feature: 'products' },
+    { to: '/suppliers',              label: __('Suppliers'),                     icon: Store,        feature: 'suppliers' },
   ]
 
   const handleLock = async () => {
@@ -32,18 +47,22 @@ export default function Layout() {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div
+      ref={shellRef}
+      className="flex bg-gray-50 overflow-hidden"
+      style={{ position: 'sticky' }}
+    >
       {/* Sidebar */}
-      <aside className="w-56 shrink-0 bg-white border-r border-gray-200 flex flex-col">
+      <aside className="w-[20%] min-w-[200px] max-w-[260px] shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-y-auto overflow-x-hidden">
         {/* Logo */}
-        <div className="px-5 py-5 border-b border-gray-100">
+        <div className="px-4 py-3 border-b border-gray-100">
           <span className="text-lg font-bold tracking-tight text-gray-900">
             Fotonic
           </span>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 px-3 py-2 space-y-0.5">
           {navItems.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
@@ -64,7 +83,7 @@ export default function Layout() {
 
           {proNavItems.some(({ feature }) => features[feature]) && (
             <>
-              <div className="pt-3 pb-1 px-3">
+              <div className="pt-2 pb-1 px-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">{__('Pro')}</span>
               </div>
               {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon }) => (
@@ -88,7 +107,7 @@ export default function Layout() {
           )}
         </nav>
 
-        <div className="px-3 py-3 border-t border-gray-100 space-y-1">
+        <div className="px-3 py-2 border-t border-gray-100 space-y-1">
           <NavLink
             to="/settings"
             className={({ isActive }) =>
@@ -122,7 +141,7 @@ export default function Layout() {
       </aside>
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto">
+      <main className="flex-1 min-w-0 overflow-y-auto">
         <Outlet />
       </main>
     </div>
