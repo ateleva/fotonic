@@ -15,11 +15,20 @@ export function VaultProvider({ children }) {
       body: JSON.stringify({ password, otp }),
     })
     if (!data.salt) throw new Error('Vault salt not returned by server')
-    const key = await deriveKey(password, data.salt)
-    setDerivedKey(key)
+
+    // Browser key derivation requires a secure context (HTTPS).
+    // Gracefully skip on plain HTTP (e.g. local dev) — server-side v1 decryption still works.
+    if (window.crypto?.subtle) {
+      try {
+        const key = await deriveKey(password, data.salt)
+        setDerivedKey(key)
+        setVaultKey(key)
+      } catch (e) {
+        console.warn('[Fotonic] Browser key derivation failed:', e)
+      }
+    }
+
     setIsUnlocked(true)
-    setVaultKey(key)
-    return key
   }, [])
 
   const lock = useCallback(async () => {
