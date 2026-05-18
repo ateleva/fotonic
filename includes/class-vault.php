@@ -226,25 +226,18 @@ class Fotonic_Vault {
 	 * @return void
 	 */
 	private static function send_cookie( string $value, int $expiry ): void {
-		$secure   = is_ssl() ? '; Secure' : '';
-		$path     = COOKIEPATH ?: '/';
-		$domain   = COOKIE_DOMAIN ?: '';
-		$domain_s = $domain ? '; Domain=' . $domain : '';
-
-		$cookie_line = sprintf(
-			'%s=%s; Expires=%s; Max-Age=%d; Path=%s%s; HttpOnly%s; SameSite=Strict',
+		setcookie(
 			self::COOKIE_NAME,
-			rawurlencode( $value ),
-			gmdate( 'D, d M Y H:i:s T', $expiry ),
-			max( 0, $expiry - time() ),
-			$path,
-			$domain_s,
-			$secure
+			$value,
+			array(
+				'expires'  => $expiry,
+				'path'     => COOKIEPATH ? COOKIEPATH : '/',
+				'domain'   => COOKIE_DOMAIN ? COOKIE_DOMAIN : '',
+				'secure'   => is_ssl(),
+				'httponly' => true,
+				'samesite' => 'Strict',
+			)
 		);
-
-		header( 'Set-Cookie: ' . $cookie_line, false );
-
-		// Also update the in-process superglobal so same-request reads work.
 		if ( '' === $value ) {
 			unset( $_COOKIE[ self::COOKIE_NAME ] );
 		} else {

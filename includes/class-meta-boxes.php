@@ -535,8 +535,8 @@ class Fotonic_Meta_Boxes {
 					?>
 					<label class="ftnc-color-swatch" title="<?php echo esc_attr( $info['label'] ); ?>">
 						<input type="radio" name="ftnc_color" value="<?php echo esc_attr( $hex ); ?>"<?php checked( $color, $hex ); ?>>
-						<span class="ftnc-color-circle" style="background:<?php echo esc_attr( $info['bg'] ); ?>;<?php echo $extra_border; ?><?php echo $txt_color; ?>">
-							<?php echo $is_selected ? '✓' : ''; ?>
+						<span class="ftnc-color-circle" style="background:<?php echo esc_attr( $info['bg'] ); ?>;<?php echo esc_attr( $extra_border ); ?><?php echo esc_attr( $txt_color ); ?>">
+							<?php echo $is_selected ? esc_html( '✓' ) : ''; ?>
 						</span>
 					</label>
 				<?php endforeach; ?>
@@ -545,14 +545,14 @@ class Fotonic_Meta_Boxes {
 
 		<!-- Section 4: Owner -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '4. Titolare del Lavoro', 'fotonic' ); ?></legend>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '4. Work Owner', 'fotonic' ); ?></legend>
 			<table class="form-table">
 				<tr>
-					<th><label for="ftnc_owner_select"><?php esc_html_e( 'Titolare', 'fotonic' ); ?></label></th>
+					<th><label for="ftnc_owner_select"><?php esc_html_e( 'Owner', 'fotonic' ); ?></label></th>
 					<td>
 						<select id="ftnc_owner_select" name="ftnc_owner_select" class="regular-text">
 							<option value="<?php echo esc_attr( 'admin:' . $admin_user_id ); ?>"<?php selected( $current_owner_val, 'admin:' . $admin_user_id ); ?>>
-								<?php echo esc_html( sprintf( __( 'Io (%s)', 'fotonic' ), $owner_display ) ); ?>
+								<?php echo esc_html( sprintf( __( 'Me (%s)', 'fotonic' ), $owner_display ) ); ?>
 							</option>
 							<?php foreach ( $collaborators_list as $collab ) : ?>
 								<option value="<?php echo esc_attr( 'collaborator:' . $collab['id'] ); ?>"<?php selected( $current_owner_val, 'collaborator:' . $collab['id'] ); ?>>
@@ -560,30 +560,30 @@ class Fotonic_Meta_Boxes {
 								</option>
 							<?php endforeach; ?>
 						</select>
-						<p class="description"><?php esc_html_e( 'Chi è il titolare/autore di questo lavoro? Seleziona te stesso o un collaboratore.', 'fotonic' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Who is the owner/author of this work?', 'fotonic' ); ?></p>
 					</td>
 				</tr>
 			</table>
 		</fieldset>
 
-		<!-- Section 5: Collaboratori -->
+		<!-- Section 5: Collaborators -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
-			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '5. Collaboratori', 'fotonic' ); ?></legend>
-			<p style="margin:0 0 10px;font-size:12px;color:#646970;"><?php esc_html_e( 'Aggiungi i collaboratori coinvolti in questo lavoro con il relativo compenso.', 'fotonic' ); ?></p>
+			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '5. Collaborators', 'fotonic' ); ?></legend>
+			<p style="margin:0 0 10px;font-size:12px;color:#646970;"><?php esc_html_e( 'Add collaborators involved in this work', 'fotonic' ); ?></p>
 			<table class="widefat ftnc-work-table" id="ftnc-collabs-table">
 				<thead>
 					<tr>
-						<th><?php esc_html_e( 'Collaboratore', 'fotonic' ); ?></th>
-						<th><?php esc_html_e( 'Servizi', 'fotonic' ); ?></th>
-						<th><?php esc_html_e( 'Prezzo (€)', 'fotonic' ); ?></th>
-						<th><?php esc_html_e( 'Stato pagamento', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Collaborator', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Services', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Price (€)', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Payment Status', 'fotonic' ); ?></th>
 						<th></th>
 					</tr>
 				</thead>
 				<tbody id="ftnc-collabs-rows"></tbody>
 			</table>
 			<p style="margin-top:8px;">
-				<button type="button" id="ftnc-add-collab" class="button"><?php esc_html_e( '+ Aggiungi collaboratore', 'fotonic' ); ?></button>
+				<button type="button" id="ftnc-add-collab" class="button"><?php esc_html_e( '+ Add Collaborator', 'fotonic' ); ?></button>
 			</p>
 			<input type="hidden" id="ftnc_collaborators_json" name="ftnc_collaborators_json" value="<?php echo esc_attr( $collabs_json ); ?>">
 		</fieldset>
@@ -674,7 +674,7 @@ class Fotonic_Meta_Boxes {
 			var collabsList        = <?php echo wp_json_encode( $collaborators_list, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 			var collabServicesMap  = <?php echo wp_json_encode( $collab_services_map, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 			var adminUserId     = <?php echo (int) $admin_user_id; ?>;
-			var adminLabel      = <?php echo wp_json_encode( sprintf( __( 'Io (%s)', 'fotonic' ), $owner_display ) ); ?>;
+			var adminLabel      = <?php echo wp_json_encode( sprintf( __( 'Me (%s)', 'fotonic' ), $owner_display ) ); ?>;
 
 			function esc(v) {
 				if (!v && v !== 0) return '';
@@ -885,7 +885,7 @@ class Fotonic_Meta_Boxes {
 
 			// --- Collaborators repeater ---
 			function buildCollabOptions(ownerVal, selectedVal) {
-				var opts = '<option value=""><?php echo esc_js( __( '— Seleziona —', 'fotonic' ) ); ?></option>';
+				var opts = '<option value=""><?php echo esc_js( __( '— Select —', 'fotonic' ) ); ?></option>';
 				// If owner is a collaborator, also show admin as option
 				if (ownerVal && ownerVal.indexOf('collaborator:') === 0) {
 					var adminOptVal = 'admin:' + adminUserId;
@@ -902,7 +902,7 @@ class Fotonic_Meta_Boxes {
 			function buildServicesSelect(collabId, selectedIds, rowIdx) {
 				var services = collabServicesMap[collabId] || [];
 				if (services.length === 0) {
-					return '<span style="color:#999;font-size:12px;"><?php echo esc_js( __( 'Nessun servizio', 'fotonic' ) ); ?></span>';
+					return '<span style="color:#999;font-size:12px;"><?php echo esc_js( __( 'No services', 'fotonic' ) ); ?></span>';
 				}
 				var html = '<select multiple data-collabfield="services" data-collabidx="' + rowIdx + '" style="min-width:120px;max-width:180px;">';
 				services.forEach(function(s) {
@@ -922,7 +922,7 @@ class Fotonic_Meta_Boxes {
 					var selectedSvcs = Array.isArray(c.services) ? c.services : [];
 					var isPaid   = c.status === 'paid';
 					var btnClass = isPaid ? 'ftnc-status-paid' : 'ftnc-status-unpaid';
-					var btnLabel = isPaid ? <?php echo wp_json_encode( __( 'Pagato', 'fotonic' ) ); ?> : <?php echo wp_json_encode( __( 'Da pagare', 'fotonic' ) ); ?>;
+					var btnLabel = isPaid ? <?php echo wp_json_encode( __( 'Paid', 'fotonic' ) ); ?> : <?php echo wp_json_encode( __( 'To Pay', 'fotonic' ) ); ?>;
 					var collabId = (c.type === 'collaborator') ? c.id : 0;
 					var tr = document.createElement('tr');
 					tr.innerHTML =
@@ -930,7 +930,7 @@ class Fotonic_Meta_Boxes {
 						'<td>' + buildServicesSelect(collabId, selectedSvcs, i) + '</td>' +
 						'<td><input type="number" step="0.01" min="0" value="' + esc(c.price) + '" data-collabfield="price" data-collabidx="' + i + '" class="small-text"></td>' +
 						'<td><button type="button" class="ftnc-status-toggle ' + btnClass + '" data-collabidx="' + i + '" style="border-radius:12px;padding:3px 10px;font-size:12px;border:none;cursor:pointer;">' + btnLabel + '</button></td>' +
-						'<td><button type="button" class="button-link ftnc-remove-collab" data-collabidx="' + i + '" style="color:#a00">' + <?php echo wp_json_encode( __( 'Rimuovi', 'fotonic' ) ); ?> + '</button></td>';
+						'<td><button type="button" class="button-link ftnc-remove-collab" data-collabidx="' + i + '" style="color:#a00">' + <?php echo wp_json_encode( __( 'Remove', 'fotonic' ) ); ?> + '</button></td>';
 					tbody.appendChild(tr);
 				});
 				attachCollabListeners();
@@ -1108,14 +1108,14 @@ class Fotonic_Meta_Boxes {
 			$tin                = sanitize_text_field( $person['tin'] ?? '' );
 
 			if ( $encrypt ) {
-				$first_name         = Fotonic_Crypto::encrypt( $first_name,         $vault_key );
-				$last_name          = Fotonic_Crypto::encrypt( $last_name,          $vault_key );
-				$nationality        = Fotonic_Crypto::encrypt( $nationality,        $vault_key );
-				$instagram_username = Fotonic_Crypto::encrypt( $instagram_username, $vault_key );
-				$address            = Fotonic_Crypto::encrypt( $address,            $vault_key );
-				$tin                = Fotonic_Crypto::encrypt( $tin,                $vault_key );
-				$email              = Fotonic_Crypto::deterministic_encrypt( $email, $vault_key );
-				$phone              = Fotonic_Crypto::deterministic_encrypt( $phone, $vault_key );
+				if ( '' !== $first_name )         { $first_name         = Fotonic_Crypto::encrypt( $first_name,         $vault_key ); }
+				if ( '' !== $last_name )          { $last_name          = Fotonic_Crypto::encrypt( $last_name,          $vault_key ); }
+				if ( '' !== $nationality )        { $nationality        = Fotonic_Crypto::encrypt( $nationality,        $vault_key ); }
+				if ( '' !== $instagram_username ) { $instagram_username = Fotonic_Crypto::encrypt( $instagram_username, $vault_key ); }
+				if ( '' !== $address )            { $address            = Fotonic_Crypto::encrypt( $address,            $vault_key ); }
+				if ( '' !== $tin )                { $tin                = Fotonic_Crypto::encrypt( $tin,                $vault_key ); }
+				if ( '' !== $email )              { $email              = Fotonic_Crypto::deterministic_encrypt( $email, $vault_key ); }
+				if ( '' !== $phone )              { $phone              = Fotonic_Crypto::deterministic_encrypt( $phone, $vault_key ); }
 			}
 
 			$sanitized[] = [
@@ -1485,6 +1485,13 @@ class Fotonic_Meta_Boxes {
 	// ---------------------------------------------------------------------------
 	// Helpers
 	// ---------------------------------------------------------------------------
+
+	public static function extend_customer_search_distinct( string $distinct, WP_Query $wp_query ): string {
+		if ( ! $wp_query->is_search() || ( $wp_query->query_vars['post_type'] ?? '' ) !== 'ftnc_customer' ) {
+			return $distinct;
+		}
+		return 'DISTINCT';
+	}
 
 	/**
 	 * Common save-guard: nonce check, autosave check, capability check.

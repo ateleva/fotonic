@@ -32,3 +32,4 @@ CLAUDE.md
 
 # NOTE: dist/ IS committed — it is the WP deployment artifact
 # dist/fotonic-app.js and dist/fotonic-app.css are intentionally tracked
+dist/index.html

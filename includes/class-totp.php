@@ -93,10 +93,17 @@ class Fotonic_TOTP {
 
 		$timestamp = (int) floor( time() / self::TIME_STEP );
 
+		$used_key     = 'fotonic_totp_used_' . md5( $secret );
+		$used_counter = get_transient( $used_key );
+
 		for ( $i = -$window; $i <= $window; $i++ ) {
 			$counter   = $timestamp + $i;
+			if ( false !== $used_counter && $counter === (int) $used_counter ) {
+				continue;
+			}
 			$expected  = self::hotp( $secret, $counter );
 			if ( hash_equals( $expected, $code ) ) {
+				set_transient( $used_key, $counter, 90 );
 				return true;
 			}
 		}

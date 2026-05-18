@@ -1,36 +1,62 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2026 Alessandro Bonacina
-# This file is distributed under the same license as the Fotonic package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
-#
-#, fuzzy
+# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: fotonic 1.1.0\n"
-"Report-Msgid-Bugs-To: bonacina.ale@gmail.com\n"
-"POT-Creation-Date: 2026-05-12T00:00:00+00:00\n"
-"PO-Revision-Date: 2026-05-12T00:00:00+00:00\n"
-"Last-Translator: Alessandro Bonacina <bonacina.ale@gmail.com>\n"
-"Language-Team: Italian <LL@li.org>\n"
-"Language: \n"
+"Project-Id-Version: Fotonic 1.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/fotonic\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"POT-Creation-Date: 2026-05-18T16:30:36+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: fotonic\n"
 
-#: includes/class-admin-page.php:7 includes/class-admin-page.php:8
+#. Plugin Name of the plugin
+#: fotonic.php
+#: includes/class-admin-page.php:7
+#: includes/class-admin-page.php:8
 msgid "Fotonic"
 msgstr ""
 
-#: includes/class-cpt-registry.php:15 includes/class-cpt-registry.php:26
+#. Plugin URI of the plugin
+#: fotonic.php
+msgid "https://github.com/ateleva/fotonic"
+msgstr ""
+
+#. Description of the plugin
+#: fotonic.php
+msgid "CRM and workflow manager for professional event photographers."
+msgstr ""
+
+#. Author of the plugin
+#: fotonic.php
+msgid "Alessandro Bonacina"
+msgstr ""
+
+#. Author URI of the plugin
+#: fotonic.php
+msgid "https://eleva.alessandrobonacina.com"
+msgstr ""
+
+#: includes/class-activator.php:8
+msgid "Fotonic requires the PHP OpenSSL extension. Please enable it on your server."
+msgstr ""
+
+#: includes/class-cpt-registry.php:15
+#: includes/class-cpt-registry.php:26
 msgid "Customers"
 msgstr ""
 
-#: includes/class-cpt-registry.php:16 includes/class-meta-boxes.php:444
+#: includes/class-cpt-registry.php:16
+#: includes/class-meta-boxes.php:494
 msgid "Customer"
 msgstr ""
 
-#: includes/class-cpt-registry.php:17 includes/class-cpt-registry.php:43
+#: includes/class-cpt-registry.php:17
+#: includes/class-cpt-registry.php:43
 #: includes/class-cpt-registry.php:69
 msgid "Add New"
 msgstr ""
@@ -67,11 +93,14 @@ msgstr ""
 msgid "All Customers"
 msgstr ""
 
-#: includes/class-cpt-registry.php:41 includes/class-cpt-registry.php:52
+#: includes/class-cpt-registry.php:41
+#: includes/class-cpt-registry.php:52
+#: includes/class-meta-boxes.php:577
 msgid "Services"
 msgstr ""
 
-#: includes/class-cpt-registry.php:42 includes/class-meta-boxes.php:525
+#: includes/class-cpt-registry.php:42
+#: includes/class-meta-boxes.php:597
 msgid "Service"
 msgstr ""
 
@@ -107,7 +136,8 @@ msgstr ""
 msgid "All Services"
 msgstr ""
 
-#: includes/class-cpt-registry.php:67 includes/class-cpt-registry.php:78
+#: includes/class-cpt-registry.php:67
+#: includes/class-cpt-registry.php:78
 msgid "Works"
 msgstr ""
 
@@ -147,7 +177,9 @@ msgstr ""
 msgid "All Works"
 msgstr ""
 
-#: includes/class-cpt-registry.php:94 includes/class-cpt-registry.php:95
+#: includes/class-cpt-registry.php:94
+#: includes/class-cpt-registry.php:95
+#: includes/class-meta-boxes.php:579
 msgid "Payment Status"
 msgstr ""
 
@@ -231,9 +263,12 @@ msgstr ""
 msgid "+ Add Person"
 msgstr ""
 
-#: includes/class-meta-boxes.php:164 includes/class-meta-boxes.php:620
-#: includes/class-meta-boxes.php:657 includes/class-meta-boxes.php:700
-#: includes/class-meta-boxes.php:752
+#: includes/class-meta-boxes.php:164
+#: includes/class-meta-boxes.php:698
+#: includes/class-meta-boxes.php:735
+#: includes/class-meta-boxes.php:778
+#: includes/class-meta-boxes.php:830
+#: includes/class-meta-boxes.php:933
 msgid "Remove"
 msgstr ""
 
@@ -249,934 +284,367 @@ msgstr ""
 msgid "Notes"
 msgstr ""
 
-#: includes/class-meta-boxes.php:401
+#: includes/class-meta-boxes.php:451
 msgid "1. Event Details"
 msgstr ""
 
-#: includes/class-meta-boxes.php:404
+#: includes/class-meta-boxes.php:454
 msgid "Event Date"
 msgstr ""
 
-#: includes/class-meta-boxes.php:408
+#: includes/class-meta-boxes.php:458
 msgid "Event Time From"
 msgstr ""
 
-#: includes/class-meta-boxes.php:412
+#: includes/class-meta-boxes.php:462
 msgid "Event Time To"
 msgstr ""
 
-#: includes/class-meta-boxes.php:416
+#: includes/class-meta-boxes.php:466
 msgid "Addresses"
 msgstr ""
 
-#: includes/class-meta-boxes.php:421
+#: includes/class-meta-boxes.php:471
 msgid "Label"
 msgstr ""
 
-#: includes/class-meta-boxes.php:422
+#: includes/class-meta-boxes.php:472
 msgid "Street"
 msgstr ""
 
-#: includes/class-meta-boxes.php:430
+#: includes/class-meta-boxes.php:480
 msgid "+ Add Address"
 msgstr ""
 
-#: includes/class-meta-boxes.php:441
+#: includes/class-meta-boxes.php:491
 msgid "2. Customer"
 msgstr ""
 
-#: includes/class-meta-boxes.php:447
+#: includes/class-meta-boxes.php:497
 msgid "— Select customer —"
 msgstr ""
 
-#: includes/class-meta-boxes.php:463
+#: includes/class-meta-boxes.php:513
 msgid "3. Calendar Color"
 msgstr ""
 
-#: includes/class-meta-boxes.php:464
+#: includes/class-meta-boxes.php:514
 msgid "Choose the event card color shown in the calendar view."
 msgstr ""
 
-#: includes/class-meta-boxes.php:468 includes/class-meta-boxes.php:744
+#: includes/class-meta-boxes.php:518
+#: includes/class-meta-boxes.php:822
 msgid "Default"
 msgstr ""
 
-#: includes/class-meta-boxes.php:469
+#: includes/class-meta-boxes.php:519
 msgid "Tomato"
 msgstr ""
 
-#: includes/class-meta-boxes.php:470
+#: includes/class-meta-boxes.php:520
 msgid "Flamingo"
 msgstr ""
 
-#: includes/class-meta-boxes.php:471
+#: includes/class-meta-boxes.php:521
 msgid "Tangerine"
 msgstr ""
 
-#: includes/class-meta-boxes.php:472
+#: includes/class-meta-boxes.php:522
 msgid "Banana"
 msgstr ""
 
-#: includes/class-meta-boxes.php:473
+#: includes/class-meta-boxes.php:523
 msgid "Sage"
 msgstr ""
 
-#: includes/class-meta-boxes.php:474
+#: includes/class-meta-boxes.php:524
 msgid "Basil"
 msgstr ""
 
-#: includes/class-meta-boxes.php:475
+#: includes/class-meta-boxes.php:525
 msgid "Peacock"
 msgstr ""
 
-#: includes/class-meta-boxes.php:476
+#: includes/class-meta-boxes.php:526
 msgid "Blueberry"
 msgstr ""
 
-#: includes/class-meta-boxes.php:477
+#: includes/class-meta-boxes.php:527
 msgid "Lavender"
 msgstr ""
 
-#: includes/class-meta-boxes.php:478
+#: includes/class-meta-boxes.php:528
 msgid "Grape"
 msgstr ""
 
-#: includes/class-meta-boxes.php:479
+#: includes/class-meta-boxes.php:529
 msgid "Graphite"
 msgstr ""
 
-#: includes/class-meta-boxes.php:498
-msgid "4. Owner"
-msgstr ""
-
-#: includes/class-meta-boxes.php:501
-msgid "Owner Type"
-msgstr ""
-
-#: includes/class-meta-boxes.php:505
-msgid "Admin (free plan)"
-msgstr ""
-
-#: includes/class-meta-boxes.php:510
-msgid "Owner"
-msgstr ""
-
-#: includes/class-meta-boxes.php:521
-msgid "5. Services Included"
-msgstr ""
-
-#: includes/class-meta-boxes.php:526
-msgid "Price Override (€)"
-msgstr ""
-
-#: includes/class-meta-boxes.php:527
-msgid "Notes Override"
-msgstr ""
-
-#: includes/class-meta-boxes.php:535
-msgid "— Add a service —"
-msgstr ""
-
-#: includes/class-meta-boxes.php:544
-msgid "Add"
+#: includes/class-meta-boxes.php:548
+msgid "4. Work Owner"
 msgstr ""
 
 #: includes/class-meta-boxes.php:551
-msgid "6. Files"
+msgid "Owner"
 msgstr ""
 
 #: includes/class-meta-boxes.php:555
-msgid "+ Add File"
+#: includes/class-meta-boxes.php:677
+#, php-format
+msgid "Me (%s)"
 msgstr ""
 
 #: includes/class-meta-boxes.php:563
-msgid "7. Payments"
+msgid "Who is the owner/author of this work?"
 msgstr ""
 
-#: includes/class-meta-boxes.php:566
-msgid "Total Price (€)"
+#: includes/class-meta-boxes.php:571
+msgid "5. Collaborators"
 msgstr ""
 
-#: includes/class-meta-boxes.php:570
-msgid "Installments"
-msgstr ""
-
-#: includes/class-meta-boxes.php:574
-msgid "Type"
-msgstr ""
-
-#: includes/class-meta-boxes.php:575 includes/class-meta-boxes.php:844
-msgid "Title"
+#: includes/class-meta-boxes.php:572
+msgid "Add collaborators involved in this work"
 msgstr ""
 
 #: includes/class-meta-boxes.php:576
+msgid "Collaborator"
+msgstr ""
+
+#: includes/class-meta-boxes.php:578
+msgid "Price (€)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:586
+msgid "+ Add Collaborator"
+msgstr ""
+
+#: includes/class-meta-boxes.php:593
+msgid "6. Services Included"
+msgstr ""
+
+#: includes/class-meta-boxes.php:598
+msgid "Price Override (€)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:599
+msgid "Notes Override"
+msgstr ""
+
+#: includes/class-meta-boxes.php:607
+msgid "— Add a service —"
+msgstr ""
+
+#: includes/class-meta-boxes.php:616
+msgid "Add"
+msgstr ""
+
+#: includes/class-meta-boxes.php:623
+msgid "7. Files"
+msgstr ""
+
+#: includes/class-meta-boxes.php:627
+msgid "+ Add File"
+msgstr ""
+
+#: includes/class-meta-boxes.php:635
+msgid "8. Payments"
+msgstr ""
+
+#: includes/class-meta-boxes.php:638
+msgid "Total Price (€)"
+msgstr ""
+
+#: includes/class-meta-boxes.php:642
+msgid "Installments"
+msgstr ""
+
+#: includes/class-meta-boxes.php:646
+msgid "Type"
+msgstr ""
+
+#: includes/class-meta-boxes.php:647
+#: includes/class-meta-boxes.php:1046
+msgid "Title"
+msgstr ""
+
+#: includes/class-meta-boxes.php:648
 msgid "Amount (€)"
 msgstr ""
 
-#: includes/class-meta-boxes.php:577 includes/class-meta-boxes.php:845
+#: includes/class-meta-boxes.php:649
+#: includes/class-meta-boxes.php:1047
 msgid "Status"
 msgstr ""
 
-#: includes/class-meta-boxes.php:585
+#: includes/class-meta-boxes.php:657
 msgid "+ Add Installment"
 msgstr ""
 
-#: includes/class-meta-boxes.php:618
+#: includes/class-meta-boxes.php:696
 msgid "e.g. Church"
 msgstr ""
 
-#: includes/class-meta-boxes.php:619
+#: includes/class-meta-boxes.php:697
 msgid "Via Roma 1, Milano"
 msgstr ""
 
-#: includes/class-meta-boxes.php:699
+#: includes/class-meta-boxes.php:777
 msgid "Attachment ID"
 msgstr ""
 
-#: includes/class-meta-boxes.php:714
+#: includes/class-meta-boxes.php:792
 msgid "Media library not available."
 msgstr ""
 
-#: includes/class-meta-boxes.php:718
+#: includes/class-meta-boxes.php:796
 msgid "Select Files"
 msgstr ""
 
-#: includes/class-meta-boxes.php:719
+#: includes/class-meta-boxes.php:797
 msgid "Add to Work"
 msgstr ""
 
-#: includes/class-meta-boxes.php:742
+#: includes/class-meta-boxes.php:820
+#: includes/class-meta-boxes.php:925
 msgid "Paid"
 msgstr ""
 
-#: includes/class-meta-boxes.php:742
+#: includes/class-meta-boxes.php:820
 msgid "Unpaid"
 msgstr ""
 
-#: includes/class-meta-boxes.php:744
+#: includes/class-meta-boxes.php:822
 msgid "Coupon"
 msgstr ""
 
-#: includes/class-meta-boxes.php:831
+#: includes/class-meta-boxes.php:888
+msgid "— Select —"
+msgstr ""
+
+#: includes/class-meta-boxes.php:905
+msgid "No services"
+msgstr ""
+
+#: includes/class-meta-boxes.php:925
+msgid "To Pay"
+msgstr ""
+
+#: includes/class-meta-boxes.php:1033
 msgid "To Do"
 msgstr ""
 
-#: includes/class-meta-boxes.php:832
+#: includes/class-meta-boxes.php:1034
 msgid "In Progress"
 msgstr ""
 
-#: includes/class-meta-boxes.php:833
+#: includes/class-meta-boxes.php:1035
 msgid "Done"
 msgstr ""
 
-#: includes/class-meta-boxes.php:837
+#: includes/class-meta-boxes.php:1039
 msgid "Tasks"
 msgstr ""
 
-#: includes/class-meta-boxes.php:839
+#: includes/class-meta-boxes.php:1041
 msgid "No tasks yet. Create tasks from the Kanban board."
 msgstr ""
 
-#: includes/class-rest-api.php:238
+#: includes/class-rest-api.php:247
 msgid "Password is required."
 msgstr ""
 
-#: includes/class-rest-api.php:251
+#: includes/class-rest-api.php:260
 msgid "Vault setup failed."
 msgstr ""
 
-#: includes/class-rest-api.php:278 includes/class-rest-api.php:465
+#: includes/class-rest-api.php:285
+#: includes/class-rest-api.php:425
+msgid "Too many failed attempts. Try again in 15 minutes."
+msgstr ""
+
+#: includes/class-rest-api.php:296
+#: includes/class-rest-api.php:518
 msgid "Password and OTP are required."
 msgstr ""
 
-#: includes/class-rest-api.php:286 includes/class-rest-api.php:425
-#: includes/class-rest-api.php:492
+#: includes/class-rest-api.php:305
+#: includes/class-rest-api.php:465
+#: includes/class-rest-api.php:545
 msgid "Invalid password or OTP code."
 msgstr ""
 
-#: includes/class-rest-api.php:335
+#: includes/class-rest-api.php:356
 msgid "File not found."
 msgstr ""
 
-#: includes/class-rest-api.php:343
+#: includes/class-rest-api.php:364
 msgid "File not found on disk."
 msgstr ""
 
-#: includes/class-rest-api.php:353
+#: includes/class-rest-api.php:374
+#: includes/class-rest-api.php:385
 msgid "Access denied."
 msgstr ""
 
-#: includes/class-rest-api.php:398
+#: includes/class-rest-api.php:437
 msgid "All fields are required."
 msgstr ""
 
-#: includes/class-rest-api.php:405 includes/class-rest-api.php:472
+#: includes/class-rest-api.php:444
+#: includes/class-rest-api.php:525
 msgid "Vault is not set up."
 msgstr ""
 
-#: includes/class-rest-api.php:415 includes/class-rest-api.php:482
+#: includes/class-rest-api.php:454
+#: includes/class-rest-api.php:535
 msgid "Vault configuration error."
 msgstr ""
 
-#: includes/class-rest-api.php:436 includes/class-rest-api.php:502
+#: includes/class-rest-api.php:474
+msgid "A re-encryption is already in progress."
+msgstr ""
+
+#: includes/class-rest-api.php:487
+#: includes/class-rest-api.php:555
 msgid "Encryption error."
 msgstr ""
 
-#: includes/class-rest-api.php:658 includes/class-rest-api.php:705
-#: includes/class-rest-api.php:730 includes/class-rest-api.php:1009
+#: includes/class-rest-api.php:711
+#: includes/class-rest-api.php:758
+#: includes/class-rest-api.php:783
+#: includes/class-rest-api.php:1062
 msgid "Customer not found."
 msgstr ""
 
-#: includes/class-rest-api.php:676 includes/class-rest-api.php:789
-#: includes/class-rest-api.php:925
+#: includes/class-rest-api.php:729
+#: includes/class-rest-api.php:842
+#: includes/class-rest-api.php:978
 msgid "Title is required."
 msgstr ""
 
-#: includes/class-rest-api.php:771 includes/class-rest-api.php:818
-#: includes/class-rest-api.php:843 includes/class-rest-api.php:1045
+#: includes/class-rest-api.php:824
+#: includes/class-rest-api.php:871
+#: includes/class-rest-api.php:896
+#: includes/class-rest-api.php:1098
 msgid "Service not found."
 msgstr ""
 
-#: includes/class-rest-api.php:907 includes/class-rest-api.php:956
-#: includes/class-rest-api.php:989 includes/class-rest-api.php:1097
+#: includes/class-rest-api.php:960
+#: includes/class-rest-api.php:1009
+#: includes/class-rest-api.php:1042
+#: includes/class-rest-api.php:1150
 msgid "Work not found."
 msgstr ""
 
-#: includes/class-rest-api.php:1029 includes/class-rest-api.php:1081
+#: includes/class-rest-api.php:1082
+#: includes/class-rest-api.php:1134
 #, php-format
 msgid "Linked to %d work: %s"
 msgid_plural "Linked to %d works: %s"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/src/components/Layout.jsx:14
-msgid "Dashboard"
-msgstr ""
-
-#: src/src/components/Layout.jsx:21
-msgid "Kanban"
-msgstr ""
-
-#: src/src/components/Layout.jsx:22
-msgid "Analytics"
-msgstr ""
-
-#: src/src/components/Layout.jsx:23
-msgid "Calendar"
-msgstr ""
-
-#: src/src/components/Layout.jsx:24
-msgid "Collaborators"
-msgstr ""
-
-#: src/src/components/Layout.jsx:25
-msgid "Products"
-msgstr ""
-
-#: src/src/components/Layout.jsx:26
-msgid "Suppliers"
-msgstr ""
-
-#: src/src/components/Layout.jsx:68
-msgid "Pro"
-msgstr ""
-
-#: src/src/components/Layout.jsx:104
-msgid "Settings"
-msgstr ""
-
-#: src/src/components/Layout.jsx:112
-msgid "Lock Vault"
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:40
-msgid "Unable to check references. Please try again."
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:132
-msgid "e.g. Elisa & Edoardo"
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:134
-msgid "Title is required"
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:151
-msgid "An error occurred. Please try again."
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:160
-msgid "Saving..."
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:160
-msgid "Update Customer"
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:160
-msgid "Create Customer"
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:167
-msgid "Cancel"
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:177
-msgid "Delete this customer? This action cannot be undone."
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:179
-msgid "Cannot Delete"
-msgstr ""
-
-#: src/src/features/customers/CustomerForm.jsx:182
-msgid "OK"
-msgstr ""
-
-#: src/src/features/customers/CustomerList.jsx:41
-msgid "Main Contact"
-msgstr ""
-
-#: src/src/features/customers/CustomerList.jsx:78
-msgid "Actions"
-msgstr ""
-
-#: src/src/features/customers/CustomerList.jsx:85
-msgid "Edit customer"
-msgstr ""
-
-#: src/src/features/customers/CustomerList.jsx:88
-msgid "Edit"
-msgstr ""
-
-#: src/src/features/customers/CustomerList.jsx:102
-msgid "Add Customer"
-msgstr ""
-
-#: src/src/features/customers/CustomerList.jsx:112
-msgid "Search customers..."
-msgstr ""
-
-#: src/src/features/customers/CustomerList.jsx:125
-msgid "No customers found. Add your first customer."
-msgstr ""
-
-#: src/src/features/customers/PeopleRepeater.jsx:53
-msgid "Person"
-msgstr ""
-
-#: src/src/features/customers/PeopleRepeater.jsx:71
-msgid "Remove person"
-msgstr ""
-
-#: src/src/features/customers/PeopleRepeater.jsx:88
-msgid "First name"
-msgstr ""
-
-#: src/src/features/customers/PeopleRepeater.jsx:100
-msgid "Last name"
-msgstr ""
-
-#: src/src/features/customers/PeopleRepeater.jsx:181
-msgid "Add Person"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:122
-msgid "Date"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:132
-msgid "Revenue"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:157
-msgid "Works This Year"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:159
-msgid "Year"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:162
-msgid "Revenue This Year"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:164
-msgid "From paid installments"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:167
-msgid "Unpaid Balance"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:169
-msgid "All works combined"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:172
-msgid "Coupon vs Default Revenue"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:174
-msgid "coupon"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:174
-msgid "default"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:181
-msgid "Next Upcoming Works"
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:184
-msgid "No upcoming events scheduled."
-msgstr ""
-
-#: src/src/features/dashboard/Dashboard.jsx:189
-msgid "No upcoming events."
-msgstr ""
-
-#: src/src/features/services/ServiceForm.jsx:110
-msgid "e.g. Wedding Photography"
-msgstr ""
-
-#: src/src/features/services/ServiceForm.jsx:129
-msgid "Price must be 0 or more"
-msgstr ""
-
-#: src/src/features/services/ServiceForm.jsx:138
-msgid "Optional notes about this service..."
-msgstr ""
-
-#: src/src/features/services/ServiceForm.jsx:155
-msgid "Update Service"
-msgstr ""
-
-#: src/src/features/services/ServiceForm.jsx:156
-msgid "Create Service"
-msgstr ""
-
-#: src/src/features/services/ServiceForm.jsx:173
-msgid "Delete this service? This action cannot be undone."
-msgstr ""
-
-#: src/src/features/services/ServiceList.jsx:32
-msgid "Name"
-msgstr ""
-
-#: src/src/features/services/ServiceList.jsx:39
-msgid "Base Price"
-msgstr ""
-
-#: src/src/features/services/ServiceList.jsx:76
-msgid "Add Service"
-msgstr ""
-
-#: src/src/features/services/ServiceList.jsx:89
-msgid "No services found. Add your first service."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:57
-msgid "Loading…"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:66
-msgid "Vault configured"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:66
-msgid "Not configured"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:73
-msgid "Unlocked"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:73
-msgid "Locked"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:107
-msgid "New passwords do not match."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:111
-msgid "New password must be at least 8 characters."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:122
-msgid "Current Password"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:125
-msgid "Current OTP Code"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:128
-msgid "New Password"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:131
-msgid "Confirm New Password"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:136
-msgid "Password changed successfully."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:139
-msgid "Saving…"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:139
-msgid "Change Password"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:170
-msgid "Password and OTP code are required."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:180
-msgid "Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:184
-msgid "New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:189
-msgid "TOTP QR Code"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:195
-msgid "Or enter this key manually:"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:201
-msgid "Reset again"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:208
-msgid "Vault Password"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:218
-msgid "Generating…"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:218
-msgid "Generate New Code"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:262
-msgid "Fotonic Pro License"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:267
-msgid "Vault"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:273
-msgid "Change Vault Password"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:276
-msgid "Reset Authenticator App"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:285
-msgid "Enable the Vault to encrypt sensitive customer data (names, emails, addresses). The key is protected by a password + one-time code from your authenticator app."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:293
-msgid "Set Up Vault"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:301
-msgid "Google Calendar"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:307
-msgid "Email Notifications"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:314
-msgid "Reload the page to load email settings."
-msgstr ""
-
-#: src/src/features/vault/VaultGate.jsx:29
-msgid "Could not reach the vault. Please reload the page."
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:29
-msgid "Invalid password or code"
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:41
-msgid "Vault Locked"
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:43
-msgid "Enter your vault password and authenticator code to access your data."
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:59
-msgid "Password is required"
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:64
-msgid "Authenticator Code"
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:78
-msgid "Code is required"
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:79
-msgid "Enter a 6-digit code"
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:94
-msgid "Unlock Vault"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:84
-msgid "Set Vault Password"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:86
-msgid "Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault."
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:90
-msgid "Password"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:102
-msgid "Minimum 8 characters"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:108
-msgid "Confirm Password"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:119
-msgid "Please confirm your password"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:121
-msgid "Passwords do not match"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:128
-msgid "Next"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:164
-msgid "Setting up vault…"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:174
-msgid "Try again"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:182
-msgid "Scan QR Code"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:184
-msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below."
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:197
-msgid "Manual entry key:"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:206
-msgid "I've scanned the code — Next"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:233
-msgid "Invalid code — check your authenticator app"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:240
-msgid "Confirm Authenticator Code"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:242
-msgid "Enter the 6-digit code shown in your authenticator app to complete setup."
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:246
-msgid "One-Time Code"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:272
-msgid "Verify & Unlock"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:303
-msgid "Vault Setup"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:304
-msgid "Step"
-msgstr ""
-
-#: src/src/features/vault/VaultSetup.jsx:304
-msgid "of"
-msgstr ""
-
-#: src/src/features/works/EventAddressesRepeater.jsx:62
-msgid "Remove address"
-msgstr ""
-
-#: src/src/features/works/EventAddressesRepeater.jsx:76
-msgid "Add Address"
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:37
-msgid "These files exceed the 10 MB limit and were skipped:"
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:64
-msgid "Filename"
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:81
-msgid "Download file"
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:89
-msgid "Remove file"
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:101
-msgid "No files attached."
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:107
-msgid "Upload File"
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:110
-msgid "Images, PDF, DOC, DOCX · max 10 MB each"
-msgstr ""
-
-#: src/src/features/works/InstallmentsRepeater.jsx:80
-msgid "e.g. Deposit"
-msgstr ""
-
-#: src/src/features/works/InstallmentsRepeater.jsx:113
-msgid "Remove installment"
-msgstr ""
-
-#: src/src/features/works/InstallmentsRepeater.jsx:127
-msgid "Add Installment"
-msgstr ""
-
-#: src/src/features/works/ServicesRepeater.jsx:46
-msgid "Price (€)"
-msgstr ""
-
-#: src/src/features/works/ServicesRepeater.jsx:60
-msgid "— Select service —"
-msgstr ""
-
-#: src/src/features/works/ServicesRepeater.jsx:85
-msgid "Optional notes..."
-msgstr ""
-
-#: src/src/features/works/ServicesRepeater.jsx:93
-msgid "Remove service"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:39
-msgid "Choose the event card color in the calendar view."
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:218
-msgid "Event Details"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:230
-msgid "e.g. Matrimonio Rossi"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:295
-msgid "Calendar Color"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:305
-msgid "Services Included"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:321
-msgid "Files"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:345
-msgid "Payments"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:375
-msgid "Scheduled Notifications"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:391
-msgid "Update Work"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:392
-msgid "Create Work"
-msgstr ""
-
-#: src/src/features/works/WorkForm.jsx:409
-msgid "Delete this work? This action cannot be undone."
-msgstr ""
-
-#: src/src/features/works/WorkList.jsx:74
-msgid "Total Price"
-msgstr ""
-
-#: src/src/features/works/WorkList.jsx:102
-msgid "Add Work"
-msgstr ""
-
-#: src/src/features/works/WorkList.jsx:112
-msgid "Search works..."
-msgstr ""
-
-#: src/src/features/works/WorkList.jsx:120
-msgid "All Statuses"
-msgstr ""
-
-#: src/src/features/works/WorkList.jsx:122
-msgid "Partial"
-msgstr ""
-
-#: src/src/features/works/WorkList.jsx:135
-msgid "No works found. Add your first work."
-msgstr ""
-
 #: src/src/components/Layout.jsx:39
 msgid "Collaborator Services"
-msgstr ""
-
-#: src/src/components/PageHeader.jsx:13
-msgid "← Back"
-msgstr ""
-
-#: src/src/components/PageHeader.jsx:24
-msgid "Delete"
-msgstr ""
-
-#: src/src/components/ConfirmDialog.jsx:10
-msgid "Are you sure you want to delete this item? This action cannot be undone."
-msgstr ""
-
-#: src/src/components/ConfirmDialog.jsx:10
-msgid "Confirm Delete"
 msgstr ""

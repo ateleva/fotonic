@@ -3,6 +3,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Activator {
     public static function activate(): void {
+        if ( ! extension_loaded( 'openssl' ) ) {
+            deactivate_plugins( plugin_basename( __FILE__ ) );
+            wp_die( esc_html__( 'Fotonic requires the PHP OpenSSL extension. Please enable it on your server.', 'fotonic' ) );
+        }
+
         $upload_dir = wp_upload_dir();
         $vault_dir  = $upload_dir['basedir'] . '/fotonic/vault';
 
@@ -16,7 +21,6 @@ class Fotonic_Activator {
         }
 
         add_option( 'fotonic_vault_enabled', false );
-        add_option( 'fotonic_smtp_settings', [] );
         add_option( 'fotonic_vault_salt', wp_generate_password( 64, true, true ) );
 
         flush_rewrite_rules();

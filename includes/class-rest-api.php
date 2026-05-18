@@ -278,6 +278,15 @@ class Fotonic_REST_API {
 	 * Returns: { unlocked: true }
 	 */
 	public static function vault_unlock( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'fotonic' ) ),
+				429
+			);
+		}
+
 		$body     = $req->get_json_params();
 		$password = isset( $body['password'] ) ? (string) $body['password'] : '';
 		$otp      = isset( $body['otp'] )      ? (string) $body['otp']      : '';
@@ -291,11 +300,14 @@ class Fotonic_REST_API {
 
 		$ok = Fotonic_Vault::unlock( $password, $otp );
 		if ( ! $ok ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
 				401
 			);
 		}
+
+		delete_transient( $fail_key );
 
 		// Return the PBKDF2 salt so the browser can derive its own AES-GCM key (Phase C+).
 		// Sent only on successful authentication — never on status polls.
@@ -364,6 +376,15 @@ class Fotonic_REST_API {
 			);
 		}
 
+		global $wpdb;
+		$linked = $wpdb->get_var( $wpdb->prepare(
+			"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s LIMIT 1",
+			'%' . $wpdb->esc_like( (string) $id ) . '%'
+		) );
+		if ( ! $linked ) {
+			return new \WP_REST_Response( array( 'code' => 'forbidden', 'message' => __( 'Access denied.', 'fotonic' ) ), 403 );
+		}
+
 		// Sanitize headers before output.
 		$mime     = sanitize_mime_type( $post->post_mime_type );
 		$filename = sanitize_file_name( basename( $real_file ) );
@@ -384,7 +405,7 @@ class Fotonic_REST_API {
 
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
 		readfile( $real_file );
-		exit; // Required to stop WP from appending HTML after the binary stream.
+		exit; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary stream requires exit to prevent WP HTML appended after file content.
 	}
 
 	// ---------------------------------------------------------------------------
@@ -397,6 +418,15 @@ class Fotonic_REST_API {
 	 * Re-derives the vault key from a new password and re-encrypts all PII postmeta.
 	 */
 	public static function vault_change_password( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'fotonic' ) ),
+				429
+			);
+		}
+
 		$body             = $req->get_json_params();
 		$current_password = isset( $body['current_password'] ) ? (string) $body['current_password'] : '';
 		$otp              = isset( $body['otp'] )              ? (string) $body['otp']              : '';
@@ -430,17 +460,29 @@ class Fotonic_REST_API {
 		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $old_key );
 
 		if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
 				401
 			);
 		}
 
+		delete_transient( $fail_key );
+
+		if ( get_transient( 'fotonic_vault_reencrypt_lock' ) ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'reencrypt_in_progress', 'message' => __( 'A re-encryption is already in progress.', 'fotonic' ) ),
+				409
+			);
+		}
+		set_transient( 'fotonic_vault_reencrypt_lock', true, 5 * MINUTE_IN_SECONDS );
+
 		$new_salt           = base64_encode( random_bytes( 32 ) );
 		$new_key            = Fotonic_Crypto::derive_key( $new_password, $new_salt );
 		$new_encrypted_totp = Fotonic_Crypto::encrypt( $totp_secret, $new_key );
 
 		if ( empty( $new_encrypted_totp ) ) {
+			delete_transient( 'fotonic_vault_reencrypt_lock' );
 			return new \WP_REST_Response(
 				[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'fotonic' ) ],
 				500
@@ -454,6 +496,8 @@ class Fotonic_REST_API {
 		update_option( Fotonic_Vault::OPTION_TOTP, $new_encrypted_totp, false );
 
 		Fotonic_Vault::update_session_key( $new_key );
+
+		delete_transient( 'fotonic_vault_reencrypt_lock' );
 
 		return new \WP_REST_Response( [ 'changed' => true ], 200 );
 	}
@@ -1742,9 +1786,9 @@ class Fotonic_REST_API {
 		if ( base64_encode( base64_decode( $value, true ) ) !== $value ) {
 			return false;
 		}
-		// Decoded length must be at least 16 bytes (IV) + 16 bytes (one AES block).
 		$decoded = base64_decode( $value, true );
-		// 16 bytes covers deterministic-encrypted fields (no IV prefix, one AES block).
+		// Decoded length: 16+ bytes covers deterministic-encrypted fields (no IV prefix, one AES block).
+		// Random-IV fields are 32+ bytes (16 IV + 16 min ciphertext). Both pass this threshold.
 		return ( false !== $decoded && strlen( $decoded ) >= 16 );
 	}
 }

@@ -15,7 +15,7 @@ class Fotonic_Admin_Page {
     }
 
     public static function render(): void {
-        echo '<div class="wrap"><div id="fotonic-app-root"></div></div>';
+        echo '<div class="wrap"><div id="fotonic-app-root"></div></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Static HTML, no user data.
     }
 
     /**
