@@ -159,13 +159,9 @@ export default function CollaboratorsRepeater({ value = [], onChange, ownerType,
 
                   {/* Remove */}
                   <td style={tdStyle}>
-                    <button
-                      type="button"
-                      onClick={() => removeRow(i)}
-                      style={{ color: '#a00', background: 'none', border: 'none', cursor: 'pointer', fontSize: 13 }}
-                    >
+                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(i)}>
                       {__('Rimuovi')}
-                    </button>
+                    </Button>
                   </td>
                 </tr>
               )

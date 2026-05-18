@@ -226,7 +226,7 @@ export default function WorkForm() {
 
   return (
     <>
-    <div className="p-6 max-w-5xl">
+    <div className="p-6">
       <PageHeader
         title={isEdit ? __('Edit Work') : __('New Work')}
         backTo="/works"

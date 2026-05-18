@@ -63,15 +63,16 @@ export default function PeopleRepeater({ value = [], onChange }) {
                 />
                 {__('Main Contact')}
               </label>
-              <button
+              <Button
                 type="button"
+                variant="danger"
+                size="sm"
                 onClick={() => removePerson(index)}
                 disabled={people.length <= 1}
-                className="text-gray-400 hover:text-red-500 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                 aria-label={__('Remove person')}
               >
-                <Trash2 size={16} />
-              </button>
+                <Trash2 size={14} />
+              </Button>
             </div>
           </div>
 

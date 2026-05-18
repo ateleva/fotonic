@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.1] — 2026-05-18
+
+### Changed
+- **Consistent button design system**: all buttons now use three semantic variants — `primary` (WP admin theme color, adapts to user's chosen color scheme), `secondary` (white + gray border), `danger` (red). No more shadows, gradients, or mixed inline styles.
+- **WP admin theme color integration**: primary buttons pick up `--wp-admin-theme-color` CSS variable automatically, so the plugin matches whatever admin color scheme the user selects in their WP profile.
+- Button reset (`appearance: none`, `box-shadow: none`, `outline: none` on focus/active) prevents WP admin CSS bleed-through on all button elements inside `#fotonic-app-root`.
+- **Full-width forms**: removed `max-w-*` constraints from WorkForm, CustomerForm, ServiceForm, and SettingsPage — all forms now use full available width.
+- Trash/remove buttons in PeopleRepeater, ServicesRepeater, and CollaboratorsRepeater are now solid danger buttons (red background, white icon/text).
+- Dashboard work-title links reset to plain link style (no WP admin button border bleed).
+- Vault lock button neutral gray instead of amber.
+- Analytics toolbar: Apply, Export CSV, Export PDF buttons aligned to same height (34px) as date inputs.
+
 ## [1.2.0] — 2026-05-14
 
 ### Added

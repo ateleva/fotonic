@@ -3,6 +3,12 @@ export default {
   content: ['./index.html', './src/**/*.{js,jsx}'],
   corePlugins: { preflight: false },
   important: '#fotonic-app-root',
-  theme: { extend: {} },
+  theme: {
+    extend: {
+      colors: {
+        'fotonic-primary': 'var(--fotonic-primary)',
+      },
+    },
+  },
   plugins: [],
 }

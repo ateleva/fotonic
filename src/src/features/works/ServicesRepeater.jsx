@@ -86,14 +86,9 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                     />
                   </td>
                   <td className="px-3 py-2">
-                    <button
-                      type="button"
-                      onClick={() => removeRow(index)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                      aria-label={__('Remove service')}
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove service')}>
+                      <Trash2 size={14} />
+                    </Button>
                   </td>
                 </tr>
               ))}

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Pencil, PlusCircle } from 'lucide-react'
-import { format, parseISO } from 'date-fns'
 import { useWorks } from '../../api/works'
+import { formatDate } from '../../utils/date'
 import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import Table from '../../components/Table'
@@ -15,15 +15,6 @@ function formatPrice(amount) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '—'
-  try {
-    return format(parseISO(dateStr), 'dd MMM yyyy')
-  } catch {
-    return dateStr
-  }
 }
 
 export default function WorkList() {
@@ -80,7 +71,7 @@ export default function WorkList() {
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             onClick={() => navigate(`/works/${row.id}`)}
           >

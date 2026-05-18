@@ -125,7 +125,7 @@ export default function Layout() {
           {isUnlocked && (
             <button
               onClick={handleLock}
-              className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium text-amber-600 hover:bg-amber-50 hover:text-amber-700 transition-colors cursor-pointer"
+              className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
             >
               <Lock size={14} />
               {__('Lock Vault')}

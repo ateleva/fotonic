@@ -1,8 +1,9 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { __ } from '../../utils/i18n'
-import { format, parseISO, isAfter, getYear } from 'date-fns'
+import { parseISO, isAfter, getYear } from 'date-fns'
 import { useWorks } from '../../api/works'
+import { formatDate } from '../../utils/date'
 import Badge from '../../components/Badge'
 import Spinner from '../../components/Spinner'
 import Table from '../../components/Table'
@@ -22,15 +23,6 @@ function formatPrice(amount) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '—'
-  try {
-    return format(parseISO(dateStr), 'dd MMMM yyyy')
-  } catch {
-    return dateStr
-  }
 }
 
 function workRevenue(work) {
@@ -110,7 +102,7 @@ export default function Dashboard() {
       label: __('Title'),
       render: (row) => (
         <button
-          className="text-indigo-600 hover:underline font-medium text-left"
+          className="border-0 bg-transparent p-0 text-blue-600 hover:underline font-medium text-left cursor-pointer"
           onClick={() => navigate(`/works/${row.id}`)}
         >
           {row.title}

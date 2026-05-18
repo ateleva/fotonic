@@ -54,7 +54,7 @@ export default function ServiceList() {
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
-            variant="ghost"
+            variant="secondary"
             size="sm"
             onClick={() => navigate(`/services/${row.id}`)}
           >

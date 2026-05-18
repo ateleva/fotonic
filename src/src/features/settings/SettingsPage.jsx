@@ -255,7 +255,7 @@ export default function SettingsPage() {
       </div>
     )}
 
-    <div className="p-6 max-w-2xl space-y-6">
+    <div className="p-6 space-y-6">
       <PageHeader title={__('Settings')} />
 
       {LicenseSettingsSection && (
