@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Fotonic
  * Plugin URI:        https://github.com/ateleva/fotonic
- * Description:       CRM and workflow manager for professional event photographers.
+ * Description:       CRM and workflow manager for freelance photographers.
  * Version:           1.2.2
  * Requires at least: 6.0
  * Requires PHP:      7.4
