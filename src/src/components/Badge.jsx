@@ -1,16 +1,17 @@
+import { __ } from '../utils/i18n'
+
 const styles = {
   paid:    'bg-green-100 text-green-800',
   partial: 'bg-yellow-100 text-yellow-800',
   unpaid:  'bg-red-100 text-red-800',
 }
 
-const labels = {
-  paid:    'Paid',
-  partial: 'Partial',
-  unpaid:  'Unpaid',
-}
-
 export default function Badge({ status }) {
+  const labels = {
+    paid:    __('Paid',    'fotonic'),
+    partial: __('Partial', 'fotonic'),
+    unpaid:  __('Unpaid',  'fotonic'),
+  }
   const s = status?.toLowerCase() ?? 'unpaid'
   return (
     <span

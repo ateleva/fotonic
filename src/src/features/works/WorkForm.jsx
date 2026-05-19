@@ -296,18 +296,26 @@ export default function WorkForm() {
         <section>
           <SectionHeading>{__('Customer')}</SectionHeading>
           <FormField label={__('Customer')} htmlFor="customer_id">
-            <select
-              id="customer_id"
-              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-              {...register('customer_id')}
-            >
-              <option value="">{__('— Select customer —')}</option>
-              {customers.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
+            <Controller
+              name="customer_id"
+              control={control}
+              render={({ field }) => (
+                <select
+                  id="customer_id"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  value={field.value ?? ''}
+                  onChange={(e) => field.onChange(e.target.value)}
+                  onBlur={field.onBlur}
+                >
+                  <option value="">{__('— Select customer —')}</option>
+                  {customers.map((c) => (
+                    <option key={c.id} value={String(c.id)}>
+                      {c.title}
+                    </option>
+                  ))}
+                </select>
+              )}
+            />
           </FormField>
         </section>
 

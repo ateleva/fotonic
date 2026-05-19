@@ -11,11 +11,36 @@
 #fotonic-app-root button {
   -webkit-appearance: none;
   appearance: none;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
 }
 
-#fotonic-app-root button:focus,
-#fotonic-app-root button:focus-visible,
-#fotonic-app-root button:active {
+/* Remove WP/browser focus ring for mouse/touch — keep for keyboard */
+#fotonic-app-root button:focus:not(:focus-visible),
+#fotonic-app-root a:focus:not(:focus-visible),
+#fotonic-app-root select:focus:not(:focus-visible) {
   box-shadow: none;
   outline: none;
+}
+
+/* Keyboard focus ring — all interactive elements, both plugins */
+#fotonic-app-root button:focus-visible,
+#fotonic-app-root a:focus-visible,
+#fotonic-app-root select:focus-visible {
+  outline: 2px solid var(--fotonic-primary);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* Sidebar active nav link — solid WP base color + white text */
+#fotonic-app-root .nav-link-active {
+  background-color: var(--fotonic-nav, #1d2327);
+  color: #fff;
+}
+
+/* Sidebar inactive nav link hover — themed, not plain grey */
+#fotonic-app-root .fotonic-nav-inactive:hover {
+  background-color: color-mix(in srgb, var(--fotonic-nav, #1d2327) 12%, white);
+  color: var(--fotonic-nav, #1d2327);
 }

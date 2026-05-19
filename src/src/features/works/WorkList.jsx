@@ -8,6 +8,7 @@ import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Badge from '../../components/Badge'
 import Spinner from '../../components/Spinner'
+import PaymentTypeManager from './PaymentTypeManager'
 import { __ } from '../../utils/i18n'
 
 function formatPrice(amount) {
@@ -126,6 +127,8 @@ export default function WorkList() {
           emptyMessage={__('No works found. Add your first work.')}
         />
       )}
+
+      <PaymentTypeManager />
 
     </div>
   )

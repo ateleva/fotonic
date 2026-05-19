@@ -1342,8 +1342,10 @@ class Fotonic_Meta_Boxes {
 				if ( ! is_array( $item ) ) {
 					continue;
 				}
-				$status  = ( isset( $item['status'] ) && $item['status'] === 'paid' ) ? 'paid' : 'unpaid';
-				$type    = ( isset( $item['type'] ) && $item['type'] === 'coupon' ) ? 'coupon' : 'default';
+				$status      = ( isset( $item['status'] ) && $item['status'] === 'paid' ) ? 'paid' : 'unpaid';
+				$valid_slugs = Fotonic_REST_API::get_valid_payment_type_slugs();
+				$fallback    = ! empty( $valid_slugs ) ? $valid_slugs[0] : 'default';
+				$type        = ( isset( $item['type'] ) && in_array( $item['type'], $valid_slugs, true ) ) ? $item['type'] : $fallback;
 				$raw_date = sanitize_text_field( $item['date'] ?? '' );
 				$clean[]  = [
 					'title'  => sanitize_text_field( $item['title'] ?? '' ),

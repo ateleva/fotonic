@@ -214,6 +214,49 @@ class Fotonic_REST_API {
 			'callback'            => [ __CLASS__, 'get_collaborator_options' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
+
+		// ------------------------------------------------------------------
+		// Payment Types
+		// ------------------------------------------------------------------
+		register_rest_route( self::NAMESPACE, '/payment-types', [
+			[
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => [ __CLASS__, 'get_payment_types' ],
+				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+			],
+			[
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ __CLASS__, 'create_payment_type' ],
+				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'args'                => [
+					'label' => [
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+				],
+			],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/payment-types/(?P<id>\d+)', [
+			[
+				'methods'             => 'PUT',
+				'callback'            => [ __CLASS__, 'update_payment_type' ],
+				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'args'                => [
+					'label' => [
+						'type'              => 'string',
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+				],
+			],
+			[
+				'methods'             => \WP_REST_Server::DELETABLE,
+				'callback'            => [ __CLASS__, 'delete_payment_type' ],
+				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+			],
+		] );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1436,10 +1479,12 @@ class Fotonic_REST_API {
 				if ( ! is_array( $inst ) ) {
 					continue;
 				}
-				$status  = ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid';
-				$type    = ( isset( $inst['type'] ) && $inst['type'] === 'coupon' ) ? 'coupon' : 'default';
-				$raw_date = sanitize_text_field( $inst['date'] ?? '' );
-				$clean[]  = [
+				$status      = ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid';
+				$valid_slugs = self::get_valid_payment_type_slugs();
+				$fallback    = ! empty( $valid_slugs ) ? $valid_slugs[0] : 'default';
+				$type        = ( isset( $inst['type'] ) && in_array( $inst['type'], $valid_slugs, true ) ) ? $inst['type'] : $fallback;
+				$raw_date    = sanitize_text_field( $inst['date'] ?? '' );
+				$clean[]     = [
 					'title'  => sanitize_text_field( $inst['title'] ?? '' ),
 					'amount' => (float) ( $inst['amount'] ?? 0 ),
 					'status' => $status,
@@ -1629,7 +1674,7 @@ class Fotonic_REST_API {
 						'title'  => (string) ( $inst['title'] ?? '' ),
 						'amount' => (float) ( $inst['amount'] ?? 0 ),
 						'status' => ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid',
-						'type'   => ( isset( $inst['type'] ) && $inst['type'] === 'coupon' ) ? 'coupon' : 'default',
+						'type'   => (string) ( $inst['type'] ?? 'default' ),
 						'date'   => (string) ( $inst['date'] ?? '' ),
 					];
 				}
@@ -1778,6 +1823,113 @@ class Fotonic_REST_API {
 	 * @param string $value Value to test.
 	 * @return bool
 	 */
+	// ---------------------------------------------------------------------------
+	// Payment Types
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * @return array<int, array{id: int, slug: string, label: string}>
+	 */
+	private static function get_payment_types_option(): array {
+		$raw = get_option( 'fotonic_payment_types' );
+		if ( ! is_string( $raw ) || '' === $raw ) {
+			$defaults = [
+				[ 'id' => 1, 'slug' => 'default', 'label' => 'Payment' ],
+				[ 'id' => 2, 'slug' => 'coupon',  'label' => 'Discount' ],
+			];
+			if ( false === $raw ) {
+				update_option( 'fotonic_payment_types', wp_json_encode( $defaults ) );
+			}
+			return $defaults;
+		}
+		$types = json_decode( $raw, true );
+		return is_array( $types ) ? $types : [];
+	}
+
+	private static function save_payment_types_option( array $types ): void {
+		update_option( 'fotonic_payment_types', wp_json_encode( array_values( $types ) ) );
+	}
+
+	public static function get_valid_payment_type_slugs(): array {
+		$types = self::get_payment_types_option();
+		return array_column( $types, 'slug' );
+	}
+
+	public static function get_payment_types( \WP_REST_Request $request ): \WP_REST_Response {
+		return new \WP_REST_Response( self::get_payment_types_option(), 200 );
+	}
+
+	public static function create_payment_type( \WP_REST_Request $request ): \WP_REST_Response {
+		$label = sanitize_text_field( (string) $request->get_param( 'label' ) );
+		if ( empty( $label ) ) {
+			return new \WP_REST_Response( [ 'message' => __( 'Label is required.', 'fotonic' ) ], 400 );
+		}
+		$slug  = sanitize_title( $label );
+		$types = self::get_payment_types_option();
+		foreach ( $types as $t ) {
+			if ( $t['slug'] === $slug ) {
+				return new \WP_REST_Response( [ 'message' => __( 'A payment type with this slug already exists.', 'fotonic' ) ], 400 );
+			}
+		}
+		$max_id = 0;
+		foreach ( $types as $t ) {
+			if ( (int) $t['id'] > $max_id ) {
+				$max_id = (int) $t['id'];
+			}
+		}
+		$new     = [ 'id' => $max_id + 1, 'slug' => $slug, 'label' => $label ];
+		$types[] = $new;
+		self::save_payment_types_option( $types );
+		return new \WP_REST_Response( $new, 201 );
+	}
+
+	public static function update_payment_type( \WP_REST_Request $request ): \WP_REST_Response {
+		$id    = (int) $request->get_param( 'id' );
+		$label = sanitize_text_field( (string) $request->get_param( 'label' ) );
+		if ( empty( $label ) ) {
+			return new \WP_REST_Response( [ 'message' => __( 'Label is required.', 'fotonic' ) ], 400 );
+		}
+		$types   = self::get_payment_types_option();
+		$found   = false;
+		$updated = null;
+		foreach ( $types as &$t ) {
+			if ( (int) $t['id'] === $id ) {
+				$t['label'] = $label;
+				$updated    = $t;
+				$found      = true;
+				break;
+			}
+		}
+		unset( $t );
+		if ( ! $found ) {
+			return new \WP_REST_Response( [ 'message' => __( 'Payment type not found.', 'fotonic' ) ], 404 );
+		}
+		self::save_payment_types_option( $types );
+		return new \WP_REST_Response( $updated, 200 );
+	}
+
+	public static function delete_payment_type( \WP_REST_Request $request ): \WP_REST_Response {
+		$id       = (int) $request->get_param( 'id' );
+		$types    = self::get_payment_types_option();
+		if ( count( $types ) <= 1 ) {
+			return new \WP_REST_Response( [ 'message' => __( 'At least one payment type must remain.', 'fotonic' ) ], 400 );
+		}
+		$found    = false;
+		$filtered = [];
+		foreach ( $types as $t ) {
+			if ( (int) $t['id'] === $id ) {
+				$found = true;
+			} else {
+				$filtered[] = $t;
+			}
+		}
+		if ( ! $found ) {
+			return new \WP_REST_Response( [ 'message' => __( 'Payment type not found.', 'fotonic' ) ], 404 );
+		}
+		self::save_payment_types_option( $filtered );
+		return new \WP_REST_Response( [ 'deleted' => true ], 200 );
+	}
+
 	private static function looks_encrypted( string $value ): bool {
 		if ( strlen( $value ) < 24 ) {
 			return false;

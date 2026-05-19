@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.2.2] — 2026-05-19
+
+### Added
+- **Custom payment types**: CRUD REST API (`GET/POST /payment-types`, `PUT/DELETE /payment-types/:id`) backed by a `fotonic_payment_types` wp_option. Defaults seed `Payment` and `Discount` types on first use.
+- **Payment Type Manager**: UI in the Works list to create, rename, and delete custom installment types.
+- Installment type selector in WorkForm is now a `<select>` dropdown populated from custom payment types, replacing the hardcoded Default/Coupon toggle.
+
+### Changed
+- **WP admin theme color**: sidebar nav active background and CTA button accent now read actual computed colors from the WP admin DOM at runtime via an inline script (reads `#adminmenu .current > a` for `--fotonic-nav` and a hidden `.wp-core-ui .button-primary` for `--fotonic-primary`). Works for all built-in and custom admin color schemes without hardcoding.
+- Sidebar nav: all nav items (free + Pro) now use `nav-link-active` CSS class for active state; Pro items no longer render hardcoded `bg-indigo-50 text-indigo-700`.
+- Payment status badge labels (Paid / Partial / Unpaid) moved inside component render scope so they are correctly translated via `__()`.
+
+### Fixed
+- Secondary button border disappeared after WP admin bleed-through reset. Fixed by adding `border-solid` to the Tailwind variant class (`border border-solid border-gray-200`).
+- `focus:outline-none` removed from `Button` base classes — keyboard users now see a proper focus ring on all interactive elements.
+- `cursor-pointer` added to `Button` base classes to restore pointer cursor after the `appearance: none` reset.
+
 ## [1.2.1] — 2026-05-18
 
 ### Changed

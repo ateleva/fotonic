@@ -3,7 +3,7 @@ Contributors: ateleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 6.7
-Stable tag: 1.2.0
+Stable tag: 1.2.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,20 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 
 == Changelog ==
 
+= 1.2.2 =
+* WP admin theme color integration: sidebar nav active state and CTA buttons now read actual computed colors from the WP admin DOM at runtime, adapting to all built-in and custom admin color schemes.
+* Custom payment types: new CRUD REST API (GET/POST /payment-types, PUT/DELETE /payment-types/:id) lets administrators define installment types beyond the built-in Default/Coupon. UI manager in the Works list.
+* Installment type selector: dropdown driven by custom payment types instead of a hardcoded toggle.
+* Payment status badge labels (Paid / Partial / Unpaid) are now translatable via WordPress i18n.
+* Secondary button border fix: added border-style: solid to prevent WP admin CSS bleed-through from hiding the border after the appearance reset.
+* Accessibility: removed focus:outline-none from Button component; keyboard users now see a proper focus ring on all interactive elements.
+* Sidebar nav: all nav items (free and Pro) use the themed active state class; Pro items no longer show hardcoded indigo on active.
+
+= 1.2.1 =
+* Consistent button design system: all buttons use three semantic variants — primary (WP admin theme color), secondary (white + gray border), danger (red). No more shadows, gradients, or mixed inline styles.
+* WP admin theme color integration: primary buttons pick up --wp-admin-theme-color CSS variable automatically.
+* Full-width forms: removed max-w-* constraints from WorkForm, CustomerForm, ServiceForm, and SettingsPage.
+
 = 1.2.0 =
 * Added collaborators repeater on Work edit form: assign collaborators with individual price and payment status per entry.
 * Added owner dropdown on Work edit form: select yourself or any collaborator as the work owner.
@@ -151,6 +165,12 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.2.2 =
+Adds custom payment types and WP admin theme color support. No breaking changes to existing data.
+
+= 1.2.1 =
+Consistent button styles. No breaking changes.
 
 = 1.2.0 =
 Adds collaborators repeater and owner dropdown to Work edit form. No breaking changes to existing data.

@@ -630,6 +630,62 @@ msgstr[1] "Collegato a %d lavori: %s"
 msgid "Collaborator Services"
 msgstr "Servizi collaboratore"
 
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "Payment Types"
+msgstr "Tipi di pagamento"
+
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "New payment type…"
+msgstr "Nuovo tipo di pagamento…"
+
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "Save"
+msgstr "Salva"
+
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "No payment types yet."
+msgstr "Nessun tipo di pagamento."
+
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "Name is required."
+msgstr "Il nome è obbligatorio."
+
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "Error adding type."
+msgstr "Errore nell'aggiunta del tipo."
+
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "Error updating type."
+msgstr "Errore nell'aggiornamento del tipo."
+
+#: src/src/features/works/PaymentTypeManager.jsx
+msgid "Delete this payment type? Existing installments will keep their current type."
+msgstr "Eliminare questo tipo di pagamento? Le rate esistenti manterranno il tipo attuale."
+
+#: src/src/features/works/PaymentTypeManager.jsx src/src/features/works/InstallmentsRepeater.jsx
+msgid "Payment"
+msgstr "Pagamento"
+
+#: src/src/features/works/PaymentTypeManager.jsx src/src/features/works/InstallmentsRepeater.jsx
+msgid "Discount"
+msgstr "Sconto"
+
+#: includes/class-rest-api.php
+msgid "Label is required."
+msgstr "L'etichetta è obbligatoria."
+
+#: includes/class-rest-api.php
+msgid "A payment type with this slug already exists."
+msgstr "Esiste già un tipo di pagamento con questo slug."
+
+#: includes/class-rest-api.php
+msgid "The default payment type cannot be deleted."
+msgstr "Il tipo di pagamento predefinito non può essere eliminato."
+
+#: includes/class-rest-api.php
+msgid "Payment type not found."
+msgstr "Tipo di pagamento non trovato."
+
 #~ msgid "Owner Type"
 #~ msgstr "Tipo responsabile"
 

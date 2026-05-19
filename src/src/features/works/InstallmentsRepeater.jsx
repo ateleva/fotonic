@@ -1,6 +1,7 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import { __ } from '../../utils/i18n'
 import Button from '../../components/Button'
+import { usePaymentTypes } from '../../api/paymentTypes'
 
 const emptyInstallment = () => ({
   title: '',
@@ -11,6 +12,8 @@ const emptyInstallment = () => ({
 })
 
 export default function InstallmentsRepeater({ value = [], onChange }) {
+  const { data: paymentTypes = [] } = usePaymentTypes()
+
   function addRow() {
     onChange([...value, emptyInstallment()])
   }
@@ -28,11 +31,6 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
     updateRow(index, 'status', current === 'paid' ? 'unpaid' : 'paid')
   }
 
-  function toggleType(index) {
-    const current = value[index].type ?? 'default'
-    updateRow(index, 'type', current === 'coupon' ? 'default' : 'coupon')
-  }
-
   const totalPaid = value.reduce((sum, r) => {
     return r.status === 'paid' ? sum + parseFloat(r.amount || 0) : sum
   }, 0)
@@ -48,7 +46,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-28">{__('Type')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Type')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Title')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Amount (€)')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Date')}</th>
@@ -60,18 +58,18 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
               {value.map((row, index) => (
                 <tr key={index}>
                   <td className="px-3 py-2">
-                    <button
-                      type="button"
-                      onClick={() => toggleType(index)}
-                      className={[
-                        'inline-flex items-center px-2.5 py-1 rounded text-xs font-medium transition-colors',
-                        (row.type ?? 'default') === 'coupon'
-                          ? 'bg-orange-100 text-orange-800 hover:bg-orange-200'
-                          : 'bg-blue-100 text-blue-800 hover:bg-blue-200',
-                      ].join(' ')}
+                    <select
+                      value={row.type ?? 'default'}
+                      onChange={(e) => updateRow(index, 'type', e.target.value)}
+                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      {(row.type ?? 'default') === 'coupon' ? __('Coupon') : __('Default')}
-                    </button>
+                      {paymentTypes.length > 0
+                        ? paymentTypes.map((t) => (
+                            <option key={t.id} value={t.slug}>{t.label}</option>
+                          ))
+                        : <option value={row.type ?? 'default'}>{row.type ?? 'default'}</option>
+                      }
+                    </select>
                   </td>
                   <td className="px-3 py-2">
                     <input
