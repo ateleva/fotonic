@@ -1,11 +1,22 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
+import QRCode from 'qrcode'
 import { apiFetch } from '../../api/client'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
 import { __ } from '../../utils/i18n'
+
+function QrCanvas({ uri, size = 200 }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (ref.current && uri) {
+      QRCode.toCanvas(ref.current, uri, { width: size, margin: 2 })
+    }
+  }, [uri, size])
+  return <canvas ref={ref} />
+}
 
 // --- base32 encoding (RFC 4648, no external lib) ---
 const BASE32_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'
@@ -186,13 +197,9 @@ function StepQR({ password, totpSecret, onNext }) {
 
       {qrUri && (
         <div className="flex flex-col items-center gap-3">
-          <img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUri)}`}
-            alt={__('TOTP QR Code')}
-            width={200}
-            height={200}
-            className="rounded-md border border-gray-200 p-2"
-          />
+          <div className="rounded-md border border-gray-200 p-2">
+            <QrCanvas uri={qrUri} size={200} />
+          </div>
           <div className="w-full rounded-md bg-gray-50 border border-gray-200 p-3">
             <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:')}</p>
             <p className="text-sm font-mono font-semibold text-gray-800 break-all">

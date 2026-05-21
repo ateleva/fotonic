@@ -1155,7 +1155,7 @@ class Fotonic_Meta_Boxes {
 		}
 
 		if ( isset( $_POST['ftnc_base_price'] ) ) {
-			$price = (float) $_POST['ftnc_base_price'];
+			$price = (float) wp_unslash( $_POST['ftnc_base_price'] );
 			update_post_meta( $post_id, '_ftnc_base_price', $price >= 0 ? $price : 0 );
 		}
 
@@ -1327,7 +1327,7 @@ class Fotonic_Meta_Boxes {
 
 		// Section 6 — Payments.
 		if ( isset( $_POST['ftnc_total_price'] ) ) {
-			$price = (float) $_POST['ftnc_total_price'];
+			$price = (float) wp_unslash( $_POST['ftnc_total_price'] );
 			update_post_meta( $post_id, '_ftnc_total_price', $price >= 0 ? $price : 0 );
 		}
 

@@ -30,7 +30,7 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 - Products catalog
 - Custom email notifications with SMTP delivery
 
-[Learn more about Fotonic Pro](#)
+[Learn more about Fotonic Pro](https://alessandrobonacina.com)
 
 ---
 
@@ -65,7 +65,7 @@ The Vault encrypts all personally identifiable information (names, emails, phone
 Yes, as long as the host meets the PHP 7.4+ and WordPress 6.0+ requirements.
 
 **Is there a Pro version?**
-Yes. [Fotonic Pro](#) is a paid addon sold separately. The free plugin is fully functional without it.
+Yes. [Fotonic Pro](https://alessandrobonacina.com) is a paid addon sold separately. The free plugin is fully functional without it.
 
 ---
 

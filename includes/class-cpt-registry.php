@@ -7,7 +7,6 @@ class Fotonic_CPT_Registry {
         self::register_service_cpt();
         self::register_payment_status_taxonomy(); // must register before CPT
         self::register_work_cpt();
-        add_action( 'save_post_ftnc_work', [ __CLASS__, 'auto_assign_payment_status' ] );
     }
 
     private static function register_customer_cpt(): void {

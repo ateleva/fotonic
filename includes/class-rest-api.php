@@ -77,7 +77,7 @@ class Fotonic_REST_API {
 				'callback'            => [ __CLASS__, 'get_customers' ],
 				'permission_callback' => [ __CLASS__, 'admin_permission' ],
 				'args'                => [
-					'search'   => [ 'type' => 'string',  'default' => '' ],
+					'search'   => [ 'type' => 'string',  'default' => '', 'sanitize_callback' => 'sanitize_text_field' ],
 					'page'     => [ 'type' => 'integer', 'default' => 1, 'minimum' => 1 ],
 					'per_page' => [ 'type' => 'integer', 'default' => 20, 'minimum' => 1, 'maximum' => 100 ],
 				],
@@ -150,7 +150,7 @@ class Fotonic_REST_API {
 				'callback'            => [ __CLASS__, 'get_works' ],
 				'permission_callback' => [ __CLASS__, 'admin_permission' ],
 				'args'                => [
-					'search'         => [ 'type' => 'string',  'default' => '' ],
+					'search'         => [ 'type' => 'string',  'default' => '', 'sanitize_callback' => 'sanitize_text_field' ],
 					'page'           => [ 'type' => 'integer', 'default' => 1,  'minimum' => 1 ],
 					'per_page'       => [ 'type' => 'integer', 'default' => 20, 'minimum' => 1, 'maximum' => 100 ],
 					'payment_status' => [
@@ -412,7 +412,7 @@ class Fotonic_REST_API {
 		// Verify the resolved path is inside the uploads directory (path traversal guard).
 		$real_file    = realpath( $file );
 		$real_basedir = realpath( wp_upload_dir()['basedir'] );
-		if ( ! $real_file || ! $real_basedir || strpos( $real_file, $real_basedir ) !== 0 ) {
+		if ( ! $real_file || ! $real_basedir || strpos( $real_file, rtrim( $real_basedir, '/' ) . '/' ) !== 0 ) {
 			return new \WP_REST_Response(
 				[ 'code' => 'forbidden', 'message' => __( 'Access denied.', 'fotonic' ) ],
 				403
@@ -552,6 +552,15 @@ class Fotonic_REST_API {
 	 * Returns: { reset: true, qr_uri: string }
 	 */
 	public static function vault_reset_totp( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'fotonic' ) ),
+				429
+			);
+		}
+
 		$body     = $req->get_json_params();
 		$password = isset( $body['password'] ) ? (string) $body['password'] : '';
 		$otp      = isset( $body['otp'] )      ? (string) $body['otp']      : '';
@@ -584,11 +593,14 @@ class Fotonic_REST_API {
 		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $key );
 
 		if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
 				401
 			);
 		}
+
+		delete_transient( $fail_key );
 
 		$new_totp_secret    = Fotonic_TOTP::generate_secret();
 		$new_encrypted_totp = Fotonic_Crypto::encrypt( strtoupper( $new_totp_secret ), $key );

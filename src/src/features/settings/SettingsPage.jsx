@@ -1,10 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { Shield, Key, ChevronDown, ChevronUp, CheckCircle, XCircle } from 'lucide-react'
+import QRCode from 'qrcode'
 import { __ } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
 import VaultSetup from '../vault/VaultSetup'
+
+function QrCanvas({ uri, size = 180 }) {
+  const ref = useRef(null)
+  useEffect(() => {
+    if (ref.current && uri) {
+      QRCode.toCanvas(ref.current, uri, { width: size, margin: 2 })
+    }
+  }, [uri, size])
+  return <canvas ref={ref} />
+}
 
 function SectionCard({ title, icon: Icon, children }) {
   return (
@@ -184,13 +195,9 @@ function ResetTotpForm() {
             {__('New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm.')}
           </p>
           <div className="flex flex-col items-center gap-3">
-            <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(qrUri)}`}
-              alt={__('TOTP QR Code')}
-              width={180}
-              height={180}
-              className="rounded border border-gray-200 p-2"
-            />
+            <div className="rounded border border-gray-200 p-2">
+              <QrCanvas uri={qrUri} size={180} />
+            </div>
             <div className="w-full rounded bg-gray-50 border border-gray-200 p-3">
               <p className="text-xs text-gray-500 mb-1">{__('Or enter this key manually:')}</p>
               <p className="text-xs font-mono font-semibold text-gray-800 break-all">
