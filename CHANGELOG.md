@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.3.0] — 2026-05-21
+
+### Security
+- **VULN-801**: `vault/setup` REST endpoint now returns `409 Conflict` if the vault is already initialised. Previously any `manage_options` user could re-POST to the endpoint at any time, generating a new key and making all existing encrypted PII permanently unreadable.
+- **VULN-810**: Vault cookie server-secret fallback replaced. Was `get_site_url() . $wpdb->prefix` (publicly guessable). Now a 64-character random key generated once and persisted as a WordPress option.
+- **VULN-007**: `can_save()` in `class-meta-boxes.php` upgraded from `edit_post` to `manage_options` capability check, matching the REST API auth model and preventing lower-privilege users from saving Fotonic meta boxes.
+
+### Changed
+- `wp_enqueue_script` updated from boolean `true` to array-style `[ 'in_footer' => true ]` (WordPress 6.3+ deprecation).
+- Plugin header: `Tested up to: 7.0`.
+
+### CI
+- `.github/workflows/deploy.yml`: build artifact verification step added — release aborted if `dist/fotonic-app.js` or `dist/fotonic-app.css` are missing after the build step.
+
+### i18n
+- Translation strings refreshed (PHP and JavaScript).
+
 ## [1.2.2] — 2026-05-19
 
 ### Added

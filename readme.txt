@@ -3,7 +3,7 @@ Contributors: ateleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.2.2
+Stable tag: 1.3.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -123,6 +123,15 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 
 == Changelog ==
 
+= 1.3.0 =
+* Security: vault setup endpoint now returns 409 if the vault is already configured, preventing a privileged user from accidentally overwriting all encrypted PII.
+* Security: vault cookie server-secret fallback replaced with a randomly generated 64-character key stored as a WordPress option, eliminating a guessable fallback based on site URL.
+* Security: meta box save guard upgraded from edit_post to manage_options capability, matching the REST API authorization model.
+* Compatibility: wp_enqueue_script updated to use array-style args (WordPress 6.3+); removes the deprecation notice from WP_DEBUG logs.
+* Compatibility: Tested up to WordPress 7.0.
+* CI: build artifact verification step added to the deploy workflow; the release is aborted if the compiled JS or CSS files are missing.
+* i18n: translation strings refreshed.
+
 = 1.2.2 =
 * WP admin theme color integration: sidebar nav active state and CTA buttons now read actual computed colors from the WP admin DOM at runtime, adapting to all built-in and custom admin color schemes.
 * Custom payment types: new CRUD REST API (GET/POST /payment-types, PUT/DELETE /payment-types/:id) lets administrators define installment types beyond the built-in Default/Coupon. UI manager in the Works list.
@@ -165,6 +174,9 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Security hardening: vault setup guard, server-secret hardening, and meta box capability fix. Recommended for all installations. No breaking changes to existing data.
 
 = 1.2.2 =
 Adds custom payment types and WP admin theme color support. No breaking changes to existing data.

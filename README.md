@@ -82,6 +82,14 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 
 ## Changelog
 
+### 1.3.0
+- Security: vault setup endpoint returns 409 if already configured (prevents accidental PII wipe)
+- Security: vault cookie server-secret now uses a random stored key instead of the guessable site URL
+- Security: meta box save requires `manage_options` (was `edit_post`)
+- Compatibility: `wp_enqueue_script` updated to array-style args (WP 6.3+)
+- Compatibility: Tested up to WordPress 7.0
+- CI: build artifact check added to deploy workflow
+
 ### 1.2.2
 - WP admin theme color integration: sidebar nav and CTA buttons adapt to all built-in and custom admin color schemes
 - Custom payment types: new CRUD API and UI manager lets administrators define installment types beyond Default/Coupon
