@@ -25,12 +25,14 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 - Kanban board with drag-and-drop task management
 - Monthly Calendar view
 - Google Calendar and Google Tasks sync
-- Analytics with charts and CSV / PDF export
-- Collaborator and Supplier management
-- Products catalog
+- Analytics: clean UI dashboard with key stats and charts ready to be exported in CSV and PDF formats
+- Full Expenses tracker: add software, equipment, fixed costs, professionals services, taxes... and track everything overtime 
+- Collaborator: manage your collaborators registry and assign them roles in your works, tracking expenses and their services
+- Supplier management: create a list of suppliers and professionals to recommend in your works
+- Products catalog: track products you offer with flexible pricing tables and export everything in PDF format
 - Custom email notifications with SMTP delivery
 
-[Learn more about Fotonic Pro](https://alessandrobonacina.com)
+[Learn more about Fotonic Pro](https://eleva.alessandrobonacina.com)
 
 ---
 

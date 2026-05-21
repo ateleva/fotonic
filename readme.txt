@@ -28,7 +28,7 @@ Fotonic is a standalone WordPress plugin that provides a modern React-powered CR
 
 = Fotonic Pro =
 
-A paid addon (sold separately) that adds: task management with Kanban board, a monthly Calendar view, Google Calendar and Google Tasks integration, Analytics with charts and CSV/PDF export, Collaborator management, Products catalog, custom email notifications with SMTP delivery, and SLM license management.
+A paid addon (sold separately) that adds: task management with Kanban board, a monthly Calendar view, Google Calendar and Google Tasks integration, Analytics with charts and CSV/PDF export, Expenses tracker, Collaborators and Suppliers registry, Products catalog, custom email notifications with SMTP delivery.
 
 When Fotonic Pro's Google Calendar integration is enabled, certain work and task data (titles, dates, times, locations, quick notes, task descriptions) is sent to Google's servers. See the Privacy Policy section below and the Fotonic Pro readme for full details.
 
