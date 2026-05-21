@@ -62,16 +62,6 @@ export function createRouter() { return createHashRouter([
           </Suspense>
         )
       }] : []),
-      ...(window.FotonicApp?.features?.collaborators && window.FotonicProComponents?.CollaboratorServiceList ? [
-        {
-          path: 'collaborator-services',
-          element: (
-            <Suspense fallback={<Fallback />}>
-              <window.FotonicProComponents.CollaboratorServiceList />
-            </Suspense>
-          ),
-        },
-      ] : []),
       ...(window.FotonicApp?.features?.collaborators && window.FotonicProComponents?.CollaboratorList ? [
         {
           path: 'collaborators',
@@ -146,6 +136,32 @@ export function createRouter() { return createHashRouter([
           element: (
             <Suspense fallback={<Fallback />}>
               <window.FotonicProComponents.SupplierForm />
+            </Suspense>
+          ),
+        },
+      ] : []),
+      ...(window.FotonicApp?.features?.expenses && window.FotonicProComponents?.ExpenseList ? [
+        {
+          path: 'expenses',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.ExpenseList />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'expenses/new',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.ExpenseForm />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'expenses/:id',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.ExpenseForm />
             </Suspense>
           ),
         },

@@ -30,10 +30,34 @@ class Fotonic_Admin_Page {
         return str_replace( '<script ', '<script type="module" ', $tag );
     }
 
+    /**
+     * Remove all admin notices on the Fotonic SPA page to prevent double scrollbars.
+     * Hooked to `all_admin_notices` at priority PHP_INT_MAX so it fires after everything else.
+     */
+    public static function suppress_notices(): void {
+        $page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( 'fotonic' !== $page ) {
+            return;
+        }
+        remove_all_actions( 'admin_notices' );
+        remove_all_actions( 'all_admin_notices' );
+        remove_all_actions( 'network_admin_notices' );
+        remove_all_actions( 'user_admin_notices' );
+    }
+
     public static function enqueue_assets( string $hook ): void {
         if ( 'toplevel_page_fotonic' !== $hook ) {
             return;
         }
+
+        // Inline CSS: hide any residual notices and kill the page-level scrollbar on the SPA page.
+        wp_add_inline_style( 'fotonic-app-css', '
+            .notice, .notice-error, .notice-warning, .notice-info, .notice-success,
+            .update-nag, .updated, .error, .wp-browser-update,
+            #wpbody-content > .updated, #wpbody-content > .error { display: none !important; }
+            body.toplevel_page_fotonic, body.toplevel_page_fotonic #wpbody-content,
+            body.toplevel_page_fotonic #wpwrap { overflow: hidden !important; }
+        ' );
 
         add_filter( 'script_loader_tag', [ __CLASS__, 'add_module_type' ], 10, 2 );
 
@@ -45,7 +69,7 @@ class Fotonic_Admin_Page {
             FOTONIC_URL . 'dist/fotonic-app.js',
             [ 'wp-i18n' ], // wp-i18n provides window.wp.i18n used by @wordpress/i18n
             FOTONIC_VERSION,
-            true
+            [ 'in_footer' => true ]
         );
 
         wp_enqueue_style(
@@ -114,6 +138,7 @@ class Fotonic_Admin_Page {
                 'suppliers'     => $license_valid,
                 'calendar'      => $license_valid,
                 'gcal'          => $license_valid && class_exists( 'Fotonic_Google_OAuth' ) && Fotonic_Google_OAuth::is_connected(),
+                'expenses'      => $license_valid,
             ],
         ] );
     }

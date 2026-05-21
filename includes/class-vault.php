@@ -259,7 +259,12 @@ class Fotonic_Vault {
 		if ( defined( 'SECURE_AUTH_KEY' ) && SECURE_AUTH_KEY ) {
 			return SECURE_AUTH_KEY;
 		}
-		// Last-resort: site URL + DB prefix (not ideal but avoids a hard failure).
-		return get_site_url() . ( isset( $GLOBALS['wpdb'] ) ? $GLOBALS['wpdb']->prefix : '' );
+		// Last-resort: generate and persist a random secret so the fallback is not guessable.
+		$fallback = get_option( 'fotonic_server_secret_fallback', '' );
+		if ( empty( $fallback ) ) {
+			$fallback = wp_generate_password( 64, true, true );
+			update_option( 'fotonic_server_secret_fallback', $fallback, false );
+		}
+		return $fallback;
 	}
 }

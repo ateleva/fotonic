@@ -791,9 +791,6 @@ msgstr "Tipo di pagamento non trovato."
 #~ msgid "Date"
 #~ msgstr "Data"
 
-#~ msgid "Revenue"
-#~ msgstr "Ricavi"
-
 #~ msgid "Works This Year"
 #~ msgstr "Lavori quest'anno"
 
@@ -1190,3 +1187,43 @@ msgstr "Tipo di pagamento non trovato."
 
 #~ msgid "Confirm Delete"
 #~ msgstr "Conferma eliminazione"
+
+#: src/src/components/Layout.jsx
+msgid "Expenses"
+msgstr "Spese"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "this year"
+msgstr "quest'anno"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "next year"
+msgstr "anno prossimo"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "last year"
+msgstr "anno scorso"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "Revenue"
+msgstr "Fatturato"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "Payments to receive"
+msgstr "Pagamenti da ricevere"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "Payment types used"
+msgstr "Tipi di pagamento utilizzati"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "No data"
+msgstr "Nessun dato"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "Recent Works"
+msgstr "Lavori recenti"
+
+#: src/src/features/dashboard/Dashboard.jsx
+msgid "Total"
+msgstr "Totale"

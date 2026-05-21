@@ -238,6 +238,12 @@ class Fotonic_REST_API {
 			],
 		] );
 
+		register_rest_route( self::NAMESPACE, '/dashboard-stats', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'get_dashboard_stats' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
 		register_rest_route( self::NAMESPACE, '/payment-types/(?P<id>\d+)', [
 			[
 				'methods'             => 'PUT',
@@ -281,6 +287,13 @@ class Fotonic_REST_API {
 	 * Returns: { setup: true, qr_uri: string }
 	 */
 	public static function vault_setup( \WP_REST_Request $req ): \WP_REST_Response {
+		if ( Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'already_setup', 'message' => __( 'Vault is already configured. Use change-password to update credentials.', 'fotonic' ) ],
+				409
+			);
+		}
+
 		$body        = $req->get_json_params();
 		$password    = isset( $body['password'] )    ? (string) $body['password']    : '';
 		$totp_secret = isset( $body['totp_secret'] ) ? (string) $body['totp_secret'] : '';
@@ -1865,6 +1878,138 @@ class Fotonic_REST_API {
 	public static function get_valid_payment_type_slugs(): array {
 		$types = self::get_payment_types_option();
 		return array_column( $types, 'slug' );
+	}
+
+	// =========================================================================
+	// Dashboard Stats
+	// =========================================================================
+
+	public static function get_dashboard_stats( \WP_REST_Request $request ): \WP_REST_Response {
+		$now          = current_time( 'Y' );
+		$this_year    = (int) $now;
+		$last_year    = $this_year - 1;
+		$next_year    = $this_year + 1;
+
+		$years = [
+			'last_year' => $last_year,
+			'this_year' => $this_year,
+			'next_year' => $next_year,
+		];
+
+		$works_count   = [ 'last_year' => 0, 'this_year' => 0, 'next_year' => 0 ];
+		$revenue       = [ 'last_year' => 0.0, 'this_year' => 0.0, 'next_year' => 0.0 ];
+		$payments_recv = [ 'last_year' => 0.0, 'this_year' => 0.0 ];
+
+		foreach ( $years as $key => $year ) {
+			$from = sprintf( '%04d-01-01', $year );
+			$to   = sprintf( '%04d-12-31', $year );
+
+			$query = new \WP_Query( [
+				'post_type'      => 'ftnc_work',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'meta_query'     => [
+					[
+						'key'     => '_ftnc_event_date',
+						'value'   => [ $from, $to ],
+						'compare' => 'BETWEEN',
+						'type'    => 'DATE',
+					],
+				],
+			] );
+
+			$works_count[ $key ] = $query->post_count;
+
+			foreach ( $query->posts as $post_id ) {
+				$raw          = get_post_meta( (int) $post_id, '_ftnc_installments', true );
+				$installments = is_string( $raw ) ? json_decode( $raw, true ) : [];
+				if ( ! is_array( $installments ) ) {
+					$installments = [];
+				}
+				foreach ( $installments as $inst ) {
+					if ( ! is_array( $inst ) ) continue;
+					$amount = (float) ( $inst['amount'] ?? 0 );
+					$revenue[ $key ] += $amount;
+					if ( isset( $key ) && ( 'last_year' === $key || 'this_year' === $key ) ) {
+						$status = (string) ( $inst['status'] ?? 'unpaid' );
+						if ( 'unpaid' === $status ) {
+							$payments_recv[ $key ] += $amount;
+						}
+					}
+				}
+			}
+		}
+
+		// Payment types breakdown — this year only
+		$pt_map     = [];
+		$pt_total   = 0.0;
+		$from_ty    = sprintf( '%04d-01-01', $this_year );
+		$to_ty      = sprintf( '%04d-12-31', $this_year );
+		$ty_query   = new \WP_Query( [
+			'post_type'      => 'ftnc_work',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_query'     => [
+				[
+					'key'     => '_ftnc_event_date',
+					'value'   => [ $from_ty, $to_ty ],
+					'compare' => 'BETWEEN',
+					'type'    => 'DATE',
+				],
+			],
+		] );
+		foreach ( $ty_query->posts as $post_id ) {
+			$raw          = get_post_meta( (int) $post_id, '_ftnc_installments', true );
+			$installments = is_string( $raw ) ? json_decode( $raw, true ) : [];
+			if ( ! is_array( $installments ) ) continue;
+			foreach ( $installments as $inst ) {
+				if ( ! is_array( $inst ) ) continue;
+				$amount   = (float) ( $inst['amount'] ?? 0 );
+				$type_key = sanitize_key( (string) ( $inst['type'] ?? 'default' ) );
+				if ( ! isset( $pt_map[ $type_key ] ) ) {
+					$pt_map[ $type_key ] = 0.0;
+				}
+				$pt_map[ $type_key ] += $amount;
+				$pt_total             += $amount;
+			}
+		}
+
+		// Build payment_types array with labels + percentages
+		$all_types     = self::get_payment_types_option();
+		$type_labels   = array_column( $all_types, 'label', 'slug' );
+		$payment_types = [];
+		foreach ( $pt_map as $slug => $subtotal ) {
+			$payment_types[] = [
+				'slug'     => $slug,
+				'label'    => $type_labels[ $slug ] ?? $slug,
+				'subtotal' => round( $subtotal, 2 ),
+				'pct'      => $pt_total > 0 ? round( ( $subtotal / $pt_total ) * 100, 1 ) : 0.0,
+			];
+		}
+		usort( $payment_types, static function( $a, $b ) {
+			return $b['subtotal'] <=> $a['subtotal'];
+		} );
+
+		return new \WP_REST_Response( [
+			'works'    => [
+				'this_year' => $works_count['this_year'],
+				'next_year' => $works_count['next_year'],
+				'last_year' => $works_count['last_year'],
+			],
+			'revenue'  => [
+				'this_year' => round( $revenue['this_year'], 2 ),
+				'next_year' => round( $revenue['next_year'], 2 ),
+				'last_year' => round( $revenue['last_year'], 2 ),
+			],
+			'payments_to_receive' => [
+				'this_year'     => round( $payments_recv['this_year'], 2 ),
+				'last_year'     => round( $payments_recv['last_year'], 2 ),
+				'show_last_year' => $payments_recv['last_year'] > 0,
+			],
+			'payment_types' => $payment_types,
+		], 200 );
 	}
 
 	public static function get_payment_types( \WP_REST_Request $request ): \WP_REST_Response {

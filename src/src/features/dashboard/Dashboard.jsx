@@ -1,28 +1,15 @@
-import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { __ } from '../../utils/i18n'
-import { parseISO, isAfter, getYear } from 'date-fns'
 import { useWorks } from '../../api/works'
 import { formatDate } from '../../utils/date'
 import Badge from '../../components/Badge'
 import Spinner from '../../components/Spinner'
 import Table from '../../components/Table'
+import { apiFetch } from '../../api/client'
 
-function StatCard({ label, value, sub }) {
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-1">
-      <span className="text-sm text-gray-500">{label}</span>
-      <span className="text-2xl font-bold text-gray-900">{value}</span>
-      {sub && <span className="text-xs text-gray-400">{sub}</span>}
-    </div>
-  )
-}
-
-function formatPrice(amount) {
-  return '€' + Number(amount || 0).toLocaleString('it-IT', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+function formatEuro(amount) {
+  return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(amount ?? 0)
 }
 
 function workRevenue(work) {
@@ -31,70 +18,44 @@ function workRevenue(work) {
     .reduce((s, i) => s + parseFloat(i.amount || 0), 0)
 }
 
+// Stat card: title on top, main value (big+bold) + main label (small right), then sub-rows
+function StatCard({ title, mainValue, mainLabel, rows, children }) {
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-2">
+      <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">{title}</span>
+      <div className="flex items-baseline gap-2">
+        <span className="text-2xl font-bold text-gray-900 leading-none">{mainValue}</span>
+        {mainLabel && <span className="text-xs text-gray-400">{mainLabel}</span>}
+      </div>
+      {rows && rows.map((r, i) => (
+        <div key={i} className="flex items-baseline gap-2">
+          <span className="text-sm font-semibold text-gray-600">{r.value}</span>
+          <span className="text-xs text-gray-400">{r.label}</span>
+        </div>
+      ))}
+      {children}
+    </div>
+  )
+}
+
 export default function Dashboard() {
   const navigate = useNavigate()
-  const { data, isLoading } = useWorks({ per_page: 100 })
-  const works = Array.isArray(data) ? data : data?.data ?? []
+  const { data: works, isLoading: worksLoading } = useWorks({ per_page: 5, page: 1 })
+  const upcomingWorks = Array.isArray(works) ? works : works?.data ?? []
 
-  const now = new Date()
-  const currentYear = getYear(now)
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['dashboard-stats'],
+    queryFn: () => apiFetch('dashboard-stats'),
+    staleTime: 60_000,
+  })
 
-  const stats = useMemo(() => {
-    const thisYearWorks = works.filter((w) => {
-      if (!w.event_date) return false
-      try {
-        return getYear(parseISO(w.event_date)) === currentYear
-      } catch {
-        return false
-      }
-    })
-
-    const revenueThisYear = thisYearWorks.reduce((sum, w) => {
-      const paid = (w.installments ?? []).filter((i) => i.status === 'paid')
-      return sum + paid.reduce((s, i) => s + parseFloat(i.amount || 0), 0)
-    }, 0)
-
-    const upcoming = works.filter((w) => {
-      if (!w.event_date) return false
-      try {
-        return isAfter(parseISO(w.event_date), now)
-      } catch {
-        return false
-      }
-    })
-
-    const unpaidBalance = works.reduce((sum, w) => {
-      const unpaid = (w.installments ?? []).filter((i) => i.status === 'unpaid')
-      return sum + unpaid.reduce((s, i) => s + parseFloat(i.amount || 0), 0)
-    }, 0)
-
-    const allPaidRevenue = works.reduce((sum, w) => {
-      const paid = (w.installments ?? []).filter((i) => i.status === 'paid')
-      return sum + paid.reduce((s, i) => s + parseFloat(i.amount || 0), 0)
-    }, 0)
-
-    const couponRevenue = works.reduce((sum, w) => {
-      const coupons = (w.installments ?? []).filter((i) => i.type === 'coupon' && i.status === 'paid')
-      return sum + coupons.reduce((s, i) => s + parseFloat(i.amount || 0), 0)
-    }, 0)
-
-    const defaultRevenue = allPaidRevenue - couponRevenue
-    const couponPct = allPaidRevenue > 0 ? Math.round((couponRevenue / allPaidRevenue) * 100) : 0
-    const defaultPct = allPaidRevenue > 0 ? 100 - couponPct : 0
-
-    return {
-      totalWorksThisYear: thisYearWorks.length,
-      revenueThisYear,
-      unpaidBalance,
-      couponRevenue,
-      defaultRevenue,
-      couponPct,
-      defaultPct,
-      next5: [...upcoming]
-        .sort((a, b) => (a.event_date ?? '').localeCompare(b.event_date ?? ''))
-        .slice(0, 5),
-    }
-  }, [works, currentYear])
+  if (statsLoading || worksLoading) {
+    return (
+      <div className="flex justify-center py-12">
+        <Spinner />
+      </div>
+    )
+  }
 
   const upcomingColumns = [
     {
@@ -122,7 +83,7 @@ export default function Dashboard() {
     {
       key: 'revenue',
       label: __('Revenue'),
-      render: (row) => formatPrice(workRevenue(row)),
+      render: (row) => formatEuro(workRevenue(row)),
     },
     {
       key: 'payment_status',
@@ -131,13 +92,8 @@ export default function Dashboard() {
     },
   ]
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center py-12">
-        <Spinner />
-      </div>
-    )
-  }
+  const paymentTypes = stats?.payment_types ?? []
+  const totalPT = paymentTypes.reduce((s, t) => s + t.subtotal, 0)
 
   return (
     <div className="p-6 space-y-8">
@@ -145,40 +101,79 @@ export default function Dashboard() {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        {/* Works */}
         <StatCard
-          label={__('Works This Year')}
-          value={stats.totalWorksThisYear}
-          sub={`${__('Year')} ${currentYear}`}
+          title={__('Works')}
+          mainValue={stats?.works?.this_year ?? 0}
+          mainLabel={__('this year')}
+          rows={[
+            { value: stats?.works?.next_year ?? 0, label: __('next year') },
+            { value: stats?.works?.last_year ?? 0, label: __('last year') },
+          ]}
         />
+
+        {/* Revenue */}
         <StatCard
-          label={__('Revenue This Year')}
-          value={formatPrice(stats.revenueThisYear)}
-          sub={__('From paid installments')}
+          title={__('Revenue')}
+          mainValue={formatEuro(stats?.revenue?.this_year)}
+          mainLabel={__('this year')}
+          rows={[
+            { value: formatEuro(stats?.revenue?.next_year), label: __('next year') },
+            { value: formatEuro(stats?.revenue?.last_year), label: __('last year') },
+          ]}
         />
+
+        {/* Payments to receive */}
         <StatCard
-          label={__('Unpaid Balance')}
-          value={formatPrice(stats.unpaidBalance)}
-          sub={__('All works combined')}
+          title={__('Payments to receive')}
+          mainValue={formatEuro(stats?.payments_to_receive?.this_year)}
+          mainLabel={__('this year')}
+          rows={
+            stats?.payments_to_receive?.show_last_year
+              ? [{ value: formatEuro(stats?.payments_to_receive?.last_year), label: __('last year') }]
+              : []
+          }
         />
-        <StatCard
-          label={__('Coupon vs Default Revenue')}
-          value={`${stats.couponPct}% / ${stats.defaultPct}%`}
-          sub={`${formatPrice(stats.couponRevenue)} ${__('coupon')} · ${formatPrice(stats.defaultRevenue)} ${__('default')}`}
-        />
+
+        {/* Payment types used */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">{__('Payment types used')}</span>
+          {paymentTypes.length === 0 ? (
+            <span className="text-sm text-gray-400">{__('No data')}</span>
+          ) : (
+            <div className="flex flex-col gap-1">
+              {paymentTypes.map((t) => (
+                <div key={t.slug} className="flex items-center gap-2 text-sm">
+                  <span className="font-medium text-gray-700 flex-1 truncate">{t.label}</span>
+                  <span className="text-gray-600 font-semibold">{formatEuro(t.subtotal)}</span>
+                  <span className="text-gray-400 text-xs w-10 text-right">{t.pct}%</span>
+                </div>
+              ))}
+              {totalPT > 0 && (
+                <div className="border-t border-gray-100 pt-1 mt-1 flex items-center gap-2 text-sm">
+                  <span className="text-gray-400 flex-1">{__('Total')}</span>
+                  <span className="font-bold text-gray-800">{formatEuro(totalPT)}</span>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
       </div>
 
-      {/* Next 5 Upcoming */}
+      {/* Recent Works */}
       <div>
         <h2 className="text-base font-semibold text-gray-800 mb-3">
-          {__('Next Upcoming Works')}
+          {__('Recent Works')}
         </h2>
-        {stats.next5.length === 0 ? (
-          <p className="text-sm text-gray-400">{__('No upcoming events scheduled.')}</p>
+        {upcomingWorks.length === 0 ? (
+          <p className="text-sm text-gray-400">{__('No works found.')}</p>
         ) : (
           <Table
             columns={upcomingColumns}
-            data={stats.next5}
-            emptyMessage={__('No upcoming events.')}
+            data={upcomingWorks}
+            emptyMessage={__('No works found.')}
           />
         )}
       </div>

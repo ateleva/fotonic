@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Tag } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
 import { __ } from '../utils/i18n'
@@ -32,13 +32,13 @@ export default function Layout() {
   ]
 
   const proNavItems = [
-    { to: '/kanban',                 label: __('Kanban'),                        icon: Kanban,       feature: 'kanban' },
-    { to: '/analytics',              label: __('Analytics'),                     icon: BarChart2,    feature: 'analytics' },
-    { to: '/calendar',               label: __('Calendar'),                      icon: CalendarDays, feature: 'calendar' },
-    { to: '/collaborators',          label: __('Collaborators'),                 icon: UserCheck,    feature: 'collaborators' },
-    { to: '/collaborator-services',  label: __('Collaborator Services', 'fotonic'), icon: Tag,       feature: 'collaborators' },
-    { to: '/products',               label: __('Products'),                      icon: Package,      feature: 'products' },
-    { to: '/suppliers',              label: __('Suppliers'),                     icon: Store,        feature: 'suppliers' },
+    { to: '/kanban',         label: __('Kanban'),         icon: Kanban,       feature: 'kanban' },
+    { to: '/analytics',     label: __('Analytics'),      icon: BarChart2,    feature: 'analytics' },
+    { to: '/calendar',      label: __('Calendar'),       icon: CalendarDays, feature: 'calendar' },
+    { to: '/collaborators', label: __('Collaborators'),  icon: UserCheck,    feature: 'collaborators' },
+    { to: '/products',      label: __('Products'),       icon: Package,      feature: 'products' },
+    { to: '/suppliers',     label: __('Suppliers'),      icon: Store,        feature: 'suppliers' },
+    { to: '/expenses',      label: __('Expenses'),       icon: Receipt,      feature: 'expenses' },
   ]
 
   const handleLock = async () => {
@@ -55,14 +55,14 @@ export default function Layout() {
       {/* Sidebar */}
       <aside className="w-[20%] min-w-[200px] max-w-[260px] shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-y-auto overflow-x-hidden">
         {/* Logo */}
-        <div className="px-4 py-3 border-b border-gray-100">
+        <div className="px-4 py-2 border-b border-gray-100">
           <span className="text-lg font-bold tracking-tight text-gray-900">
             Fotonic
           </span>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-3 py-2 space-y-0.5">
+        <nav className="flex-1 px-3 py-1.5 space-y-0.5">
           {navItems.map(({ to, label, icon: Icon }) => (
             <NavLink
               key={to}
@@ -84,8 +84,8 @@ export default function Layout() {
 
           {proNavItems.some(({ feature }) => features[feature]) && (
             <>
-              <div className="pt-2 pb-1 px-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400">{__('Pro')}</span>
+              <div className="pt-1 pb-0.5 px-3">
+                <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">{__('Pro')}</span>
               </div>
               {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon }) => (
                 <NavLink
@@ -109,7 +109,7 @@ export default function Layout() {
           )}
         </nav>
 
-        <div className="px-3 py-2 border-t border-gray-100 space-y-1">
+        <div className="px-3 py-1.5 border-t border-gray-100 space-y-0.5">
           <NavLink
             to="/settings"
             className={({ isActive }) =>
@@ -134,10 +134,10 @@ export default function Layout() {
               {__('Lock Vault')}
             </button>
           )}
-          <div className="px-3 space-y-0.5">
-            <p className="text-xs text-gray-400">Fotonic v{window.FotonicApp?.version ?? '–'}</p>
+          <div className="px-3 flex items-center gap-2 flex-wrap">
+            <span className="text-xs text-gray-400">Fotonic v{window.FotonicApp?.version ?? '–'}</span>
             {window.FotonicApp?.proVersion && (
-              <p className="text-xs text-indigo-400">Fotonic Pro v{window.FotonicApp.proVersion}</p>
+              <span className="text-xs text-indigo-400">Fotonic Pro v{window.FotonicApp.proVersion}</span>
             )}
           </div>
         </div>

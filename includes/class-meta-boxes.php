@@ -451,16 +451,22 @@ class Fotonic_Meta_Boxes {
 			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '1. Event Details', 'fotonic' ); ?></legend>
 			<table class="form-table">
 				<tr>
-					<th><label for="ftnc_event_date"><?php esc_html_e( 'Event Date', 'fotonic' ); ?></label></th>
-					<td><input type="date" id="ftnc_event_date" name="ftnc_event_date" value="<?php echo esc_attr( $event_date ); ?>" class="regular-text"></td>
-				</tr>
-				<tr>
-					<th><label for="ftnc_event_time_from"><?php esc_html_e( 'Event Time From', 'fotonic' ); ?></label></th>
-					<td><input type="time" id="ftnc_event_time_from" name="ftnc_event_time_from" value="<?php echo esc_attr( $event_time_from ); ?>" class="regular-text"></td>
-				</tr>
-				<tr>
-					<th><label for="ftnc_event_time_to"><?php esc_html_e( 'Event Time To', 'fotonic' ); ?></label></th>
-					<td><input type="time" id="ftnc_event_time_to" name="ftnc_event_time_to" value="<?php echo esc_attr( $event_time_to ); ?>" class="regular-text"></td>
+					<td colspan="2" style="padding:8px 0 0;">
+						<div style="display:flex;gap:12px;">
+							<div style="flex:0 0 calc(33.333% - 8px);box-sizing:border-box;">
+								<label for="ftnc_event_date" style="display:block;font-weight:600;margin-bottom:4px;"><?php esc_html_e( 'Event Date', 'fotonic' ); ?></label>
+								<input type="date" id="ftnc_event_date" name="ftnc_event_date" value="<?php echo esc_attr( $event_date ); ?>" style="width:100%;">
+							</div>
+							<div style="flex:0 0 calc(33.333% - 8px);box-sizing:border-box;">
+								<label for="ftnc_event_time_from" style="display:block;font-weight:600;margin-bottom:4px;"><?php esc_html_e( 'Event Time From', 'fotonic' ); ?></label>
+								<input type="time" id="ftnc_event_time_from" name="ftnc_event_time_from" value="<?php echo esc_attr( $event_time_from ); ?>" style="width:100%;">
+							</div>
+							<div style="flex:0 0 calc(33.333% - 8px);box-sizing:border-box;">
+								<label for="ftnc_event_time_to" style="display:block;font-weight:600;margin-bottom:4px;"><?php esc_html_e( 'Event Time To', 'fotonic' ); ?></label>
+								<input type="time" id="ftnc_event_time_to" name="ftnc_event_time_to" value="<?php echo esc_attr( $event_time_to ); ?>" style="width:100%;">
+							</div>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<th style="vertical-align:top;padding-top:10px;"><label><?php esc_html_e( 'Addresses', 'fotonic' ); ?></label></th>
@@ -1517,7 +1523,7 @@ class Fotonic_Meta_Boxes {
 		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) ), $nonce_action ) ) {
 			return false;
 		}
-		if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			return false;
 		}
 		return true;

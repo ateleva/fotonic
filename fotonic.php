@@ -6,6 +6,7 @@
  * Version:           1.2.2
  * Requires at least: 6.0
  * Requires PHP:      7.4
+ * Tested up to:      7.0
  * Author:            Alessandro Bonacina
  * Author URI:        https://eleva.alessandrobonacina.com
  * License:           GPLv2 or later
@@ -39,6 +40,7 @@ add_action( 'init', [ 'Fotonic_CPT_Registry', 'ensure_payment_terms' ], 20 );
 add_action( 'rest_api_init', [ 'Fotonic_REST_API', 'register_routes' ] );
 add_action( 'admin_menu', [ 'Fotonic_Admin_Page', 'add_menu' ] );
 add_action( 'admin_enqueue_scripts', [ 'Fotonic_Admin_Page', 'enqueue_assets' ] );
+add_action( 'all_admin_notices', [ 'Fotonic_Admin_Page', 'suppress_notices' ], PHP_INT_MAX );
 
 // Meta box registration and save hooks.
 add_action( 'add_meta_boxes', [ 'Fotonic_Meta_Boxes', 'register' ] );
