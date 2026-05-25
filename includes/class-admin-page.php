@@ -129,6 +129,8 @@ class Fotonic_Admin_Page {
             'version'    => FOTONIC_VERSION,
             'proVersion' => $pro_installed ? FOTO_PRO_VERSION : null,
             'locale'     => get_locale(),
+            'dateFormat' => get_option( 'date_format', 'd/m/Y' ),
+            'timeFormat' => get_option( 'time_format', 'H:i' ),
             'features' => [
                 'kanban'        => $license_valid,
                 'collaborators' => $license_valid,

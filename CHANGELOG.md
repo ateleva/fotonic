@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.3.1] — 2026-05-25
+
+### Added
+- `dateFormat` and `timeFormat` (from WP Settings › General) now exposed to JS via `window.FotonicApp`, enabling locale-aware date/time formatting across the entire React SPA.
+- `analytics-compare` route registered in the free plugin router, activated when the Pro `AnalyticsCompare` component is present.
+
+### Changed
+- `utils/date.js` fully rewritten: PHP format string → date-fns converter (`phpToDateFns`) with locale-based fallbacks (`it` → `dd/MM/yyyy` / `HH:mm`; `en_GB` → `dd/MM/yyyy` / `h:mm aa`; default → `MM/dd/yyyy` / `h:mm aa`). Exports `formatDate`, `formatTime`, `formatDateTime`.
+
+---
+
 ## [1.3.0] — 2026-05-21
 
 ### Security

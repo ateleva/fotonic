@@ -26,6 +26,7 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 - Monthly Calendar view
 - Google Calendar and Google Tasks sync
 - Analytics: clean UI dashboard with key stats and charts ready to be exported in CSV and PDF formats
+- Analytics Compare: side-by-side period comparison with trend indicators — revenue shown as %, costs and expenses as absolute € diff
 - Full Expenses tracker: add software, equipment, fixed costs, professionals services, taxes... and track everything overtime 
 - Collaborator: manage your collaborators registry and assign them roles in your works, tracking expenses and their services
 - Supplier management: create a list of suppliers and professionals to recommend in your works
