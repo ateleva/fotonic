@@ -65,7 +65,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                     >
                       {paymentTypes.length > 0
                         ? paymentTypes.map((t) => (
-                            <option key={t.id} value={t.slug}>{t.label}</option>
+                            <option key={t.id} value={t.slug}>{__(t.label)}</option>
                           ))
                         : <option value={row.type ?? 'default'}>{row.type ?? 'default'}</option>
                       }

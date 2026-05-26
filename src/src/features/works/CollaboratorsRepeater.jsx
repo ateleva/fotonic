@@ -10,7 +10,7 @@ export default function CollaboratorsRepeater({ value = [], onChange, ownerType,
   function buildOptions() {
     const opts = []
     if (ownerType === 'collaborator' && admin) {
-      opts.push({ value: `admin:${admin.id}`, label: `${__('Io')} (${admin.name})`, services: [] })
+      opts.push({ value: `admin:${admin.id}`, label: `${__('Me')} (${admin.name})`, services: [] })
     }
     collaborators.forEach((c) => {
       const key = `collaborator:${c.id}`
@@ -60,10 +60,10 @@ export default function CollaboratorsRepeater({ value = [], onChange, ownerType,
           </colgroup>
           <thead>
             <tr>
-              <th style={thStyle}>{__('Collaboratore')}</th>
-              <th style={thStyle}>{__('Servizi')}</th>
-              <th style={thStyle}>{__('Prezzo (€)')}</th>
-              <th style={thStyle}>{__('Stato pagamento')}</th>
+              <th style={thStyle}>{__('Collaborator')}</th>
+              <th style={thStyle}>{__('Services')}</th>
+              <th style={thStyle}>{__('Price (€)')}</th>
+              <th style={thStyle}>{__('Payment Status')}</th>
               <th style={thStyle}></th>
             </tr>
           </thead>
@@ -153,14 +153,14 @@ export default function CollaboratorsRepeater({ value = [], onChange, ownerType,
                         color: isPaid ? '#155724' : '#856404',
                       }}
                     >
-                      {isPaid ? __('Pagato') : __('Da pagare')}
+                      {isPaid ? __('Paid') : __('To Pay')}
                     </button>
                   </td>
 
                   {/* Remove */}
                   <td style={tdStyle}>
                     <Button type="button" variant="danger" size="sm" onClick={() => removeRow(i)}>
-                      {__('Rimuovi')}
+                      {__('Remove')}
                     </Button>
                   </td>
                 </tr>
@@ -175,10 +175,10 @@ export default function CollaboratorsRepeater({ value = [], onChange, ownerType,
         onClick={addRow}
         disabled={selectOpts.length === 0}
       >
-        {__('+ Aggiungi collaboratore')}
+        {__('+ Add Collaborator')}
       </Button>
       {selectOpts.length === 0 && (
-        <p className="text-sm text-gray-500 mt-2">{__('Nessun collaboratore disponibile. Aggiungine uno nella sezione Collaboratori.')}</p>
+        <p className="text-sm text-gray-500 mt-2">{__('No collaborators available. Add one in the Collaborators section.')}</p>
       )}
     </div>
   )

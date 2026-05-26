@@ -45,7 +45,7 @@ msgstr ""
 #: includes/class-activator.php:8
 msgid ""
 "Fotonic requires the PHP OpenSSL extension. Please enable it on your server."
-msgstr ""
+msgstr "Fotonic richiede l'estensione PHP OpenSSL. Abilitala sul tuo server."
 
 #: includes/class-cpt-registry.php:15 includes/class-cpt-registry.php:26
 msgid "Customers"
@@ -384,11 +384,11 @@ msgstr "Responsabile"
 #: includes/class-meta-boxes.php:555 includes/class-meta-boxes.php:677
 #, php-format
 msgid "Me (%s)"
-msgstr ""
+msgstr "Io (%s)"
 
 #: includes/class-meta-boxes.php:563
 msgid "Who is the owner/author of this work?"
-msgstr ""
+msgstr "Chi è il titolare/autore di questo lavoro?"
 
 #: includes/class-meta-boxes.php:571
 #, fuzzy
@@ -397,21 +397,19 @@ msgstr "Collaboratori"
 
 #: includes/class-meta-boxes.php:572
 msgid "Add collaborators involved in this work"
-msgstr ""
+msgstr "Aggiungi i collaboratori coinvolti con questo lavoro"
 
 #: includes/class-meta-boxes.php:576
-#, fuzzy
 msgid "Collaborator"
-msgstr "Collaboratori"
+msgstr "Collaboratore"
 
 #: includes/class-meta-boxes.php:578
 msgid "Price (€)"
 msgstr "Prezzo (€)"
 
 #: includes/class-meta-boxes.php:586
-#, fuzzy
 msgid "+ Add Collaborator"
-msgstr "Collaboratori"
+msgstr "+ Aggiungi collaboratore"
 
 #: includes/class-meta-boxes.php:593
 #, fuzzy
@@ -524,7 +522,7 @@ msgstr "Nessun servizio trovato."
 
 #: includes/class-meta-boxes.php:925
 msgid "To Pay"
-msgstr ""
+msgstr "Da pagare"
 
 #: includes/class-meta-boxes.php:1033
 msgid "To Do"
@@ -556,7 +554,7 @@ msgstr "Configurazione vault non riuscita."
 
 #: includes/class-rest-api.php:285 includes/class-rest-api.php:425
 msgid "Too many failed attempts. Try again in 15 minutes."
-msgstr ""
+msgstr "Troppi tentativi falliti. Riprova tra 15 minuti."
 
 #: includes/class-rest-api.php:296 includes/class-rest-api.php:518
 msgid "Password and OTP are required."
@@ -593,7 +591,7 @@ msgstr "Errore di configurazione vault."
 
 #: includes/class-rest-api.php:474
 msgid "A re-encryption is already in progress."
-msgstr ""
+msgstr "Una re-cifratura è già in corso."
 
 #: includes/class-rest-api.php:487 includes/class-rest-api.php:555
 msgid "Encryption error."
@@ -1227,3 +1225,23 @@ msgstr "Lavori recenti"
 #: src/src/features/dashboard/Dashboard.jsx
 msgid "Total"
 msgstr "Totale"
+
+#: src/src/features/works/WorkForm.jsx
+msgid "Work Owner"
+msgstr "Titolare del Lavoro"
+
+#: src/src/features/works/WorkForm.jsx src/src/features/works/CollaboratorsRepeater.jsx
+msgid "Me"
+msgstr "Io"
+
+#: src/src/features/works/WorkForm.jsx
+msgid "Collaborators"
+msgstr "Collaboratori"
+
+#: src/src/features/works/WorkForm.jsx
+msgid "Add collaborators involved with their compensation."
+msgstr "Aggiungi i collaboratori coinvolti con il relativo compenso."
+
+#: src/src/features/works/CollaboratorsRepeater.jsx
+msgid "No collaborators available. Add one in the Collaborators section."
+msgstr "Nessun collaboratore disponibile. Aggiungine uno nella sezione Collaboratori."

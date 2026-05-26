@@ -108,7 +108,7 @@ export default function PaymentTypeManager() {
                         {editError && <span className="text-red-600 text-xs">{editError}</span>}
                       </form>
                     ) : (
-                      <span className="text-sm font-medium text-gray-800">{t.label}</span>
+                      <span className="text-sm font-medium text-gray-800">{__(t.label)}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 ml-3 shrink-0">

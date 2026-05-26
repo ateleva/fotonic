@@ -116,7 +116,7 @@ class Fotonic_CPT_Registry {
      * Safe to call on every init — term_exists() prevents duplicates.
      */
     public static function ensure_payment_terms(): void {
-        $terms = [ 'paid' => 'Paid', 'partial' => 'Partial', 'unpaid' => 'Unpaid' ];
+        $terms = [ 'paid' => __( 'Paid', 'fotonic' ), 'partial' => __( 'Partial', 'fotonic' ), 'unpaid' => __( 'Unpaid', 'fotonic' ) ];
         foreach ( $terms as $slug => $name ) {
             if ( ! term_exists( $slug, 'ftnc_work_payment_status' ) ) {
                 wp_insert_term( $name, 'ftnc_work_payment_status', [ 'slug' => $slug ] );

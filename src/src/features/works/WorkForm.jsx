@@ -321,8 +321,8 @@ export default function WorkForm() {
 
         {/* Section — Owner */}
         <section>
-          <SectionHeading>{__('Titolare del Lavoro')}</SectionHeading>
-          <p className="text-sm text-gray-500 mb-3">{__('Chi è il titolare/autore di questo lavoro?')}</p>
+          <SectionHeading>{__('Work Owner')}</SectionHeading>
+          <p className="text-sm text-gray-500 mb-3">{__('Who is the owner/author of this work?')}</p>
           <Controller
             name="owner_type"
             control={control}
@@ -345,7 +345,7 @@ export default function WorkForm() {
                       }}
                     >
                       {admin && (
-                        <option value={`admin:${admin.id}`}>{__('Io')} ({admin.name})</option>
+                        <option value={`admin:${admin.id}`}>{__('Me')} ({admin.name})</option>
                       )}
                       {collaborators.map((c) => (
                         <option key={c.id} value={`collaborator:${c.id}`}>{c.name}</option>
@@ -360,8 +360,8 @@ export default function WorkForm() {
 
         {/* Section — Collaboratori */}
         <section>
-          <SectionHeading>{__('Collaboratori')}</SectionHeading>
-          <p className="text-sm text-gray-500 mb-3">{__('Aggiungi i collaboratori coinvolti con il relativo compenso.')}</p>
+          <SectionHeading>{__('Collaborators')}</SectionHeading>
+          <p className="text-sm text-gray-500 mb-3">{__('Add collaborators involved with their compensation.')}</p>
           <Controller
             name="owner_type"
             control={control}
