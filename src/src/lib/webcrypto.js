@@ -74,15 +74,19 @@ export async function decryptField(cryptoKey, ciphertext) {
  */
 export async function deterministicEncrypt(cryptoKey, value) {
   const rawKey = await crypto.subtle.exportKey('raw', cryptoKey)
-  const hashBuf = await crypto.subtle.digest('SHA-256', rawKey)
+  const valueBytes = encoder.encode(String(value))
+  const keyAndValue = new Uint8Array(rawKey.byteLength + valueBytes.byteLength)
+  keyAndValue.set(new Uint8Array(rawKey), 0)
+  keyAndValue.set(valueBytes, rawKey.byteLength)
+  const hashBuf = await crypto.subtle.digest('SHA-256', keyAndValue)
   const iv = new Uint8Array(hashBuf).slice(0, 12)
   const cipherBuf = await crypto.subtle.encrypt(
     { name: 'AES-GCM', iv },
     cryptoKey,
-    encoder.encode(String(value))
+    valueBytes
   )
-  const combined = new Uint8Array(12 + cipherBuf.byteLength)
-  combined.set(iv, 0)
-  combined.set(new Uint8Array(cipherBuf), 12)
-  return 'v2:' + bytesToB64(combined)
+  const result = new Uint8Array(12 + cipherBuf.byteLength)
+  result.set(iv, 0)
+  result.set(new Uint8Array(cipherBuf), 12)
+  return 'v2:' + bytesToB64(result)
 }

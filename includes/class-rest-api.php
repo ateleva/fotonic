@@ -270,7 +270,11 @@ class Fotonic_REST_API {
 	// ---------------------------------------------------------------------------
 
 	public static function admin_permission(): bool {
-		return current_user_can( 'manage_options' );
+		return current_user_can( 'manage_options' ) &&
+			(bool) wp_verify_nonce(
+				sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ?? '' ) ),
+				'wp_rest'
+			);
 	}
 
 	public static function vault_download_permission(): bool {
@@ -301,6 +305,13 @@ class Fotonic_REST_API {
 		if ( empty( $password ) ) {
 			return new \WP_REST_Response(
 				[ 'code' => 'missing_password', 'message' => __( 'Password is required.', 'fotonic' ) ],
+				400
+			);
+		}
+
+		if ( strlen( $password ) < 12 ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'password_too_short', 'message' => __( 'Vault password must be at least 12 characters.', 'fotonic' ) ],
 				400
 			);
 		}
@@ -357,6 +368,7 @@ class Fotonic_REST_API {
 		$ok = Fotonic_Vault::unlock( $password, $otp );
 		if ( ! $ok ) {
 			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			self::audit_log( 'vault_unlock_fail' );
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
 				401
@@ -364,6 +376,7 @@ class Fotonic_REST_API {
 		}
 
 		delete_transient( $fail_key );
+		self::audit_log( 'vault_unlock_ok' );
 
 		// Return the PBKDF2 salt so the browser can derive its own AES-GCM key (Phase C+).
 		// Sent only on successful authentication — never on status polls.
@@ -379,6 +392,7 @@ class Fotonic_REST_API {
 	 */
 	public static function vault_lock( \WP_REST_Request $_req ): \WP_REST_Response {
 		Fotonic_Vault::lock();
+		self::audit_log( 'vault_lock' );
 		return new \WP_REST_Response( [ 'locked' => true ], 200 );
 	}
 
@@ -433,10 +447,24 @@ class Fotonic_REST_API {
 		}
 
 		global $wpdb;
+		// Use exact JSON token matching (prevents substring false-positives, e.g. ID 1 matching [10,11]).
 		$linked = $wpdb->get_var( $wpdb->prepare(
 			"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s LIMIT 1",
-			'%' . $wpdb->esc_like( (string) $id ) . '%'
+			'%' . $wpdb->esc_like( (string) $id ) . '"%'
 		) );
+		// Also check for ID at start of array: [ID,...] or as only element [ID].
+		if ( ! $linked ) {
+			$linked = $wpdb->get_var( $wpdb->prepare(
+				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s LIMIT 1",
+				'[' . $wpdb->esc_like( (string) $id ) . ',%'
+			) );
+		}
+		if ( ! $linked ) {
+			$linked = $wpdb->get_var( $wpdb->prepare(
+				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s LIMIT 1",
+				'[' . $wpdb->esc_like( (string) $id ) . ']'
+			) );
+		}
 		if ( ! $linked ) {
 			return new \WP_REST_Response( array( 'code' => 'forbidden', 'message' => __( 'Access denied.', 'fotonic' ) ), 403 );
 		}
@@ -491,6 +519,13 @@ class Fotonic_REST_API {
 		if ( empty( $current_password ) || empty( $otp ) || empty( $new_password ) ) {
 			return new \WP_REST_Response(
 				[ 'code' => 'missing_fields', 'message' => __( 'All fields are required.', 'fotonic' ) ],
+				400
+			);
+		}
+
+		if ( strlen( $new_password ) < 12 ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'fotonic' ) ],
 				400
 			);
 		}
@@ -554,6 +589,7 @@ class Fotonic_REST_API {
 		Fotonic_Vault::update_session_key( $new_key );
 
 		delete_transient( 'fotonic_vault_reencrypt_lock' );
+		self::audit_log( 'vault_password_changed' );
 
 		return new \WP_REST_Response( [ 'changed' => true ], 200 );
 	}
@@ -674,7 +710,7 @@ class Fotonic_REST_API {
 				}
 				foreach ( [ 'email', 'phone' ] as $field ) {
 					if ( ! empty( $person[ $field ] ) && self::looks_encrypted( $person[ $field ] ) ) {
-						$plain = Fotonic_Crypto::decrypt( $person[ $field ], $old_key );
+						$plain = Fotonic_Crypto::deterministic_decrypt( $person[ $field ], $old_key );
 						if ( '' !== $plain ) {
 							$person[ $field ] = Fotonic_Crypto::deterministic_encrypt( $plain, $new_key );
 							$changed          = true;
@@ -1471,7 +1507,7 @@ class Fotonic_REST_API {
 				}
 				$clean[] = [
 					'service_id'     => (int) ( $svc['service_id'] ?? 0 ),
-					'price_override' => (float) ( $svc['price_override'] ?? 0 ),
+					'price_override' => max( 0.0, (float) ( $svc['price_override'] ?? 0 ) ),
 					'notes_override' => sanitize_text_field( $svc['notes_override'] ?? '' ),
 				];
 			}
@@ -1511,7 +1547,7 @@ class Fotonic_REST_API {
 				$raw_date    = sanitize_text_field( $inst['date'] ?? '' );
 				$clean[]     = [
 					'title'  => sanitize_text_field( $inst['title'] ?? '' ),
-					'amount' => (float) ( $inst['amount'] ?? 0 ),
+					'amount' => max( 0.0, (float) ( $inst['amount'] ?? 0 ) ),
 					'status' => $status,
 					'type'   => $type,
 					'date'   => preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw_date ) ? $raw_date : '',
@@ -1654,7 +1690,7 @@ class Fotonic_REST_API {
 					$services[] = [
 						'service_id'    => (int) ( $svc['service_id'] ?? 0 ),
 						'service_title' => $svc_post ? $svc_post->post_title : '',
-						'price_override' => (float) ( $svc['price_override'] ?? 0 ),
+						'price_override' => max( 0.0, (float) ( $svc['price_override'] ?? 0 ) ),
 						'notes_override' => (string) ( $svc['notes_override'] ?? '' ),
 					];
 				}
@@ -1697,7 +1733,7 @@ class Fotonic_REST_API {
 					}
 					$installments[] = [
 						'title'  => (string) ( $inst['title'] ?? '' ),
-						'amount' => (float) ( $inst['amount'] ?? 0 ),
+						'amount' => max( 0.0, (float) ( $inst['amount'] ?? 0 ) ),
 						'status' => ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid',
 						'type'   => (string) ( $inst['type'] ?? 'default' ),
 						'date'   => (string) ( $inst['date'] ?? '' ),
@@ -1830,12 +1866,12 @@ class Fotonic_REST_API {
 		if ( ! self::looks_encrypted( $value ) ) {
 			return $value;
 		}
+		// v1d: prefix = deterministic CBC (email/phone searchable fields).
+		if ( strncmp( $value, 'v1d:', 4 ) === 0 ) {
+			return Fotonic_Crypto::deterministic_decrypt( $value, $vault_key );
+		}
 		$decrypted = Fotonic_Crypto::decrypt( $value, $vault_key );
-		// If decrypt returns empty string for a non-empty input, the data may be
-		// encrypted with a different key or be deterministic-encrypted; fall back.
 		if ( '' === $decrypted && '' !== $value ) {
-			// Decrypt returned empty — either wrong key or the original plaintext was
-			// empty. Either way, return empty rather than leaking raw ciphertext.
 			return '';
 		}
 		return $decrypted;
@@ -1859,8 +1895,8 @@ class Fotonic_REST_API {
 		$raw = get_option( 'fotonic_payment_types' );
 		if ( ! is_string( $raw ) || '' === $raw ) {
 			$defaults = [
-				[ 'id' => 1, 'slug' => 'default', 'label' => 'Payment' ],
-				[ 'id' => 2, 'slug' => 'coupon',  'label' => 'Discount' ],
+				[ 'id' => 1, 'slug' => 'default', 'label' => __( 'Payment', 'fotonic' ) ],
+				[ 'id' => 2, 'slug' => 'coupon',  'label' => __( 'Discount', 'fotonic' ) ],
 			];
 			if ( false === $raw ) {
 				update_option( 'fotonic_payment_types', wp_json_encode( $defaults ) );
@@ -2087,7 +2123,26 @@ class Fotonic_REST_API {
 		return new \WP_REST_Response( [ 'deleted' => true ], 200 );
 	}
 
+	/**
+	 * Write a vault audit log entry to the WordPress error log.
+	 * Uses error_log so no extra DB tables are needed; visible in WP_DEBUG_LOG.
+	 *
+	 * @param string $event  Short event name: vault_unlock_ok, vault_unlock_fail, vault_lock, vault_password_changed.
+	 * @param array  $extra  Optional extra context key→value pairs.
+	 */
+	private static function audit_log( string $event, array $extra = [] ): void {
+		$user_id = get_current_user_id();
+		$ip      = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? 'unknown' ) );
+		$context = array_merge( [ 'user_id' => $user_id, 'ip' => $ip ], $extra );
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( '[Fotonic Vault] ' . $event . ' ' . wp_json_encode( $context ) );
+	}
+
 	private static function looks_encrypted( string $value ): bool {
+		// Prefixed formats are unambiguously encrypted.
+		if ( strncmp( $value, 'v1d:', 4 ) === 0 || strncmp( $value, 'v2:', 3 ) === 0 ) {
+			return true;
+		}
 		if ( strlen( $value ) < 24 ) {
 			return false;
 		}
@@ -2096,8 +2151,7 @@ class Fotonic_REST_API {
 			return false;
 		}
 		$decoded = base64_decode( $value, true );
-		// Decoded length: 16+ bytes covers deterministic-encrypted fields (no IV prefix, one AES block).
-		// Random-IV fields are 32+ bytes (16 IV + 16 min ciphertext). Both pass this threshold.
+		// Decoded length: 16+ bytes covers legacy v1 fields (16-byte IV + ciphertext).
 		return ( false !== $decoded && strlen( $decoded ) >= 16 );
 	}
 }

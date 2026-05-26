@@ -24,7 +24,7 @@ export function VaultProvider({ children }) {
         setDerivedKey(key)
         setVaultKey(key)
       } catch (e) {
-        console.warn('[Fotonic] Browser key derivation failed:', e)
+        console.warn('[Fotonic] Browser key derivation failed — vault will use server-side decryption only.')
       }
     }
 

@@ -21,7 +21,7 @@ class Fotonic_Vault {
 	const OPTION_SETUP = 'fotonic_vault_setup';          // bool — whether vault has been set up.
 
 	const COOKIE_EXPIRY = 86400; // 24 hours in seconds.
-	const CIPHER        = 'aes-256-cbc';
+	const CIPHER        = 'aes-256-gcm';
 
 	// ---------------------------------------------------------------------------
 	// Status
@@ -147,6 +147,8 @@ class Fotonic_Vault {
 	 * Return the raw 32-byte AES-256 key from the session cookie, or null if
 	 * the vault is locked or the cookie is invalid / tampered.
 	 *
+	 * Cookie format: base64( nonce[12] || GCM-tag[16] || AES-256-GCM-ciphertext[32] )
+	 *
 	 * @return string|null Raw binary key, or null.
 	 */
 	public static function get_session_key(): ?string {
@@ -154,20 +156,20 @@ class Fotonic_Vault {
 			return null;
 		}
 
-		$server_secret = self::server_secret();
-		$blob          = base64_decode( $_COOKIE[ self::COOKIE_NAME ], true );
+		$blob = base64_decode( $_COOKIE[ self::COOKIE_NAME ], true );
 
-		if ( false === $blob || strlen( $blob ) < 16 ) {
+		// 12-byte nonce + 16-byte GCM tag + 32-byte ciphertext = 60 bytes minimum.
+		if ( false === $blob || strlen( $blob ) < 60 ) {
 			return null;
 		}
 
-		$iv         = substr( $blob, 0, 16 );
-		$ciphertext = substr( $blob, 16 );
+		$iv         = substr( $blob, 0, 12 );
+		$tag        = substr( $blob, 12, 16 );
+		$ciphertext = substr( $blob, 28 );
 
-		// The server_secret is a string, not necessarily 32 bytes — hash it to get a proper key.
-		$server_key = hash( 'sha256', $server_secret, true );
+		$server_key = hash( 'sha256', self::server_secret(), true );
 
-		$key = openssl_decrypt( $ciphertext, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv );
+		$key = openssl_decrypt( $ciphertext, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag );
 
 		if ( false === $key || strlen( $key ) !== 32 ) {
 			return null;
@@ -197,21 +199,22 @@ class Fotonic_Vault {
 	/**
 	 * Encrypt the derived key with the server secret and write the cookie.
 	 *
-	 * Cookie value: base64( IV || AES-256-CBC( derived_key, hash(AUTH_KEY) ) )
+	 * Cookie value: base64( nonce[12] || GCM-tag[16] || AES-256-GCM( derived_key, hash(AUTH_KEY) ) )
 	 *
 	 * @param string $key 32-byte derived key.
 	 * @return void
 	 */
 	private static function set_session_cookie( string $key ): void {
 		$server_key = hash( 'sha256', self::server_secret(), true );
-		$iv         = random_bytes( 16 );
-		$ciphertext = openssl_encrypt( $key, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv );
+		$iv         = random_bytes( 12 );
+		$tag        = '';
+		$ciphertext = openssl_encrypt( $key, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag, '', 16 );
 
 		if ( false === $ciphertext ) {
 			return;
 		}
 
-		$value = base64_encode( $iv . $ciphertext );
+		$value = base64_encode( $iv . $tag . $ciphertext );
 		self::send_cookie( $value, time() + self::COOKIE_EXPIRY );
 	}
 

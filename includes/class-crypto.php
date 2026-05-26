@@ -28,14 +28,28 @@ class Fotonic_Crypto {
     }
 
     /**
-     * Deterministic encryption: same input always → same output.
-     * Use ONLY for searchable fields (email, phone). Not for sensitive free-text.
+     * Deterministic encryption: same input always → same output (searchable).
+     * Uses HMAC-SHA256(key, value) as IV so different values produce different IVs,
+     * eliminating ECB-mode prefix leakage from a fixed IV.
+     * Output format: 'v1d:' . base64( HMAC_IV[16] || AES-256-CBC_ciphertext )
+     * The IV is included in the output so decryption does not require the plaintext.
      */
     public static function deterministic_encrypt( string $value, string $key ): string {
-        // Fixed IV derived from key — deterministic but key-dependent
-        $iv = substr( hash( 'sha256', $key . 'fotonic_det_iv_v1', true ), 0, 16 );
+        // Per-value IV: HMAC-SHA256(key, value) — deterministic per (key, value) pair.
+        $iv = substr( hash_hmac( 'sha256', $value, $key, true ), 0, 16 );
         $ct = openssl_encrypt( $value, self::CIPHER, $key, OPENSSL_RAW_DATA, $iv );
-        return ( false === $ct ) ? '' : base64_encode( $ct );
+        return ( false === $ct ) ? '' : 'v1d:' . base64_encode( $iv . $ct );
+    }
+
+    /**
+     * Decrypt a value produced by deterministic_encrypt().
+     * Handles the 'v1d:' prefix and passes the rest to the standard decrypt().
+     */
+    public static function deterministic_decrypt( string $encoded, string $key ): string {
+        if ( strncmp( $encoded, 'v1d:', 4 ) === 0 ) {
+            $encoded = substr( $encoded, 4 );
+        }
+        return self::decrypt( $encoded, $key );
     }
 
     /**
