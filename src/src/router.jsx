@@ -11,6 +11,7 @@ const ServiceForm  = lazy(() => import('./features/services/ServiceForm'))
 const WorkList     = lazy(() => import('./features/works/WorkList'))
 const WorkForm     = lazy(() => import('./features/works/WorkForm'))
 const SettingsPage = lazy(() => import('./features/settings/SettingsPage'))
+const CalendarView = lazy(() => import('./features/calendar/CalendarView').then(m => ({ default: m.CalendarView })))
 
 function Fallback() {
   return (
@@ -44,6 +45,7 @@ export function createRouter() { return createHashRouter([
       { path: 'works',           element: <Lazy component={WorkList} /> },
       { path: 'works/new',       element: <Lazy component={WorkForm} /> },
       { path: 'works/:id',       element: <Lazy component={WorkForm} /> },
+      { path: 'calendar',        element: <Lazy component={CalendarView} /> },
       { path: 'settings',        element: <Lazy component={SettingsPage} /> },
       // Pro routes — only active when FotonicPro bundle is loaded
       ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.KanbanBoard ? [{
@@ -174,14 +176,6 @@ export function createRouter() { return createHashRouter([
           ),
         },
       ] : []),
-      ...(window.FotonicApp?.features?.calendar && window.FotonicProComponents?.CalendarView ? [{
-        path: 'calendar',
-        element: (
-          <Suspense fallback={<Fallback />}>
-            <window.FotonicProComponents.CalendarView />
-          </Suspense>
-        )
-      }] : []),
     ],
   },
 ]) }

@@ -275,22 +275,19 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <VaultStatusRow status={vaultStatus} />
 
-          {vaultStatus?.setup && (
-            <div className="space-y-2 pt-1">
-              <Accordion label={__('Change Vault Password')}>
-                <ChangePasswordForm />
-              </Accordion>
-              <Accordion label={__('Reset Authenticator App')}>
-                <ResetTotpForm />
-              </Accordion>
-            </div>
-          )}
-
           {vaultStatus && !vaultStatus.setup && (
             <div className="pt-1 space-y-3">
-              <p className="text-sm text-gray-500">
-                {__('Enable the Vault to encrypt sensitive customer data (names, emails, addresses). The key is protected by a password + one-time code from your authenticator app.')}
-              </p>
+              <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
+                <p className="text-sm font-medium text-blue-900">{__('What is the Vault?')}</p>
+                <p className="text-sm text-blue-800">
+                  {__('The Vault encrypts all sensitive customer data — names, emails, phone numbers, and addresses — using AES-256 encryption. Data is only visible while the Vault is unlocked.')}
+                </p>
+                <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                  <li>{__('Set a strong master password — it cannot be recovered if lost.')}</li>
+                  <li>{__('Scan a QR code with an authenticator app to enable two-factor access.')}</li>
+                  <li>{__('Lock the Vault when you leave to keep customer data private.')}</li>
+                </ul>
+              </div>
               <button
                 type="button"
                 onClick={() => setShowSetup(true)}
@@ -299,6 +296,22 @@ export default function SettingsPage() {
                 <Shield size={14} />
                 {__('Set Up Vault')}
               </button>
+            </div>
+          )}
+
+          {vaultStatus?.setup && (
+            <div className="space-y-2">
+              <p className="text-sm text-gray-500">
+                {__('All customer PII is encrypted at rest. Unlock with your master password + OTP to access sensitive data.')}
+              </p>
+              <div className="space-y-2 pt-1">
+                <Accordion label={__('Change Vault Password')}>
+                  <ChangePasswordForm />
+                </Accordion>
+                <Accordion label={__('Reset Authenticator App')}>
+                  <ResetTotpForm />
+                </Accordion>
+              </div>
             </div>
           )}
         </div>

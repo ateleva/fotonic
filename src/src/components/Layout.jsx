@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt } from 'lucide-react'
+import logoSvg from '../assets/fotonic-logotype.svg'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
 import { __ } from '../utils/i18n'
@@ -29,12 +30,12 @@ export default function Layout() {
     { to: '/customers', label: __('Customers'),  icon: Users },
     { to: '/services',  label: __('Services'),   icon: Briefcase },
     { to: '/works',     label: __('Works'),      icon: Camera },
+    { to: '/calendar',  label: __('Calendar'),   icon: CalendarDays },
   ]
 
   const proNavItems = [
     { to: '/kanban',         label: __('Kanban'),         icon: Kanban,       feature: 'kanban' },
     { to: '/analytics',     label: __('Analytics'),      icon: BarChart2,    feature: 'analytics' },
-    { to: '/calendar',      label: __('Calendar'),       icon: CalendarDays, feature: 'calendar' },
     { to: '/collaborators', label: __('Collaborators'),  icon: UserCheck,    feature: 'collaborators' },
     { to: '/products',      label: __('Products'),       icon: Package,      feature: 'products' },
     { to: '/suppliers',     label: __('Suppliers'),      icon: Store,        feature: 'suppliers' },
@@ -55,10 +56,8 @@ export default function Layout() {
       {/* Sidebar */}
       <aside className="w-[20%] min-w-[200px] max-w-[260px] shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-y-auto overflow-x-hidden">
         {/* Logo */}
-        <div className="px-4 py-2 border-b border-gray-100">
-          <span className="text-lg font-bold tracking-tight text-gray-900">
-            Fotonic
-          </span>
+        <div className="px-4 py-2 border-b border-gray-100 flex items-center">
+          <img src={logoSvg} alt="Fotonic" className="h-7 w-auto" />
         </div>
 
         {/* Nav */}
@@ -114,7 +113,7 @@ export default function Layout() {
             to="/settings"
             className={({ isActive }) =>
               [
-                'flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fotonic-primary focus-visible:ring-offset-1',
                 isActive
                   ? 'nav-link-active'
@@ -122,15 +121,15 @@ export default function Layout() {
               ].join(' ')
             }
           >
-            <Settings size={14} />
+            <Settings size={16} />
             {__('Settings')}
           </NavLink>
           {isUnlocked && (
             <button
               onClick={handleLock}
-              className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
+              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
             >
-              <Lock size={14} />
+              <Lock size={16} />
               {__('Lock Vault')}
             </button>
           )}

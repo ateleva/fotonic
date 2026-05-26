@@ -3,7 +3,7 @@ Contributors: ateleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -24,11 +24,12 @@ Fotonic is a standalone WordPress plugin that provides a modern React-powered CR
 * Vault Security: AES-256 encryption protected by a master password and TOTP two-factor authentication. All personally identifiable data is encrypted at rest. Even direct database access reveals only ciphertext.
 * Dashboard: summary cards showing annual revenue, upcoming events, and unpaid balances. Next five upcoming works.
 * Quick Notes: a dedicated WYSIWYG notes field on each Work, positioned above the main notes editor, for short reminders visible at a glance.
-* Calendar Color: choose an event card color (12-color Google Calendar palette) on each Work, used in the monthly calendar view and synced to Google Calendar when the Pro integration is enabled.
+* Calendar Color: choose an event card color (12-color Google Calendar palette) on each Work.
+* Monthly Calendar: a full monthly calendar view showing all scheduled works as colored pills. Click any entry to see a detail popup with date, customer, payment status, and a link to the work. Google Calendar sync is available when Fotonic Pro is installed and connected.
 
 = Fotonic Pro =
 
-A paid addon (sold separately) that adds: task management with Kanban board, a monthly Calendar view, Google Calendar and Google Tasks integration, Analytics with charts and CSV/PDF export, Expenses tracker, Collaborators and Suppliers registry, Products catalog, custom email notifications with SMTP delivery.
+A paid addon (sold separately) that adds: task management with Kanban board, Google Calendar and Google Tasks integration (sync works and tasks to your Google account), Analytics with charts and CSV/PDF export, Expenses tracker, Collaborators and Suppliers registry, Products catalog, custom email notifications with SMTP delivery.
 
 When Fotonic Pro's Google Calendar integration is enabled, certain work and task data (titles, dates, times, locations, quick notes, task descriptions) is sent to Google's servers. See the Privacy Policy section below and the Fotonic Pro readme for full details.
 
@@ -71,7 +72,7 @@ Exception: if you install Fotonic Pro and connect Google Calendar, certain work 
 
 = Is there a Pro version? =
 
-Yes. Fotonic Pro is a paid addon that adds task management, Kanban board, Calendar view, Google Calendar and Google Tasks integration, Analytics dashboards, Collaborator management, Products catalog, custom email notifications, and license management. It is sold separately and is not required to use the free plugin.
+Yes. Fotonic Pro is a paid addon that adds task management, Kanban board, Google Calendar and Google Tasks sync, Analytics dashboards, Collaborator management, Products catalog, custom email notifications, and license management. It is sold separately and is not required to use the free plugin.
 
 = Does the plugin send data anywhere? =
 
@@ -122,6 +123,16 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 4. Work detail form with payment installments and file attachments
 
 == Changelog ==
+
+= 1.3.2 =
+* Calendar view is now a free feature: the monthly calendar showing all scheduled works is available to all users. Only Google Calendar sync requires Fotonic Pro.
+* Calendar locale fix: month names and event dates now display in the WordPress site language instead of the server/OS locale.
+* PRO gating: Work Owner and Collaborators fields no longer appear in the Work edit form when Fotonic Pro is not installed or not licensed. Calendar Color remains visible to all users.
+* Vault description: Settings page now shows an explanation of the Vault feature — detailed when not yet configured, a short reminder when active.
+* UI: Fotonic logotype SVG now shown in the React SPA sidebar; Fotonic logo mark used as the WP Admin menu icon.
+* UI: Settings sidebar nav item right-side clipping fixed.
+* UI: Payment status filter dropdown in the Works list now sizes to full option text width.
+* Layout: WP admin footer hidden on the Fotonic page; SPA viewport height correctly fills the available space.
 
 = 1.3.1 =
 * Security: vault session cookie upgraded from AES-256-CBC (unauthenticated) to AES-256-GCM. The GCM authentication tag means any tampered cookie is rejected outright rather than silently decrypted to garbage. Cookie format: base64(nonce[12] + auth-tag[16] + ciphertext[32]).

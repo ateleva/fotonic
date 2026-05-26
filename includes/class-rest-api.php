@@ -216,6 +216,19 @@ class Fotonic_REST_API {
 		] );
 
 		// ------------------------------------------------------------------
+		// Calendar — GET /calendar?from=YYYY-MM-DD&to=YYYY-MM-DD
+		// ------------------------------------------------------------------
+		register_rest_route( self::NAMESPACE, '/calendar', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'get_calendar_works' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+			'args'                => [
+				'from' => [ 'type' => 'string', 'required' => true ],
+				'to'   => [ 'type' => 'string', 'required' => true ],
+			],
+		] );
+
+		// ------------------------------------------------------------------
 		// Payment Types
 		// ------------------------------------------------------------------
 		register_rest_route( self::NAMESPACE, '/payment-types', [
@@ -1261,7 +1274,7 @@ class Fotonic_REST_API {
 
 	/**
 	 * GET /collaborator-options
-	 * Returns admin user + all published ftnc_collaborator posts for owner/collab dropdowns.
+	 * Returns admin user + collaborators (PRO only) for owner/collab dropdowns.
 	 */
 	public static function get_collaborator_options( \WP_REST_Request $req ): \WP_REST_Response {
 		$current_user = wp_get_current_user();
@@ -1271,32 +1284,84 @@ class Fotonic_REST_API {
 		];
 
 		$collaborators = [];
-		$query         = new \WP_Query( [
-			'post_type'      => 'ftnc_collaborator',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		] );
-		foreach ( $query->posts as $post ) {
-			$terms    = wp_get_post_terms( $post->ID, 'ftnc_collaborator_service' );
-			$services = [];
-			if ( ! is_wp_error( $terms ) ) {
-				foreach ( $terms as $term ) {
-					$services[] = [ 'id' => $term->term_id, 'name' => $term->name ];
+		if ( defined( 'FOTO_PRO_VERSION' ) ) {
+			$query = new \WP_Query( [
+				'post_type'      => 'ftnc_collaborator',
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			] );
+			foreach ( $query->posts as $post ) {
+				$terms    = wp_get_post_terms( $post->ID, 'ftnc_collaborator_service' );
+				$services = [];
+				if ( ! is_wp_error( $terms ) ) {
+					foreach ( $terms as $term ) {
+						$services[] = [ 'id' => $term->term_id, 'name' => $term->name ];
+					}
 				}
+				$collaborators[] = [
+					'id'       => $post->ID,
+					'name'     => $post->post_title,
+					'services' => $services,
+				];
 			}
-			$collaborators[] = [
-				'id'       => $post->ID,
-				'name'     => $post->post_title,
-				'services' => $services,
-			];
 		}
 
 		return new \WP_REST_Response( [
 			'admin'         => $admin,
 			'collaborators' => $collaborators,
 		], 200 );
+	}
+
+	/**
+	 * GET /calendar?from=YYYY-MM-DD&to=YYYY-MM-DD
+	 * Returns ftnc_work posts with event_date in range for the calendar view.
+	 */
+	public static function get_calendar_works( \WP_REST_Request $req ): \WP_REST_Response {
+		$from = sanitize_text_field( $req->get_param( 'from' ) );
+		$to   = sanitize_text_field( $req->get_param( 'to' ) );
+
+		$query = new \WP_Query( [
+			'post_type'      => 'ftnc_work',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'meta_value',
+			'meta_key'       => '_ftnc_event_date',
+			'order'          => 'ASC',
+			'meta_query'     => [
+				[
+					'key'     => '_ftnc_event_date',
+					'value'   => [ $from, $to ],
+					'compare' => 'BETWEEN',
+					'type'    => 'DATE',
+				],
+			],
+		] );
+
+		$events = [];
+		foreach ( $query->posts as $post ) {
+			$customer_id    = (int) get_post_meta( $post->ID, '_ftnc_customer_id', true );
+			$customer_title = $customer_id > 0 ? get_the_title( $customer_id ) : null;
+			$ps_terms       = wp_get_object_terms( $post->ID, 'ftnc_work_payment_status', [ 'fields' => 'slugs' ] );
+			$payment_status = ( ! is_wp_error( $ps_terms ) && ! empty( $ps_terms ) ) ? $ps_terms[0] : 'unpaid';
+			$events[]       = [
+				'type'            => 'work',
+				'id'              => $post->ID,
+				'title'           => $post->post_title,
+				'event_date'      => (string) get_post_meta( $post->ID, '_ftnc_event_date', true ),
+				'event_time_from' => (string) get_post_meta( $post->ID, '_ftnc_event_time_from', true ),
+				'event_time_to'   => (string) get_post_meta( $post->ID, '_ftnc_event_time_to', true ),
+				'customer_title'  => $customer_title,
+				'payment_status'  => $payment_status,
+				'kanban_status'   => (string) get_post_meta( $post->ID, '_ftnc_kanban_status', true ),
+				'color'           => (string) get_post_meta( $post->ID, '_ftnc_color', true ),
+				'gcal_event_id'   => (string) get_post_meta( $post->ID, '_ftnc_gcal_event_id', true ),
+				'gcal_entry_type' => null,
+			];
+		}
+
+		return new \WP_REST_Response( $events, 200 );
 	}
 
 	// ---------------------------------------------------------------------------

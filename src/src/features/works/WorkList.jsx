@@ -108,6 +108,7 @@ export default function WorkList() {
           value={paymentStatus}
           onChange={(e) => setPaymentStatus(e.target.value)}
           className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          style={{ width: 'auto', minWidth: 'max-content', paddingRight: '2rem' }}
         >
           <option value="">{__('All Statuses')}</option>
           <option value="paid">{__('Paid')}</option>

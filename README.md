@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ateleva/fotonic/main/.wordpress-org/icon-256x256.png" alt="Fotonic" width="128">
+</p>
+
 # Fotonic
 
 **CRM and workflow manager for freelance photographers.**
@@ -17,14 +21,14 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Dashboard** — annual revenue, upcoming events, unpaid balances, and the next five scheduled works
 - **Quick Notes** — a WYSIWYG notes field on each Work for short reminders visible at a glance
 - **Calendar Color** — assign an event color (12-color Google Calendar palette) to each Work
+- **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
 
 ## Fotonic Pro
 
 The premium addon adds advanced workflow, analytics, team management, and Google Calendar integration.
 
 - Kanban board with drag-and-drop task management
-- Monthly Calendar view
-- Google Calendar and Google Tasks sync
+- Google Calendar and Google Tasks sync (works and tasks)
 - Analytics: clean UI dashboard with key stats and charts ready to be exported in CSV and PDF formats
 - Analytics Compare: side-by-side period comparison with trend indicators — revenue shown as %, costs and expenses as absolute € diff
 - Full Expenses tracker: add software, equipment, fixed costs, professionals services, taxes... and track everything overtime 
@@ -84,6 +88,16 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 ---
 
 ## Changelog
+
+### 1.3.2
+- **Calendar view** moved from Pro to free — available to all users without a license
+- **Calendar locale**: month names and date labels now use the WordPress site language
+- **PRO gating**: Work Owner and Collaborators fields hidden when Pro is not installed/licensed
+- **Vault description** added to Settings page (detailed when not configured, short reminder when active)
+- **WP admin icon** updated to Fotonic logo mark SVG; SPA sidebar shows Fotonic logotype SVG
+- **Layout**: WP admin footer hidden on Fotonic page; SPA height fills viewport correctly
+- **Settings sidebar**: active item right-side padding and border-radius fixed
+- **Works list**: payment status dropdown now sizes to full option text
 
 ### 1.3.1
 - **Security**: vault session cookie upgraded to AES-256-GCM (authenticated encryption — tampered cookies rejected)

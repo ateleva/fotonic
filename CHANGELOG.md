@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.3.2] — 2026-05-26
+
+### Added
+- **Calendar view**: monthly calendar is now a free feature — available to all users without a Pro license. Only Google Calendar sync remains Pro-only.
+- **Vault description**: Settings page now shows explanatory text in the Vault section — a detailed explanation when the vault has not yet been configured, and a short reminder when it is active.
+- **Fotonic logotype**: React SPA sidebar now shows the Fotonic SVG logotype instead of a plain text label.
+- **WP admin icon**: Fotonic menu entry in the WordPress admin sidebar now uses the custom Fotonic logo mark SVG.
+- **GitHub README**: plugin logo (icon-256x256.png) shown above the title on the repository page.
+
+### Changed
+- Calendar month names and event date labels now respect the WordPress site language (derived from `window.FotonicApp.locale`) instead of the browser/OS locale.
+- WP admin footer (`#wpfooter`) is hidden on the Fotonic admin page; `#wpbody-content` bottom padding removed so the React SPA fills the viewport without overflow.
+
+### Fixed
+- Work Owner and Collaborators fields no longer appear in the `ftnc_work` classic editor or React form when Fotonic Pro is not installed or the license is not valid. Calendar Color remains visible to all users.
+- Settings sidebar: active nav item now has correct right-side padding and full border-radius (was clipped on the right edge).
+- Works list: payment status filter dropdown now sizes to the widest option instead of clipping the "All Statuses" label.
+- REST `/collaborator-options`: returns an empty collaborators array when Fotonic Pro is inactive, preventing a PHP error in the free plugin.
+
+---
+
 ## [1.3.1] — 2026-05-26
 
 ### Security

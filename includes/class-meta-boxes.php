@@ -549,7 +549,8 @@ class Fotonic_Meta_Boxes {
 			</div>
 		</fieldset>
 
-		<!-- Section 4: Owner -->
+		<?php if ( defined( 'FOTO_PRO_VERSION' ) ) : ?>
+		<!-- Section 4: Owner (PRO only) -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
 			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '4. Work Owner', 'fotonic' ); ?></legend>
 			<table class="form-table">
@@ -572,7 +573,7 @@ class Fotonic_Meta_Boxes {
 			</table>
 		</fieldset>
 
-		<!-- Section 5: Collaborators -->
+		<!-- Section 5: Collaborators (PRO only) -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
 			<legend style="<?php echo esc_attr( $legend_style ); ?>"><?php esc_html_e( '5. Collaborators', 'fotonic' ); ?></legend>
 			<p style="margin:0 0 10px;font-size:12px;color:#646970;"><?php esc_html_e( 'Add collaborators involved in this work', 'fotonic' ); ?></p>
@@ -593,6 +594,7 @@ class Fotonic_Meta_Boxes {
 			</p>
 			<input type="hidden" id="ftnc_collaborators_json" name="ftnc_collaborators_json" value="<?php echo esc_attr( $collabs_json ); ?>">
 		</fieldset>
+		<?php endif; ?>
 
 		<!-- Section 6: Services Included -->
 		<fieldset style="<?php echo esc_attr( $fieldset_style ); ?>">
@@ -1251,8 +1253,8 @@ class Fotonic_Meta_Boxes {
 			}
 		}
 
-		// Section 4 — Owner (dropdown: "admin:{user_id}" or "collaborator:{post_id}").
-		if ( isset( $_POST['ftnc_owner_select'] ) ) {
+		// Section 4 — Owner (PRO only).
+		if ( defined( 'FOTO_PRO_VERSION' ) && isset( $_POST['ftnc_owner_select'] ) ) {
 			$owner_select = sanitize_text_field( wp_unslash( $_POST['ftnc_owner_select'] ) );
 			if ( preg_match( '/^(admin|collaborator):(\d+)$/', $owner_select, $m ) ) {
 				$o_type = $m[1];
@@ -1267,8 +1269,8 @@ class Fotonic_Meta_Boxes {
 			}
 		}
 
-		// Section 8 — Collaborators.
-		if ( isset( $_POST['ftnc_collaborators_json'] ) ) {
+		// Section 8 — Collaborators (PRO only).
+		if ( defined( 'FOTO_PRO_VERSION' ) && isset( $_POST['ftnc_collaborators_json'] ) ) {
 			$raw = wp_unslash( $_POST['ftnc_collaborators_json'] );
 			$dec = json_decode( $raw, true );
 			if ( ! is_array( $dec ) ) {

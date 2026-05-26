@@ -3,13 +3,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Admin_Page {
     public static function add_menu(): void {
+        $icon_svg = file_get_contents( FOTONIC_DIR . '.wordpress-org/fotonic-icon-only.svg' );
+        $icon_url = 'data:image/svg+xml;base64,' . base64_encode( $icon_svg );
         add_menu_page(
             esc_html__( 'Fotonic', 'fotonic' ),
             esc_html__( 'Fotonic', 'fotonic' ),
             'manage_options',
             'fotonic',
             [ __CLASS__, 'render' ],
-            'dashicons-camera',
+            $icon_url,
             25
         );
     }
@@ -57,6 +59,8 @@ class Fotonic_Admin_Page {
             #wpbody-content > .updated, #wpbody-content > .error { display: none !important; }
             body.toplevel_page_fotonic, body.toplevel_page_fotonic #wpbody-content,
             body.toplevel_page_fotonic #wpwrap { overflow: hidden !important; }
+            body.toplevel_page_fotonic #wpwrap #wpfooter { display: none !important; }
+            #wpbody-content { padding-bottom: 0 !important; }
         ' );
 
         add_filter( 'script_loader_tag', [ __CLASS__, 'add_module_type' ], 10, 2 );
@@ -138,7 +142,7 @@ class Fotonic_Admin_Page {
                 'notifications' => $license_valid,
                 'products'      => $license_valid,
                 'suppliers'     => $license_valid,
-                'calendar'      => $license_valid,
+                'calendar'      => true,
                 'gcal'          => $license_valid && class_exists( 'Fotonic_Google_OAuth' ) && Fotonic_Google_OAuth::is_connected(),
                 'expenses'      => $license_valid,
             ],

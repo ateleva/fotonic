@@ -319,75 +319,79 @@ export default function WorkForm() {
           </FormField>
         </section>
 
-        {/* Section — Owner */}
-        <section>
-          <SectionHeading>{__('Work Owner')}</SectionHeading>
-          <p className="text-sm text-gray-500 mb-3">{__('Who is the owner/author of this work?')}</p>
-          <Controller
-            name="owner_type"
-            control={control}
-            render={({ field: ownerTypeField }) => (
-              <Controller
-                name="owner_id"
-                control={control}
-                render={({ field: ownerIdField }) => {
-                  const admin = collabOptions?.admin
-                  const collaborators = collabOptions?.collaborators ?? []
-                  return (
-                    <select
-                      className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full max-w-sm"
-                      value={ownerTypeField.value === 'collaborator' ? `collaborator:${ownerIdField.value}` : `admin:${admin?.id ?? ''}`}
-                      onChange={(e) => {
-                        const val = e.target.value
-                        const [type, rawId] = val.split(':')
-                        ownerTypeField.onChange(type)
-                        ownerIdField.onChange(rawId ? parseInt(rawId, 10) : null)
-                      }}
-                    >
-                      {admin && (
-                        <option value={`admin:${admin.id}`}>{__('Me')} ({admin.name})</option>
-                      )}
-                      {collaborators.map((c) => (
-                        <option key={c.id} value={`collaborator:${c.id}`}>{c.name}</option>
-                      ))}
-                    </select>
-                  )
-                }}
-              />
-            )}
-          />
-        </section>
+        {/* Section — Owner (PRO only) */}
+        {window.FotonicApp?.features?.collaborators && (
+          <section>
+            <SectionHeading>{__('Work Owner')}</SectionHeading>
+            <p className="text-sm text-gray-500 mb-3">{__('Who is the owner/author of this work?')}</p>
+            <Controller
+              name="owner_type"
+              control={control}
+              render={({ field: ownerTypeField }) => (
+                <Controller
+                  name="owner_id"
+                  control={control}
+                  render={({ field: ownerIdField }) => {
+                    const admin = collabOptions?.admin
+                    const collaborators = collabOptions?.collaborators ?? []
+                    return (
+                      <select
+                        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full max-w-sm"
+                        value={ownerTypeField.value === 'collaborator' ? `collaborator:${ownerIdField.value}` : `admin:${admin?.id ?? ''}`}
+                        onChange={(e) => {
+                          const val = e.target.value
+                          const [type, rawId] = val.split(':')
+                          ownerTypeField.onChange(type)
+                          ownerIdField.onChange(rawId ? parseInt(rawId, 10) : null)
+                        }}
+                      >
+                        {admin && (
+                          <option value={`admin:${admin.id}`}>{__('Me')} ({admin.name})</option>
+                        )}
+                        {collaborators.map((c) => (
+                          <option key={c.id} value={`collaborator:${c.id}`}>{c.name}</option>
+                        ))}
+                      </select>
+                    )
+                  }}
+                />
+              )}
+            />
+          </section>
+        )}
 
-        {/* Section — Collaboratori */}
-        <section>
-          <SectionHeading>{__('Collaborators')}</SectionHeading>
-          <p className="text-sm text-gray-500 mb-3">{__('Add collaborators involved with their compensation.')}</p>
-          <Controller
-            name="owner_type"
-            control={control}
-            render={({ field: ownerTypeField }) => (
-              <Controller
-                name="owner_id"
-                control={control}
-                render={({ field: ownerIdField }) => (
-                  <Controller
-                    name="collaborators"
-                    control={control}
-                    render={({ field }) => (
-                      <CollaboratorsRepeater
-                        value={field.value}
-                        onChange={field.onChange}
-                        ownerType={ownerTypeField.value}
-                        ownerId={ownerIdField.value}
-                        options={collabOptions}
-                      />
-                    )}
-                  />
-                )}
-              />
-            )}
-          />
-        </section>
+        {/* Section — Collaboratori (PRO only) */}
+        {window.FotonicApp?.features?.collaborators && (
+          <section>
+            <SectionHeading>{__('Collaborators')}</SectionHeading>
+            <p className="text-sm text-gray-500 mb-3">{__('Add collaborators involved with their compensation.')}</p>
+            <Controller
+              name="owner_type"
+              control={control}
+              render={({ field: ownerTypeField }) => (
+                <Controller
+                  name="owner_id"
+                  control={control}
+                  render={({ field: ownerIdField }) => (
+                    <Controller
+                      name="collaborators"
+                      control={control}
+                      render={({ field }) => (
+                        <CollaboratorsRepeater
+                          value={field.value}
+                          onChange={field.onChange}
+                          ownerType={ownerTypeField.value}
+                          ownerId={ownerIdField.value}
+                          options={collabOptions}
+                        />
+                      )}
+                    />
+                  )}
+                />
+              )}
+            />
+          </section>
+        )}
 
         {/* Section 3 — Calendar Color */}
         <section>
