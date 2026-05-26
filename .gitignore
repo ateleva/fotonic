@@ -24,6 +24,9 @@ Thumbs.db
 # AI Agent
 CLAUDE.md
 
+# Internal dev docs — not for public repo
+SUBMISSION-GUIDE.md
+
 # Temp / Editor backups
 *.bak
 *.swp
