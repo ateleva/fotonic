@@ -62,7 +62,7 @@ No. Fotonic is fully standalone and has no third-party plugin dependencies.
 All data is stored in your own WordPress database. The free plugin makes no external HTTP requests — your data never leaves your server.
 
 **What is the Vault?**
-The Vault encrypts all personally identifiable information (names, emails, phone numbers, addresses) before it is written to the database. You protect it with a master password and a TOTP authenticator app.
+The Vault encrypts all personally identifiable information (names, emails, phone numbers, addresses) with AES-256 before it is written to the database. You protect it with a master password and a TOTP authenticator app. The session key lives only in an HTTP-Only, SameSite=Strict cookie encrypted with AES-256-GCM — authenticated encryption that rejects any tampered cookie.
 
 **Does it work on shared hosting?**
 Yes, as long as the host meets the PHP 7.4+ and WordPress 6.0+ requirements.
@@ -84,6 +84,15 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 ---
 
 ## Changelog
+
+### 1.3.1
+- **Security**: vault session cookie upgraded to AES-256-GCM (authenticated encryption — tampered cookies rejected)
+- **Security**: deterministic IV reuse fixed for email/phone fields (PHP and browser-side)
+- **Security**: `v1d:` ciphertext format introduced — deterministic ciphertexts are now correctly round-trippable; email/phone no longer display empty after encryption
+- **Security**: REST nonce verification enforced in permission callback; file download IDOR fixed; negative price injection prevented
+- **Security**: vault audit logging added (unlock ok/fail, lock, password-change) to WP error log
+- Added `uninstall.php` for full data cleanup on plugin deletion
+- CI: deny-all GITHUB_TOKEN permissions on deploy workflow
 
 ### 1.3.0
 - Security: vault setup endpoint returns 409 if already configured (prevents accidental PII wipe)

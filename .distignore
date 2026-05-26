@@ -4,6 +4,9 @@
 /.github
 /.claude
 /CLAUDE.md
+/README.md
+/CHANGELOG.md
+/SUBMISSION-GUIDE.md
 /src
 /tests
 /.vscode
@@ -18,5 +21,6 @@ Thumbs.db
 *.swp
 *.swo
 *~
+*.po~
 phpunit.xml
 phpcs.xml

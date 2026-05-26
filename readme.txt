@@ -3,7 +3,7 @@ Contributors: ateleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -57,7 +57,7 @@ Yes. Fotonic is completely standalone and has no dependency on WooCommerce or an
 
 = What is the Vault? =
 
-The Vault is a built-in security layer. All personally identifiable information (customer names, emails, phone numbers, addresses, notes) is encrypted with AES-256-CBC before being stored in the database. You set a Vault master password that is independent of your WordPress login, and you pair it with a TOTP authenticator app. Without your Vault master password, the database contains only unreadable ciphertext. The decryption key is never stored in the database; it lives only in a temporary, HTTP-Only, SameSite=Strict session cookie.
+The Vault is a built-in security layer. All personally identifiable information (customer names, emails, phone numbers, addresses, notes) is encrypted with AES-256 before being stored in the database. You set a Vault master password that is independent of your WordPress login, and you pair it with a TOTP authenticator app. Without your Vault master password, the database contains only unreadable ciphertext. The decryption key is never stored in the database; it lives only in a temporary, HTTP-Only, SameSite=Strict session cookie encrypted with AES-256-GCM (authenticated encryption — tampered cookies are rejected, not silently decrypted).
 
 = Does the plugin work on shared hosting? =
 
@@ -123,6 +123,21 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 
 == Changelog ==
 
+= 1.3.1 =
+* Security: vault session cookie upgraded from AES-256-CBC (unauthenticated) to AES-256-GCM. The GCM authentication tag means any tampered cookie is rejected outright rather than silently decrypted to garbage. Cookie format: base64(nonce[12] + auth-tag[16] + ciphertext[32]).
+* Security: deterministic encryption for searchable fields (email, phone) fixed. IV is now derived per-value via HMAC-SHA256(key, value), so different field values produce different IVs. Previously all deterministic ciphertexts shared the same IV, creating a ciphertext relationship leak.
+* Security: browser-side AES-GCM deterministic encryption (webcrypto.js) IV derivation fixed. IV now hashes key bytes concatenated with value bytes; previously only the key was hashed, producing the same IV for every value in a session.
+* Security: deterministic ciphertext format changed from bare base64 to v1d:base64(IV||CT), making the format unambiguous and correctly round-trippable through decrypt(). Email and phone fields that were previously stored with the broken format would silently return empty — now they decrypt correctly.
+* Security: vault REST permission callback now explicitly calls wp_verify_nonce() in addition to current_user_can(), closing a theoretical CSRF window on the REST API.
+* Security: vault file download endpoint (GET /vault-download/{id}) fixed to use exact JSON-token matching. The previous LIKE %id% pattern allowed attachment ID 1 to match work file arrays containing IDs 10 or 11.
+* Security: vault unlock, failed unlock, lock, and password-change events now write audit entries to the WordPress error log (user ID, remote IP, event name). Requires WP_DEBUG_LOG to be enabled.
+* Security: re-encryption of email/phone fields during vault password change now uses deterministic decryption instead of standard decryption, ensuring those fields are correctly re-encrypted after a password change.
+* Security: price_override and installment amounts are clamped to max(0.0, value), preventing negative price injection via the REST API.
+* Security: vault password minimum length (12 characters) enforced server-side on both setup and change-password endpoints.
+* CI: workflow-level permissions: {} deny-all added to deploy.yml; the build job overrides with contents: read only, reducing GITHUB_TOKEN blast radius.
+* Maintenance: added uninstall.php for complete data cleanup (CPT posts, postmeta, taxonomy terms, options, transients, vault upload directory) on plugin deletion — required for WordPress.org approval.
+* Distribution: excluded developer-only files (CLAUDE.md, README.md, CHANGELOG.md, SUBMISSION-GUIDE.md) from plugin ZIP via .distignore.
+
 = 1.3.0 =
 * Security: vault setup endpoint now returns 409 if the vault is already configured, preventing a privileged user from accidentally overwriting all encrypted PII.
 * Security: vault cookie server-secret fallback replaced with a randomly generated 64-character key stored as a WordPress option, eliminating a guessable fallback based on site URL.
@@ -174,6 +189,9 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.1 =
+Security hardening release. Vault session cookie upgraded to AES-256-GCM. Deterministic encryption (email/phone) IV reuse fixed. REST nonce check enforced. File download IDOR fixed. Audit logging added. No breaking changes to existing data — vault password-change will correctly re-encrypt all fields.
 
 = 1.3.0 =
 Security hardening: vault setup guard, server-secret hardening, and meta box capability fix. Recommended for all installations. No breaking changes to existing data.

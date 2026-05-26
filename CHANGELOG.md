@@ -1,13 +1,30 @@
 # Changelog
 
-## [1.3.1] — 2026-05-25
+## [1.3.1] — 2026-05-26
+
+### Security
+- **VULN-S01 (HIGH)**: Vault session cookie upgraded from AES-256-CBC to AES-256-GCM. CBC had no MAC — a tampered cookie would decrypt to garbage silently. GCM rejects any tampered ciphertext via the 16-byte authentication tag. New cookie format: `base64(nonce[12] || auth-tag[16] || CT[32])`. (`class-vault.php`)
+- **VULN-S02 (HIGH)**: Deterministic encryption for searchable fields (email, phone) used the same IV for every value encrypted with the same key — a per-value IV was never applied. IV is now `hash_hmac('sha256', $value, $key, true)[0:16]`, unique per (key, value) pair. (`class-crypto.php`)
+- **VULN-S03 (HIGH)**: `deterministic_encrypt()` output format changed from bare `base64($ciphertext)` (no IV embedded) to `v1d:base64(HMAC_IV[16] || CT)`. The old format was undecodable — `decrypt()` would interpret the first block of ciphertext as the IV and return garbage, causing email and phone fields to always display empty. Added `deterministic_decrypt()` to handle the `v1d:` prefix. (`class-crypto.php`)
+- **VULN-S04 (HIGH)**: Browser-side `deterministicEncrypt()` (webcrypto.js) derived IV from `SHA-256(rawKey)` only — the same 12-byte GCM nonce for every value encrypted in a session. IV now derived from `SHA-256(rawKey || valueBytes)`, unique per (key, value). (`src/src/lib/webcrypto.js`)
+- **VULN-S05 (MEDIUM)**: REST API permission callback `admin_permission()` checked `current_user_can('manage_options')` but did not explicitly verify the WP REST nonce. Added `wp_verify_nonce()` call. (`class-rest-api.php`)
+- **VULN-S06 (MEDIUM)**: Vault file download IDOR — `GET /vault-download/{id}` used `LIKE %{id}%` which matched ID `1` inside arrays `[10, 11]`. Replaced with three-query exact JSON-token matching: trailing-quote match, start-of-array match, single-element match. (`class-rest-api.php`)
+- **VULN-S07 (MEDIUM)**: No audit trail for vault events. Added private `audit_log()` helper; wired to `vault_unlock_ok`, `vault_unlock_fail`, `vault_lock`, `vault_password_changed` — each entry records user ID, IP, and event to the WP error log. (`class-rest-api.php`)
+- **VULN-S08 (MEDIUM)**: `maybe_decrypt()` routed all ciphertext through `Fotonic_Crypto::decrypt()`, mishandling `v1d:`-prefixed deterministic fields. `looks_encrypted()` now fast-paths `v1d:` and `v2:` prefixes. `maybe_decrypt()` routes `v1d:` to `deterministic_decrypt()`. `reencrypt_customers()` email/phone block uses `deterministic_decrypt()` for old-key reads. (`class-rest-api.php`)
+- Price overrides and installment amounts clamped to `max(0.0, value)` — prevents negative price injection via REST. (`class-rest-api.php`)
+- Vault password minimum length (12 characters) enforced server-side on setup and change-password. (`class-rest-api.php`)
 
 ### Added
-- `dateFormat` and `timeFormat` (from WP Settings › General) now exposed to JS via `window.FotonicApp`, enabling locale-aware date/time formatting across the entire React SPA.
-- `analytics-compare` route registered in the free plugin router, activated when the Pro `AnalyticsCompare` component is present.
+- `uninstall.php`: complete data cleanup on plugin deletion — removes all CPT posts, postmeta, taxonomy terms, options, transients, and vault upload directory. Required for WordPress.org approval. (`uninstall.php`)
+- `dateFormat` and `timeFormat` (from WP Settings › General) exposed to JS via `window.FotonicApp` for locale-aware date/time formatting.
+- `analytics-compare` route registered in free plugin router, activated when Pro `AnalyticsCompare` component is present.
 
 ### Changed
-- `utils/date.js` fully rewritten: PHP format string → date-fns converter (`phpToDateFns`) with locale-based fallbacks (`it` → `dd/MM/yyyy` / `HH:mm`; `en_GB` → `dd/MM/yyyy` / `h:mm aa`; default → `MM/dd/yyyy` / `h:mm aa`). Exports `formatDate`, `formatTime`, `formatDateTime`.
+- `utils/date.js` fully rewritten: PHP format string → date-fns converter (`phpToDateFns`) with locale-based fallbacks (`it` → `dd/MM/yyyy`; `en_GB` → `dd/MM/yyyy`; default → `MM/dd/yyyy`). Exports `formatDate`, `formatTime`, `formatDateTime`.
+
+### CI / Distribution
+- `deploy.yml`: workflow-level `permissions: {}` deny-all; build job overrides with `contents: read` only.
+- `.distignore`: excludes `CLAUDE.md`, `README.md`, `CHANGELOG.md`, `SUBMISSION-GUIDE.md`, `*.po~` from SVN deploy ZIP.
 
 ---
 
