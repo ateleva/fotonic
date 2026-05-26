@@ -278,14 +278,14 @@ export default function SettingsPage() {
           {vaultStatus && !vaultStatus.setup && (
             <div className="pt-1 space-y-3">
               <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
-                <p className="text-sm font-medium text-blue-900">{__('What is the Vault?')}</p>
+                <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe')}</p>
                 <p className="text-sm text-blue-800">
-                  {__('The Vault encrypts all sensitive customer data — names, emails, phone numbers, and addresses — using AES-256 encryption. Data is only visible while the Vault is unlocked.')}
+                  {__('The Vault protects the personal details you store for each client — names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.')}
                 </p>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                  <li>{__('Set a strong master password — it cannot be recovered if lost.')}</li>
-                  <li>{__('Scan a QR code with an authenticator app to enable two-factor access.')}</li>
-                  <li>{__('Lock the Vault when you leave to keep customer data private.')}</li>
+                  <li>{__('Pick a strong master password and store it somewhere safe — there is no way to recover it if forgotten.')}</li>
+                  <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.')}</li>
+                  <li>{__('Lock the Vault when you finish working to keep client details protected.')}</li>
                 </ul>
               </div>
               <button
@@ -302,7 +302,7 @@ export default function SettingsPage() {
           {vaultStatus?.setup && (
             <div className="space-y-2">
               <p className="text-sm text-gray-500">
-                {__('All customer PII is encrypted at rest. Unlock with your master password + OTP to access sensitive data.')}
+                {__('All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.')}
               </p>
               <div className="space-y-2 pt-1">
                 <Accordion label={__('Change Vault Password')}>

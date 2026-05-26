@@ -1245,3 +1245,27 @@ msgstr "Aggiungi i collaboratori coinvolti con il relativo compenso."
 #: src/src/features/works/CollaboratorsRepeater.jsx
 msgid "No collaborators available. Add one in the Collaborators section."
 msgstr "Nessun collaboratore disponibile. Aggiungine uno nella sezione Collaboratori."
+
+#: src/src/features/settings/SettingsPage.jsx
+msgid "Keep your client data safe"
+msgstr "Mantieni al sicuro i dati dei clienti"
+
+#: src/src/features/settings/SettingsPage.jsx
+msgid "The Vault protects the personal details you store for each client — names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database."
+msgstr "Il Vault protegge i dati personali che conservi per ciascun cliente — nomi, numeri di telefono, indirizzi email e indirizzi di casa. Una volta attivo, tutte queste informazioni sono bloccate e illeggibili per chiunque, anche in caso di accesso diretto al tuo sito o al database."
+
+#: src/src/features/settings/SettingsPage.jsx
+msgid "Pick a strong master password and store it somewhere safe — there is no way to recover it if forgotten."
+msgstr "Scegli una password principale robusta e conservala in un posto sicuro — non è possibile recuperarla se dimenticata."
+
+#: src/src/features/settings/SettingsPage.jsx
+msgid "Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault."
+msgstr "Scarica una qualsiasi app di autenticazione gratuita sul telefono (Google Authenticator, Authy o simili) e scansiona un codice QR per aggiungere un secondo controllo ogni volta che apri il Vault."
+
+#: src/src/features/settings/SettingsPage.jsx
+msgid "Lock the Vault when you finish working to keep client details protected."
+msgstr "Blocca il Vault quando finisci di lavorare per mantenere protetti i dati dei clienti."
+
+#: src/src/features/settings/SettingsPage.jsx
+msgid "All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information."
+msgstr "Tutti i dati personali dei clienti sono protetti. Sblocca il Vault con la tua password e un codice temporaneo dall'app di autenticazione per visualizzare o modificare le informazioni di contatto."
