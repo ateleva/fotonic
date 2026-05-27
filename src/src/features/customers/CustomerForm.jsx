@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { useCustomer, useCreateCustomer, useUpdateCustomer, useDeleteCustomer } from '../../api/customers'
+import { useWorks } from '../../api/works'
 import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
 import FormField from '../../components/FormField'
@@ -11,6 +12,105 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import PeopleRepeater from './PeopleRepeater'
 import { __ } from '../../utils/i18n'
+
+const fmtEur = (v) =>
+  new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(v ?? 0)
+
+const fmtDate = (d) => {
+  if (!d) return '—'
+  const [y, m, day] = d.split('-')
+  return `${day}/${m}/${y}`
+}
+
+function paymentBadge(status) {
+  const map = {
+    paid:    { label: __('Paid', 'fotonic'),    bg: '#dcfce7', color: '#16a34a' },
+    partial: { label: __('Partial', 'fotonic'), bg: '#fef9c3', color: '#ca8a04' },
+    unpaid:  { label: __('Unpaid', 'fotonic'),  bg: '#fee2e2', color: '#dc2626' },
+  }
+  const s = map[status] ?? { label: status, bg: '#f3f4f6', color: '#6b7280' }
+  return (
+    <span style={{ background: s.bg, color: s.color, borderRadius: 4, padding: '2px 8px', fontSize: 12, fontWeight: 600 }}>
+      {s.label}
+    </span>
+  )
+}
+
+function CustomerWorksSection({ customerId }) {
+  const { data, isLoading } = useWorks({ customer_id: customerId, per_page: 100 })
+  const works = data?.data ?? []
+
+  const totalPrice = works.reduce((s, w) => s + (w.total_price ?? 0), 0)
+  const paidTotal  = works.reduce((s, w) => {
+    const paid = (w.installments ?? [])
+      .filter((i) => i.status === 'paid' && i.type !== 'coupon')
+      .reduce((a, i) => a + (i.amount ?? 0), 0)
+    return s + paid
+  }, 0)
+  const unpaidTotal = totalPrice - paidTotal
+
+  return (
+    <div style={{ marginTop: 32 }}>
+      <h3 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#111827' }}>
+        {__('Works', 'fotonic')}
+      </h3>
+      {isLoading ? (
+        <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}><Spinner /></div>
+      ) : (
+        <div style={{ border: '1px solid #e5e7eb', borderRadius: 8, overflow: 'hidden', fontSize: '0.875rem' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
+                {[__('Title'), __('Date', 'fotonic'), __('Services', 'fotonic'), __('Total Price', 'fotonic'), __('Payment Status', 'fotonic')].map((h) => (
+                  <th key={h} style={{ padding: '0.625rem 0.875rem', textAlign: 'left', fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {works.length === 0 ? (
+                <tr>
+                  <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>
+                    {__('No works yet.', 'fotonic')}
+                  </td>
+                </tr>
+              ) : (
+                works.map((w, i) => (
+                  <tr key={w.id} style={{ borderBottom: i < works.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                    <td style={{ padding: '0.625rem 0.875rem', fontWeight: 500 }}>
+                      <Link to={`/works/${w.id}`} style={{ color: '#4f46e5', textDecoration: 'none' }}>{w.title || __('(no title)', 'fotonic')}</Link>
+                    </td>
+                    <td style={{ padding: '0.625rem 0.875rem', color: '#6b7280', whiteSpace: 'nowrap' }}>{fmtDate(w.event_date)}</td>
+                    <td style={{ padding: '0.625rem 0.875rem', color: '#374151' }}>
+                      {(w.services ?? []).map((s) => s.service_title).filter(Boolean).join(', ') || '—'}
+                    </td>
+                    <td style={{ padding: '0.625rem 0.875rem', color: '#111827', fontWeight: 600, whiteSpace: 'nowrap' }}>{fmtEur(w.total_price)}</td>
+                    <td style={{ padding: '0.625rem 0.875rem' }}>{paymentBadge(w.payment_status)}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+            {works.length > 0 && (
+              <tfoot>
+                <tr style={{ borderTop: '2px solid #e5e7eb', background: '#f9fafb' }}>
+                  <td style={{ padding: '0.625rem 0.875rem', fontWeight: 700, color: '#111827' }}>
+                    {__('Total works:', 'fotonic')} {works.length}
+                  </td>
+                  <td />
+                  <td />
+                  <td style={{ padding: '0.625rem 0.875rem', fontWeight: 700, color: '#111827', whiteSpace: 'nowrap' }}>{fmtEur(totalPrice)}</td>
+                  <td style={{ padding: '0.625rem 0.875rem', fontSize: 12, color: '#374151' }}>
+                    <span style={{ color: '#16a34a', marginRight: 8 }}>{__('Paid:', 'fotonic')} {fmtEur(paidTotal)}</span>
+                    <span style={{ color: '#dc2626' }}>{__('Unpaid:', 'fotonic')} {fmtEur(unpaidTotal)}</span>
+                  </td>
+                </tr>
+              </tfoot>
+            )}
+          </table>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function CustomerForm() {
   const { id } = useParams()
@@ -168,6 +268,7 @@ export default function CustomerForm() {
           </Button>
         </div>
       </form>
+      {isEdit && <CustomerWorksSection customerId={Number(id)} />}
     </div>
 
     <ConfirmDialog

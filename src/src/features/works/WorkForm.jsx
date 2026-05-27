@@ -99,9 +99,12 @@ const defaultValues = {
   files: [],
   notes: '',
   total_price: '',
+  total_price_taxable: '',
   installments: [],
   color: '',
 }
+
+const isPro = !!window.FotonicApp?.isPro
 
 const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?? null
 
@@ -169,6 +172,7 @@ export default function WorkForm() {
         files: work.files ?? [],
         notes: work.notes ?? '',
         total_price: work.total_price ?? '',
+        total_price_taxable: work.total_price_taxable ?? '',
         installments: work.installments ?? [],
         color: work.color ?? '',
       })
@@ -191,6 +195,9 @@ export default function WorkForm() {
         status: c.status,
       })),
       total_price: data.total_price !== '' ? parseFloat(data.total_price) : null,
+      ...(isPro
+        ? { total_price_taxable: data.total_price_taxable !== '' && data.total_price_taxable != null ? parseFloat(data.total_price_taxable) : null }
+        : {}),
       installments: data.installments.map((inst) => ({
         ...inst,
         amount: inst.amount !== '' ? parseFloat(inst.amount) : 0,
@@ -447,17 +454,33 @@ export default function WorkForm() {
         <section>
           <SectionHeading>{__('Payments')}</SectionHeading>
           <div className="space-y-4">
-            <FormField label={__('Total Price (€)')} htmlFor="total_price">
-              <input
-                id="total_price"
-                type="number"
-                min="0"
-                step="0.01"
-                placeholder="0.00"
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
-                {...register('total_price')}
-              />
-            </FormField>
+            <div className="flex flex-wrap gap-6">
+              <FormField label={__('Total Price (€)')} htmlFor="total_price">
+                <input
+                  id="total_price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
+                  {...register('total_price')}
+                />
+              </FormField>
+
+              {isPro && (
+                <FormField label={__('Taxable Price (€)')} htmlFor="total_price_taxable">
+                  <input
+                    id="total_price_taxable"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder="0.00"
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
+                    {...register('total_price_taxable')}
+                  />
+                </FormField>
+              )}
+            </div>
 
             <div>
               <p className="text-sm font-medium text-gray-700 mb-3">{__('Installments')}</p>

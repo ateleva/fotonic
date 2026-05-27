@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.3] — 2026-05-27
+
+### Added
+- **Customer Works recap**: the Customer edit page in the React SPA now shows a table of all linked works below the customer form. Columns: title (link to work), date, services (comma-separated), total price, payment status badge. Footer row shows work count, sum of total price, sum paid (from installments), and sum unpaid.
+- **Taxable Price field on Work** (Pro-gated): new `Taxable Price (€)` number input displayed next to Total Price in the Work form when Fotonic Pro is active. Stored as `_ftnc_total_price_taxable` post meta. Hidden when Pro is not installed.
+- **`customer_id` filter on GET `/works`**: REST endpoint now accepts a `customer_id` query parameter to return only works linked to a specific customer. Used internally by the customer works recap.
+
+### i18n
+
+- Italian translations added for customer works recap labels (Works, Date, Services, Total Price, Payment Status, Paid, Partial, Unpaid, No works yet., Total works:, Paid:, Unpaid:) and Taxable Price (€) / Imponibile (€).
+
+---
+
 ## [1.3.2] — 2026-05-26
 
 ### Added

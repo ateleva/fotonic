@@ -684,3 +684,40 @@ msgstr ""
 #: src/src/features/dashboard/Dashboard.jsx
 msgid "Total"
 msgstr ""
+
+#: includes/class-meta-boxes.php
+msgid "Date"
+msgstr ""
+
+#: includes/class-meta-boxes.php
+msgid "Total Price"
+msgstr ""
+
+#: includes/class-meta-boxes.php
+msgid "Partial"
+msgstr ""
+
+#: includes/class-meta-boxes.php
+msgid "No works yet."
+msgstr ""
+
+#. translators: %d: number of works
+#: includes/class-meta-boxes.php
+msgid "Total works: %d"
+msgstr ""
+
+#: includes/class-meta-boxes.php
+msgid "Paid:"
+msgstr ""
+
+#: includes/class-meta-boxes.php
+msgid "Unpaid:"
+msgstr ""
+
+#: includes/class-meta-boxes.php
+msgid "(no title)"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx
+msgid "Taxable Price (€)"
+msgstr ""

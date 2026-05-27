@@ -32,6 +32,15 @@ class Fotonic_Meta_Boxes {
 		);
 
 		add_meta_box(
+			'ftnc_customer_works',
+			esc_html__( 'Works', 'fotonic' ),
+			[ __CLASS__, 'render_customer_works_meta_box' ],
+			'ftnc_customer',
+			'normal',
+			'default'
+		);
+
+		add_meta_box(
 			'ftnc_service_details',
 			esc_html__( 'Service Details', 'fotonic' ),
 			[ __CLASS__, 'render_service_meta_box' ],
@@ -224,6 +233,194 @@ class Fotonic_Meta_Boxes {
 			render();
 		})();
 		</script>
+		<?php
+	}
+
+	// ---------------------------------------------------------------------------
+	// Customer → Works recap meta box (read-only)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Render the "Works" recap meta box on a single ftnc_customer post.
+	 * Lists all ftnc_work linked to this customer with totals footer.
+	 */
+	public static function render_customer_works_meta_box( WP_Post $post ): void {
+		$customer_id = (int) $post->ID;
+
+		$query = new WP_Query( [
+			'post_type'              => 'ftnc_work',
+			'post_status'            => 'publish',
+			'posts_per_page'         => -1,
+			'meta_key'               => '_ftnc_event_date',
+			'orderby'                => 'meta_value',
+			'order'                  => 'DESC',
+			'meta_query'             => [
+				[
+					'key'   => '_ftnc_customer_id',
+					'value' => $customer_id,
+				],
+			],
+			'no_found_rows'          => true,
+			'update_post_term_cache' => true,
+			'update_post_meta_cache' => true,
+		] );
+
+		$service_ids_needed = [];
+		$rows               = [];
+		foreach ( $query->posts as $work ) {
+			$raw_services = get_post_meta( $work->ID, '_ftnc_work_services', true );
+			$services_ids = [];
+			if ( ! empty( $raw_services ) ) {
+				$dec = json_decode( $raw_services, true );
+				if ( is_array( $dec ) ) {
+					foreach ( $dec as $svc ) {
+						if ( isset( $svc['service_id'] ) ) {
+							$sid                          = (int) $svc['service_id'];
+							$services_ids[]               = $sid;
+							$service_ids_needed[ $sid ]   = true;
+						}
+					}
+				}
+			}
+
+			$raw_installments = get_post_meta( $work->ID, '_ftnc_installments', true );
+			$paid_sum         = 0.0;
+			if ( ! empty( $raw_installments ) ) {
+				$dec = json_decode( $raw_installments, true );
+				if ( is_array( $dec ) ) {
+					foreach ( $dec as $inst ) {
+						if ( isset( $inst['status'] ) && 'paid' === $inst['status'] ) {
+							$paid_sum += (float) ( $inst['amount'] ?? 0 );
+						}
+					}
+				}
+			}
+
+			$total_price   = (float) get_post_meta( $work->ID, '_ftnc_total_price', true );
+			$event_date    = get_post_meta( $work->ID, '_ftnc_event_date', true );
+			$payment_terms = wp_get_object_terms( $work->ID, 'ftnc_work_payment_status', [ 'fields' => 'slugs' ] );
+			$payment_slug  = ! is_wp_error( $payment_terms ) && ! empty( $payment_terms ) ? $payment_terms[0] : 'unpaid';
+
+			$rows[] = [
+				'id'           => $work->ID,
+				'title'        => $work->post_title,
+				'event_date'   => $event_date,
+				'services_ids' => $services_ids,
+				'total_price'  => $total_price,
+				'paid_sum'     => $paid_sum,
+				'payment_slug' => $payment_slug,
+			];
+		}
+
+		$services_titles = [];
+		if ( ! empty( $service_ids_needed ) ) {
+			$svc_posts = get_posts( [
+				'post_type'              => 'ftnc_service',
+				'post_status'            => 'any',
+				'posts_per_page'         => -1,
+				'post__in'               => array_map( 'intval', array_keys( $service_ids_needed ) ),
+				'orderby'                => 'post__in',
+				'no_found_rows'          => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+			] );
+			foreach ( $svc_posts as $svc ) {
+				$services_titles[ $svc->ID ] = $svc->post_title;
+			}
+		}
+
+		$status_labels = [
+			'paid'    => __( 'Paid', 'fotonic' ),
+			'partial' => __( 'Partial', 'fotonic' ),
+			'unpaid'  => __( 'Unpaid', 'fotonic' ),
+		];
+		$status_classes = [
+			'paid'    => 'ftnc-cw-paid',
+			'partial' => 'ftnc-cw-partial',
+			'unpaid'  => 'ftnc-cw-unpaid',
+		];
+
+		$date_format = get_option( 'date_format' );
+		$count_total = count( $rows );
+		$sum_total   = 0.0;
+		$sum_paid    = 0.0;
+		foreach ( $rows as $r ) {
+			$sum_total += $r['total_price'];
+			$sum_paid  += $r['paid_sum'];
+		}
+		$sum_unpaid = $sum_total - $sum_paid;
+		?>
+		<style>
+		#ftnc_customer_works .inside { padding: 0 12px 12px; }
+		.ftnc-cw-table { width: 100%; border-collapse: collapse; }
+		.ftnc-cw-table th, .ftnc-cw-table td { padding: 8px 10px; text-align: left; vertical-align: middle; font-size: 13px; }
+		.ftnc-cw-table thead th { background: #f0f0f1; font-weight: 600; border-bottom: 1px solid #ddd; }
+		.ftnc-cw-table tbody tr { border-top: 1px solid #eee; }
+		.ftnc-cw-table tfoot td { background: #fafafa; font-weight: 600; border-top: 2px solid #ddd; }
+		.ftnc-cw-table .num { text-align: right; white-space: nowrap; }
+		.ftnc-cw-empty { padding: 12px; color: #777; font-style: italic; }
+		.ftnc-cw-badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+		.ftnc-cw-paid    { background: #d4edda; color: #155724; }
+		.ftnc-cw-partial { background: #fff3cd; color: #856404; }
+		.ftnc-cw-unpaid  { background: #f8d7da; color: #721c24; }
+		.ftnc-cw-services { color: #555; font-size: 12px; }
+		</style>
+
+		<?php if ( empty( $rows ) ) : ?>
+			<p class="ftnc-cw-empty"><?php esc_html_e( 'No works yet.', 'fotonic' ); ?></p>
+		<?php else : ?>
+			<table class="widefat ftnc-cw-table">
+				<thead>
+					<tr>
+						<th><?php esc_html_e( 'Title', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Date', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Services', 'fotonic' ); ?></th>
+						<th class="num"><?php esc_html_e( 'Total Price', 'fotonic' ); ?></th>
+						<th><?php esc_html_e( 'Payment Status', 'fotonic' ); ?></th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ( $rows as $r ) :
+						$spa_url   = admin_url( 'admin.php?page=fotonic' ) . '#/works/' . (int) $r['id'];
+						$svc_names = [];
+						foreach ( $r['services_ids'] as $sid ) {
+							if ( isset( $services_titles[ $sid ] ) ) {
+								$svc_names[] = $services_titles[ $sid ];
+							}
+						}
+						$svc_str     = implode( ', ', $svc_names );
+						$date_disp   = $r['event_date'] ? date_i18n( $date_format, strtotime( $r['event_date'] ) ) : '—';
+						$badge_class = isset( $status_classes[ $r['payment_slug'] ] ) ? $status_classes[ $r['payment_slug'] ] : 'ftnc-cw-unpaid';
+						$badge_label = isset( $status_labels[ $r['payment_slug'] ] ) ? $status_labels[ $r['payment_slug'] ] : $status_labels['unpaid'];
+						$title_disp  = $r['title'] !== '' ? $r['title'] : __( '(no title)', 'fotonic' );
+						?>
+						<tr>
+							<td><a href="<?php echo esc_url( $spa_url ); ?>"><?php echo esc_html( $title_disp ); ?></a></td>
+							<td><?php echo esc_html( $date_disp ); ?></td>
+							<td class="ftnc-cw-services"><?php echo esc_html( $svc_str ); ?></td>
+							<td class="num">€ <?php echo esc_html( number_format_i18n( $r['total_price'], 2 ) ); ?></td>
+							<td><span class="ftnc-cw-badge <?php echo esc_attr( $badge_class ); ?>"><?php echo esc_html( $badge_label ); ?></span></td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td colspan="3">
+							<?php
+							/* translators: %d: number of works */
+							printf( esc_html__( 'Total works: %d', 'fotonic' ), (int) $count_total );
+							?>
+						</td>
+						<td class="num">€ <?php echo esc_html( number_format_i18n( $sum_total, 2 ) ); ?></td>
+						<td>
+							<span style="color:#155724;"><?php esc_html_e( 'Paid:', 'fotonic' ); ?> € <?php echo esc_html( number_format_i18n( $sum_paid, 2 ) ); ?></span>
+							&nbsp;·&nbsp;
+							<span style="color:#721c24;"><?php esc_html_e( 'Unpaid:', 'fotonic' ); ?> € <?php echo esc_html( number_format_i18n( $sum_unpaid, 2 ) ); ?></span>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		<?php endif; ?>
 		<?php
 	}
 

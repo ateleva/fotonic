@@ -12,9 +12,9 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 
 ## Features
 
-- **Customer Management** — store couples and individuals with multiple contacts per client; full search across all fields
+- **Customer Management** — store couples and individuals with multiple contacts per client; full search across all fields; each customer page shows a linked Works table with totals (count, total price, paid, unpaid)
 - **Service Catalog** — define services and base prices; override price and notes per project
-- **Works / Projects** — the central hub linking customers, services, files, and payment installments
+- **Works / Projects** — the central hub linking customers, services, files, and payment installments; Total Price and Taxable Price (Pro-gated) shown side-by-side
 - **Payment Tracking** — track deposits and balances; paid/partial/unpaid status assigned automatically
 - **File Vault** — attach contracts and files to any project; protected storage with REST-gated downloads
 - **Vault Security** — AES-256 encryption behind a master password and TOTP two-factor authentication; all PII is encrypted at rest
@@ -31,7 +31,7 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 - Google Calendar and Google Tasks sync (works and tasks)
 - Analytics: clean UI dashboard with key stats and charts ready to be exported in CSV and PDF formats
 - Analytics Compare: side-by-side period comparison with trend indicators — revenue shown as %, costs and expenses as absolute € diff
-- Full Expenses tracker: add software, equipment, fixed costs, professionals services, taxes... and track everything overtime 
+- Full Expenses tracker: add software, equipment, fixed costs, professionals services, taxes... and track everything over time
 - Collaborator: manage your collaborators registry and assign them roles in your works, tracking expenses and their services
 - Supplier management: create a list of suppliers and professionals to recommend in your works
 - Products catalog: track products you offer with flexible pricing tables and export everything in PDF format
@@ -89,7 +89,15 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 
 ## Changelog
 
+### 1.3.3
+
+- **Customer Works recap**: Customer edit page shows a table of all linked works (title, date, services, total price, payment status). Footer shows work count, total price, paid total, and unpaid total.
+- **Taxable Price field** (Pro-gated): new numeric input next to Total Price in the Work form when Fotonic Pro is active. Used by Pro to compute raw taxes per work.
+- **GET /works `customer_id` filter**: REST endpoint now accepts `customer_id` to return only a specific customer's works.
+- i18n: Italian translations added for all new strings.
+
 ### 1.3.2
+
 - **Calendar view** moved from Pro to free — available to all users without a license
 - **Calendar locale**: month names and date labels now use the WordPress site language
 - **PRO gating**: Work Owner and Collaborators fields hidden when Pro is not installed/licensed
@@ -100,6 +108,7 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 - **Works list**: payment status dropdown now sizes to full option text
 
 ### 1.3.1
+
 - **Security**: vault session cookie upgraded to AES-256-GCM (authenticated encryption — tampered cookies rejected)
 - **Security**: deterministic IV reuse fixed for email/phone fields (PHP and browser-side)
 - **Security**: `v1d:` ciphertext format introduced — deterministic ciphertexts are now correctly round-trippable; email/phone no longer display empty after encryption
@@ -109,6 +118,7 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 - CI: deny-all GITHUB_TOKEN permissions on deploy workflow
 
 ### 1.3.0
+
 - Security: vault setup endpoint returns 409 if already configured (prevents accidental PII wipe)
 - Security: vault cookie server-secret now uses a random stored key instead of the guessable site URL
 - Security: meta box save requires `manage_options` (was `edit_post`)
@@ -117,26 +127,31 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 - CI: build artifact check added to deploy workflow
 
 ### 1.2.2
+
 - WP admin theme color integration: sidebar nav and CTA buttons adapt to all built-in and custom admin color schemes
 - Custom payment types: new CRUD API and UI manager lets administrators define installment types beyond Default/Coupon
 - Payment status badge labels (Paid / Partial / Unpaid) are now translatable
 - Accessibility: keyboard focus ring restored on all interactive elements
 
 ### 1.2.1
+
 - Consistent button design system: primary, secondary, and danger variants using WP admin theme color
 - Full-width forms across WorkForm, CustomerForm, ServiceForm, and SettingsPage
 
 ### 1.2.0
+
 - Collaborators repeater on Work edit form with individual price and payment status per entry
 - Owner dropdown on Work edit form
 - Sticky layout with independently scrollable sidebar and content area
 
 ### 1.1.0
+
 - Quick Notes WYSIWYG field on Work edit screen
 - Calendar Color picker (12-color palette) on Work edit screen
 - Full i18n/l10n support; Italian (it_IT) translation at 100%
 
 ### 1.0.0
+
 - Initial public release
 
 ---

@@ -7,6 +7,7 @@ function buildQuery(params = {}) {
   if (params.page)           q.set('page',           params.page)
   if (params.per_page)       q.set('per_page',       params.per_page)
   if (params.payment_status) q.set('payment_status', params.payment_status)
+  if (params.customer_id)    q.set('customer_id',    params.customer_id)
   const qs = q.toString()
   return qs ? `works?${qs}` : 'works'
 }

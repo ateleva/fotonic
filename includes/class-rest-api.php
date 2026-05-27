@@ -158,6 +158,7 @@ class Fotonic_REST_API {
 						'default' => '',
 						'enum'    => [ '', 'paid', 'partial', 'unpaid' ],
 					],
+					'customer_id'    => [ 'type' => 'integer', 'default' => 0, 'minimum' => 0 ],
 				],
 			],
 			[
@@ -1029,6 +1030,7 @@ class Fotonic_REST_API {
 		$page           = (int) $req->get_param( 'page' );
 		$per_page       = (int) $req->get_param( 'per_page' );
 		$payment_status = (string) $req->get_param( 'payment_status' );
+		$customer_id    = (int) $req->get_param( 'customer_id' );
 
 		$args = [
 			'post_type'      => 'ftnc_work',
@@ -1042,6 +1044,16 @@ class Fotonic_REST_API {
 
 		if ( ! empty( $search ) ) {
 			$args['s'] = $search;
+		}
+
+		if ( $customer_id > 0 ) {
+			$args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				[
+					'key'   => '_ftnc_customer_id',
+					'value' => $customer_id,
+					'type'  => 'NUMERIC',
+				],
+			];
 		}
 
 		if ( ! empty( $payment_status ) ) {
@@ -1599,6 +1611,16 @@ class Fotonic_REST_API {
 			update_post_meta( $post_id, '_ftnc_total_price', $price >= 0 ? $price : 0 );
 		}
 
+		// Pro-only: taxable price for raw tax computation.
+		if ( defined( 'FOTO_PRO_VERSION' ) && array_key_exists( 'total_price_taxable', $body ) ) {
+			if ( null === $body['total_price_taxable'] || '' === $body['total_price_taxable'] ) {
+				delete_post_meta( $post_id, '_ftnc_total_price_taxable' );
+			} else {
+				$taxable = (float) $body['total_price_taxable'];
+				update_post_meta( $post_id, '_ftnc_total_price_taxable', $taxable >= 0 ? $taxable : 0 );
+			}
+		}
+
 		if ( isset( $body['installments'] ) && is_array( $body['installments'] ) ) {
 			$clean = [];
 			foreach ( $body['installments'] as $inst ) {
@@ -1906,13 +1928,25 @@ class Fotonic_REST_API {
 			'collaborators'   => $collaborators,
 			'services'        => $services,
 			'files'           => $files,
-			'total_price'     => (float) get_post_meta( $post->ID, '_ftnc_total_price', true ),
-			'installments'    => $installments,
+			'total_price'         => (float) get_post_meta( $post->ID, '_ftnc_total_price', true ),
+			'total_price_taxable' => self::format_taxable_price( $post->ID ),
+			'installments'        => $installments,
 			'payment_status'  => $payment_status,
 			'notes'           => $notes,
 			'quick_notes'     => (string) get_post_meta( $post->ID, '_ftnc_quick_notes', true ),
 			'color'           => (string) get_post_meta( $post->ID, '_ftnc_color', true ),
 		];
+	}
+
+	/**
+	 * Return the taxable price for a work as float, or null when unset.
+	 */
+	private static function format_taxable_price( int $post_id ) {
+		$raw = get_post_meta( $post_id, '_ftnc_total_price_taxable', true );
+		if ( '' === $raw || null === $raw ) {
+			return null;
+		}
+		return (float) $raw;
 	}
 
 	// ---------------------------------------------------------------------------

@@ -786,9 +786,6 @@ msgstr "Tipo di pagamento non trovato."
 #~ msgid "Add Person"
 #~ msgstr "Aggiungi persona"
 
-#~ msgid "Date"
-#~ msgstr "Data"
-
 #~ msgid "Works This Year"
 #~ msgstr "Lavori quest'anno"
 
@@ -1147,9 +1144,6 @@ msgstr "Tipo di pagamento non trovato."
 #~ msgid "Delete this work? This action cannot be undone."
 #~ msgstr "Eliminare questo lavoro? Questa azione non può essere annullata."
 
-#~ msgid "Total Price"
-#~ msgstr "Prezzo totale"
-
 #~ msgid "Add Work"
 #~ msgstr "Aggiungi lavoro"
 
@@ -1158,9 +1152,6 @@ msgstr "Tipo di pagamento non trovato."
 
 #~ msgid "All Statuses"
 #~ msgstr "Tutti gli stati"
-
-#~ msgid "Partial"
-#~ msgstr "Parziale"
 
 #~ msgid "No works found. Add your first work."
 #~ msgstr "Nessun lavoro trovato. Aggiungi il primo lavoro."
@@ -1269,3 +1260,40 @@ msgstr "Blocca il Vault quando finisci di lavorare per mantenere protetti i dati
 #: src/src/features/settings/SettingsPage.jsx
 msgid "All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information."
 msgstr "Tutti i dati personali dei clienti sono protetti. Sblocca il Vault con la tua password e un codice temporaneo dall'app di autenticazione per visualizzare o modificare le informazioni di contatto."
+
+#: includes/class-meta-boxes.php
+msgid "Date"
+msgstr "Data"
+
+#: includes/class-meta-boxes.php
+msgid "Total Price"
+msgstr "Prezzo Totale"
+
+#: includes/class-meta-boxes.php
+msgid "Partial"
+msgstr "Parziale"
+
+#: includes/class-meta-boxes.php
+msgid "No works yet."
+msgstr "Nessun lavoro registrato."
+
+#. translators: %d: number of works
+#: includes/class-meta-boxes.php
+msgid "Total works: %d"
+msgstr "Lavori totali: %d"
+
+#: includes/class-meta-boxes.php
+msgid "Paid:"
+msgstr "Pagato:"
+
+#: includes/class-meta-boxes.php
+msgid "Unpaid:"
+msgstr "Da pagare:"
+
+#: includes/class-meta-boxes.php
+msgid "(no title)"
+msgstr "(senza titolo)"
+
+#: src/src/features/works/WorkForm.jsx
+msgid "Taxable Price (€)"
+msgstr "Imponibile (€)"

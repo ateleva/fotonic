@@ -3,7 +3,7 @@ Contributors: ateleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -16,9 +16,9 @@ Fotonic is a standalone WordPress plugin that provides a modern React-powered CR
 
 = Features =
 
-* Customer Management: store couples and individuals with multiple contacts per client. Full backend search across all custom fields.
+* Customer Management: store couples and individuals with multiple contacts per client. Full backend search across all custom fields. Each customer page shows a linked Works table with totals (total price, paid, unpaid).
 * Service Catalog: define your services and base prices. Override price and notes per project.
-* Works / Projects: the central hub linking customers, services, attached files, and payment installments.
+* Works / Projects: the central hub linking customers, services, attached files, and payment installments. Total Price and Taxable Price (when Fotonic Pro is active) are shown side-by-side.
 * Payment Tracking: track deposits and balances. Automatic paid/partial/unpaid status assigned from installments.
 * File Vault: attach contracts and files to any project. Protected storage with .htaccess and REST-gated downloads.
 * Vault Security: AES-256 encryption protected by a master password and TOTP two-factor authentication. All personally identifiable data is encrypted at rest. Even direct database access reveals only ciphertext.
@@ -29,7 +29,7 @@ Fotonic is a standalone WordPress plugin that provides a modern React-powered CR
 
 = Fotonic Pro =
 
-A paid addon (sold separately) that adds: task management with Kanban board, Google Calendar and Google Tasks integration (sync works and tasks to your Google account), Analytics with charts and CSV/PDF export, Expenses tracker, Collaborators and Suppliers registry, Products catalog, custom email notifications with SMTP delivery.
+A paid addon (sold separately) that adds: task management with Kanban board, Google Calendar and Google Tasks integration, Analytics with revenue charts and CSV/PDF export, Expense tracker, per-year raw taxes configuration (tax percentage × taxable price per work, automatically subtracted from Net Revenue), period-over-period Analytics Compare with trend indicators, Collaborators and Suppliers registry, Products catalog, custom email notifications with SMTP delivery.
 
 When Fotonic Pro's Google Calendar integration is enabled, certain work and task data (titles, dates, times, locations, quick notes, task descriptions) is sent to Google's servers. See the Privacy Policy section below and the Fotonic Pro readme for full details.
 
@@ -124,6 +124,12 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 
 == Changelog ==
 
+= 1.3.3 =
+* Customer Works recap: the Customer edit page now shows a table of all linked works with title, date, services, total price, and payment status. Footer row shows work count, total price, paid total, and unpaid total.
+* Taxable Price field on Works (Pro-gated): new numeric input shown next to Total Price in the Work form when Fotonic Pro is active. Stored as _ftnc_total_price_taxable. Used by Fotonic Pro to compute per-work raw taxes.
+* REST GET /works now accepts a customer_id query parameter to filter works by customer. Used by the customer works recap component.
+* i18n: Italian translations added for all new strings (works recap labels, Taxable Price / Imponibile).
+
 = 1.3.2 =
 * Calendar view is now a free feature: the monthly calendar showing all scheduled works is available to all users. Only Google Calendar sync requires Fotonic Pro.
 * Calendar locale fix: month names and event dates now display in the WordPress site language instead of the server/OS locale.
@@ -200,6 +206,9 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.3 =
+Adds customer works recap table and (with Fotonic Pro) taxable price field on works. No breaking changes to existing data.
 
 = 1.3.1 =
 Security hardening release. Vault session cookie upgraded to AES-256-GCM. Deterministic encryption (email/phone) IV reuse fixed. REST nonce check enforced. File download IDOR fixed. Audit logging added. No breaking changes to existing data — vault password-change will correctly re-encrypt all fields.
