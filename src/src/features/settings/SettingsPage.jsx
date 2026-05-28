@@ -280,10 +280,10 @@ export default function SettingsPage() {
               <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
                 <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe')}</p>
                 <p className="text-sm text-blue-800">
-                  {__('The Vault protects the personal details you store for each client — names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.')}
+                  {__('The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.')}
                 </p>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                  <li>{__('Pick a strong master password and store it somewhere safe — there is no way to recover it if forgotten.')}</li>
+                  <li>{__('Pick a strong master password and store it somewhere safe: there is no way to recover it if forgotten.')}</li>
                   <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.')}</li>
                   <li>{__('Lock the Vault when you finish working to keep client details protected.')}</li>
                 </ul>
