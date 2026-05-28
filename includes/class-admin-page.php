@@ -2,9 +2,17 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Admin_Page {
+    /** @var string|null cached data-URI for the menu icon */
+    private static $icon_data_uri = null;
+
     public static function add_menu(): void {
-        $icon_svg = file_get_contents( FOTONIC_DIR . '.wordpress-org/fotonic-icon-only.svg' );
-        $icon_url = 'data:image/svg+xml;base64,' . base64_encode( $icon_svg );
+        if ( null === self::$icon_data_uri ) {
+            $svg_path = FOTONIC_DIR . '.wordpress-org/fotonic-icon-only.svg';
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local plugin asset, no remote I/O.
+            $icon_svg = is_readable( $svg_path ) ? (string) file_get_contents( $svg_path ) : '';
+            self::$icon_data_uri = 'data:image/svg+xml;base64,' . base64_encode( $icon_svg );
+        }
+        $icon_url = self::$icon_data_uri;
         add_menu_page(
             esc_html__( 'Fotonic', 'fotonic' ),
             esc_html__( 'Fotonic', 'fotonic' ),
@@ -33,18 +41,13 @@ class Fotonic_Admin_Page {
     }
 
     /**
-     * Remove all admin notices on the Fotonic SPA page to prevent double scrollbars.
-     * Hooked to `all_admin_notices` at priority PHP_INT_MAX so it fires after everything else.
+     * No-op kept for backwards-compatibility with the hook registration in fotonic.php.
+     * Admin notices on the Fotonic SPA page are hidden via scoped CSS only (see enqueue_assets).
+     * We do NOT call remove_all_actions() — security and update notices still fire and can be
+     * surfaced by accessibility tooling; CSS only hides them visually inside the SPA viewport.
      */
     public static function suppress_notices(): void {
-        $page = isset( $_GET['page'] ) ? sanitize_key( $_GET['page'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( 'fotonic' !== $page ) {
-            return;
-        }
-        remove_all_actions( 'admin_notices' );
-        remove_all_actions( 'all_admin_notices' );
-        remove_all_actions( 'network_admin_notices' );
-        remove_all_actions( 'user_admin_notices' );
+        // Intentionally empty.
     }
 
     public static function enqueue_assets( string $hook ): void {

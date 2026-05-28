@@ -461,23 +461,24 @@ class Fotonic_REST_API {
 		}
 
 		global $wpdb;
-		// Use exact JSON token matching (prevents substring false-positives, e.g. ID 1 matching [10,11]).
-		$linked = $wpdb->get_var( $wpdb->prepare(
-			"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s LIMIT 1",
-			'%' . $wpdb->esc_like( (string) $id ) . '"%'
+		// Narrow candidates with LIKE (catches all positions: [10], [10,...], [...,10], [...,10,...]),
+		// then decode JSON and confirm exact integer membership server-side. Avoids substring false-positives
+		// (ID 1 vs [10,11]) and works regardless of array position/whitespace.
+		$candidates = $wpdb->get_col( $wpdb->prepare(
+			"SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s",
+			'%' . $wpdb->esc_like( (string) $id ) . '%'
 		) );
-		// Also check for ID at start of array: [ID,...] or as only element [ID].
-		if ( ! $linked ) {
-			$linked = $wpdb->get_var( $wpdb->prepare(
-				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s LIMIT 1",
-				'[' . $wpdb->esc_like( (string) $id ) . ',%'
-			) );
-		}
-		if ( ! $linked ) {
-			$linked = $wpdb->get_var( $wpdb->prepare(
-				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s LIMIT 1",
-				'[' . $wpdb->esc_like( (string) $id ) . ']'
-			) );
+		$linked = false;
+		foreach ( $candidates as $raw ) {
+			$decoded = json_decode( $raw, true );
+			if ( is_array( $decoded ) ) {
+				foreach ( $decoded as $maybe_id ) {
+					if ( (int) $maybe_id === (int) $id ) {
+						$linked = true;
+						break 2;
+					}
+				}
+			}
 		}
 		if ( ! $linked ) {
 			return new \WP_REST_Response( array( 'code' => 'forbidden', 'message' => __( 'Access denied.', 'fotonic' ) ), 403 );
@@ -1208,7 +1209,8 @@ class Fotonic_REST_API {
 			return new \WP_REST_Response( [
 				'can_delete' => false,
 				'reason'     => sprintf(
-					_n( 'Linked to %d work: %s', 'Linked to %d works: %s', $count, 'fotonic' ),
+					/* translators: 1: number of linked works, 2: comma-separated work titles */
+					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'fotonic' ),
 					$count,
 					implode( ', ', $titles )
 				),
@@ -1260,7 +1262,8 @@ class Fotonic_REST_API {
 			return new \WP_REST_Response( [
 				'can_delete' => false,
 				'reason'     => sprintf(
-					_n( 'Linked to %d work: %s', 'Linked to %d works: %s', $count, 'fotonic' ),
+					/* translators: 1: number of linked works, 2: comma-separated work titles */
+					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'fotonic' ),
 					$count,
 					implode( ', ', $linked_titles )
 				),

@@ -756,7 +756,7 @@ class Fotonic_Meta_Boxes {
 					<td>
 						<select id="ftnc_owner_select" name="ftnc_owner_select" class="regular-text">
 							<option value="<?php echo esc_attr( 'admin:' . $admin_user_id ); ?>"<?php selected( $current_owner_val, 'admin:' . $admin_user_id ); ?>>
-								<?php echo esc_html( sprintf( __( 'Me (%s)', 'fotonic' ), $owner_display ) ); ?>
+								<?php /* translators: %s: current admin display name */ echo esc_html( sprintf( __( 'Me (%s)', 'fotonic' ), $owner_display ) ); ?>
 							</option>
 							<?php foreach ( $collaborators_list as $collab ) : ?>
 								<option value="<?php echo esc_attr( 'collaborator:' . $collab['id'] ); ?>"<?php selected( $current_owner_val, 'collaborator:' . $collab['id'] ); ?>>
@@ -879,7 +879,7 @@ class Fotonic_Meta_Boxes {
 			var collabsList        = <?php echo wp_json_encode( $collaborators_list, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 			var collabServicesMap  = <?php echo wp_json_encode( $collab_services_map, JSON_HEX_TAG | JSON_HEX_AMP ); ?>;
 			var adminUserId     = <?php echo (int) $admin_user_id; ?>;
-			var adminLabel      = <?php echo wp_json_encode( sprintf( __( 'Me (%s)', 'fotonic' ), $owner_display ) ); ?>;
+			var adminLabel      = <?php /* translators: %s: current admin display name */ echo wp_json_encode( sprintf( __( 'Me (%s)', 'fotonic' ), $owner_display ) ); ?>;
 
 			function esc(v) {
 				if (!v && v !== 0) return '';
@@ -1655,9 +1655,10 @@ class Fotonic_Meta_Boxes {
 
 		$term = '%' . $wpdb->esc_like( $wp_query->query_vars['s'] ) . '%';
 
+		// Scoped to the `_ftnc_people` meta key only (set in extend_customer_search_join).
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $wpdb->postmeta is a trusted WP core property, not user input.
 		$search .= $wpdb->prepare(
-			" OR ({$wpdb->postmeta}.meta_value LIKE %s)",
+			" OR (ftnc_people_pm.meta_value LIKE %s)",
 			$term
 		);
 
@@ -1683,8 +1684,9 @@ class Fotonic_Meta_Boxes {
 			return $join;
 		}
 
+		// Scope the JOIN to the `_ftnc_people` meta key only so it does not span unrelated postmeta rows.
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from WP core globals, not user input.
-		$join .= " LEFT JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)";
+		$join .= " LEFT JOIN {$wpdb->postmeta} AS ftnc_people_pm ON ({$wpdb->posts}.ID = ftnc_people_pm.post_id AND ftnc_people_pm.meta_key = '_ftnc_people')";
 
 		return $join;
 	}

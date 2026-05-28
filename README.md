@@ -89,6 +89,16 @@ If you install Fotonic Pro and enable Google Calendar integration, certain work 
 
 ## Changelog
 
+### 1.3.4
+
+- Security: vault file download (`GET /vault-download/{id}`) ownership check rewritten — decodes the `_ftnc_work_files` JSON server-side and compares integers exactly. The previous LIKE-based check missed mid-array IDs.
+- Security: PBKDF2 raised from 100,000 → 600,000 iterations (OWASP 2023). Existing vaults remain unlockable; no migration needed.
+- Security: customer search `posts_search` / `posts_join` filters scoped to the `_ftnc_people` meta key only.
+- WP.org compliance: replaced `remove_all_actions()` on admin-notice hooks with CSS-only hiding inside the SPA viewport — security and update warnings still fire.
+- Reliability: activator `deactivate_plugins()` argument fixed to the canonical plugin slug so the OpenSSL-missing path disables the right plugin.
+- Performance: menu icon SVG cached in a static property.
+- i18n: translators comments added; `_n()` placeholders converted to positional form.
+
 ### 1.3.3
 
 - **Customer Works recap**: Customer edit page shows a table of all linked works (title, date, services, total price, payment status). Footer shows work count, total price, paid total, and unpaid total.

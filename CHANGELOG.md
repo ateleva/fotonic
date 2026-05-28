@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.3.4] — 2026-05-28
+
+### Security
+
+- **Vault file download IDOR hardening**: `GET /vault-download/{id}` ownership check rewritten. Previously the endpoint used three LIKE patterns against the `_ftnc_work_files` JSON column, which only matched IDs in the first or last position of the array and missed mid-array entries. The new check pulls the candidate rows with a coarse LIKE then `json_decode`s and compares integers exactly — robust regardless of position, whitespace, or future format changes.
+- **PBKDF2 iterations raised 100k → 600k** in `Fotonic_Crypto::derive_key()`. Matches OWASP 2023 guidance for PBKDF2-HMAC-SHA256. Constant `PBKDF2_ITERATIONS` introduced for future bumps. Existing vaults continue to unlock; the new iteration count is applied transparently because `derive_key()` always re-runs PBKDF2 from password + salt.
+- **Customer search SQL scope**: `posts_search` and `posts_join` filters for `ftnc_customer` now join an aliased `postmeta` row constrained to `meta_key = '_ftnc_people'` and the OR-clause matches against that alias. Previously the JOIN spanned every postmeta row for the matched posts.
+
+### Changed
+
+- **Admin notice handling**: dropped the `remove_all_actions()` calls on `admin_notices`, `all_admin_notices`, `network_admin_notices`, and `user_admin_notices` on the Fotonic SPA page. Security and update warnings still fire (so administrators are not blinded to important messages); they are only hidden visually inside the SPA viewport via the existing scoped CSS rule. This aligns with WordPress.org guideline 11 (no admin hijacking).
+- **Activator OpenSSL guard**: corrected `deactivate_plugins()` argument from `plugin_basename(__FILE__)` (which resolved to the activator file path, not the main plugin file) to the canonical `'fotonic/fotonic.php'` so the main plugin is properly disabled when PHP OpenSSL is unavailable.
+- **Menu icon SVG caching**: `Fotonic_Admin_Page::add_menu()` now reads the icon SVG once per request and caches the resulting data URI in a static property, avoiding redundant filesystem reads.
+
+### i18n
+
+- Added `/* translators: */` comments to placeholder-bearing strings (`Me (%s)`, `Linked to %1$d work(s): %2$s`) so translators get correct positional context. The `_n()` call now uses positional `%1$d` / `%2$s` arguments.
+
+---
+
 ## [1.3.3] — 2026-05-27
 
 ### Added

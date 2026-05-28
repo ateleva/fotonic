@@ -53,9 +53,12 @@ class Fotonic_Crypto {
     }
 
     /**
-     * Derive AES-256 key from vault password using PBKDF2-SHA256, 100k iterations.
+     * Derive AES-256 key from vault password using PBKDF2-SHA256.
+     * 600k iterations matches OWASP 2023 guidance for PBKDF2-HMAC-SHA256.
      */
+    const PBKDF2_ITERATIONS = 600000;
+
     public static function derive_key( string $vault_password, string $salt ): string {
-        return hash_pbkdf2( 'sha256', $vault_password, $salt, 100000, 32, true );
+        return hash_pbkdf2( 'sha256', $vault_password, $salt, self::PBKDF2_ITERATIONS, 32, true );
     }
 }

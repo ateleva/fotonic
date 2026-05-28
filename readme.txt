@@ -3,7 +3,7 @@ Contributors: ateleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -124,6 +124,15 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 
 == Changelog ==
 
+= 1.3.4 =
+* Security: vault file download (GET /vault-download/{id}) ownership check now decodes the JSON file-list server-side and compares integers exactly. Previous LIKE-pattern matching covered only IDs in the first or last position of the array and missed mid-array entries; the new check is exact regardless of position.
+* Security: PBKDF2 iteration count for the vault key derivation raised from 100,000 to 600,000, aligning with OWASP 2023 guidance. Existing vaults remain unlockable; the new iteration count is applied to all derive_key() calls.
+* Security: customer search SQL filter (posts_search + posts_join) is now scoped to the _ftnc_people meta key only. Previously the JOIN spanned all postmeta rows for matched posts, an unnecessary surface that could grow as new meta keys were added.
+* WP.org compliance: removed the aggressive remove_all_actions() call on admin_notices hooks on the Fotonic SPA page. Admin notices still fire (so security/update warnings are not suppressed) and are only hidden visually inside the SPA viewport via scoped CSS.
+* Reliability: activator OpenSSL-missing path now passes the correct plugin slug to deactivate_plugins() so the main plugin is disabled cleanly when the extension is unavailable.
+* Performance: menu icon SVG is read from disk once per request and cached in a static property instead of being read on every add_menu() call.
+* i18n: added translators comments to sprintf/_n strings carrying %s/%d placeholders so translators have correct context.
+
 = 1.3.3 =
 * Customer Works recap: the Customer edit page now shows a table of all linked works with title, date, services, total price, and payment status. Footer row shows work count, total price, paid total, and unpaid total.
 * Taxable Price field on Works (Pro-gated): new numeric input shown next to Total Price in the Work form when Fotonic Pro is active. Stored as _ftnc_total_price_taxable. Used by Fotonic Pro to compute per-work raw taxes.
@@ -206,6 +215,9 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.4 =
+Security hardening release. Vault file download ownership check rewritten for exact JSON matching, PBKDF2 raised to 600k iterations, customer search SQL scoped to a single meta key, admin notice suppression replaced with CSS-only hide. No breaking changes to existing data; existing vaults continue to unlock correctly.
 
 = 1.3.3 =
 Adds customer works recap table and (with Fotonic Pro) taxable price field on works. No breaking changes to existing data.

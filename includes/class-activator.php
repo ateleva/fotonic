@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Fotonic_Activator {
     public static function activate(): void {
         if ( ! extension_loaded( 'openssl' ) ) {
-            deactivate_plugins( plugin_basename( __FILE__ ) );
+            deactivate_plugins( 'fotonic/fotonic.php' );
             wp_die( esc_html__( 'Fotonic requires the PHP OpenSSL extension. Please enable it on your server.', 'fotonic' ) );
         }
 
