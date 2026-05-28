@@ -18,10 +18,10 @@ global $wpdb;
 // 1. Delete all custom post type posts (force delete — bypass trash).
 // ---------------------------------------------------------------------------
 
-$post_types = array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_collaborator' );
+$ftnc_post_types = array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_collaborator' );
 
-foreach ( $post_types as $post_type ) {
-	$post_ids = get_posts( array(
+foreach ( $ftnc_post_types as $post_type ) {
+	$ftnc_post_ids = get_posts( array(
 		'post_type'      => $post_type,
 		'post_status'    => 'any',
 		'numberposts'    => -1,
@@ -29,7 +29,7 @@ foreach ( $post_types as $post_type ) {
 		'no_found_rows'  => true,
 	) );
 
-	foreach ( $post_ids as $post_id ) {
+	foreach ( $ftnc_post_ids as $post_id ) {
 		wp_delete_post( (int) $post_id, true );
 	}
 }
@@ -39,7 +39,7 @@ foreach ( $post_types as $post_type ) {
 //    but belt-and-suspenders for any postmeta that survived).
 // ---------------------------------------------------------------------------
 
-$meta_prefixes = array(
+$ftnc_meta_prefixes = array(
 	'_ftnc_people',
 	'_ftnc_base_price',
 	'_ftnc_notes',
@@ -60,23 +60,24 @@ $meta_prefixes = array(
 	'_ftnc_collaborators',
 );
 
-foreach ( $meta_prefixes as $key ) {
-	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => $key ), array( '%s' ) );
+foreach ( $ftnc_meta_prefixes as $ftnc_key ) {
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Orphan postmeta cleanup in uninstall context; no caching needed.
+	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => $ftnc_key ), array( '%s' ) );
 }
 
 // ---------------------------------------------------------------------------
 // 3. Delete taxonomy terms for ftnc_work_payment_status.
 // ---------------------------------------------------------------------------
 
-$terms = get_terms( array(
+$ftnc_terms = get_terms( array(
 	'taxonomy'   => 'ftnc_work_payment_status',
 	'hide_empty' => false,
 	'fields'     => 'ids',
 ) );
 
-if ( is_array( $terms ) ) {
-	foreach ( $terms as $term_id ) {
-		wp_delete_term( (int) $term_id, 'ftnc_work_payment_status' );
+if ( is_array( $ftnc_terms ) ) {
+	foreach ( $ftnc_terms as $ftnc_term_id ) {
+		wp_delete_term( (int) $ftnc_term_id, 'ftnc_work_payment_status' );
 	}
 }
 
@@ -84,7 +85,7 @@ if ( is_array( $terms ) ) {
 // 4. Delete plugin options.
 // ---------------------------------------------------------------------------
 
-$options = array(
+$ftnc_options = array(
 	'fotonic_vault_enabled',
 	'fotonic_vault_salt',
 	'fotonic_vault_totp_secret',
@@ -94,8 +95,8 @@ $options = array(
 	'fotonic_pro_license_key',
 );
 
-foreach ( $options as $option ) {
-	delete_option( $option );
+foreach ( $ftnc_options as $ftnc_option ) {
+	delete_option( $ftnc_option );
 }
 
 // ---------------------------------------------------------------------------
@@ -119,31 +120,31 @@ $wpdb->query(
 //    no user input.
 // ---------------------------------------------------------------------------
 
-$upload_dir = wp_upload_dir();
-$vault_dir  = $upload_dir['basedir'] . '/fotonic/vault';
-$fotonic_dir = $upload_dir['basedir'] . '/fotonic';
+$ftnc_upload_dir = wp_upload_dir();
+$ftnc_vault_dir  = $ftnc_upload_dir['basedir'] . '/fotonic/vault';
+$ftnc_fotonic_dir = $ftnc_upload_dir['basedir'] . '/fotonic';
 
-if ( is_dir( $vault_dir ) ) {
+if ( is_dir( $ftnc_vault_dir ) ) {
 	// Recursive deletion handles any subdirectories that may exist.
-	$items = new RecursiveIteratorIterator(
-		new RecursiveDirectoryIterator( $vault_dir, RecursiveDirectoryIterator::SKIP_DOTS ),
+	$ftnc_items = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $ftnc_vault_dir, RecursiveDirectoryIterator::SKIP_DOTS ),
 		RecursiveIteratorIterator::CHILD_FIRST
 	);
-	foreach ( $items as $item ) {
-		if ( $item->isDir() ) {
+	foreach ( $ftnc_items as $ftnc_item ) {
+		if ( $ftnc_item->isDir() ) {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
-			rmdir( $item->getPathname() );
+			rmdir( $ftnc_item->getPathname() );
 		} else {
 			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
-			unlink( $item->getPathname() );
+			unlink( $ftnc_item->getPathname() );
 		}
 	}
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
-	rmdir( $vault_dir );
+	rmdir( $ftnc_vault_dir );
 }
 
 // Remove the fotonic uploads parent directory only if now empty.
-if ( is_dir( $fotonic_dir ) && ! ( new FilesystemIterator( $fotonic_dir ) )->valid() ) {
+if ( is_dir( $ftnc_fotonic_dir ) && ! ( new FilesystemIterator( $ftnc_fotonic_dir ) )->valid() ) {
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
-	rmdir( $fotonic_dir );
+	rmdir( $ftnc_fotonic_dir );
 }

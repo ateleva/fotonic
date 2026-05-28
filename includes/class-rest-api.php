@@ -464,6 +464,7 @@ class Fotonic_REST_API {
 		// Narrow candidates with LIKE (catches all positions: [10], [10,...], [...,10], [...,10,...]),
 		// then decode JSON and confirm exact integer membership server-side. Avoids substring false-positives
 		// (ID 1 vs [10,11]) and works regardless of array position/whitespace.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Ownership check must be real-time; caching stale results would allow IDOR. Prepared query, no user-controlled table name.
 		$candidates = $wpdb->get_col( $wpdb->prepare(
 			"SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s",
 			'%' . $wpdb->esc_like( (string) $id ) . '%'
@@ -1039,7 +1040,7 @@ class Fotonic_REST_API {
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
 			'orderby'        => 'meta_value',
-			'meta_key'       => '_ftnc_event_date',
+			'meta_key'       => '_ftnc_event_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 			'order'          => 'ASC',
 		];
 
@@ -1194,6 +1195,7 @@ class Fotonic_REST_API {
 			);
 		}
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 		$linked = get_posts( [
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
@@ -1231,6 +1233,7 @@ class Fotonic_REST_API {
 			);
 		}
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 		$candidate_works = get_posts( [
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
@@ -1337,14 +1340,15 @@ class Fotonic_REST_API {
 		$from = sanitize_text_field( $req->get_param( 'from' ) );
 		$to   = sanitize_text_field( $req->get_param( 'to' ) );
 
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 		$query = new \WP_Query( [
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'orderby'        => 'meta_value',
-			'meta_key'       => '_ftnc_event_date',
+			'meta_key'       => '_ftnc_event_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 			'order'          => 'ASC',
-			'meta_query'     => [
+			'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 				[
 					'key'     => '_ftnc_event_date',
 					'value'   => [ $from, $to ],
@@ -2042,12 +2046,13 @@ class Fotonic_REST_API {
 			$from = sprintf( '%04d-01-01', $year );
 			$to   = sprintf( '%04d-12-31', $year );
 
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 			$query = new \WP_Query( [
 				'post_type'      => 'ftnc_work',
 				'post_status'    => 'publish',
 				'posts_per_page' => -1,
 				'fields'         => 'ids',
-				'meta_query'     => [
+				'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 					[
 						'key'     => '_ftnc_event_date',
 						'value'   => [ $from, $to ],
@@ -2084,12 +2089,13 @@ class Fotonic_REST_API {
 		$pt_total   = 0.0;
 		$from_ty    = sprintf( '%04d-01-01', $this_year );
 		$to_ty      = sprintf( '%04d-12-31', $this_year );
+		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 		$ty_query   = new \WP_Query( [
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
-			'meta_query'     => [
+			'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 				[
 					'key'     => '_ftnc_event_date',
 					'value'   => [ $from_ty, $to_ty ],

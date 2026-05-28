@@ -251,10 +251,10 @@ class Fotonic_Meta_Boxes {
 			'post_type'              => 'ftnc_work',
 			'post_status'            => 'publish',
 			'posts_per_page'         => -1,
-			'meta_key'               => '_ftnc_event_date',
+			'meta_key'               => '_ftnc_event_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key is indexed; query scoped to a single post type.
 			'orderby'                => 'meta_value',
 			'order'                  => 'DESC',
-			'meta_query'             => [
+			'meta_query'             => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key is indexed; query scoped to a single post type.
 				[
 					'key'   => '_ftnc_customer_id',
 					'value' => $customer_id,
@@ -1226,7 +1226,7 @@ class Fotonic_Meta_Boxes {
 				'posts_per_page' => -1,
 				'orderby'        => 'date',
 				'order'          => 'ASC',
-				'meta_query'     => [
+				'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key is indexed; query scoped to a single post type.
 					[
 						'key'   => '_ftnc_task_work_id',
 						'value' => $post->ID,
@@ -1283,6 +1283,7 @@ class Fotonic_Meta_Boxes {
 		if ( ! self::can_save( $post_id, $post, 'ftnc_customer_nonce', 'ftnc_customer_save' ) ) {
 			return;
 		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified by can_save() which calls check_admin_referer(). All inputs sanitized individually below.
 
 		$raw = isset( $_POST['ftnc_people_json'] ) ? wp_unslash( $_POST['ftnc_people_json'] ) : '[]';
 
@@ -1342,6 +1343,7 @@ class Fotonic_Meta_Boxes {
 		}
 
 		update_post_meta( $post_id, '_ftnc_people', wp_json_encode( $sanitized ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1358,6 +1360,7 @@ class Fotonic_Meta_Boxes {
 		if ( ! self::can_save( $post_id, $post, 'ftnc_service_nonce', 'ftnc_service_save' ) ) {
 			return;
 		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified by can_save() which calls check_admin_referer(). All inputs sanitized individually below.
 
 		if ( isset( $_POST['ftnc_base_price'] ) ) {
 			$price = (float) wp_unslash( $_POST['ftnc_base_price'] );
@@ -1367,6 +1370,7 @@ class Fotonic_Meta_Boxes {
 		if ( isset( $_POST['ftnc_notes'] ) ) {
 			update_post_meta( $post_id, '_ftnc_notes', wp_kses_post( wp_unslash( $_POST['ftnc_notes'] ) ) );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1383,6 +1387,7 @@ class Fotonic_Meta_Boxes {
 		if ( ! self::can_save( $post_id, $post, 'ftnc_work_nonce', 'ftnc_work_save' ) ) {
 			return;
 		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified by can_save() which calls check_admin_referer(). All inputs sanitized individually below.
 
 		$vault_key = Fotonic_Vault::get_session_key();
 		$encrypt   = $vault_key !== null;
@@ -1577,6 +1582,7 @@ class Fotonic_Meta_Boxes {
 		if ( isset( $_POST['ftnc_quick_notes'] ) ) {
 			update_post_meta( $post_id, '_ftnc_quick_notes', wp_kses_post( wp_unslash( $_POST['ftnc_quick_notes'] ) ) );
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
 	// ---------------------------------------------------------------------------

@@ -156,7 +156,7 @@ class Fotonic_Vault {
 			return null;
 		}
 
-		$blob = base64_decode( $_COOKIE[ self::COOKIE_NAME ], true );
+		$blob = base64_decode( sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE_NAME ] ) ), true );
 
 		// 12-byte nonce + 16-byte GCM tag + 32-byte ciphertext = 60 bytes minimum.
 		if ( false === $blob || strlen( $blob ) < 60 ) {

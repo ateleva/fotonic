@@ -224,13 +224,13 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 == Upgrade Notice ==
 
 = 1.3.4 =
-Security hardening release. Vault file download ownership check rewritten for exact JSON matching, PBKDF2 raised to 600k iterations, customer search SQL scoped to a single meta key, admin notice suppression replaced with CSS-only hide. No breaking changes to existing data; existing vaults continue to unlock correctly.
+Security: vault download ownership check rewritten; PBKDF2 raised to 600k iterations. WP.org compliance: replaced admin-notice hook suppression with CSS-only hiding. See changelog for full details.
 
 = 1.3.3 =
 Adds customer works recap table and (with Fotonic Pro) taxable price field on works. No breaking changes to existing data.
 
 = 1.3.1 =
-Security hardening release. Vault session cookie upgraded to AES-256-GCM. Deterministic encryption (email/phone) IV reuse fixed. REST nonce check enforced. File download IDOR fixed. Audit logging added. No breaking changes to existing data — vault password-change will correctly re-encrypt all fields.
+Security: vault cookie upgraded to AES-256-GCM; REST nonce enforcement tightened; IDOR in file downloads fixed. Added uninstall.php for complete data cleanup on plugin deletion.
 
 = 1.3.0 =
 Security hardening: vault setup guard, server-secret hardening, and meta box capability fix. Recommended for all installations. No breaking changes to existing data.
