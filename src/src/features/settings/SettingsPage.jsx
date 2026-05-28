@@ -247,16 +247,9 @@ export default function SettingsPage() {
     queryFn: () => apiFetch('vault/status'),
   })
 
-  // Close setup overlay once vault setup completes (query refetches with setup:true)
-  useEffect(() => {
-    if (vaultStatus?.setup === true && showSetup) {
-      setShowSetup(false)
-    }
-  }, [vaultStatus?.setup, showSetup])
-
   return (
     <>
-    {showSetup && (
+    {showSetup && !vaultStatus?.setup && (
       <div className="fixed inset-0 z-[9999]">
         <VaultSetup />
       </div>
