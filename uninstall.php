@@ -13,6 +13,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 global $wpdb;
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Variables use the ftnc_ shorthand prefix, consistent with all plugin meta keys and CPT slugs.
 
 // ---------------------------------------------------------------------------
 // 1. Delete all custom post type posts (force delete — bypass trash).
@@ -61,7 +62,7 @@ $ftnc_meta_prefixes = array(
 );
 
 foreach ( $ftnc_meta_prefixes as $ftnc_key ) {
-	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Orphan postmeta cleanup in uninstall context; no caching needed.
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Orphan postmeta cleanup in uninstall context; no caching needed.
 	$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => $ftnc_key ), array( '%s' ) );
 }
 
@@ -148,3 +149,4 @@ if ( is_dir( $ftnc_fotonic_dir ) && ! ( new FilesystemIterator( $ftnc_fotonic_di
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
 	rmdir( $ftnc_fotonic_dir );
 }
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound

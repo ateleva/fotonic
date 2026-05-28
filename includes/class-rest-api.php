@@ -1200,8 +1200,8 @@ class Fotonic_REST_API {
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
-			'meta_key'       => '_ftnc_customer_id',
-			'meta_value'     => $id,
+			'meta_key'       => '_ftnc_customer_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+			'meta_value'     => $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 			'fields'         => 'ids',
 		] );
 
@@ -1239,7 +1239,7 @@ class Fotonic_REST_API {
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
-			'meta_query'     => [ [
+			'meta_query'     => [ [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 				'key'     => '_ftnc_work_services',
 				'compare' => 'EXISTS',
 			] ],
