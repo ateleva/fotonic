@@ -1242,12 +1242,12 @@ msgid "Keep your client data safe"
 msgstr "Mantieni al sicuro i dati dei clienti"
 
 #: src/src/features/settings/SettingsPage.jsx
-msgid "The Vault protects the personal details you store for each client — names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database."
-msgstr "Il Vault protegge i dati personali che conservi per ciascun cliente — nomi, numeri di telefono, indirizzi email e indirizzi di casa. Una volta attivo, tutte queste informazioni sono bloccate e illeggibili per chiunque, anche in caso di accesso diretto al tuo sito o al database."
+msgid "The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database."
+msgstr "Il Vault protegge i dati personali che conservi per ciascun cliente: nomi, numeri di telefono, indirizzi email e indirizzi di casa. Una volta attivo, tutte queste informazioni sono bloccate e illeggibili per chiunque, anche in caso di accesso diretto al tuo sito o al database."
 
 #: src/src/features/settings/SettingsPage.jsx
-msgid "Pick a strong master password and store it somewhere safe — there is no way to recover it if forgotten."
-msgstr "Scegli una password principale robusta e conservala in un posto sicuro — non è possibile recuperarla se dimenticata."
+msgid "Pick a strong master password and store it somewhere safe: there is no way to recover it if forgotten."
+msgstr "Scegli una password principale robusta e conservala in un posto sicuro: non è possibile recuperarla se dimenticata."
 
 #: src/src/features/settings/SettingsPage.jsx
 msgid "Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault."
