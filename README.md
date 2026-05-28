@@ -2,9 +2,9 @@
   <img src="https://raw.githubusercontent.com/ateleva/fotonic/main/.wordpress-org/icon-256x256.png" alt="Fotonic" width="128">
 </p>
 
-# Fotonic
+# Fotonic – CRM for Photographers
 
-**CRM and workflow manager for freelance photographers.**
+**CRM and workflow manager for photographers.**
 
 A standalone WordPress plugin with a modern React-powered dashboard — no monthly fees, no external dependencies.
 

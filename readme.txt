@@ -1,4 +1,4 @@
-=== Fotonic ===
+=== Fotonic – CRM for Photographers ===
 Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
