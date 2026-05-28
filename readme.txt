@@ -117,10 +117,17 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 
 == Screenshots ==
 
-1. Vault unlock screen with master password and TOTP authentication
-2. Dashboard with annual revenue, upcoming events, and unpaid balance summary
-3. Customer list with search
-4. Work detail form with payment installments and file attachments
+1. Dashboard showing annual revenue, payments to receive, payment type breakdown, and upcoming works list
+2. Customer list with search — name, main contact, email, and phone at a glance
+3. Service catalog with base prices — add, edit, and reuse services across projects
+4. Works list with payment status filter (All / Paid / Partial / Unpaid) and total price column
+5. Works list filtered to "Partial" status, with custom Payment Types manager expanded
+6. Work edit form — event details with date, time, and multiple location addresses
+7. Work edit form — customer selector, calendar color picker, and services with per-work price override
+8. Work edit form — payment section with installments, paid/unpaid status per installment, and running totals
+9. Monthly calendar view showing scheduled works as colored event pills
+10. Settings page — Vault section showing change-password and reset-authenticator-app panels
+11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
 == Changelog ==
 
