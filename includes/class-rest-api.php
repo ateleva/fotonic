@@ -62,6 +62,30 @@ class Fotonic_REST_API {
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
+		register_rest_route( self::NAMESPACE, '/vault/recovery/reset-password', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_recovery_reset_password' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/recovery/reset-totp', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_recovery_reset_totp' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/recovery/regenerate', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_recovery_regenerate' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/reset', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_reset' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
 		register_rest_route( self::NAMESPACE, '/vault-download/(?P<id>\d+)', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'vault_download' ],
@@ -208,15 +232,6 @@ class Fotonic_REST_API {
 		] );
 
 		// ------------------------------------------------------------------
-		// Collaborator options (for work owner/collab dropdowns)
-		// ------------------------------------------------------------------
-		register_rest_route( self::NAMESPACE, '/collaborator-options', [
-			'methods'             => \WP_REST_Server::READABLE,
-			'callback'            => [ __CLASS__, 'get_collaborator_options' ],
-			'permission_callback' => [ __CLASS__, 'admin_permission' ],
-		] );
-
-		// ------------------------------------------------------------------
 		// Calendar — GET /calendar?from=YYYY-MM-DD&to=YYYY-MM-DD
 		// ------------------------------------------------------------------
 		register_rest_route( self::NAMESPACE, '/calendar', [
@@ -291,7 +306,15 @@ class Fotonic_REST_API {
 			);
 	}
 
-	public static function vault_download_permission(): bool {
+	public static function vault_download_permission( \WP_REST_Request $request ): bool {
+		// Verify REST nonce from X-WP-Nonce header or _wpnonce query param.
+		$nonce = $request->get_header( 'x_wp_nonce' );
+		if ( empty( $nonce ) ) {
+			$nonce = $request->get_param( '_wpnonce' );
+		}
+		if ( empty( $nonce ) || ! wp_verify_nonce( sanitize_text_field( (string) $nonce ), 'wp_rest' ) ) {
+			return false;
+		}
 		return current_user_can( 'manage_options' ) && Fotonic_Vault::is_unlocked();
 	}
 
@@ -307,7 +330,7 @@ class Fotonic_REST_API {
 	public static function vault_setup( \WP_REST_Request $req ): \WP_REST_Response {
 		if ( Fotonic_Vault::is_setup() ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'already_setup', 'message' => __( 'Vault is already configured. Use change-password to update credentials.', 'fotonic' ) ],
+				[ 'code' => 'already_setup', 'message' => __( 'Vault is already configured. Use change-password to update credentials.', 'eleva-crm-for-photographers' ) ],
 				409
 			);
 		}
@@ -318,14 +341,14 @@ class Fotonic_REST_API {
 
 		if ( empty( $password ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_password', 'message' => __( 'Password is required.', 'fotonic' ) ],
+				[ 'code' => 'missing_password', 'message' => __( 'Password is required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
 		if ( strlen( $password ) < 12 ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'password_too_short', 'message' => __( 'Vault password must be at least 12 characters.', 'fotonic' ) ],
+				[ 'code' => 'password_too_short', 'message' => __( 'Vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
@@ -335,21 +358,24 @@ class Fotonic_REST_API {
 			$totp_secret = Fotonic_TOTP::generate_secret();
 		}
 
-		$ok = Fotonic_Vault::setup( $password, $totp_secret );
-		if ( ! $ok ) {
+		$result = Fotonic_Vault::setup( $password, $totp_secret );
+		if ( ! $result['ok'] ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'setup_failed', 'message' => __( 'Vault setup failed.', 'fotonic' ) ],
+				[ 'code' => 'setup_failed', 'message' => __( 'Vault setup failed.', 'eleva-crm-for-photographers' ) ],
 				500
 			);
 		}
 
-		$site_name = get_bloginfo( 'name' ) ?: 'Fotonic';
+		$site_name = get_bloginfo( 'name' ) ?: 'Eleva CRM';
 		$label     = $site_name . ':' . wp_get_current_user()->user_email;
-		$qr_uri    = Fotonic_TOTP::get_uri( $totp_secret, $label );
+		$qr_uri    = Fotonic_TOTP::get_uri( $totp_secret, $label, $site_name );
+
+		self::audit_log( 'vault_setup' );
 
 		return new \WP_REST_Response( [
-			'setup'  => true,
-			'qr_uri' => $qr_uri,
+			'setup'         => true,
+			'qr_uri'        => $qr_uri,
+			'recovery_code' => $result['recovery_code'],
 		], 200 );
 	}
 
@@ -363,7 +389,7 @@ class Fotonic_REST_API {
 		$attempts = (int) get_transient( $fail_key );
 		if ( $attempts >= 5 ) {
 			return new \WP_REST_Response(
-				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'fotonic' ) ),
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
 				429
 			);
 		}
@@ -374,7 +400,7 @@ class Fotonic_REST_API {
 
 		if ( empty( $password ) || empty( $otp ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_fields', 'message' => __( 'Password and OTP are required.', 'fotonic' ) ],
+				[ 'code' => 'missing_fields', 'message' => __( 'Password and OTP are required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
@@ -384,7 +410,7 @@ class Fotonic_REST_API {
 			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 			self::audit_log( 'vault_unlock_fail' );
 			return new \WP_REST_Response(
-				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
+				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
 				401
 			);
 		}
@@ -416,8 +442,10 @@ class Fotonic_REST_API {
 	 */
 	public static function vault_status( \WP_REST_Request $_req ): \WP_REST_Response {
 		return new \WP_REST_Response( [
-			'setup'    => Fotonic_Vault::is_setup(),
-			'unlocked' => Fotonic_Vault::is_unlocked(),
+			'setup'        => Fotonic_Vault::is_setup(),
+			'unlocked'     => Fotonic_Vault::is_unlocked(),
+			'has_recovery' => Fotonic_Vault::has_recovery(),
+			'scheme'       => Fotonic_Vault::get_scheme(),
 		], 200 );
 	}
 
@@ -437,7 +465,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || ! is_a( $post, 'WP_Post' ) || strpos( $post->post_mime_type, '/' ) === false ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'File not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'File not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -445,7 +473,7 @@ class Fotonic_REST_API {
 		$file = get_attached_file( $id );
 		if ( ! $file || ! file_exists( $file ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'file_missing', 'message' => __( 'File not found on disk.', 'fotonic' ) ],
+				[ 'code' => 'file_missing', 'message' => __( 'File not found on disk.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -455,7 +483,7 @@ class Fotonic_REST_API {
 		$real_basedir = realpath( wp_upload_dir()['basedir'] );
 		if ( ! $real_file || ! $real_basedir || strpos( $real_file, rtrim( $real_basedir, '/' ) . '/' ) !== 0 ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'forbidden', 'message' => __( 'Access denied.', 'fotonic' ) ],
+				[ 'code' => 'forbidden', 'message' => __( 'Access denied.', 'eleva-crm-for-photographers' ) ],
 				403
 			);
 		}
@@ -482,7 +510,7 @@ class Fotonic_REST_API {
 			}
 		}
 		if ( ! $linked ) {
-			return new \WP_REST_Response( array( 'code' => 'forbidden', 'message' => __( 'Access denied.', 'fotonic' ) ), 403 );
+			return new \WP_REST_Response( array( 'code' => 'forbidden', 'message' => __( 'Access denied.', 'eleva-crm-for-photographers' ) ), 403 );
 		}
 
 		// Sanitize headers before output.
@@ -515,14 +543,14 @@ class Fotonic_REST_API {
 	/**
 	 * POST /vault/change-password
 	 * Body: { current_password, otp, new_password }
-	 * Re-derives the vault key from a new password and re-encrypts all PII postmeta.
+	 * Envelope scheme v2: re-wraps MK under new KEK — no PII re-encryption needed.
 	 */
 	public static function vault_change_password( \WP_REST_Request $req ): \WP_REST_Response {
 		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
 		$attempts = (int) get_transient( $fail_key );
 		if ( $attempts >= 5 ) {
 			return new \WP_REST_Response(
-				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'fotonic' ) ),
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
 				429
 			);
 		}
@@ -534,77 +562,37 @@ class Fotonic_REST_API {
 
 		if ( empty( $current_password ) || empty( $otp ) || empty( $new_password ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_fields', 'message' => __( 'All fields are required.', 'fotonic' ) ],
+				[ 'code' => 'missing_fields', 'message' => __( 'All fields are required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
 		if ( strlen( $new_password ) < 12 ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'fotonic' ) ],
+				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
 		if ( ! Fotonic_Vault::is_setup() ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'fotonic' ) ],
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
-		$old_salt       = (string) get_option( Fotonic_Vault::OPTION_SALT, '' );
-		$encrypted_totp = (string) get_option( Fotonic_Vault::OPTION_TOTP, '' );
+		$ok = Fotonic_Vault::change_password( $current_password, $otp, $new_password );
 
-		if ( empty( $old_salt ) || empty( $encrypted_totp ) ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'vault_error', 'message' => __( 'Vault configuration error.', 'fotonic' ) ],
-				500
-			);
-		}
-
-		$old_key     = Fotonic_Crypto::derive_key( $current_password, $old_salt );
-		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $old_key );
-
-		if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+		if ( ! $ok ) {
 			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			self::audit_log( 'vault_password_change_fail' );
 			return new \WP_REST_Response(
-				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
+				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
 				401
 			);
 		}
 
 		delete_transient( $fail_key );
-
-		if ( get_transient( 'fotonic_vault_reencrypt_lock' ) ) {
-			return new \WP_REST_Response(
-				array( 'code' => 'reencrypt_in_progress', 'message' => __( 'A re-encryption is already in progress.', 'fotonic' ) ),
-				409
-			);
-		}
-		set_transient( 'fotonic_vault_reencrypt_lock', true, 5 * MINUTE_IN_SECONDS );
-
-		$new_salt           = base64_encode( random_bytes( 32 ) );
-		$new_key            = Fotonic_Crypto::derive_key( $new_password, $new_salt );
-		$new_encrypted_totp = Fotonic_Crypto::encrypt( $totp_secret, $new_key );
-
-		if ( empty( $new_encrypted_totp ) ) {
-			delete_transient( 'fotonic_vault_reencrypt_lock' );
-			return new \WP_REST_Response(
-				[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'fotonic' ) ],
-				500
-			);
-		}
-
-		self::reencrypt_customers( $old_key, $new_key );
-		self::reencrypt_works( $old_key, $new_key );
-
-		update_option( Fotonic_Vault::OPTION_SALT, $new_salt,           false );
-		update_option( Fotonic_Vault::OPTION_TOTP, $new_encrypted_totp, false );
-
-		Fotonic_Vault::update_session_key( $new_key );
-
-		delete_transient( 'fotonic_vault_reencrypt_lock' );
 		self::audit_log( 'vault_password_changed' );
 
 		return new \WP_REST_Response( [ 'changed' => true ], 200 );
@@ -613,7 +601,8 @@ class Fotonic_REST_API {
 	/**
 	 * POST /vault/reset-totp
 	 * Body: { password, otp }
-	 * Generates a new TOTP secret (keeping the same vault password/key).
+	 * Generates a new TOTP secret while keeping the same password.
+	 * Works for both legacy scheme v1 and envelope scheme v2.
 	 * Returns: { reset: true, qr_uri: string }
 	 */
 	public static function vault_reset_totp( \WP_REST_Request $req ): \WP_REST_Response {
@@ -621,7 +610,7 @@ class Fotonic_REST_API {
 		$attempts = (int) get_transient( $fail_key );
 		if ( $attempts >= 5 ) {
 			return new \WP_REST_Response(
-				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'fotonic' ) ),
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
 				429
 			);
 		}
@@ -632,56 +621,100 @@ class Fotonic_REST_API {
 
 		if ( empty( $password ) || empty( $otp ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_fields', 'message' => __( 'Password and OTP are required.', 'fotonic' ) ],
+				[ 'code' => 'missing_fields', 'message' => __( 'Password and OTP are required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
 		if ( ! Fotonic_Vault::is_setup() ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'fotonic' ) ],
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
-		$salt           = (string) get_option( Fotonic_Vault::OPTION_SALT, '' );
-		$encrypted_totp = (string) get_option( Fotonic_Vault::OPTION_TOTP, '' );
-
-		if ( empty( $salt ) || empty( $encrypted_totp ) ) {
+		$salt = (string) get_option( Fotonic_Vault::OPTION_SALT, '' );
+		if ( empty( $salt ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'vault_error', 'message' => __( 'Vault configuration error.', 'fotonic' ) ],
+				[ 'code' => 'vault_error', 'message' => __( 'Vault configuration error.', 'eleva-crm-for-photographers' ) ],
 				500
 			);
 		}
 
-		$key         = Fotonic_Crypto::derive_key( $password, $salt );
-		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $key );
+		$new_totp_secret = '';
+		$qr_uri          = '';
 
-		if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
-			return new \WP_REST_Response(
-				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'fotonic' ) ],
-				401
-			);
+		if ( Fotonic_Vault::get_scheme() >= 2 ) {
+			// Scheme v2: verify via unlock (checks wrap_pw + wrap_totp), then
+			// generate new TOTP and re-wrap under MK.
+			$wrap_pw   = (string) get_option( Fotonic_Vault::OPTION_WRAP_PW, '' );
+			$wrap_totp = (string) get_option( Fotonic_Vault::OPTION_WRAP_TOTP, '' );
+			if ( empty( $wrap_pw ) || empty( $wrap_totp ) ) {
+				return new \WP_REST_Response(
+					[ 'code' => 'vault_error', 'message' => __( 'Vault configuration error.', 'eleva-crm-for-photographers' ) ],
+					500
+				);
+			}
+			$kek_pw = Fotonic_Crypto::derive_key( $password, $salt );
+			$mk     = Fotonic_Crypto::unwrap( $wrap_pw, $kek_pw );
+			if ( false === $mk ) {
+				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				return new \WP_REST_Response(
+					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
+					401
+				);
+			}
+			$current_totp = Fotonic_Crypto::unwrap( $wrap_totp, $mk );
+			if ( false === $current_totp || ! Fotonic_TOTP::verify( $otp, $current_totp ) ) {
+				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				return new \WP_REST_Response(
+					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
+					401
+				);
+			}
+			$new_totp_secret = Fotonic_TOTP::generate_secret();
+			$new_wrap_totp   = Fotonic_Crypto::wrap( strtoupper( $new_totp_secret ), $mk );
+			if ( empty( $new_wrap_totp ) ) {
+				return new \WP_REST_Response(
+					[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'eleva-crm-for-photographers' ) ],
+					500
+				);
+			}
+			update_option( Fotonic_Vault::OPTION_WRAP_TOTP, $new_wrap_totp, false );
+		} else {
+			// Legacy scheme v1 path.
+			$encrypted_totp = (string) get_option( Fotonic_Vault::OPTION_TOTP, '' );
+			if ( empty( $encrypted_totp ) ) {
+				return new \WP_REST_Response(
+					[ 'code' => 'vault_error', 'message' => __( 'Vault configuration error.', 'eleva-crm-for-photographers' ) ],
+					500
+				);
+			}
+			$key         = Fotonic_Crypto::derive_key( $password, $salt );
+			$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $key );
+			if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				return new \WP_REST_Response(
+					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
+					401
+				);
+			}
+			$new_totp_secret    = Fotonic_TOTP::generate_secret();
+			$new_encrypted_totp = Fotonic_Crypto::encrypt( strtoupper( $new_totp_secret ), $key );
+			if ( empty( $new_encrypted_totp ) ) {
+				return new \WP_REST_Response(
+					[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'eleva-crm-for-photographers' ) ],
+					500
+				);
+			}
+			update_option( Fotonic_Vault::OPTION_TOTP, $new_encrypted_totp, false );
 		}
 
 		delete_transient( $fail_key );
 
-		$new_totp_secret    = Fotonic_TOTP::generate_secret();
-		$new_encrypted_totp = Fotonic_Crypto::encrypt( strtoupper( $new_totp_secret ), $key );
-
-		if ( empty( $new_encrypted_totp ) ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'fotonic' ) ],
-				500
-			);
-		}
-
-		update_option( Fotonic_Vault::OPTION_TOTP, $new_encrypted_totp, false );
-
-		$site_name = get_bloginfo( 'name' ) ?: 'Fotonic';
+		$site_name = get_bloginfo( 'name' ) ?: 'Eleva CRM';
 		$label     = $site_name . ':' . wp_get_current_user()->user_email;
-		$qr_uri    = Fotonic_TOTP::get_uri( $new_totp_secret, $label );
+		$qr_uri    = Fotonic_TOTP::get_uri( $new_totp_secret, $label, $site_name );
 
 		return new \WP_REST_Response( [
 			'reset'  => true,
@@ -689,13 +722,190 @@ class Fotonic_REST_API {
 		], 200 );
 	}
 
+	// ---------------------------------------------------------------------------
+	// Vault recovery endpoints
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * POST /vault/recovery/reset-password
+	 * Body: { recovery_code, new_password }
+	 * Reset the vault password using a recovery code (lost OTP path).
+	 * Rate-limited to 5 attempts / 15 min.
+	 */
+	public static function vault_recovery_reset_password( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
+				429
+			);
+		}
+
+		$body          = $req->get_json_params();
+		$recovery_code = isset( $body['recovery_code'] ) ? (string) $body['recovery_code'] : '';
+		$new_password  = isset( $body['new_password'] )  ? (string) $body['new_password']  : '';
+
+		if ( empty( $recovery_code ) || empty( $new_password ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'missing_fields', 'message' => __( 'Recovery code and new password are required.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		if ( strlen( $new_password ) < 12 ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		if ( ! Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		$ok = Fotonic_Vault::recover_reset_password( $recovery_code, $new_password );
+		if ( ! $ok ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			self::audit_log( 'vault_recovery_password_reset_fail' );
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_recovery_code', 'message' => __( 'Invalid recovery code.', 'eleva-crm-for-photographers' ) ],
+				401
+			);
+		}
+
+		delete_transient( $fail_key );
+		self::audit_log( 'vault_recovery_password_reset' );
+
+		return new \WP_REST_Response( [ 'reset' => true ], 200 );
+	}
+
+	/**
+	 * POST /vault/recovery/reset-totp
+	 * Body: { password, recovery_code }
+	 * Reset the TOTP secret when the OTP device is lost.
+	 * Both password AND recovery code are required (dual-factor).
+	 * Rate-limited to 5 attempts / 15 min.
+	 */
+	public static function vault_recovery_reset_totp( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
+				429
+			);
+		}
+
+		$body          = $req->get_json_params();
+		$password      = isset( $body['password'] )      ? (string) $body['password']      : '';
+		$recovery_code = isset( $body['recovery_code'] ) ? (string) $body['recovery_code'] : '';
+
+		if ( empty( $password ) || empty( $recovery_code ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'missing_fields', 'message' => __( 'Password and recovery code are required.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		if ( ! Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		$result = Fotonic_Vault::recover_reset_totp( $password, $recovery_code );
+		if ( false === $result ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			self::audit_log( 'vault_recovery_totp_reset_fail' );
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or recovery code.', 'eleva-crm-for-photographers' ) ],
+				401
+			);
+		}
+
+		delete_transient( $fail_key );
+		self::audit_log( 'vault_recovery_totp_reset' );
+
+		return new \WP_REST_Response( [
+			'reset'  => true,
+			'qr_uri' => $result['qr_uri'],
+		], 200 );
+	}
+
+	/**
+	 * POST /vault/recovery/regenerate
+	 * Generate a new recovery code (replaces the old one).
+	 * Requires vault to be unlocked.
+	 * Rate-limited to 5 attempts / 15 min.
+	 */
+	public static function vault_recovery_regenerate( \WP_REST_Request $_req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
+				429
+			);
+		}
+
+		if ( ! Fotonic_Vault::is_unlocked() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'vault_locked', 'message' => __( 'Vault must be unlocked to regenerate recovery code.', 'eleva-crm-for-photographers' ) ],
+				403
+			);
+		}
+
+		$result = Fotonic_Vault::regenerate_recovery_code();
+		if ( false === $result ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			self::audit_log( 'vault_recovery_regenerate_fail' );
+			return new \WP_REST_Response(
+				[ 'code' => 'regenerate_failed', 'message' => __( 'Failed to regenerate recovery code.', 'eleva-crm-for-photographers' ) ],
+				500
+			);
+		}
+
+		delete_transient( $fail_key );
+		self::audit_log( 'vault_recovery_regenerated' );
+
+		return new \WP_REST_Response( [
+			'regenerated'   => true,
+			'recovery_code' => $result['recovery_code'],
+		], 200 );
+	}
+
+	/**
+	 * POST /vault/reset
+	 * Completely delete the vault and all its options.
+	 * WARNING: all PII encrypted under the Master Key becomes unrecoverable.
+	 */
+	public static function vault_reset( \WP_REST_Request $_req ): \WP_REST_Response {
+		$ok = Fotonic_Vault::reset_vault();
+		self::audit_log( 'vault_reset' );
+
+		if ( ! $ok ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'reset_failed', 'message' => __( 'Vault reset failed.', 'eleva-crm-for-photographers' ) ],
+				500
+			);
+		}
+
+		return new \WP_REST_Response( [ 'reset' => true ], 200 );
+	}
+
 	/**
 	 * Re-encrypt all customer PII postmeta with a new key.
+	 * Public so Fotonic_Vault::migrate_legacy() can call it.
 	 *
 	 * @param string $old_key 32-byte old derived key.
 	 * @param string $new_key 32-byte new derived key.
 	 */
-	private static function reencrypt_customers( string $old_key, string $new_key ): void {
+	public static function reencrypt_customers( string $old_key, string $new_key ): void {
 		$posts = get_posts( [
 			'post_type'      => 'ftnc_customer',
 			'post_status'    => 'publish',
@@ -744,11 +954,12 @@ class Fotonic_REST_API {
 
 	/**
 	 * Re-encrypt all work event address postmeta with a new key.
+	 * Public so Fotonic_Vault::migrate_legacy() can call it.
 	 *
 	 * @param string $old_key 32-byte old derived key.
 	 * @param string $new_key 32-byte new derived key.
 	 */
-	private static function reencrypt_works( string $old_key, string $new_key ): void {
+	public static function reencrypt_works( string $old_key, string $new_key ): void {
 		$posts = get_posts( [
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
@@ -828,7 +1039,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_customer' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -846,7 +1057,7 @@ class Fotonic_REST_API {
 		$title = isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '';
 		if ( empty( $title ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_title', 'message' => __( 'Title is required.', 'fotonic' ) ],
+				[ 'code' => 'missing_title', 'message' => __( 'Title is required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
@@ -875,7 +1086,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_customer' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -900,7 +1111,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_customer' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -941,7 +1152,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_service' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -959,7 +1170,7 @@ class Fotonic_REST_API {
 		$title = isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '';
 		if ( empty( $title ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_title', 'message' => __( 'Title is required.', 'fotonic' ) ],
+				[ 'code' => 'missing_title', 'message' => __( 'Title is required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
@@ -988,7 +1199,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_service' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -1013,7 +1224,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_service' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -1088,7 +1299,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_work' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -1106,7 +1317,7 @@ class Fotonic_REST_API {
 		$title = isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '';
 		if ( empty( $title ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_title', 'message' => __( 'Title is required.', 'fotonic' ) ],
+				[ 'code' => 'missing_title', 'message' => __( 'Title is required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
@@ -1128,6 +1339,15 @@ class Fotonic_REST_API {
 		self::save_work_meta( $post_id, $body );
 		Fotonic_Meta_Boxes::auto_assign_payment_status( $post_id );
 
+		/**
+		 * Fires after a work is created and its core meta saved.
+		 * Pro plugin uses this to handle owner (collaborator) and collaborators list.
+		 *
+		 * @param int   $post_id Work post ID.
+		 * @param array $body    Decoded request body array.
+		 */
+		do_action( 'ftnc_after_save_work', $post_id, $body );
+
 		return new \WP_REST_Response( self::format_work( get_post( $post_id ) ), 201 );
 	}
 
@@ -1137,7 +1357,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_work' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -1161,6 +1381,15 @@ class Fotonic_REST_API {
 		self::save_work_meta( $id, $body );
 		Fotonic_Meta_Boxes::auto_assign_payment_status( $id );
 
+		/**
+		 * Fires after a work is updated and its core meta saved.
+		 * Pro plugin uses this to handle owner (collaborator) and collaborators list.
+		 *
+		 * @param int   $id   Work post ID.
+		 * @param array $body Decoded request body array.
+		 */
+		do_action( 'ftnc_after_save_work', $id, $body );
+
 		return new \WP_REST_Response( self::format_work( get_post( $id ) ), 200 );
 	}
 
@@ -1170,7 +1399,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_work' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -1190,7 +1419,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_customer' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Customer not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -1212,7 +1441,7 @@ class Fotonic_REST_API {
 				'can_delete' => false,
 				'reason'     => sprintf(
 					/* translators: 1: number of linked works, 2: comma-separated work titles */
-					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'fotonic' ),
+					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'eleva-crm-for-photographers' ),
 					$count,
 					implode( ', ', $titles )
 				),
@@ -1228,7 +1457,7 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_service' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Service not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
@@ -1266,7 +1495,7 @@ class Fotonic_REST_API {
 				'can_delete' => false,
 				'reason'     => sprintf(
 					/* translators: 1: number of linked works, 2: comma-separated work titles */
-					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'fotonic' ),
+					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'eleva-crm-for-photographers' ),
 					$count,
 					implode( ', ', $linked_titles )
 				),
@@ -1282,54 +1511,12 @@ class Fotonic_REST_API {
 
 		if ( ! $post || $post->post_type !== 'ftnc_work' || $post->post_status === 'trash' ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'fotonic' ) ],
+				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
 		}
 
 		return new \WP_REST_Response( [ 'can_delete' => true ], 200 );
-	}
-
-	/**
-	 * GET /collaborator-options
-	 * Returns admin user + collaborators (PRO only) for owner/collab dropdowns.
-	 */
-	public static function get_collaborator_options( \WP_REST_Request $req ): \WP_REST_Response {
-		$current_user = wp_get_current_user();
-		$admin        = [
-			'id'   => $current_user->ID,
-			'name' => $current_user->display_name ?: $current_user->user_login,
-		];
-
-		$collaborators = [];
-		if ( defined( 'FOTO_PRO_VERSION' ) ) {
-			$query = new \WP_Query( [
-				'post_type'      => 'ftnc_collaborator',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
-			] );
-			foreach ( $query->posts as $post ) {
-				$terms    = wp_get_post_terms( $post->ID, 'ftnc_collaborator_service' );
-				$services = [];
-				if ( ! is_wp_error( $terms ) ) {
-					foreach ( $terms as $term ) {
-						$services[] = [ 'id' => $term->term_id, 'name' => $term->name ];
-					}
-				}
-				$collaborators[] = [
-					'id'       => $post->ID,
-					'name'     => $post->post_title,
-					'services' => $services,
-				];
-			}
-		}
-
-		return new \WP_REST_Response( [
-			'admin'         => $admin,
-			'collaborators' => $collaborators,
-		], 200 );
 	}
 
 	/**
@@ -1540,46 +1727,11 @@ class Fotonic_REST_API {
 			}
 		}
 
-		// Owner.
-		if ( isset( $body['owner_type'] ) && isset( $body['owner_id'] ) ) {
-			$o_type = sanitize_text_field( $body['owner_type'] );
-			$o_id   = (int) $body['owner_id'];
-			if ( 'collaborator' === $o_type && 'ftnc_collaborator' === get_post_type( $o_id ) ) {
-				update_post_meta( $post_id, '_ftnc_owner_type', 'collaborator' );
-				update_post_meta( $post_id, '_ftnc_owner_id', $o_id );
-			} else {
-				update_post_meta( $post_id, '_ftnc_owner_type', 'admin' );
-				update_post_meta( $post_id, '_ftnc_owner_id', get_current_user_id() );
-			}
-		} elseif ( ! get_post_meta( $post_id, '_ftnc_owner_type', true ) ) {
+		// Owner — free plugin only sets the default admin owner when no owner is stored yet.
+		// Pro plugin handles collaborator owner and collaborators list via ftnc_after_save_work hook.
+		if ( ! get_post_meta( $post_id, '_ftnc_owner_type', true ) ) {
 			update_post_meta( $post_id, '_ftnc_owner_type', 'admin' );
 			update_post_meta( $post_id, '_ftnc_owner_id', get_current_user_id() );
-		}
-
-		// Collaborators.
-		if ( isset( $body['collaborators'] ) && is_array( $body['collaborators'] ) ) {
-			$clean_collabs = [];
-			foreach ( $body['collaborators'] as $c ) {
-				if ( ! is_array( $c ) ) {
-					continue;
-				}
-				$c_type     = in_array( $c['type'] ?? '', [ 'admin', 'collaborator' ], true ) ? $c['type'] : '';
-				$c_id       = (int) ( $c['id'] ?? 0 );
-				$c_price    = (float) ( $c['price'] ?? 0 );
-				$c_status   = in_array( $c['status'] ?? '', [ 'paid', 'to_pay' ], true ) ? $c['status'] : 'to_pay';
-				$c_svcs_raw = isset( $c['services'] ) ? (array) $c['services'] : [];
-				$c_services = array_values( array_filter( array_map( 'absint', $c_svcs_raw ) ) );
-				if ( $c_type && $c_id > 0 ) {
-					$clean_collabs[] = [
-						'type'     => $c_type,
-						'id'       => $c_id,
-						'services' => $c_services,
-						'price'    => $c_price >= 0 ? $c_price : 0,
-						'status'   => $c_status,
-					];
-				}
-			}
-			update_post_meta( $post_id, '_ftnc_collaborators', wp_json_encode( $clean_collabs ) );
 		}
 
 		// Services.
@@ -1618,17 +1770,7 @@ class Fotonic_REST_API {
 			update_post_meta( $post_id, '_ftnc_total_price', $price >= 0 ? $price : 0 );
 		}
 
-		// Pro-only: taxable price for raw tax computation.
-		if ( defined( 'FOTO_PRO_VERSION' ) && array_key_exists( 'total_price_taxable', $body ) ) {
-			if ( null === $body['total_price_taxable'] || '' === $body['total_price_taxable'] ) {
-				delete_post_meta( $post_id, '_ftnc_total_price_taxable' );
-			} else {
-				$taxable = (float) $body['total_price_taxable'];
-				update_post_meta( $post_id, '_ftnc_total_price_taxable', $taxable >= 0 ? $taxable : 0 );
-			}
-		}
-
-		if ( isset( $body['installments'] ) && is_array( $body['installments'] ) ) {
+		if ( isset( $body['installments'] )&& is_array( $body['installments'] ) ) {
 			$clean = [];
 			foreach ( $body['installments'] as $inst ) {
 				if ( ! is_array( $inst ) ) {
@@ -2001,8 +2143,8 @@ class Fotonic_REST_API {
 		$raw = get_option( 'fotonic_payment_types' );
 		if ( ! is_string( $raw ) || '' === $raw ) {
 			$defaults = [
-				[ 'id' => 1, 'slug' => 'default', 'label' => __( 'Payment', 'fotonic' ) ],
-				[ 'id' => 2, 'slug' => 'coupon',  'label' => __( 'Discount', 'fotonic' ) ],
+				[ 'id' => 1, 'slug' => 'default', 'label' => __( 'Payment', 'eleva-crm-for-photographers' ) ],
+				[ 'id' => 2, 'slug' => 'coupon',  'label' => __( 'Discount', 'eleva-crm-for-photographers' ) ],
 			];
 			if ( false === $raw ) {
 				update_option( 'fotonic_payment_types', wp_json_encode( $defaults ) );
@@ -2163,13 +2305,13 @@ class Fotonic_REST_API {
 	public static function create_payment_type( \WP_REST_Request $request ): \WP_REST_Response {
 		$label = sanitize_text_field( (string) $request->get_param( 'label' ) );
 		if ( empty( $label ) ) {
-			return new \WP_REST_Response( [ 'message' => __( 'Label is required.', 'fotonic' ) ], 400 );
+			return new \WP_REST_Response( [ 'message' => __( 'Label is required.', 'eleva-crm-for-photographers' ) ], 400 );
 		}
 		$slug  = sanitize_title( $label );
 		$types = self::get_payment_types_option();
 		foreach ( $types as $t ) {
 			if ( $t['slug'] === $slug ) {
-				return new \WP_REST_Response( [ 'message' => __( 'A payment type with this slug already exists.', 'fotonic' ) ], 400 );
+				return new \WP_REST_Response( [ 'message' => __( 'A payment type with this slug already exists.', 'eleva-crm-for-photographers' ) ], 400 );
 			}
 		}
 		$max_id = 0;
@@ -2188,7 +2330,7 @@ class Fotonic_REST_API {
 		$id    = (int) $request->get_param( 'id' );
 		$label = sanitize_text_field( (string) $request->get_param( 'label' ) );
 		if ( empty( $label ) ) {
-			return new \WP_REST_Response( [ 'message' => __( 'Label is required.', 'fotonic' ) ], 400 );
+			return new \WP_REST_Response( [ 'message' => __( 'Label is required.', 'eleva-crm-for-photographers' ) ], 400 );
 		}
 		$types   = self::get_payment_types_option();
 		$found   = false;
@@ -2203,7 +2345,7 @@ class Fotonic_REST_API {
 		}
 		unset( $t );
 		if ( ! $found ) {
-			return new \WP_REST_Response( [ 'message' => __( 'Payment type not found.', 'fotonic' ) ], 404 );
+			return new \WP_REST_Response( [ 'message' => __( 'Payment type not found.', 'eleva-crm-for-photographers' ) ], 404 );
 		}
 		self::save_payment_types_option( $types );
 		return new \WP_REST_Response( $updated, 200 );
@@ -2213,7 +2355,7 @@ class Fotonic_REST_API {
 		$id       = (int) $request->get_param( 'id' );
 		$types    = self::get_payment_types_option();
 		if ( count( $types ) <= 1 ) {
-			return new \WP_REST_Response( [ 'message' => __( 'At least one payment type must remain.', 'fotonic' ) ], 400 );
+			return new \WP_REST_Response( [ 'message' => __( 'At least one payment type must remain.', 'eleva-crm-for-photographers' ) ], 400 );
 		}
 		$found    = false;
 		$filtered = [];
@@ -2225,7 +2367,7 @@ class Fotonic_REST_API {
 			}
 		}
 		if ( ! $found ) {
-			return new \WP_REST_Response( [ 'message' => __( 'Payment type not found.', 'fotonic' ) ], 404 );
+			return new \WP_REST_Response( [ 'message' => __( 'Payment type not found.', 'eleva-crm-for-photographers' ) ], 404 );
 		}
 		self::save_payment_types_option( $filtered );
 		return new \WP_REST_Response( [ 'deleted' => true ], 200 );

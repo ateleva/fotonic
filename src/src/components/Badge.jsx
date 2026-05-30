@@ -8,9 +8,9 @@ const styles = {
 
 export default function Badge({ status }) {
   const labels = {
-    paid:    __('Paid',    'fotonic'),
-    partial: __('Partial', 'fotonic'),
-    unpaid:  __('Unpaid',  'fotonic'),
+    paid:    __('Paid', 'eleva-crm-for-photographers'),
+    partial: __('Partial', 'eleva-crm-for-photographers'),
+    unpaid:  __('Unpaid', 'eleva-crm-for-photographers'),
   }
   const s = status?.toLowerCase() ?? 'unpaid'
   return (

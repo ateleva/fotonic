@@ -1,23 +1,23 @@
 <?php
 /**
- * Plugin Name:       Fotonic – CRM for Photographers
- * Plugin URI:        https://github.com/ateleva/fotonic
+ * Plugin Name:       Eleva CRM for Photographers
+ * Plugin URI:        https://eleva.alessandrobonacina.com
  * Description:       CRM and workflow manager for photographers: clients, services, works, payments, encrypted vault for PII, and calendar view.
- * Version:           1.3.4
+ * Version:           1.3.5
  * Requires at least: 6.0
  * Requires PHP:      7.4
- * Tested up to:      7.0
+ * Tested up to:      6.8
  * Author:            Alessandro Bonacina
  * Author URI:        https://eleva.alessandrobonacina.com
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       fotonic
+ * Text Domain: eleva-crm-for-photographers
  * Domain Path:       /languages
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FOTONIC_VERSION', '1.3.4' );
+define( 'FOTONIC_VERSION', '1.3.5' );
 define( 'FOTONIC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FOTONIC_URL', plugin_dir_url( __FILE__ ) );
 
@@ -44,6 +44,7 @@ add_action( 'all_admin_notices', [ 'Fotonic_Admin_Page', 'suppress_notices' ], P
 
 // Meta box registration and save hooks.
 add_action( 'add_meta_boxes', [ 'Fotonic_Meta_Boxes', 'register' ] );
+add_action( 'admin_enqueue_scripts', [ 'Fotonic_Meta_Boxes', 'enqueue_meta_assets' ] );
 add_action( 'save_post_ftnc_customer', [ 'Fotonic_Meta_Boxes', 'save_customer' ], 10, 2 );
 add_action( 'save_post_ftnc_service',  [ 'Fotonic_Meta_Boxes', 'save_service' ],  10, 2 );
 add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'save_work' ],     10, 2 );

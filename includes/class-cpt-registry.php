@@ -11,18 +11,18 @@ class Fotonic_CPT_Registry {
 
     private static function register_customer_cpt(): void {
         $labels = [
-            'name'               => __( 'Customers', 'fotonic' ),
-            'singular_name'      => __( 'Customer', 'fotonic' ),
-            'add_new'            => __( 'Add New', 'fotonic' ),
-            'add_new_item'       => __( 'Add New Customer', 'fotonic' ),
-            'edit_item'          => __( 'Edit Customer', 'fotonic' ),
-            'new_item'           => __( 'New Customer', 'fotonic' ),
-            'view_item'          => __( 'View Customer', 'fotonic' ),
-            'search_items'       => __( 'Search Customers', 'fotonic' ),
-            'not_found'          => __( 'No customers found.', 'fotonic' ),
-            'not_found_in_trash' => __( 'No customers found in trash.', 'fotonic' ),
-            'all_items'          => __( 'All Customers', 'fotonic' ),
-            'menu_name'          => __( 'Customers', 'fotonic' ),
+            'name'               => __( 'Customers', 'eleva-crm-for-photographers' ),
+            'singular_name'      => __( 'Customer', 'eleva-crm-for-photographers' ),
+            'add_new'            => __( 'Add New', 'eleva-crm-for-photographers' ),
+            'add_new_item'       => __( 'Add New Customer', 'eleva-crm-for-photographers' ),
+            'edit_item'          => __( 'Edit Customer', 'eleva-crm-for-photographers' ),
+            'new_item'           => __( 'New Customer', 'eleva-crm-for-photographers' ),
+            'view_item'          => __( 'View Customer', 'eleva-crm-for-photographers' ),
+            'search_items'       => __( 'Search Customers', 'eleva-crm-for-photographers' ),
+            'not_found'          => __( 'No customers found.', 'eleva-crm-for-photographers' ),
+            'not_found_in_trash' => __( 'No customers found in trash.', 'eleva-crm-for-photographers' ),
+            'all_items'          => __( 'All Customers', 'eleva-crm-for-photographers' ),
+            'menu_name'          => __( 'Customers', 'eleva-crm-for-photographers' ),
         ];
         register_post_type( 'ftnc_customer', [
             'labels'       => $labels,
@@ -37,18 +37,18 @@ class Fotonic_CPT_Registry {
 
     private static function register_service_cpt(): void {
         $labels = [
-            'name'               => __( 'Services', 'fotonic' ),
-            'singular_name'      => __( 'Service', 'fotonic' ),
-            'add_new'            => __( 'Add New', 'fotonic' ),
-            'add_new_item'       => __( 'Add New Service', 'fotonic' ),
-            'edit_item'          => __( 'Edit Service', 'fotonic' ),
-            'new_item'           => __( 'New Service', 'fotonic' ),
-            'view_item'          => __( 'View Service', 'fotonic' ),
-            'search_items'       => __( 'Search Services', 'fotonic' ),
-            'not_found'          => __( 'No services found.', 'fotonic' ),
-            'not_found_in_trash' => __( 'No services found in trash.', 'fotonic' ),
-            'all_items'          => __( 'All Services', 'fotonic' ),
-            'menu_name'          => __( 'Services', 'fotonic' ),
+            'name'               => __( 'Services', 'eleva-crm-for-photographers' ),
+            'singular_name'      => __( 'Service', 'eleva-crm-for-photographers' ),
+            'add_new'            => __( 'Add New', 'eleva-crm-for-photographers' ),
+            'add_new_item'       => __( 'Add New Service', 'eleva-crm-for-photographers' ),
+            'edit_item'          => __( 'Edit Service', 'eleva-crm-for-photographers' ),
+            'new_item'           => __( 'New Service', 'eleva-crm-for-photographers' ),
+            'view_item'          => __( 'View Service', 'eleva-crm-for-photographers' ),
+            'search_items'       => __( 'Search Services', 'eleva-crm-for-photographers' ),
+            'not_found'          => __( 'No services found.', 'eleva-crm-for-photographers' ),
+            'not_found_in_trash' => __( 'No services found in trash.', 'eleva-crm-for-photographers' ),
+            'all_items'          => __( 'All Services', 'eleva-crm-for-photographers' ),
+            'menu_name'          => __( 'Services', 'eleva-crm-for-photographers' ),
         ];
         register_post_type( 'ftnc_service', [
             'labels'       => $labels,
@@ -63,18 +63,18 @@ class Fotonic_CPT_Registry {
 
     private static function register_work_cpt(): void {
         $labels = [
-            'name'               => __( 'Works', 'fotonic' ),
-            'singular_name'      => __( 'Work', 'fotonic' ),
-            'add_new'            => __( 'Add New', 'fotonic' ),
-            'add_new_item'       => __( 'Add New Work', 'fotonic' ),
-            'edit_item'          => __( 'Edit Work', 'fotonic' ),
-            'new_item'           => __( 'New Work', 'fotonic' ),
-            'view_item'          => __( 'View Work', 'fotonic' ),
-            'search_items'       => __( 'Search Works', 'fotonic' ),
-            'not_found'          => __( 'No works found.', 'fotonic' ),
-            'not_found_in_trash' => __( 'No works found in trash.', 'fotonic' ),
-            'all_items'          => __( 'All Works', 'fotonic' ),
-            'menu_name'          => __( 'Works', 'fotonic' ),
+            'name'               => __( 'Works', 'eleva-crm-for-photographers' ),
+            'singular_name'      => __( 'Work', 'eleva-crm-for-photographers' ),
+            'add_new'            => __( 'Add New', 'eleva-crm-for-photographers' ),
+            'add_new_item'       => __( 'Add New Work', 'eleva-crm-for-photographers' ),
+            'edit_item'          => __( 'Edit Work', 'eleva-crm-for-photographers' ),
+            'new_item'           => __( 'New Work', 'eleva-crm-for-photographers' ),
+            'view_item'          => __( 'View Work', 'eleva-crm-for-photographers' ),
+            'search_items'       => __( 'Search Works', 'eleva-crm-for-photographers' ),
+            'not_found'          => __( 'No works found.', 'eleva-crm-for-photographers' ),
+            'not_found_in_trash' => __( 'No works found in trash.', 'eleva-crm-for-photographers' ),
+            'all_items'          => __( 'All Works', 'eleva-crm-for-photographers' ),
+            'menu_name'          => __( 'Works', 'eleva-crm-for-photographers' ),
         ];
         register_post_type( 'ftnc_work', [
             'labels'       => $labels,
@@ -90,14 +90,14 @@ class Fotonic_CPT_Registry {
 
     private static function register_payment_status_taxonomy(): void {
         $labels = [
-            'name'          => __( 'Payment Status', 'fotonic' ),
-            'singular_name' => __( 'Payment Status', 'fotonic' ),
-            'all_items'     => __( 'All Payment Statuses', 'fotonic' ),
-            'edit_item'     => __( 'Edit Payment Status', 'fotonic' ),
-            'update_item'   => __( 'Update Payment Status', 'fotonic' ),
-            'add_new_item'  => __( 'Add New Payment Status', 'fotonic' ),
-            'new_item_name' => __( 'New Payment Status Name', 'fotonic' ),
-            'search_items'  => __( 'Search Payment Statuses', 'fotonic' ),
+            'name'          => __( 'Payment Status', 'eleva-crm-for-photographers' ),
+            'singular_name' => __( 'Payment Status', 'eleva-crm-for-photographers' ),
+            'all_items'     => __( 'All Payment Statuses', 'eleva-crm-for-photographers' ),
+            'edit_item'     => __( 'Edit Payment Status', 'eleva-crm-for-photographers' ),
+            'update_item'   => __( 'Update Payment Status', 'eleva-crm-for-photographers' ),
+            'add_new_item'  => __( 'Add New Payment Status', 'eleva-crm-for-photographers' ),
+            'new_item_name' => __( 'New Payment Status Name', 'eleva-crm-for-photographers' ),
+            'search_items'  => __( 'Search Payment Statuses', 'eleva-crm-for-photographers' ),
         ];
         register_taxonomy( 'ftnc_work_payment_status', 'ftnc_work', [
             'labels'            => $labels,
@@ -116,7 +116,7 @@ class Fotonic_CPT_Registry {
      * Safe to call on every init — term_exists() prevents duplicates.
      */
     public static function ensure_payment_terms(): void {
-        $terms = [ 'paid' => __( 'Paid', 'fotonic' ), 'partial' => __( 'Partial', 'fotonic' ), 'unpaid' => __( 'Unpaid', 'fotonic' ) ];
+        $terms = [ 'paid' => __( 'Paid', 'eleva-crm-for-photographers' ), 'partial' => __( 'Partial', 'eleva-crm-for-photographers' ), 'unpaid' => __( 'Unpaid', 'eleva-crm-for-photographers' ) ];
         foreach ( $terms as $slug => $name ) {
             if ( ! term_exists( $slug, 'ftnc_work_payment_status' ) ) {
                 wp_insert_term( $name, 'ftnc_work_payment_status', [ 'slug' => $slug ] );

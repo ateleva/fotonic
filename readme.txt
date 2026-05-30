@@ -1,9 +1,9 @@
-=== Fotonic – CRM for Photographers ===
+=== Eleva CRM for Photographers ===
 Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
-Tested up to: 7.0
-Stable tag: 1.3.4
+Tested up to: 6.8
+Stable tag: 1.3.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ CRM and workflow manager for professional event photographers.
 
 == Description ==
 
-Fotonic is a standalone WordPress plugin that provides a modern React-powered CRM dashboard for professional event photographers, without any monthly subscription fees.
+Eleva is a standalone WordPress plugin that provides a modern React-powered CRM dashboard for professional event photographers, without any monthly subscription fees.
 
 = Features =
 
@@ -27,11 +27,11 @@ Fotonic is a standalone WordPress plugin that provides a modern React-powered CR
 * Calendar Color: choose an event card color (12-color Google Calendar palette) on each Work.
 * Monthly Calendar: a full monthly calendar view showing all scheduled works as colored pills. Click any entry to see a detail popup with date, customer, payment status, and a link to the work. Google Calendar sync is available when Fotonic Pro is installed and connected.
 
-= Fotonic Pro =
+= Eleva Pro =
 
 A paid addon (sold separately) that adds: task management with Kanban board, Google Calendar and Google Tasks integration, Analytics with revenue charts and CSV/PDF export, Expense tracker, per-year raw taxes configuration (tax percentage × taxable price per work, automatically subtracted from Net Revenue), period-over-period Analytics Compare with trend indicators, Collaborators and Suppliers registry, Products catalog, custom email notifications with SMTP delivery.
 
-When Fotonic Pro's Google Calendar integration is enabled, certain work and task data (titles, dates, times, locations, quick notes, task descriptions) is sent to Google's servers. See the Privacy Policy section below and the Fotonic Pro readme for full details.
+When Eleva Pro's Google Calendar integration is enabled, certain work and task data (titles, dates, times, locations, quick notes, task descriptions) is sent to Google's servers. See the Privacy Policy section below and the Eleva Pro readme for full details.
 
 = No third-party dependencies =
 
@@ -42,7 +42,7 @@ No ACF required. No WooCommerce required. Fully standalone. Uses only native Wor
 1. Download the plugin ZIP from WordPress.org.
 2. Go to Plugins > Add New > Upload Plugin in your WordPress admin.
 3. Upload the ZIP and click Install Now, then Activate.
-4. Navigate to Fotonic in the WP Admin sidebar.
+4. Navigate to Eleva in the WP Admin sidebar.
 5. On first launch, set your Vault master password and scan the QR code with an authenticator app (Google Authenticator, Authy, or any TOTP-compatible app).
 6. Enter your Vault password and the current OTP code to unlock the CRM.
 
@@ -50,11 +50,11 @@ No ACF required. No WooCommerce required. Fully standalone. Uses only native Wor
 
 = Does this require ACF (Advanced Custom Fields)? =
 
-No. Fotonic uses only native WordPress meta boxes and registers all custom post types natively. No third-party field plugins are required or used.
+No. Eleva uses only native WordPress meta boxes and registers all custom post types natively. No third-party field plugins are required or used.
 
 = Does this work without WooCommerce? =
 
-Yes. Fotonic is completely standalone and has no dependency on WooCommerce or any other plugin.
+Yes. Eleva is completely standalone and has no dependency on WooCommerce or any other plugin.
 
 = What is the Vault? =
 
@@ -68,27 +68,27 @@ Yes. It requires PHP 7.4 or higher and WordPress 6.0 or higher, both of which ar
 
 All data is stored exclusively in your own WordPress database (wp_posts and wp_postmeta tables). The free plugin makes no external HTTP requests and no data is ever sent to external servers. You own and control your data entirely.
 
-Exception: if you install Fotonic Pro and connect Google Calendar, certain work and task data is transmitted to Google's APIs. This feature requires your explicit consent and can be disconnected at any time from Fotonic > Settings > Google Calendar.
+Exception: if you install Eleva Pro and connect Google Calendar, certain work and task data is transmitted to Google's APIs. This feature requires your explicit consent and can be disconnected at any time from Eleva > Settings > Google Calendar.
 
 = Is there a Pro version? =
 
-Yes. Fotonic Pro is a paid addon that adds task management, Kanban board, Google Calendar and Google Tasks sync, Analytics dashboards, Collaborator management, Products catalog, custom email notifications, and license management. It is sold separately and is not required to use the free plugin.
+Yes. Eleva Pro is a paid addon that adds task management, Kanban board, Google Calendar and Google Tasks sync, Analytics dashboards, Collaborator management, Products catalog, custom email notifications, and license management. It is sold separately and is not required to use the free plugin.
 
 = Does the plugin send data anywhere? =
 
 The free plugin makes zero external HTTP requests. Your data never leaves your server.
 
-Fotonic Pro, when Google Calendar integration is enabled by the site administrator, transmits the following data to Google's servers: work titles, event dates and times, event locations, quick notes, task titles, task descriptions, and the related work title. This data is sent to the Google Calendar Events API and Google Tasks API under your own Google account. No data is sent to Fotonic's servers. The integration is entirely opt-in and can be disconnected at any time.
+Eleva Pro, when Google Calendar integration is enabled by the site administrator, transmits the following data to Google's servers: work titles, event dates and times, event locations, quick notes, task titles, task descriptions, and the related work title. This data is sent to the Google Calendar Events API and Google Tasks API under your own Google account. No data is sent to Eleva's servers. The integration is entirely opt-in and can be disconnected at any time.
 
 == Privacy Policy ==
 
 = Free plugin =
 
-The free Fotonic plugin collects no personal data of any kind, makes no external HTTP requests, and transmits nothing to external servers. All data is stored in your own WordPress database.
+The free Eleva plugin collects no personal data of any kind, makes no external HTTP requests, and transmits nothing to external servers. All data is stored in your own WordPress database.
 
-= Fotonic Pro — Google Calendar integration =
+= Eleva Pro — Google Calendar integration =
 
-When the site administrator enables Google Calendar integration under Fotonic > Settings > Google Calendar, the following applies:
+When the site administrator enables Google Calendar integration under Eleva > Settings > Google Calendar, the following applies:
 
 **What data is sent:**
 - Work (project) titles, event dates, event start and end times, event location addresses, and quick notes are sent to the Google Calendar Events API to create or update calendar events.
@@ -100,20 +100,29 @@ When the site administrator enables Google Calendar integration under Fotonic > 
 - Only under the Google account authenticated by the site administrator.
 - No data is sent automatically during plugin activation or without the administrator's explicit action.
 
-**Data is not sent to Fotonic:**
-- All Google API calls go directly from your server to Google's servers. Fotonic's servers act only as an OAuth relay to obtain authorization tokens, and do not store or log any work or task content.
+**Data is not sent to Eleva:**
+- All Google API calls go directly from your server to Google's servers. Eleva's servers act only as an OAuth relay to obtain authorization tokens, and do not store or log any work or task content.
 
 **OAuth tokens:**
 - The Google OAuth refresh token is stored encrypted (AES-256-CBC) in your WordPress database.
 - The short-lived access token is stored in a WordPress transient and expires automatically.
 
 **Removing data:**
-- Disconnecting Google Calendar (Fotonic > Settings > Google Calendar > Disconnect) deletes the stored refresh token from your database.
+- Disconnecting Google Calendar (Eleva > Settings > Google Calendar > Disconnect) deletes the stored refresh token from your database.
 - Deleting a work or task in Fotonic also deletes the corresponding Google Calendar event or task from Google's servers.
 
 **Google's privacy policy:** https://policies.google.com/privacy
 
 **Google Calendar API Terms of Service:** https://developers.google.com/terms
+
+== Development ==
+
+The full source code, including the React/Vite app, is publicly available at https://github.com/ateleva/fotonic.
+
+To build the JavaScript bundle from source:
+
+1. `cd src && npm install`
+2. `npm run build` (Vite; outputs compiled assets to `dist/`)
 
 == Screenshots ==
 

@@ -6,6 +6,7 @@ import { apiFetch } from '../../api/client'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
+import RecoveryCodeDisplay from './RecoveryCodeDisplay'
 import { __ } from '../../utils/i18n'
 
 function QrCanvas({ uri, size = 200 }) {
@@ -143,9 +144,10 @@ function StepPassword({ onNext }) {
   )
 }
 
-// --- Step 2: Scan QR code ---
+// --- Step 2: Scan QR code (calls vault/setup, stores recovery_code) ---
 function StepQR({ password, totpSecret, onNext }) {
   const [qrUri, setQrUri] = useState(null)
+  const [recoveryCode, setRecoveryCode] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [called, setCalled] = useState(false)
@@ -160,6 +162,7 @@ function StepQR({ password, totpSecret, onNext }) {
     })
       .then((data) => {
         setQrUri(data.qr_uri)
+        setRecoveryCode(data.recovery_code ?? null)
         setLoading(false)
       })
       .catch((err) => {
@@ -209,7 +212,7 @@ function StepQR({ password, totpSecret, onNext }) {
         </div>
       )}
 
-      <Button variant="primary" className="w-full" onClick={onNext}>
+      <Button variant="primary" className="w-full" onClick={() => onNext(recoveryCode)}>
         {__("I've scanned the code — Next")}
       </Button>
     </div>
@@ -282,24 +285,46 @@ function StepOTP({ password, onSuccess }) {
   )
 }
 
+// --- Step 4: Save recovery code (shown only when server returns one) ---
+function StepRecoveryCode({ recoveryCode, onDone }) {
+  return (
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Code')}</h2>
+      <RecoveryCodeDisplay
+        code={recoveryCode}
+        onConfirm={onDone}
+        confirmLabel={__('Finish Setup')}
+      />
+    </div>
+  )
+}
+
 // --- Main VaultSetup wizard ---
+// Steps: 1=password, 2=QR, 3=OTP, 4=recovery code (if provided)
 export default function VaultSetup() {
   const [step, setStep] = useState(1)
   const [password, setPassword] = useState('')
   const [totpSecret] = useState(() => generateBase32Secret())
+  const [recoveryCode, setRecoveryCode] = useState(null)
+
+  const totalSteps = recoveryCode !== null ? 4 : 3
 
   const handlePasswordNext = (pw) => {
     setPassword(pw)
     setStep(2)
   }
 
-  const handleQRNext = () => {
+  const handleQRNext = (code) => {
+    setRecoveryCode(code)   // may be null if server doesn't return one
     setStep(3)
   }
 
-  // onSuccess: vault is now unlocked — VaultGate query refetch will re-render the app
+  // After OTP confirm: if a recovery code was returned, show step 4; otherwise done.
   const handleOTPSuccess = () => {
-    // VaultGate's useQuery will refetch after invalidation and render <RouterProvider>
+    if (recoveryCode) {
+      setStep(4)
+    }
+    // Otherwise VaultGate will re-render automatically via the invalidated query
   }
 
   return (
@@ -308,10 +333,10 @@ export default function VaultSetup() {
         <div className="text-center mb-6">
           <span className="text-3xl">🔐</span>
           <h1 className="mt-2 text-xl font-bold text-gray-900">{__('Vault Setup')}</h1>
-          <p className="text-xs text-gray-400 mt-1">{__('Step')} {step} {__('of')} 3</p>
+          <p className="text-xs text-gray-400 mt-1">{__('Step')} {step} {__('of')} {totalSteps}</p>
         </div>
 
-        <StepIndicator current={step} total={3} />
+        <StepIndicator current={step} total={totalSteps} />
 
         {step === 1 && <StepPassword onNext={handlePasswordNext} />}
         {step === 2 && (
@@ -323,6 +348,14 @@ export default function VaultSetup() {
         )}
         {step === 3 && (
           <StepOTP password={password} onSuccess={handleOTPSuccess} />
+        )}
+        {step === 4 && recoveryCode && (
+          <StepRecoveryCode
+            recoveryCode={recoveryCode}
+            onDone={() => {
+              // vault is already unlocked; VaultGate renders the app
+            }}
+          />
         )}
       </div>
     </div>

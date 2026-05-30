@@ -1,11 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { Shield, Key, ChevronDown, ChevronUp, CheckCircle, XCircle } from 'lucide-react'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Shield, Key, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2 } from 'lucide-react'
 import QRCode from 'qrcode'
 import { __ } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
+import Modal from '../../components/Modal'
+import Button from '../../components/Button'
+import Spinner from '../../components/Spinner'
 import VaultSetup from '../vault/VaultSetup'
+import RecoveryCodeDisplay from '../vault/RecoveryCodeDisplay'
+import { vaultRecoveryRegenerate, vaultReset } from '../../api/vault'
 
 function QrCanvas({ uri, size = 180 }) {
   const ref = useRef(null)
@@ -84,6 +89,197 @@ function VaultStatusRow({ status }) {
         {status.unlocked ? __('Unlocked') : __('Locked')}
       </span>
     </div>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Regenerate recovery code
+// ---------------------------------------------------------------------------
+
+function RegenerateRecoveryCode() {
+  const queryClient = useQueryClient()
+  const [loading, setLoading]         = useState(false)
+  const [error, setError]             = useState(null)
+  const [recoveryCode, setRecoveryCode] = useState(null)
+  const [modalOpen, setModalOpen]     = useState(false)
+
+  async function handleGenerate() {
+    setError(null)
+    setLoading(true)
+    try {
+      const data = await vaultRecoveryRegenerate()
+      setRecoveryCode(data.recovery_code)
+    } catch (err) {
+      setError(err.message || __('Failed to generate recovery code. Ensure the vault is unlocked.', 'eleva-crm-for-photographers'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleSaved() {
+    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+    setModalOpen(false)
+    setRecoveryCode(null)
+  }
+
+  function handleOpen() {
+    setRecoveryCode(null)
+    setError(null)
+    setModalOpen(true)
+  }
+
+  return (
+    <>
+      <div className="pt-1 space-y-2">
+        <p className="text-xs text-gray-500">
+          {__('Generate a new recovery code. The previous code will be invalidated immediately.', 'eleva-crm-for-photographers')}
+        </p>
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="inline-flex items-center gap-2 rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <RefreshCw size={14} />
+          {__('Regenerate Recovery Code', 'eleva-crm-for-photographers')}
+        </button>
+      </div>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={__('Regenerate Recovery Code', 'eleva-crm-for-photographers')}
+      >
+        <div className="space-y-4">
+          {!recoveryCode && (
+            <>
+              <p className="text-sm text-gray-600">
+                {__('A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe — it will only be shown once.', 'eleva-crm-for-photographers')}
+              </p>
+              {error && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
+              )}
+              <div className="flex justify-end gap-3">
+                <Button variant="secondary" onClick={() => setModalOpen(false)}>
+                  {__('Cancel', 'eleva-crm-for-photographers')}
+                </Button>
+                <Button variant="primary" onClick={handleGenerate} disabled={loading}>
+                  {loading ? <Spinner size="sm" /> : __('Generate', 'eleva-crm-for-photographers')}
+                </Button>
+              </div>
+            </>
+          )}
+          {recoveryCode && (
+            <RecoveryCodeDisplay
+              code={recoveryCode}
+              onConfirm={handleSaved}
+              confirmLabel={__("I've saved it — Done", 'eleva-crm-for-photographers')}
+            />
+          )}
+        </div>
+      </Modal>
+    </>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Reset vault (destructive)
+// ---------------------------------------------------------------------------
+
+function ResetVaultAction() {
+  const queryClient = useQueryClient()
+  const [modalOpen, setModalOpen] = useState(false)
+  const [typed, setTyped]         = useState('')
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(null)
+
+  const CONFIRM_WORD = 'RESET'
+
+  async function handleReset() {
+    setError(null)
+    setLoading(true)
+    try {
+      await vaultReset()
+      await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+      setModalOpen(false)
+    } catch (err) {
+      setError(err.message || __('Reset failed.', 'eleva-crm-for-photographers'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleClose() {
+    setModalOpen(false)
+    setTyped('')
+    setError(null)
+  }
+
+  return (
+    <>
+      <div className="pt-1 space-y-2">
+        <p className="text-xs text-gray-500">
+          {__('Permanently wipe the vault configuration. All encrypted data will become inaccessible.', 'eleva-crm-for-photographers')}
+        </p>
+        <button
+          type="button"
+          onClick={() => { setTyped(''); setError(null); setModalOpen(true) }}
+          className="inline-flex items-center gap-2 rounded-md border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+        >
+          <Trash2 size={14} />
+          {__('Reset Vault', 'eleva-crm-for-photographers')}
+        </button>
+      </div>
+
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        title={__('Reset Vault', 'eleva-crm-for-photographers')}
+      >
+        <div className="space-y-4">
+          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3">
+            <p className="text-sm font-medium text-red-800">
+              {__('This action is irreversible.', 'eleva-crm-for-photographers')}
+            </p>
+            <p className="text-sm text-red-700 mt-1">
+              {__('The vault password, TOTP secret, and recovery code will be permanently deleted. All encrypted client data will become unreadable.', 'eleva-crm-for-photographers')}
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-gray-600">
+              {/* translators: %s is the word RESET */}
+              {__('Type RESET to confirm', 'eleva-crm-for-photographers')}
+            </label>
+            <input
+              type="text"
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              placeholder={CONFIRM_WORD}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500"
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
+
+          {error && (
+            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
+          )}
+
+          <div className="flex justify-end gap-3">
+            <Button variant="secondary" onClick={handleClose}>
+              {__('Cancel', 'eleva-crm-for-photographers')}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleReset}
+              disabled={typed !== CONFIRM_WORD || loading}
+            >
+              {loading ? <Spinner size="sm" /> : __('Reset Vault', 'eleva-crm-for-photographers')}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
   )
 }
 
@@ -259,7 +455,7 @@ export default function SettingsPage() {
       <PageHeader title={__('Settings')} />
 
       {LicenseSettingsSection && (
-        <SectionCard title={__('Fotonic Pro License')} icon={Key}>
+        <SectionCard title={__('Eleva Pro License')} icon={Key}>
           <LicenseSettingsSection />
         </SectionCard>
       )}
@@ -303,6 +499,12 @@ export default function SettingsPage() {
                 </Accordion>
                 <Accordion label={__('Reset Authenticator App')}>
                   <ResetTotpForm />
+                </Accordion>
+                <Accordion label={__('Recovery Code')}>
+                  <RegenerateRecoveryCode />
+                </Accordion>
+                <Accordion label={__('Reset Vault')}>
+                  <ResetVaultAction />
                 </Accordion>
               </div>
             </div>

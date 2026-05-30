@@ -63,7 +63,7 @@ class Fotonic_TOTP {
 	 * @param string $issuer  Issuer name shown in authenticator apps.
 	 * @return string otpauth://totp/... URI.
 	 */
-	public static function get_uri( string $secret, string $label, string $issuer = 'Fotonic' ): string {
+	public static function get_uri( string $secret, string $label, string $issuer = 'Eleva CRM' ): string {
 		$params = http_build_query( [
 			'secret' => strtoupper( $secret ),
 			'issuer' => $issuer,

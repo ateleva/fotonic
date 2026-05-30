@@ -24,9 +24,9 @@ const fmtDate = (d) => {
 
 function paymentBadge(status) {
   const map = {
-    paid:    { label: __('Paid', 'fotonic'),    bg: '#dcfce7', color: '#16a34a' },
-    partial: { label: __('Partial', 'fotonic'), bg: '#fef9c3', color: '#ca8a04' },
-    unpaid:  { label: __('Unpaid', 'fotonic'),  bg: '#fee2e2', color: '#dc2626' },
+    paid:    { label: __('Paid', 'eleva-crm-for-photographers'),    bg: '#dcfce7', color: '#16a34a' },
+    partial: { label: __('Partial', 'eleva-crm-for-photographers'), bg: '#fef9c3', color: '#ca8a04' },
+    unpaid:  { label: __('Unpaid', 'eleva-crm-for-photographers'),  bg: '#fee2e2', color: '#dc2626' },
   }
   const s = map[status] ?? { label: status, bg: '#f3f4f6', color: '#6b7280' }
   return (
@@ -52,7 +52,7 @@ function CustomerWorksSection({ customerId }) {
   return (
     <div style={{ marginTop: 32 }}>
       <h3 style={{ margin: '0 0 12px', fontSize: '1rem', fontWeight: 700, color: '#111827' }}>
-        {__('Works', 'fotonic')}
+        {__('Works', 'eleva-crm-for-photographers')}
       </h3>
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}><Spinner /></div>
@@ -61,7 +61,7 @@ function CustomerWorksSection({ customerId }) {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
-                {[__('Title'), __('Date', 'fotonic'), __('Services', 'fotonic'), __('Total Price', 'fotonic'), __('Payment Status', 'fotonic')].map((h) => (
+                {[__('Title'), __('Date', 'eleva-crm-for-photographers'), __('Services', 'eleva-crm-for-photographers'), __('Total Price', 'eleva-crm-for-photographers'), __('Payment Status', 'eleva-crm-for-photographers')].map((h) => (
                   <th key={h} style={{ padding: '0.625rem 0.875rem', textAlign: 'left', fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
@@ -70,14 +70,14 @@ function CustomerWorksSection({ customerId }) {
               {works.length === 0 ? (
                 <tr>
                   <td colSpan={5} style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>
-                    {__('No works yet.', 'fotonic')}
+                    {__('No works yet.', 'eleva-crm-for-photographers')}
                   </td>
                 </tr>
               ) : (
                 works.map((w, i) => (
                   <tr key={w.id} style={{ borderBottom: i < works.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
                     <td style={{ padding: '0.625rem 0.875rem', fontWeight: 500 }}>
-                      <Link to={`/works/${w.id}`} style={{ color: '#4f46e5', textDecoration: 'none' }}>{w.title || __('(no title)', 'fotonic')}</Link>
+                      <Link to={`/works/${w.id}`} style={{ color: '#4f46e5', textDecoration: 'none' }}>{w.title || __('(no title)', 'eleva-crm-for-photographers')}</Link>
                     </td>
                     <td style={{ padding: '0.625rem 0.875rem', color: '#6b7280', whiteSpace: 'nowrap' }}>{fmtDate(w.event_date)}</td>
                     <td style={{ padding: '0.625rem 0.875rem', color: '#374151' }}>
@@ -93,14 +93,14 @@ function CustomerWorksSection({ customerId }) {
               <tfoot>
                 <tr style={{ borderTop: '2px solid #e5e7eb', background: '#f9fafb' }}>
                   <td style={{ padding: '0.625rem 0.875rem', fontWeight: 700, color: '#111827' }}>
-                    {__('Total works:', 'fotonic')} {works.length}
+                    {__('Total works:', 'eleva-crm-for-photographers')} {works.length}
                   </td>
                   <td />
                   <td />
                   <td style={{ padding: '0.625rem 0.875rem', fontWeight: 700, color: '#111827', whiteSpace: 'nowrap' }}>{fmtEur(totalPrice)}</td>
                   <td style={{ padding: '0.625rem 0.875rem', fontSize: 12, color: '#374151' }}>
-                    <span style={{ color: '#16a34a', marginRight: 8 }}>{__('Paid:', 'fotonic')} {fmtEur(paidTotal)}</span>
-                    <span style={{ color: '#dc2626' }}>{__('Unpaid:', 'fotonic')} {fmtEur(unpaidTotal)}</span>
+                    <span style={{ color: '#16a34a', marginRight: 8 }}>{__('Paid:', 'eleva-crm-for-photographers')} {fmtEur(paidTotal)}</span>
+                    <span style={{ color: '#dc2626' }}>{__('Unpaid:', 'eleva-crm-for-photographers')} {fmtEur(unpaidTotal)}</span>
                   </td>
                 </tr>
               </tfoot>

@@ -3,8 +3,27 @@
  * Fotonic Vault
  *
  * Manages TOTP-gated AES-256 encryption of PII stored in postmeta.
- * The derived key is never stored in the DB — it lives only in an
- * HTTP-Only, SameSite=Strict session cookie encrypted with WP AUTH_KEY.
+ *
+ * Scheme v2 (envelope encryption)
+ * --------------------------------
+ * A random 32-byte Master Key (MK) encrypts all PII.  MK is never stored in
+ * plaintext; it is "wrapped" (AES-256-GCM) under three separate Key Encryption
+ * Keys (KEKs):
+ *
+ *   wrap_pw   = Crypto::wrap( MK,           KEK_pw  )   KEK_pw  = derive(password, salt_pw)
+ *   wrap_rec  = Crypto::wrap( MK,           KEK_rec )   KEK_rec = derive(normalize(code), salt_rec)
+ *   wrap_totp = Crypto::wrap( totp_secret,  MK      )
+ *
+ * Changing the password therefore only re-wraps MK — NO PII re-encryption needed.
+ * The session cookie still carries MK (get_session_key() returns MK).
+ *
+ * Legacy scheme v1 (pre-envelope)
+ * ---------------------------------
+ * OPTION_TOTP holds the TOTP secret encrypted with the derived key K directly.
+ * On first unlock of a legacy vault, migrate_legacy() is called automatically:
+ * it generates a fresh MK, re-encrypts all PII (old K → MK), and upgrades the
+ * stored options to scheme v2.  The user must then set up a recovery code via
+ * the UI (has_recovery() will return false after migration).
  *
  * @package Fotonic
  */
@@ -16,15 +35,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Fotonic_Vault {
 
 	const COOKIE_NAME  = 'fotonic_vault_session';
-	const OPTION_TOTP  = 'fotonic_vault_totp_secret'; // Stores AES-encrypted TOTP secret.
-	const OPTION_SALT  = 'fotonic_vault_salt';          // PBKDF2 salt (random bytes, base64).
-	const OPTION_SETUP = 'fotonic_vault_setup';          // bool — whether vault has been set up.
-
 	const COOKIE_EXPIRY = 86400; // 24 hours in seconds.
 	const CIPHER        = 'aes-256-gcm';
 
 	// ---------------------------------------------------------------------------
-	// Status
+	// Option keys
+	// ---------------------------------------------------------------------------
+
+	// Kept from v1 — used as OPTION_SALT_PW and for legacy migration detection.
+	const OPTION_SALT      = 'fotonic_vault_salt';          // PBKDF2 salt for password KEK (base64).
+	const OPTION_TOTP      = 'fotonic_vault_totp_secret';   // Legacy v1: AES-CBC( totp, K ). NOT used in v2.
+	const OPTION_SETUP     = 'fotonic_vault_setup';          // bool — vault has been initialised.
+
+	// Envelope v2 options.
+	const OPTION_SALT_PW   = 'fotonic_vault_salt';          // Alias: same key as OPTION_SALT.
+	const OPTION_WRAP_PW   = 'fotonic_vault_wrap_pw';        // AES-GCM( MK, KEK_pw )  'w1:…'
+	const OPTION_SALT_REC  = 'fotonic_vault_salt_rec';       // PBKDF2 salt for recovery KEK (base64).
+	const OPTION_WRAP_REC  = 'fotonic_vault_wrap_rec';       // AES-GCM( MK, KEK_rec )  'w1:…'
+	const OPTION_WRAP_TOTP = 'fotonic_vault_wrap_totp';      // AES-GCM( totp_secret, MK )  'w1:…'
+	const OPTION_SCHEME    = 'fotonic_vault_scheme';         // int: 1 = legacy, 2 = envelope.
+
+	// ---------------------------------------------------------------------------
+	// Status helpers
 	// ---------------------------------------------------------------------------
 
 	/**
@@ -45,41 +77,87 @@ class Fotonic_Vault {
 		return self::get_session_key() !== null;
 	}
 
+	/**
+	 * Whether a recovery code wrap is stored.
+	 *
+	 * @return bool
+	 */
+	public static function has_recovery(): bool {
+		$wrap = get_option( self::OPTION_WRAP_REC, '' );
+		return ! empty( $wrap );
+	}
+
+	/**
+	 * Return the current encryption scheme version.
+	 *
+	 * @return int 1 = legacy CBC-direct, 2 = envelope GCM.
+	 */
+	public static function get_scheme(): int {
+		return (int) get_option( self::OPTION_SCHEME, 1 );
+	}
+
 	// ---------------------------------------------------------------------------
-	// Setup
+	// Setup (scheme v2)
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * First-time vault setup: derive key from password, encrypt + store the
-	 * TOTP secret, write the PBKDF2 salt, and mark vault as set up.
+	 * First-time vault setup using envelope encryption.
 	 *
-	 * @param string $password    Plain-text vault password chosen by the user.
-	 * @param string $totp_secret Base32 TOTP secret (from Fotonic_TOTP::generate_secret()).
-	 * @return bool True on success.
+	 * Generates a random Master Key, wraps it under the password KEK and a
+	 * fresh recovery code KEK, wraps the TOTP secret under MK, and stores
+	 * everything.  Returns the recovery code ONCE — it is never stored in
+	 * plaintext.
+	 *
+	 * @param string $password    Plain-text vault password.
+	 * @param string $totp_secret Base32 TOTP secret.
+	 * @return array { ok: bool, recovery_code: string }
 	 */
-	public static function setup( string $password, string $totp_secret ): bool {
+	public static function setup( string $password, string $totp_secret ): array {
+		$fail = array( 'ok' => false, 'recovery_code' => '' );
+
 		if ( empty( $password ) || empty( $totp_secret ) ) {
-			return false;
+			return $fail;
 		}
 
-		// Generate a fresh PBKDF2 salt.
-		$salt = base64_encode( random_bytes( 32 ) );
+		// Master Key — the stable key that encrypts all PII.
+		$mk = random_bytes( 32 );
 
-		// Derive the vault key from the password.
-		$key = Fotonic_Crypto::derive_key( $password, $salt );
-
-		// Encrypt the TOTP secret with the derived key so we can verify OTPs on unlock.
-		$encrypted_totp = Fotonic_Crypto::encrypt( strtoupper( $totp_secret ), $key );
-		if ( empty( $encrypted_totp ) ) {
-			return false;
+		// Password KEK.
+		$salt_pw  = base64_encode( random_bytes( 32 ) );
+		$kek_pw   = Fotonic_Crypto::derive_key( $password, $salt_pw );
+		$wrap_pw  = Fotonic_Crypto::wrap( $mk, $kek_pw );
+		if ( empty( $wrap_pw ) ) {
+			return $fail;
 		}
 
-		// Persist.
-		update_option( self::OPTION_SALT,  $salt,           false );
-		update_option( self::OPTION_TOTP,  $encrypted_totp, false );
-		update_option( self::OPTION_SETUP, true,            false );
+		// Recovery KEK.
+		$recovery_code = Fotonic_Crypto::generate_recovery_code();
+		$salt_rec      = base64_encode( random_bytes( 32 ) );
+		$kek_rec       = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $recovery_code ), $salt_rec );
+		$wrap_rec      = Fotonic_Crypto::wrap( $mk, $kek_rec );
+		if ( empty( $wrap_rec ) ) {
+			return $fail;
+		}
 
-		return true;
+		// Wrap TOTP secret under MK.
+		$wrap_totp = Fotonic_Crypto::wrap( strtoupper( $totp_secret ), $mk );
+		if ( empty( $wrap_totp ) ) {
+			return $fail;
+		}
+
+		// Persist all envelope options.
+		update_option( self::OPTION_SALT_PW,   $salt_pw,   false );
+		update_option( self::OPTION_WRAP_PW,   $wrap_pw,   false );
+		update_option( self::OPTION_SALT_REC,  $salt_rec,  false );
+		update_option( self::OPTION_WRAP_REC,  $wrap_rec,  false );
+		update_option( self::OPTION_WRAP_TOTP, $wrap_totp, false );
+		update_option( self::OPTION_SCHEME,    2,          false );
+		update_option( self::OPTION_SETUP,     true,       false );
+
+		// Issue session cookie with MK.
+		self::set_session_cookie( $mk );
+
+		return array( 'ok' => true, 'recovery_code' => $recovery_code );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -87,43 +165,51 @@ class Fotonic_Vault {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Verify password + TOTP OTP, then issue a session cookie containing the
-	 * derived key encrypted with WP's AUTH_KEY.
+	 * Verify password + TOTP OTP, then issue a session cookie containing MK.
+	 *
+	 * If the vault is still scheme v1 (legacy), migrate_legacy() is called first;
+	 * on success the vault is silently upgraded to scheme v2 and the session
+	 * cookie is issued.
 	 *
 	 * @param string $password Plain-text vault password.
 	 * @param string $otp      6-digit TOTP code.
-	 * @return bool True on success; false if password or OTP is wrong.
+	 * @return bool True on success; false if credentials are wrong.
 	 */
 	public static function unlock( string $password, string $otp ): bool {
 		if ( ! self::is_setup() ) {
 			return false;
 		}
 
-		$salt           = (string) get_option( self::OPTION_SALT, '' );
-		$encrypted_totp = (string) get_option( self::OPTION_TOTP, '' );
+		// Auto-migrate legacy v1 vaults on first unlock.
+		if ( self::get_scheme() < 2 && ! empty( get_option( self::OPTION_TOTP, '' ) ) ) {
+			return self::migrate_legacy( $password, $otp );
+		}
 
-		if ( empty( $salt ) || empty( $encrypted_totp ) ) {
+		// Scheme v2 envelope path.
+		$salt_pw  = (string) get_option( self::OPTION_SALT_PW, '' );
+		$wrap_pw  = (string) get_option( self::OPTION_WRAP_PW, '' );
+		$wrap_totp = (string) get_option( self::OPTION_WRAP_TOTP, '' );
+
+		if ( empty( $salt_pw ) || empty( $wrap_pw ) || empty( $wrap_totp ) ) {
 			return false;
 		}
 
-		// Derive key candidate from supplied password.
-		$key = Fotonic_Crypto::derive_key( $password, $salt );
-
-		// Attempt to decrypt the stored TOTP secret — if the password is wrong
-		// the decryption will yield garbage, and the TOTP verify below will fail.
-		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $key );
-		if ( empty( $totp_secret ) ) {
+		$kek_pw = Fotonic_Crypto::derive_key( $password, $salt_pw );
+		$mk     = Fotonic_Crypto::unwrap( $wrap_pw, $kek_pw );
+		if ( false === $mk ) {
 			return false;
 		}
 
-		// Verify the OTP code against the (now decrypted) secret.
+		$totp_secret = Fotonic_Crypto::unwrap( $wrap_totp, $mk );
+		if ( false === $totp_secret ) {
+			return false;
+		}
+
 		if ( ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
 			return false;
 		}
 
-		// All checks passed — issue the session cookie.
-		self::set_session_cookie( $key );
-
+		self::set_session_cookie( $mk );
 		return true;
 	}
 
@@ -133,10 +219,221 @@ class Fotonic_Vault {
 	 * @return void
 	 */
 	public static function lock(): void {
-		// Expire cookie in the past.
 		self::send_cookie( '', time() - 3600 );
-		// Also clear from the current request superglobal.
 		unset( $_COOKIE[ self::COOKIE_NAME ] );
+	}
+
+	// ---------------------------------------------------------------------------
+	// Password management
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Change the vault password.
+	 *
+	 * Verifies current credentials, then re-wraps MK under a new KEK derived
+	 * from the new password.  No PII re-encryption is needed because MK does
+	 * not change.
+	 *
+	 * @param string $current_pw Current password.
+	 * @param string $otp        Current TOTP code.
+	 * @param string $new_pw     New password.
+	 * @return bool True on success.
+	 */
+	public static function change_password( string $current_pw, string $otp, string $new_pw ): bool {
+		if ( empty( $current_pw ) || empty( $otp ) || empty( $new_pw ) ) {
+			return false;
+		}
+
+		// Obtain MK by verifying existing credentials.
+		$mk = self::get_mk_via_password( $current_pw );
+		if ( false === $mk ) {
+			return false;
+		}
+
+		// Verify OTP.
+		$wrap_totp = (string) get_option( self::OPTION_WRAP_TOTP, '' );
+		if ( empty( $wrap_totp ) ) {
+			return false;
+		}
+		$totp_secret = Fotonic_Crypto::unwrap( $wrap_totp, $mk );
+		if ( false === $totp_secret || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+			return false;
+		}
+
+		// Re-wrap MK under new password KEK.
+		$new_salt_pw = base64_encode( random_bytes( 32 ) );
+		$new_kek_pw  = Fotonic_Crypto::derive_key( $new_pw, $new_salt_pw );
+		$new_wrap_pw = Fotonic_Crypto::wrap( $mk, $new_kek_pw );
+		if ( empty( $new_wrap_pw ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_SALT_PW, $new_salt_pw, false );
+		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
+
+		// Refresh session cookie with same MK.
+		self::update_session_key( $mk );
+		return true;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Recovery: reset password via recovery code
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Reset the vault password using a recovery code (lost TOTP path).
+	 *
+	 * Verifies the recovery code unwraps wrap_rec, then re-wraps MK under a
+	 * new password KEK.  The session cookie is set so the vault is immediately
+	 * unlocked after the reset.
+	 *
+	 * @param string $recovery_code Raw recovery code (with or without dashes).
+	 * @param string $new_pw        New password.
+	 * @return bool True on success.
+	 */
+	public static function recover_reset_password( string $recovery_code, string $new_pw ): bool {
+		if ( empty( $recovery_code ) || empty( $new_pw ) ) {
+			return false;
+		}
+
+		$salt_rec = (string) get_option( self::OPTION_SALT_REC, '' );
+		$wrap_rec = (string) get_option( self::OPTION_WRAP_REC, '' );
+		if ( empty( $salt_rec ) || empty( $wrap_rec ) ) {
+			return false;
+		}
+
+		$normalized = Fotonic_Crypto::normalize_recovery_code( $recovery_code );
+		$kek_rec    = Fotonic_Crypto::derive_key( $normalized, $salt_rec );
+		$mk         = Fotonic_Crypto::unwrap( $wrap_rec, $kek_rec );
+		if ( false === $mk ) {
+			return false;
+		}
+
+		// Re-wrap MK under new password KEK.
+		$new_salt_pw = base64_encode( random_bytes( 32 ) );
+		$new_kek_pw  = Fotonic_Crypto::derive_key( $new_pw, $new_salt_pw );
+		$new_wrap_pw = Fotonic_Crypto::wrap( $mk, $new_kek_pw );
+		if ( empty( $new_wrap_pw ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_SALT_PW, $new_salt_pw, false );
+		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
+
+		self::set_session_cookie( $mk );
+		return true;
+	}
+
+	// ---------------------------------------------------------------------------
+	// Recovery: reset TOTP via password + recovery code (both required)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Reset the TOTP secret when the user still knows the password but has
+	 * lost their authenticator device.  Requires BOTH password AND recovery
+	 * code to prevent one-factor downgrade.
+	 *
+	 * @param string $password      Current vault password.
+	 * @param string $recovery_code Raw recovery code.
+	 * @return array|false Array with 'totp_secret' and 'qr_uri' on success, false on failure.
+	 */
+	public static function recover_reset_totp( string $password, string $recovery_code ) {
+		if ( empty( $password ) || empty( $recovery_code ) ) {
+			return false;
+		}
+
+		// Verify password path — get MK.
+		$mk = self::get_mk_via_password( $password );
+		if ( false === $mk ) {
+			return false;
+		}
+
+		// Also verify recovery code independently (dual-factor requirement).
+		$salt_rec = (string) get_option( self::OPTION_SALT_REC, '' );
+		$wrap_rec = (string) get_option( self::OPTION_WRAP_REC, '' );
+		if ( empty( $salt_rec ) || empty( $wrap_rec ) ) {
+			return false;
+		}
+		$normalized = Fotonic_Crypto::normalize_recovery_code( $recovery_code );
+		$kek_rec    = Fotonic_Crypto::derive_key( $normalized, $salt_rec );
+		$mk_via_rec = Fotonic_Crypto::unwrap( $wrap_rec, $kek_rec );
+		if ( false === $mk_via_rec ) {
+			return false;
+		}
+
+		// Generate a new TOTP secret and wrap it under MK.
+		$new_totp_secret = Fotonic_TOTP::generate_secret();
+		$new_wrap_totp   = Fotonic_Crypto::wrap( strtoupper( $new_totp_secret ), $mk );
+		if ( empty( $new_wrap_totp ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_WRAP_TOTP, $new_wrap_totp, false );
+
+		$site_name = get_bloginfo( 'name' ) ?: 'Eleva CRM';
+		$label     = $site_name . ':' . wp_get_current_user()->user_email;
+		$qr_uri    = Fotonic_TOTP::get_uri( $new_totp_secret, $label, $site_name );
+
+		return array(
+			'totp_secret' => $new_totp_secret,
+			'qr_uri'      => $qr_uri,
+		);
+	}
+
+	// ---------------------------------------------------------------------------
+	// Recovery: regenerate recovery code (requires active session)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Generate a new recovery code, re-wrapping MK under the new KEK.
+	 * Requires the vault to be unlocked (active session).
+	 *
+	 * @return array|false Array with 'recovery_code' on success, false otherwise.
+	 */
+	public static function regenerate_recovery_code() {
+		$mk = self::get_session_key();
+		if ( null === $mk ) {
+			return false;
+		}
+
+		$new_code     = Fotonic_Crypto::generate_recovery_code();
+		$new_salt_rec = base64_encode( random_bytes( 32 ) );
+		$normalized   = Fotonic_Crypto::normalize_recovery_code( $new_code );
+		$new_kek_rec  = Fotonic_Crypto::derive_key( $normalized, $new_salt_rec );
+		$new_wrap_rec = Fotonic_Crypto::wrap( $mk, $new_kek_rec );
+		if ( empty( $new_wrap_rec ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_SALT_REC, $new_salt_rec, false );
+		update_option( self::OPTION_WRAP_REC, $new_wrap_rec, false );
+
+		return array( 'recovery_code' => $new_code );
+	}
+
+	// ---------------------------------------------------------------------------
+	// Full vault reset
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Completely delete all vault options.
+	 *
+	 * WARNING: existing PII ciphertext in postmeta will be unrecoverable once
+	 * the Master Key is gone.  This is a destructive, last-resort operation.
+	 *
+	 * @return bool True when options deleted successfully.
+	 */
+	public static function reset_vault(): bool {
+		delete_option( self::OPTION_SETUP );
+		delete_option( self::OPTION_SALT );      // also OPTION_SALT_PW.
+		delete_option( self::OPTION_TOTP );
+		delete_option( self::OPTION_WRAP_PW );
+		delete_option( self::OPTION_SALT_REC );
+		delete_option( self::OPTION_WRAP_REC );
+		delete_option( self::OPTION_WRAP_TOTP );
+		delete_option( self::OPTION_SCHEME );
+		self::lock();
+		return true;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -144,12 +441,12 @@ class Fotonic_Vault {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Return the raw 32-byte AES-256 key from the session cookie, or null if
+	 * Return the raw 32-byte Master Key (MK) from the session cookie, or null if
 	 * the vault is locked or the cookie is invalid / tampered.
 	 *
 	 * Cookie format: base64( nonce[12] || GCM-tag[16] || AES-256-GCM-ciphertext[32] )
 	 *
-	 * @return string|null Raw binary key, or null.
+	 * @return string|null Raw binary MK, or null.
 	 */
 	public static function get_session_key(): ?string {
 		if ( empty( $_COOKIE[ self::COOKIE_NAME ] ) ) {
@@ -183,13 +480,86 @@ class Fotonic_Vault {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Replace the current session cookie with a new derived key.
-	 * Called after a vault password change to keep the session alive.
+	 * Replace the current session cookie with a (potentially new) MK.
+	 * Called after a password change or migration to keep the session alive.
 	 *
-	 * @param string $key 32-byte raw derived key.
+	 * @param string $key 32-byte raw MK.
 	 */
 	public static function update_session_key( string $key ): void {
 		self::set_session_cookie( $key );
+	}
+
+	// ---------------------------------------------------------------------------
+	// Legacy migration (v1 → v2)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Migrate a legacy scheme-v1 vault to envelope scheme-v2.
+	 *
+	 * Steps:
+	 *  1. Verify credentials against the legacy v1 storage.
+	 *  2. Generate a fresh Master Key (MK).
+	 *  3. Re-encrypt all PII postmeta: old K → MK (via REST-API helpers).
+	 *  4. Wrap: wrap_pw = wrap(MK, KEK_pw), wrap_totp = wrap(totp, MK).
+	 *  5. Store new options, set OPTION_SCHEME=2.
+	 *  6. Issue session cookie with MK.
+	 *
+	 * Recovery code is NOT created here — the frontend detects
+	 * has_recovery()==false after migration and prompts setup.
+	 *
+	 * @param string $password Plain-text vault password.
+	 * @param string $otp      6-digit TOTP code.
+	 * @return bool True on success.
+	 */
+	public static function migrate_legacy( string $password, string $otp ): bool {
+		$old_salt       = (string) get_option( self::OPTION_SALT, '' );
+		$encrypted_totp = (string) get_option( self::OPTION_TOTP, '' );
+
+		if ( empty( $old_salt ) || empty( $encrypted_totp ) ) {
+			return false;
+		}
+
+		// Derive legacy K and decrypt TOTP.
+		$old_key     = Fotonic_Crypto::derive_key( $password, $old_salt );
+		$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $old_key );
+
+		if ( empty( $totp_secret ) ) {
+			return false;
+		}
+
+		if ( ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+			return false;
+		}
+
+		// Generate a fresh Master Key.
+		$mk = random_bytes( 32 );
+
+		// Re-encrypt all PII from old K → MK using the REST-API helpers.
+		Fotonic_REST_API::reencrypt_customers( $old_key, $mk );
+		Fotonic_REST_API::reencrypt_works( $old_key, $mk );
+
+		// Wrap password KEK (reuse existing salt for backwards compat).
+		$kek_pw  = Fotonic_Crypto::derive_key( $password, $old_salt );
+		$wrap_pw = Fotonic_Crypto::wrap( $mk, $kek_pw );
+		if ( empty( $wrap_pw ) ) {
+			return false;
+		}
+
+		// Wrap TOTP under MK.
+		$wrap_totp = Fotonic_Crypto::wrap( strtoupper( $totp_secret ), $mk );
+		if ( empty( $wrap_totp ) ) {
+			return false;
+		}
+
+		// Persist.  OPTION_SALT_PW intentionally left as $old_salt (shared key).
+		update_option( self::OPTION_WRAP_PW,   $wrap_pw,   false );
+		update_option( self::OPTION_WRAP_TOTP, $wrap_totp, false );
+		update_option( self::OPTION_SCHEME,    2,          false );
+		// Remove the legacy plaintext-under-K TOTP option.
+		delete_option( self::OPTION_TOTP );
+
+		self::set_session_cookie( $mk );
+		return true;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -197,11 +567,29 @@ class Fotonic_Vault {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Encrypt the derived key with the server secret and write the cookie.
+	 * Derive MK from the stored password wrap (scheme v2).
+	 * Does NOT verify OTP — use for operations that need MK but verify OTP separately.
 	 *
-	 * Cookie value: base64( nonce[12] || GCM-tag[16] || AES-256-GCM( derived_key, hash(AUTH_KEY) ) )
+	 * @param string $password Plain-text vault password.
+	 * @return string|false 32-byte MK, or false on failure.
+	 */
+	private static function get_mk_via_password( string $password ) {
+		$salt_pw = (string) get_option( self::OPTION_SALT_PW, '' );
+		$wrap_pw = (string) get_option( self::OPTION_WRAP_PW, '' );
+		if ( empty( $salt_pw ) || empty( $wrap_pw ) ) {
+			return false;
+		}
+		$kek_pw = Fotonic_Crypto::derive_key( $password, $salt_pw );
+		$mk     = Fotonic_Crypto::unwrap( $wrap_pw, $kek_pw );
+		return ( false === $mk ) ? false : $mk;
+	}
+
+	/**
+	 * Encrypt MK with the server secret and write the cookie.
 	 *
-	 * @param string $key 32-byte derived key.
+	 * Cookie value: base64( nonce[12] || GCM-tag[16] || AES-256-GCM( MK, hash(AUTH_KEY) ) )
+	 *
+	 * @param string $key 32-byte MK.
 	 * @return void
 	 */
 	private static function set_session_cookie( string $key ): void {
@@ -220,9 +608,6 @@ class Fotonic_Vault {
 
 	/**
 	 * Emit the Set-Cookie header.
-	 *
-	 * Uses header() directly so we can append SameSite=Strict, which
-	 * setcookie() only supports in PHP 7.3+ via the $options array form.
 	 *
 	 * @param string $value  Cookie value (empty string to clear).
 	 * @param int    $expiry Unix timestamp for expiry.
@@ -249,9 +634,7 @@ class Fotonic_Vault {
 	}
 
 	/**
-	 * Server-side secret used to wrap the derived key in the cookie.
-	 * Falls back to SECURE_AUTH_KEY then a site-specific string if AUTH_KEY
-	 * is not defined (should always be defined in wp-config.php).
+	 * Server-side secret used to wrap MK in the cookie.
 	 *
 	 * @return string
 	 */
@@ -262,7 +645,6 @@ class Fotonic_Vault {
 		if ( defined( 'SECURE_AUTH_KEY' ) && SECURE_AUTH_KEY ) {
 			return SECURE_AUTH_KEY;
 		}
-		// Last-resort: generate and persist a random secret so the fallback is not guessable.
 		$fallback = get_option( 'fotonic_server_secret_fallback', '' );
 		if ( empty( $fallback ) ) {
 			$fallback = wp_generate_password( 64, true, true );

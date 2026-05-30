@@ -4,6 +4,7 @@ import { apiFetch } from '../../api/client'
 import Spinner from '../../components/Spinner'
 import VaultSetup from './VaultSetup'
 import VaultLock from './VaultLock'
+import RecoveryCodeBanner from './RecoveryCodeBanner'
 import { __ } from '../../utils/i18n'
 
 export default function VaultGate({ router }) {
@@ -33,7 +34,7 @@ export default function VaultGate({ router }) {
   }
 
   if (data?.setup === false) {
-    // Vault not configured yet (Phase C) — allow CRM access without encryption
+    // Vault not configured yet — allow CRM access without encryption
     return <RouterProvider router={router} />
   }
 
@@ -42,5 +43,21 @@ export default function VaultGate({ router }) {
   }
 
   // unlocked === true
-  return <RouterProvider router={router} />
+  // Show recovery-code banner if vault is set up, unlocked, scheme>=2, and has no recovery code yet
+  const needsRecoveryCode =
+    data?.setup === true &&
+    data?.unlocked === true &&
+    (data?.scheme ?? 0) >= 2 &&
+    data?.has_recovery === false
+
+  return (
+    <>
+      {needsRecoveryCode && (
+        <div className="px-6 pt-4">
+          <RecoveryCodeBanner />
+        </div>
+      )}
+      <RouterProvider router={router} />
+    </>
+  )
 }

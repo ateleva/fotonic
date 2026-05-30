@@ -13,12 +13,10 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import ServicesRepeater from './ServicesRepeater'
 import InstallmentsRepeater from './InstallmentsRepeater'
-import CollaboratorsRepeater from './CollaboratorsRepeater'
 import FilesSection from './FilesSection'
 import EventAddressesRepeater from './EventAddressesRepeater'
 import WpEditor from '../../components/WpEditor'
 import { __ } from '../../utils/i18n'
-import { useCollaboratorOptions } from '../../api/collaboratorOptions'
 
 const COLOR_PALETTE = [
   { label: 'Default',   hex: '' },
@@ -104,8 +102,6 @@ const defaultValues = {
   color: '',
 }
 
-const isPro = !!window.FotonicApp?.isPro
-
 const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?? null
 
 export default function WorkForm() {
@@ -120,7 +116,6 @@ export default function WorkForm() {
   const { data: work, isLoading: workLoading } = useWork(id)
   const { data: customersData } = useCustomers({ per_page: 100 })
   const { data: servicesData } = useServices()
-  const { data: collabOptions } = useCollaboratorOptions()
   const createWork = useCreateWork()
   const updateWork = useUpdateWork()
   const deleteWork = useDeleteWork()
@@ -195,9 +190,7 @@ export default function WorkForm() {
         status: c.status,
       })),
       total_price: data.total_price !== '' ? parseFloat(data.total_price) : null,
-      ...(isPro
-        ? { total_price_taxable: data.total_price_taxable !== '' && data.total_price_taxable != null ? parseFloat(data.total_price_taxable) : null }
-        : {}),
+      total_price_taxable: data.total_price_taxable !== '' && data.total_price_taxable != null ? parseFloat(data.total_price_taxable) : null,
       installments: data.installments.map((inst) => ({
         ...inst,
         amount: inst.amount !== '' ? parseFloat(inst.amount) : 0,
@@ -326,80 +319,6 @@ export default function WorkForm() {
           </FormField>
         </section>
 
-        {/* Section — Owner (PRO only) */}
-        {window.FotonicApp?.features?.collaborators && (
-          <section>
-            <SectionHeading>{__('Work Owner')}</SectionHeading>
-            <p className="text-sm text-gray-500 mb-3">{__('Who is the owner/author of this work?')}</p>
-            <Controller
-              name="owner_type"
-              control={control}
-              render={({ field: ownerTypeField }) => (
-                <Controller
-                  name="owner_id"
-                  control={control}
-                  render={({ field: ownerIdField }) => {
-                    const admin = collabOptions?.admin
-                    const collaborators = collabOptions?.collaborators ?? []
-                    return (
-                      <select
-                        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full max-w-sm"
-                        value={ownerTypeField.value === 'collaborator' ? `collaborator:${ownerIdField.value}` : `admin:${admin?.id ?? ''}`}
-                        onChange={(e) => {
-                          const val = e.target.value
-                          const [type, rawId] = val.split(':')
-                          ownerTypeField.onChange(type)
-                          ownerIdField.onChange(rawId ? parseInt(rawId, 10) : null)
-                        }}
-                      >
-                        {admin && (
-                          <option value={`admin:${admin.id}`}>{__('Me')} ({admin.name})</option>
-                        )}
-                        {collaborators.map((c) => (
-                          <option key={c.id} value={`collaborator:${c.id}`}>{c.name}</option>
-                        ))}
-                      </select>
-                    )
-                  }}
-                />
-              )}
-            />
-          </section>
-        )}
-
-        {/* Section — Collaboratori (PRO only) */}
-        {window.FotonicApp?.features?.collaborators && (
-          <section>
-            <SectionHeading>{__('Collaborators')}</SectionHeading>
-            <p className="text-sm text-gray-500 mb-3">{__('Add collaborators involved with their compensation.')}</p>
-            <Controller
-              name="owner_type"
-              control={control}
-              render={({ field: ownerTypeField }) => (
-                <Controller
-                  name="owner_id"
-                  control={control}
-                  render={({ field: ownerIdField }) => (
-                    <Controller
-                      name="collaborators"
-                      control={control}
-                      render={({ field }) => (
-                        <CollaboratorsRepeater
-                          value={field.value}
-                          onChange={field.onChange}
-                          ownerType={ownerTypeField.value}
-                          ownerId={ownerIdField.value}
-                          options={collabOptions}
-                        />
-                      )}
-                    />
-                  )}
-                />
-              )}
-            />
-          </section>
-        )}
-
         {/* Section 3 — Calendar Color */}
         <section>
           <SectionHeading>{__('Calendar Color')}</SectionHeading>
@@ -467,19 +386,6 @@ export default function WorkForm() {
                 />
               </FormField>
 
-              {isPro && (
-                <FormField label={__('Taxable Price (€)')} htmlFor="total_price_taxable">
-                  <input
-                    id="total_price_taxable"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="0.00"
-                    className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
-                    {...register('total_price_taxable')}
-                  />
-                </FormField>
-              )}
             </div>
 
             <div>

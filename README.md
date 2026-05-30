@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ateleva/fotonic/main/.wordpress-org/icon-256x256.png" alt="Fotonic" width="128">
+  <img src="https://raw.githubusercontent.com/ateleva/fotonic/main/.wordpress-org/icon-256x256.png" alt="Eleva" width="128">
 </p>
 
-# Fotonic – CRM for Photographers
+# Eleva CRM for Photographers
 
 **CRM and workflow manager for photographers.**
 
@@ -23,7 +23,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Calendar Color** — assign an event color (12-color Google Calendar palette) to each Work
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
 
-## Fotonic Pro
+## Eleva Pro
 
 The premium addon adds advanced workflow, analytics, team management, and Google Calendar integration.
 
@@ -37,7 +37,7 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 - Products catalog: track products you offer with flexible pricing tables and export everything in PDF format
 - Custom email notifications with SMTP delivery
 
-[Learn more about Fotonic Pro](https://eleva.alessandrobonacina.com)
+[Learn more about Eleva Pro](https://eleva.alessandrobonacina.com)
 
 ---
 
@@ -51,7 +51,7 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 1. Download the plugin ZIP from WordPress.org.
 2. Go to **Plugins › Add New › Upload Plugin** in your WordPress admin.
 3. Upload the ZIP and click **Install Now**, then **Activate**.
-4. Navigate to **Fotonic** in the WP Admin sidebar.
+4. Navigate to **Eleva** in the WP Admin sidebar.
 5. On first launch, set your Vault master password and scan the QR code with an authenticator app.
 6. Enter your password and the current OTP code to unlock the CRM.
 
@@ -60,7 +60,7 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 ## FAQ
 
 **Does this require ACF or WooCommerce?**
-No. Fotonic is fully standalone and has no third-party plugin dependencies.
+No. Eleva is fully standalone and has no third-party plugin dependencies.
 
 **Where is my data stored?**
 All data is stored in your own WordPress database. The free plugin makes no external HTTP requests — your data never leaves your server.

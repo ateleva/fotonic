@@ -5,7 +5,7 @@ class Fotonic_Activator {
     public static function activate(): void {
         if ( ! extension_loaded( 'openssl' ) ) {
             deactivate_plugins( 'fotonic/fotonic.php' );
-            wp_die( esc_html__( 'Fotonic requires the PHP OpenSSL extension. Please enable it on your server.', 'fotonic' ) );
+            wp_die( esc_html__( 'Fotonic requires the PHP OpenSSL extension. Please enable it on your server.', 'eleva-crm-for-photographers' ) );
         }
 
         $upload_dir = wp_upload_dir();

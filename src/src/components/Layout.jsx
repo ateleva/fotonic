@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt } from 'lucide-react'
-import logoSvg from '../assets/fotonic-logotype.svg'
+import logoPng from '../assets/icon-256x256.png'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
 import { __ } from '../utils/i18n'
@@ -47,6 +47,24 @@ export default function Layout() {
     queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
 
+  // Auto-lock after 15 minutes of inactivity when vault is unlocked.
+  useEffect(() => {
+    if (!isUnlocked) return
+    const IDLE_MS = 15 * 60 * 1000
+    let timer
+    const reset = () => {
+      clearTimeout(timer)
+      timer = setTimeout(handleLock, IDLE_MS)
+    }
+    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll']
+    events.forEach(e => window.addEventListener(e, reset, { passive: true }))
+    reset()
+    return () => {
+      clearTimeout(timer)
+      events.forEach(e => window.removeEventListener(e, reset))
+    }
+  }, [isUnlocked]) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div
       ref={shellRef}
@@ -56,8 +74,11 @@ export default function Layout() {
       {/* Sidebar */}
       <aside className="w-[20%] min-w-[200px] max-w-[260px] shrink-0 bg-white border-r border-gray-200 flex flex-col overflow-y-auto overflow-x-hidden">
         {/* Logo */}
-        <div className="px-4 py-2 border-b border-gray-100 flex items-center">
-          <img src={logoSvg} alt="Fotonic" className="h-7 w-auto" />
+        <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-2 min-w-0">
+          <img src={logoPng} alt="" className="h-8 w-8 object-contain shrink-0" />
+          <span style={{ fontFamily: '-apple-system,"Segoe UI",sans-serif', fontSize: '13px', fontWeight: 600, color: '#1d2327', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            Eleva CRM for Photographers
+          </span>
         </div>
 
         {/* Nav */}
@@ -134,9 +155,9 @@ export default function Layout() {
             </button>
           )}
           <div className="px-3 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-gray-400">Fotonic v{window.FotonicApp?.version ?? '–'}</span>
+            <span className="text-xs text-gray-400">CRM v{window.FotonicApp?.version ?? '–'}</span>
             {window.FotonicApp?.proVersion && (
-              <span className="text-xs text-indigo-400">Fotonic Pro v{window.FotonicApp.proVersion}</span>
+              <span className="text-xs text-indigo-400">CRM Pro v{window.FotonicApp.proVersion}</span>
             )}
           </div>
         </div>
