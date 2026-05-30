@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name:       Eleva CRM for Photographers
- * Plugin URI:        https://eleva.alessandrobonacina.com
+ * Plugin URI:        https://eleva.alessandrobonacina.com/progetto/eleva-crm-per-fotografi/
  * Description:       CRM and workflow manager for photographers: clients, services, works, payments, encrypted vault for PII, and calendar view.
  * Version:           1.3.5
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Tested up to:      6.8
  * Author:            Alessandro Bonacina
- * Author URI:        https://alessandrobonacina.com
+ * Author URI:        https://eleva.alessandrobonacina.com
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: eleva-crm-for-photographers
