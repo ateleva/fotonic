@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ateleva/fotonic/main/.wordpress-org/icon-256x256.png" alt="Eleva" width="128">
+  <img src="https://raw.githubusercontent.com/ateleva/fotonic/main/.wordpress-org/icon-256x256.png" alt="Eleva CRM for Photographers" width="128">
 </p>
 
 # Eleva CRM for Photographers
 
-**CRM and workflow manager for photographers.**
+**CRM and workflow manager for professional event photographers.**
 
 A standalone WordPress plugin with a modern React-powered dashboard — no monthly fees, no external dependencies.
 
@@ -14,30 +14,14 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 
 - **Customer Management** — store couples and individuals with multiple contacts per client; full search across all fields; each customer page shows a linked Works table with totals (count, total price, paid, unpaid)
 - **Service Catalog** — define services and base prices; override price and notes per project
-- **Works / Projects** — the central hub linking customers, services, files, and payment installments; Total Price and Taxable Price (Pro-gated) shown side-by-side
+- **Works / Projects** — the central hub linking customers, services, files, and payment installments; Total Price tracked per project
 - **Payment Tracking** — track deposits and balances; paid/partial/unpaid status assigned automatically
 - **File Vault** — attach contracts and files to any project; protected storage with REST-gated downloads
 - **Vault Security** — AES-256 encryption behind a master password and TOTP two-factor authentication; all PII is encrypted at rest
 - **Dashboard** — annual revenue, upcoming events, unpaid balances, and the next five scheduled works
 - **Quick Notes** — a WYSIWYG notes field on each Work for short reminders visible at a glance
-- **Calendar Color** — assign an event color (12-color Google Calendar palette) to each Work
+- **Calendar Color** — assign an event color (12-color palette) to each Work
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
-
-## Eleva Pro
-
-The premium addon adds advanced workflow, analytics, team management, and Google Calendar integration.
-
-- Kanban board with drag-and-drop task management
-- Google Calendar and Google Tasks sync (works and tasks)
-- Analytics: clean UI dashboard with key stats and charts ready to be exported in CSV and PDF formats
-- Analytics Compare: side-by-side period comparison with trend indicators — revenue shown as %, costs and expenses as absolute € diff
-- Full Expenses tracker: add software, equipment, fixed costs, professionals services, taxes... and track everything over time
-- Collaborator: manage your collaborators registry and assign them roles in your works, tracking expenses and their services
-- Supplier management: create a list of suppliers and professionals to recommend in your works
-- Products catalog: track products you offer with flexible pricing tables and export everything in PDF format
-- Custom email notifications with SMTP delivery
-
-[Learn more about Eleva Pro](https://eleva.alessandrobonacina.com)
 
 ---
 
@@ -51,7 +35,7 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 1. Download the plugin ZIP from WordPress.org.
 2. Go to **Plugins › Add New › Upload Plugin** in your WordPress admin.
 3. Upload the ZIP and click **Install Now**, then **Activate**.
-4. Navigate to **Eleva** in the WP Admin sidebar.
+4. Navigate to **CRM** in the WP Admin sidebar.
 5. On first launch, set your Vault master password and scan the QR code with an authenticator app.
 6. Enter your password and the current OTP code to unlock the CRM.
 
@@ -60,10 +44,10 @@ The premium addon adds advanced workflow, analytics, team management, and Google
 ## FAQ
 
 **Does this require ACF or WooCommerce?**
-No. Eleva is fully standalone and has no third-party plugin dependencies.
+No. Eleva CRM for Photographers is fully standalone and has no third-party plugin dependencies.
 
 **Where is my data stored?**
-All data is stored in your own WordPress database. The free plugin makes no external HTTP requests — your data never leaves your server.
+All data is stored in your own WordPress database. The plugin makes no external HTTP requests — your data never leaves your server.
 
 **What is the Vault?**
 The Vault encrypts all personally identifiable information (names, emails, phone numbers, addresses) with AES-256 before it is written to the database. You protect it with a master password and a TOTP authenticator app. The session key lives only in an HTTP-Only, SameSite=Strict cookie encrypted with AES-256-GCM — authenticated encryption that rejects any tampered cookie.
@@ -71,87 +55,89 @@ The Vault encrypts all personally identifiable information (names, emails, phone
 **Does it work on shared hosting?**
 Yes, as long as the host meets the PHP 7.4+ and WordPress 6.0+ requirements.
 
-**Is there a Pro version?**
-Yes. [Fotonic Pro](https://alessandrobonacina.com) is a paid addon sold separately. The free plugin is fully functional without it.
-
 ---
 
 ## Privacy
 
-The free Fotonic plugin collects no personal data, makes no external HTTP requests, and transmits nothing to external servers.
+Eleva CRM for Photographers collects no personal data, makes no external HTTP requests, and transmits nothing to external servers. All data is stored in your own WordPress database.
 
-If you install Fotonic Pro and enable Google Calendar integration, certain work and task data (titles, dates, times, locations, quick notes) is sent to Google's servers under your own Google account. This feature is entirely opt-in and can be disconnected at any time from **Fotonic › Settings › Google Calendar**.
+---
 
-- [Google Privacy Policy](https://policies.google.com/privacy)
-- [Google API Terms of Service](https://developers.google.com/terms)
+## Development
+
+Full source code (React/Vite) is publicly available at [github.com/ateleva/fotonic](https://github.com/ateleva/fotonic).
+
+```bash
+cd src && npm install
+npm run build   # outputs compiled assets to dist/
+```
 
 ---
 
 ## Changelog
 
+### 1.3.5
+
+- WP.org compliance: plugin renamed to "Eleva CRM for Photographers"; slug changed to eleva-crm-for-photographers
+- WP.org compliance: removed all Pro-gated code blocks from the free plugin — no locked features remain
+- WP.org compliance: converted inline script/style tags in meta boxes to `wp_add_inline_script` / `wp_add_inline_style`
+- Security: added REST nonce verification to vault file download permission callback
+- Admin menu position changed to auto to avoid conflicting with core items
+
 ### 1.3.4
 
-- Security: vault file download (`GET /vault-download/{id}`) ownership check rewritten — decodes the `_ftnc_work_files` JSON server-side and compares integers exactly. The previous LIKE-based check missed mid-array IDs.
-- Security: PBKDF2 raised from 100,000 → 600,000 iterations (OWASP 2023). Existing vaults remain unlockable; no migration needed.
-- Security: customer search `posts_search` / `posts_join` filters scoped to the `_ftnc_people` meta key only.
-- WP.org compliance: replaced `remove_all_actions()` on admin-notice hooks with CSS-only hiding inside the SPA viewport — security and update warnings still fire.
-- Reliability: activator `deactivate_plugins()` argument fixed to the canonical plugin slug so the OpenSSL-missing path disables the right plugin.
-- Performance: menu icon SVG cached in a static property.
-- i18n: translators comments added; `_n()` placeholders converted to positional form.
+- Security: vault file download ownership check rewritten — exact integer match on the stored file list
+- Security: PBKDF2 raised from 100,000 → 600,000 iterations (OWASP 2023)
+- Security: customer search SQL filters scoped to `_ftnc_people` meta key only
+- WP.org compliance: replaced `remove_all_actions()` on admin-notice hooks with CSS-only hiding
+- Reliability: activator `deactivate_plugins()` argument fixed to the canonical plugin slug
+- Performance: menu icon SVG cached in a static property
+- i18n: translators comments added; `_n()` placeholders converted to positional form
 
 ### 1.3.3
 
-- **Customer Works recap**: Customer edit page shows a table of all linked works (title, date, services, total price, payment status). Footer shows work count, total price, paid total, and unpaid total.
-- **Taxable Price field** (Pro-gated): new numeric input next to Total Price in the Work form when Fotonic Pro is active. Used by Pro to compute raw taxes per work.
-- **GET /works `customer_id` filter**: REST endpoint now accepts `customer_id` to return only a specific customer's works.
-- i18n: Italian translations added for all new strings.
+- **Customer Works recap**: Customer edit page shows a table of all linked works with totals
+- **GET /works `customer_id` filter**: REST endpoint now accepts `customer_id` to filter by customer
+- i18n: Italian translations added for all new strings
 
 ### 1.3.2
 
-- **Calendar view** moved from Pro to free — available to all users without a license
+- **Calendar view** included for all users — full monthly calendar showing all scheduled works
 - **Calendar locale**: month names and date labels now use the WordPress site language
-- **PRO gating**: Work Owner and Collaborators fields hidden when Pro is not installed/licensed
-- **Vault description** added to Settings page (detailed when not configured, short reminder when active)
-- **WP admin icon** updated to Fotonic logo mark SVG; SPA sidebar shows Fotonic logotype SVG
-- **Layout**: WP admin footer hidden on Fotonic page; SPA height fills viewport correctly
-- **Settings sidebar**: active item right-side padding and border-radius fixed
-- **Works list**: payment status dropdown now sizes to full option text
+- **Vault description** added to Settings page
+- **Layout**: WP admin footer hidden on plugin page; SPA height fills viewport correctly
 
 ### 1.3.1
 
-- **Security**: vault session cookie upgraded to AES-256-GCM (authenticated encryption — tampered cookies rejected)
+- **Security**: vault session cookie upgraded to AES-256-GCM (authenticated encryption)
 - **Security**: deterministic IV reuse fixed for email/phone fields (PHP and browser-side)
-- **Security**: `v1d:` ciphertext format introduced — deterministic ciphertexts are now correctly round-trippable; email/phone no longer display empty after encryption
-- **Security**: REST nonce verification enforced in permission callback; file download IDOR fixed; negative price injection prevented
-- **Security**: vault audit logging added (unlock ok/fail, lock, password-change) to WP error log
+- **Security**: `v1d:` ciphertext format introduced — email/phone correctly round-trippable
+- **Security**: REST nonce verification enforced in permission callback; file download IDOR fixed
+- **Security**: vault audit logging added to WP error log
 - Added `uninstall.php` for full data cleanup on plugin deletion
 - CI: deny-all GITHUB_TOKEN permissions on deploy workflow
 
 ### 1.3.0
 
-- Security: vault setup endpoint returns 409 if already configured (prevents accidental PII wipe)
-- Security: vault cookie server-secret now uses a random stored key instead of the guessable site URL
-- Security: meta box save requires `manage_options` (was `edit_post`)
+- Security: vault setup endpoint returns 409 if already configured
+- Security: vault cookie server-secret now uses a random stored key
+- Security: meta box save requires `manage_options`
 - Compatibility: `wp_enqueue_script` updated to array-style args (WP 6.3+)
-- Compatibility: Tested up to WordPress 7.0
-- CI: build artifact check added to deploy workflow
 
 ### 1.2.2
 
-- WP admin theme color integration: sidebar nav and CTA buttons adapt to all built-in and custom admin color schemes
-- Custom payment types: new CRUD API and UI manager lets administrators define installment types beyond Default/Coupon
-- Payment status badge labels (Paid / Partial / Unpaid) are now translatable
+- WP admin theme color integration: sidebar nav and CTA buttons adapt to all admin color schemes
+- Custom payment types: CRUD API and UI manager for installment types
+- Payment status badge labels are now translatable
 - Accessibility: keyboard focus ring restored on all interactive elements
 
 ### 1.2.1
 
-- Consistent button design system: primary, secondary, and danger variants using WP admin theme color
+- Consistent button design system: primary, secondary, and danger variants
 - Full-width forms across WorkForm, CustomerForm, ServiceForm, and SettingsPage
 
 ### 1.2.0
 
-- Collaborators repeater on Work edit form with individual price and payment status per entry
-- Owner dropdown on Work edit form
 - Sticky layout with independently scrollable sidebar and content area
 
 ### 1.1.0

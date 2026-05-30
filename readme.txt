@@ -18,20 +18,14 @@ Eleva is a standalone WordPress plugin that provides a modern React-powered CRM 
 
 * Customer Management: store couples and individuals with multiple contacts per client. Full backend search across all custom fields. Each customer page shows a linked Works table with totals (total price, paid, unpaid).
 * Service Catalog: define your services and base prices. Override price and notes per project.
-* Works / Projects: the central hub linking customers, services, attached files, and payment installments. Total Price and Taxable Price (when Fotonic Pro is active) are shown side-by-side.
+* Works / Projects: the central hub linking customers, services, attached files, and payment installments. Total Price and payment installments tracked per project.
 * Payment Tracking: track deposits and balances. Automatic paid/partial/unpaid status assigned from installments.
 * File Vault: attach contracts and files to any project. Protected storage with .htaccess and REST-gated downloads.
 * Vault Security: AES-256 encryption protected by a master password and TOTP two-factor authentication. All personally identifiable data is encrypted at rest. Even direct database access reveals only ciphertext.
 * Dashboard: summary cards showing annual revenue, upcoming events, and unpaid balances. Next five upcoming works.
 * Quick Notes: a dedicated WYSIWYG notes field on each Work, positioned above the main notes editor, for short reminders visible at a glance.
-* Calendar Color: choose an event card color (12-color Google Calendar palette) on each Work.
-* Monthly Calendar: a full monthly calendar view showing all scheduled works as colored pills. Click any entry to see a detail popup with date, customer, payment status, and a link to the work. Google Calendar sync is available when Fotonic Pro is installed and connected.
-
-= Eleva Pro =
-
-A paid addon (sold separately) that adds: task management with Kanban board, Google Calendar and Google Tasks integration, Analytics with revenue charts and CSV/PDF export, Expense tracker, per-year raw taxes configuration (tax percentage × taxable price per work, automatically subtracted from Net Revenue), period-over-period Analytics Compare with trend indicators, Collaborators and Suppliers registry, Products catalog, custom email notifications with SMTP delivery.
-
-When Eleva Pro's Google Calendar integration is enabled, certain work and task data (titles, dates, times, locations, quick notes, task descriptions) is sent to Google's servers. See the Privacy Policy section below and the Eleva Pro readme for full details.
+* Calendar Color: choose an event card color (12-color palette) on each Work.
+* Monthly Calendar: a full monthly calendar view showing all scheduled works as colored pills. Click any entry to see a detail popup with date, customer, payment status, and a link to the work.
 
 = No third-party dependencies =
 
@@ -66,54 +60,15 @@ Yes. It requires PHP 7.4 or higher and WordPress 6.0 or higher, both of which ar
 
 = Where is my data stored? =
 
-All data is stored exclusively in your own WordPress database (wp_posts and wp_postmeta tables). The free plugin makes no external HTTP requests and no data is ever sent to external servers. You own and control your data entirely.
-
-Exception: if you install Eleva Pro and connect Google Calendar, certain work and task data is transmitted to Google's APIs. This feature requires your explicit consent and can be disconnected at any time from Eleva > Settings > Google Calendar.
-
-= Is there a Pro version? =
-
-Yes. Eleva Pro is a paid addon that adds task management, Kanban board, Google Calendar and Google Tasks sync, Analytics dashboards, Collaborator management, Products catalog, custom email notifications, and license management. It is sold separately and is not required to use the free plugin.
+All data is stored exclusively in your own WordPress database (wp_posts and wp_postmeta tables). The plugin makes no external HTTP requests and no data is ever sent to external servers. You own and control your data entirely.
 
 = Does the plugin send data anywhere? =
 
-The free plugin makes zero external HTTP requests. Your data never leaves your server.
-
-Eleva Pro, when Google Calendar integration is enabled by the site administrator, transmits the following data to Google's servers: work titles, event dates and times, event locations, quick notes, task titles, task descriptions, and the related work title. This data is sent to the Google Calendar Events API and Google Tasks API under your own Google account. No data is sent to Eleva's servers. The integration is entirely opt-in and can be disconnected at any time.
+This plugin makes zero external HTTP requests. Your data never leaves your server.
 
 == Privacy Policy ==
 
-= Free plugin =
-
-The free Eleva plugin collects no personal data of any kind, makes no external HTTP requests, and transmits nothing to external servers. All data is stored in your own WordPress database.
-
-= Eleva Pro — Google Calendar integration =
-
-When the site administrator enables Google Calendar integration under Eleva > Settings > Google Calendar, the following applies:
-
-**What data is sent:**
-- Work (project) titles, event dates, event start and end times, event location addresses, and quick notes are sent to the Google Calendar Events API to create or update calendar events.
-- Task titles, related work titles, task descriptions, and event dates are sent to the Google Calendar Events API or Google Tasks API (depending on whether the task has an end time) to create or update entries.
-- Color preferences (mapped to Google Calendar color IDs) are included in these requests.
-
-**When data is sent:**
-- Only when a work or task is saved and the Google Calendar feature is enabled.
-- Only under the Google account authenticated by the site administrator.
-- No data is sent automatically during plugin activation or without the administrator's explicit action.
-
-**Data is not sent to Eleva:**
-- All Google API calls go directly from your server to Google's servers. Eleva's servers act only as an OAuth relay to obtain authorization tokens, and do not store or log any work or task content.
-
-**OAuth tokens:**
-- The Google OAuth refresh token is stored encrypted (AES-256-CBC) in your WordPress database.
-- The short-lived access token is stored in a WordPress transient and expires automatically.
-
-**Removing data:**
-- Disconnecting Google Calendar (Eleva > Settings > Google Calendar > Disconnect) deletes the stored refresh token from your database.
-- Deleting a work or task in Fotonic also deletes the corresponding Google Calendar event or task from Google's servers.
-
-**Google's privacy policy:** https://policies.google.com/privacy
-
-**Google Calendar API Terms of Service:** https://developers.google.com/terms
+Eleva CRM for Photographers collects no personal data of any kind, makes no external HTTP requests, and transmits nothing to external servers. All data is stored in your own WordPress database.
 
 == Development ==
 
@@ -140,6 +95,14 @@ To build the JavaScript bundle from source:
 
 == Changelog ==
 
+= 1.3.5 =
+* WP.org compliance: plugin renamed to "Eleva CRM for Photographers"; slug changed to eleva-crm-for-photographers.
+* WP.org compliance: removed all Pro-gated code blocks (Work Owner, Collaborators, Taxable Price) from the free plugin. No locked features remain.
+* WP.org compliance: converted inline script/style tags in meta boxes to wp_add_inline_script / wp_add_inline_style.
+* Security: added REST nonce verification to vault file download permission callback.
+* Source: added Development section to readme.txt linking public GitHub source repository.
+* Admin menu position changed to auto (null) to avoid conflicting with core items.
+
 = 1.3.4 =
 * Security: vault file download (GET /vault-download/{id}) ownership check now decodes the JSON file-list server-side and compares integers exactly. Previous LIKE-pattern matching covered only IDs in the first or last position of the array and missed mid-array entries; the new check is exact regardless of position.
 * Security: PBKDF2 iteration count for the vault key derivation raised from 100,000 to 600,000, aligning with OWASP 2023 guidance. Existing vaults remain unlockable; the new iteration count is applied to all derive_key() calls.
@@ -151,19 +114,17 @@ To build the JavaScript bundle from source:
 
 = 1.3.3 =
 * Customer Works recap: the Customer edit page now shows a table of all linked works with title, date, services, total price, and payment status. Footer row shows work count, total price, paid total, and unpaid total.
-* Taxable Price field on Works (Pro-gated): new numeric input shown next to Total Price in the Work form when Fotonic Pro is active. Stored as _ftnc_total_price_taxable. Used by Fotonic Pro to compute per-work raw taxes.
-* REST GET /works now accepts a customer_id query parameter to filter works by customer. Used by the customer works recap component.
-* i18n: Italian translations added for all new strings (works recap labels, Taxable Price / Imponibile).
+* REST GET /works now accepts a customer_id query parameter to filter works by customer.
+* i18n: Italian translations added for all new strings.
 
 = 1.3.2 =
-* Calendar view is now a free feature: the monthly calendar showing all scheduled works is available to all users. Only Google Calendar sync requires Fotonic Pro.
+* Calendar view is now included: the monthly calendar showing all scheduled works is available to all users.
 * Calendar locale fix: month names and event dates now display in the WordPress site language instead of the server/OS locale.
-* PRO gating: Work Owner and Collaborators fields no longer appear in the Work edit form when Fotonic Pro is not installed or not licensed. Calendar Color remains visible to all users.
 * Vault description: Settings page now shows an explanation of the Vault feature — detailed when not yet configured, a short reminder when active.
-* UI: Fotonic logotype SVG now shown in the React SPA sidebar; Fotonic logo mark used as the WP Admin menu icon.
+* UI: logo mark used as the WP Admin menu icon.
 * UI: Settings sidebar nav item right-side clipping fixed.
 * UI: Payment status filter dropdown in the Works list now sizes to full option text width.
-* Layout: WP admin footer hidden on the Fotonic page; SPA viewport height correctly fills the available space.
+* Layout: WP admin footer hidden on the plugin page; SPA viewport height correctly fills the available space.
 
 = 1.3.1 =
 * Security: vault session cookie upgraded from AES-256-CBC (unauthenticated) to AES-256-GCM. The GCM authentication tag means any tampered cookie is rejected outright rather than silently decrypted to garbage. Cookie format: base64(nonce[12] + auth-tag[16] + ciphertext[32]).
@@ -204,26 +165,14 @@ To build the JavaScript bundle from source:
 * Full-width forms: removed max-w-* constraints from WorkForm, CustomerForm, ServiceForm, and SettingsPage.
 
 = 1.2.0 =
-* Added collaborators repeater on Work edit form: assign collaborators with individual price and payment status per entry.
-* Added owner dropdown on Work edit form: select yourself or any collaborator as the work owner.
-* Added REST endpoint GET /collaborator-options for work owner and collaborator dropdowns.
+* Added REST endpoint GET /collaborator-options.
 * Work REST API now saves collaborators[] and full owner type/id fields.
-* Added Collaborator Services nav item in sidebar (Pro feature).
 * Fixed: sticky layout shell with dynamic viewport height; sidebar and main content scroll independently.
 
 = 1.1.0 =
 * Added Quick Notes WYSIWYG field to Work edit screen, placed above the main notes editor.
-* Added Calendar Color picker (12-color palette) to Work edit screen; color syncs to Google Calendar when Pro integration is enabled.
-* Work Google Calendar event description now uses the Quick Notes field only (removed customer name, price, and admin link).
+* Added Calendar Color picker (12-color palette) to Work edit screen.
 * Added `quick_notes` and `color` fields to the Works REST API.
-* Added `calendar` and `gcal` feature flags to the localized script data for Fotonic Pro.
-* Fotonic Pro: task management system — new ftnc_task post type, created from Kanban view.
-* Fotonic Pro: Kanban board is now task-centric; cards show task title and related work name.
-* Fotonic Pro: monthly Calendar view showing all works and tasks with their colors.
-* Fotonic Pro: Google Calendar integration — connect your Google account and sync works and tasks.
-* Fotonic Pro: Google Tasks API integration — tasks without an end time sync as Google Calendar Activities.
-* Fotonic Pro: task color picker (12-color palette matching Google Calendar named colors).
-* Fotonic Pro: Show in Calendar toggle on tasks with date and optional time fields.
 * Full i18n/l10n support: all React UI strings wrapped in gettext functions; Italian (it_IT) translation covers 100% of PHP and JavaScript strings.
 * Regenerated POT template; added JSON translation file for React components (`wp_set_script_translations`).
 
@@ -236,7 +185,7 @@ To build the JavaScript bundle from source:
 Security: vault download ownership check rewritten; PBKDF2 raised to 600k iterations. WP.org compliance: replaced admin-notice hook suppression with CSS-only hiding. See changelog for full details.
 
 = 1.3.3 =
-Adds customer works recap table and (with Fotonic Pro) taxable price field on works. No breaking changes to existing data.
+Adds customer works recap table and customer_id filter on the works REST endpoint. No breaking changes to existing data.
 
 = 1.3.1 =
 Security: vault cookie upgraded to AES-256-GCM; REST nonce enforcement tightened; IDOR in file downloads fixed. Added uninstall.php for complete data cleanup on plugin deletion.
@@ -254,7 +203,7 @@ Consistent button styles. No breaking changes.
 Adds collaborators repeater and owner dropdown to Work edit form. No breaking changes to existing data.
 
 = 1.1.0 =
-Adds Quick Notes and Calendar Color fields to Works. Fotonic Pro gains task management, Calendar view, Google Calendar sync, and Google Tasks integration. No breaking changes to existing data.
+Adds Quick Notes and Calendar Color fields to Works. No breaking changes to existing data.
 
 = 1.0.0 =
 Initial public release.
