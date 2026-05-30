@@ -8,7 +8,7 @@
  * Requires PHP:      7.4
  * Tested up to:      6.8
  * Author:            Alessandro Bonacina
- * Author URI:        https://eleva.alessandrobonacina.com
+ * Author URI:        https://alessandrobonacina.com
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: eleva-crm-for-photographers
