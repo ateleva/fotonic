@@ -12,6 +12,7 @@
 /src/node_modules
 /src/.vite
 /src/dist
+/src/.gitignore
 /tests
 /.vscode
 /.idea
