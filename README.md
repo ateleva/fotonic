@@ -65,16 +65,28 @@ Eleva CRM for Photographers collects no personal data, makes no external HTTP re
 
 ## Development
 
-Full source code (React/Vite) is publicly available at [github.com/ateleva/fotonic](https://github.com/ateleva/fotonic).
+The full, non-compiled React/Vite source ships inside the plugin under `src/` and is also publicly maintained at [github.com/ateleva/fotonic](https://github.com/ateleva/fotonic). WordPress loads only the compiled output in `dist/`.
+
+Build tools: Node.js 22 and npm.
 
 ```bash
-cd src && npm install
-npm run build   # outputs compiled assets to dist/
+cd src
+npm install      # or: npm ci  (reproducible build from package-lock.json)
+npm run build    # outputs compiled assets to dist/
 ```
+
+See [`src/README.md`](src/README.md) for the full build guide and source→output mapping.
 
 ---
 
 ## Changelog
+
+### 1.3.6
+
+- WP.org compliance (guideline 4): full non-compiled React/Vite source now bundled in the plugin under `src/` (compiled `dist/` retained for runtime); source also remains public on GitHub
+- Docs: expanded Development section with build-tool instructions (Node.js 22, npm, Vite); added `src/README.md` build guide
+- Compatibility: tested up to WordPress 7.0
+- Removed unreferenced Vite template assets
 
 ### 1.3.5
 

@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.3.6] — 2026-06-05
+
+### Changed
+
+- **Distribution / WP.org guideline 4 (human-readable source)**: the full non-compiled React/Vite source now ships inside the plugin under `src/`, alongside the compiled `dist/` bundle it produces. `.distignore` was updated to include `src/` and exclude only `node_modules`, `.vite`, and `dist`. The same source also remains publicly maintained at the GitHub repository. Both guideline-4 options (source in the deployed plugin **and** a public readme link) are now satisfied.
+- **Compatibility**: Tested up to WordPress 7.0.
+
+### Docs
+
+- Expanded the readme `== Development ==` section with build-tool instructions (Node.js 22, npm, Vite) and the source→output mapping.
+- Replaced the generic Vite-template `src/README.md` with a real build guide.
+
+### Removed
+
+- Unreferenced Vite template assets (`react.svg`, `vite.svg`, `hero.png`) from the source tree.
+
+---
+
+## [1.3.5] — 2026-05-30
+
+### Changed
+
+- **WP.org compliance**: plugin renamed to "Eleva CRM for Photographers"; slug changed to `eleva-crm-for-photographers`.
+- **WP.org compliance (trialware)**: removed all Pro-gated code blocks (Work Owner, Collaborators, Taxable Price) from the free plugin — no locked features remain. Pro features are injected at runtime by the separate private addon via `window.FotonicProComponents`.
+- **WP.org compliance**: converted inline `<script>` / `<style>` tags in meta boxes to `wp_add_inline_script()` / `wp_add_inline_style()`.
+- **Security**: added REST nonce verification (`wp_verify_nonce()`) to the vault file download permission callback.
+- **Admin menu**: position changed from `25` to `null` (auto) to avoid conflicting with core menu items.
+
+---
+
 ## [1.3.4] — 2026-05-28
 
 ### Security
