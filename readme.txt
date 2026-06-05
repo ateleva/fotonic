@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -72,12 +72,20 @@ Eleva CRM for Photographers collects no personal data of any kind, makes no exte
 
 == Development ==
 
-The full source code, including the React/Vite app, is publicly available at https://github.com/ateleva/fotonic.
+The full, non-compiled source code (the React/Vite app that produces the files in `dist/`) is provided two ways:
 
-To build the JavaScript bundle from source:
+1. Bundled inside this plugin under the `src/` directory.
+2. Publicly maintained at https://github.com/ateleva/fotonic
 
-1. `cd src && npm install`
-2. `npm run build` (Vite; outputs compiled assets to `dist/`)
+The admin app is built with React 18, Vite, Zustand, TanStack Query, and Tailwind CSS. WordPress loads only the compiled output in `dist/` — the `src/` tree is the human-readable source it is built from.
+
+Build tools: Node.js 22 and npm. To compile the bundle from source:
+
+1. `cd src` (the Vite project root)
+2. `npm install` (or `npm ci` for a reproducible build from `package-lock.json`)
+3. `npm run build`
+
+This runs Vite and writes the compiled assets to `dist/` — `fotonic-app.js` (app entry), `fotonic-app.css` (styles), and lazy-loaded `fotonic-chunk-*.js` route chunks. Use `npm run watch` to rebuild on save during development. See `src/README.md` for full details.
 
 == Screenshots ==
 
@@ -94,6 +102,10 @@ To build the JavaScript bundle from source:
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
 == Changelog ==
+
+= 1.3.6 =
+* WP.org compliance: the full React/Vite source is now bundled in the plugin under `src/` (the compiled `dist/` bundle is retained for runtime). The same source also remains publicly maintained at the GitHub repository. This satisfies both human-readable-source options in guideline 4.
+* Docs: expanded the Development section with build-tool instructions (Node.js 22, npm, Vite) and added a build guide at `src/README.md`.
 
 = 1.3.5 =
 * WP.org compliance: plugin renamed to "Eleva CRM for Photographers"; slug changed to eleva-crm-for-photographers.

@@ -8,7 +8,10 @@
 /README.md
 /CHANGELOG.md
 /SUBMISSION-GUIDE.md
-/src
+# src/ ships as human-readable source (WP.org guideline 4); exclude only deps/build artifacts
+/src/node_modules
+/src/.vite
+/src/dist
 /tests
 /.vscode
 /.idea
