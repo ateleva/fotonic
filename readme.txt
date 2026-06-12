@@ -72,20 +72,7 @@ Eleva CRM for Photographers collects no personal data of any kind, makes no exte
 
 == Development ==
 
-The full, non-compiled source code (the React/Vite app that produces the files in `dist/`) is provided two ways:
-
-1. Bundled inside this plugin under the `src/` directory.
-2. Publicly maintained at https://github.com/ateleva/fotonic
-
-The admin app is built with React 18, Vite, Zustand, TanStack Query, and Tailwind CSS. WordPress loads only the compiled output in `dist/` — the `src/` tree is the human-readable source it is built from.
-
-Build tools: Node.js 22 and npm. To compile the bundle from source:
-
-1. `cd src` (the Vite project root)
-2. `npm install` (or `npm ci` for a reproducible build from `package-lock.json`)
-3. `npm run build`
-
-This runs Vite and writes the compiled assets to `dist/` — `fotonic-app.js` (app entry), `fotonic-app.css` (styles), and lazy-loaded `fotonic-chunk-*.js` route chunks. Use `npm run watch` to rebuild on save during development. See `src/README.md` for full details.
+This plugin's admin interface is a compiled React application. The full, non-compiled human-readable source is included with the plugin under the `src/` directory and is also publicly maintained at https://github.com/ateleva/fotonic. Build instructions for developers are in `src/README.md`.
 
 == Screenshots ==
 
