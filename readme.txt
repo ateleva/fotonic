@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.6
+Stable tag: 1.3.7
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -89,6 +89,10 @@ This plugin's admin interface is a compiled React application. The full, non-com
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
 == Changelog ==
+
+= 1.3.7 =
+* i18n: Italian (it_IT) translation completed to 100% — added the vault recovery-code and payment-type strings that were previously untranslated, and corrected leftover pre-rebrand strings.
+* i18n: added a load_plugin_textdomain() fallback so bundled translations also load on WordPress 6.0–6.6.
 
 = 1.3.6 =
 * WP.org compliance: the full React/Vite source is now bundled in the plugin under `src/` (the compiled `dist/` bundle is retained for runtime). The same source also remains publicly maintained at the GitHub repository. This satisfies both human-readable-source options in guideline 4.
@@ -179,6 +183,9 @@ This plugin's admin interface is a compiled React application. The full, non-com
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.7 =
+Completes the Italian translation (vault recovery + payment types) and improves translation loading on older WordPress versions. No data or breaking changes.
 
 = 1.3.4 =
 Security: vault download ownership check rewritten; PBKDF2 raised to 600k iterations. WP.org compliance: replaced admin-notice hook suppression with CSS-only hiding. See changelog for full details.
