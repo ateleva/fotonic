@@ -2,22 +2,30 @@
  * VaultRecoveryPanel
  *
  * Shown from VaultLock when the user clicks "Lost your password or authenticator?"
+ *
  * Two sub-flows:
- *   A) Lost authenticator (know password) → reset-totp → show new QR → prompt OTP → relock
- *   B) Lost password (have recovery code) → reset-password → on success vault is unlocked
+ *   A) Lost authenticator (know password + have recovery code)
+ *      → POST vault/recovery/reset-totp { password, recovery_code }
+ *      → returns { qr_uri, totp_secret }
+ *      → shows new QR for re-enrollment; user must re-unlock normally.
+ *
+ *   B) Lost password (have recovery phrase)
+ *      → POST vault/recovery/reset-password-phrase { recovery_phrase, new_password }
+ *      → returns { reset: true }
+ *      → on success call onUnlocked() (caller invalidates vault-status)
  *
  * Props:
  *   onBack       {fn}  go back to unlock form
- *   onUnlocked   {fn}  called after a successful password-reset unlock (flow B)
+ *   onUnlocked   {fn}  called after successful recovery that opens the vault
  */
 import { useState, useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import QRCode from 'qrcode'
 import { ArrowLeft, KeyRound, ShieldAlert } from 'lucide-react'
+import { vaultRecoveryResetTotp, vaultRecoveryResetPasswordPhrase } from '../../api/vault'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
-import { vaultRecoveryResetPassword, vaultRecoveryResetTotp } from '../../api/vault'
 import { __ } from '../../utils/i18n'
 
 // ---------------------------------------------------------------------------
@@ -38,14 +46,15 @@ const inputCls =
   'w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500'
 
 // ---------------------------------------------------------------------------
-// Flow A: Lost authenticator — know password, have recovery code
+// Flow A: Lost authenticator — know password + have recovery code
 // ---------------------------------------------------------------------------
 
 function FlowLostAuthenticator({ onBack }) {
-  const [form, setForm]     = useState({ password: '', recovery_code: '' })
+  const [form, setForm]   = useState({ password: '', recovery_code: '' })
   const [loading, setLoading] = useState(false)
-  const [error, setError]   = useState(null)
-  const [result, setResult] = useState(null) // { qr_uri, totp_secret }
+  const [error, setError]     = useState(null)
+  const [newQrUri, setNewQrUri]         = useState(null)
+  const [newTotpSecret, setNewTotpSecret] = useState(null)
 
   const f = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }))
 
@@ -59,10 +68,16 @@ function FlowLostAuthenticator({ onBack }) {
     setLoading(true)
     try {
       const data = await vaultRecoveryResetTotp({
-        password: form.password,
+        password:      form.password,
         recovery_code: form.recovery_code.trim(),
       })
-      setResult(data)
+
+      const secret = data.totp_secret
+        ?? data.qr_uri?.match(/secret=([A-Z2-7]+)/i)?.[1]
+        ?? ''
+
+      setNewQrUri(data.qr_uri)
+      setNewTotpSecret(secret)
     } catch (err) {
       setError(err.message || __('Recovery failed. Check your password and recovery code.', 'eleva-crm-for-photographers'))
     } finally {
@@ -70,32 +85,29 @@ function FlowLostAuthenticator({ onBack }) {
     }
   }
 
-  if (result) {
-    const secret = result.totp_secret ?? result.qr_uri?.match(/secret=([A-Z2-7]+)/i)?.[1] ?? ''
+  if (newQrUri) {
     return (
       <div className="space-y-4">
         <div className="rounded-md border border-green-200 bg-green-50 px-4 py-3">
           <p className="text-sm font-medium text-green-800">
-            {__('Authenticator reset. Scan the QR code to re-add your vault to your authenticator app.', 'eleva-crm-for-photographers')}
+            {__('Authenticator reset. Scan the QR code to re-add your vault to your authenticator app, then unlock normally.', 'eleva-crm-for-photographers')}
           </p>
         </div>
 
         <div className="flex flex-col items-center gap-3">
           <div className="rounded-md border border-gray-200 p-2">
-            <QrCanvas uri={result.qr_uri} size={180} />
+            <QrCanvas uri={newQrUri} size={180} />
           </div>
-          <div className="w-full rounded-md bg-gray-50 border border-gray-200 p-3">
-            <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:', 'eleva-crm-for-photographers')}</p>
-            <p className="text-sm font-mono font-semibold text-gray-800 break-all">{secret}</p>
-          </div>
+          {newTotpSecret && (
+            <div className="w-full rounded-md bg-gray-50 border border-gray-200 p-3">
+              <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:', 'eleva-crm-for-photographers')}</p>
+              <p className="text-sm font-mono font-semibold text-gray-800 break-all">{newTotpSecret}</p>
+            </div>
+          )}
         </div>
 
-        <p className="text-sm text-gray-500 text-center">
-          {__('After adding it to your app, return to the unlock screen and sign in.', 'eleva-crm-for-photographers')}
-        </p>
-
         <Button variant="primary" className="w-full" onClick={onBack}>
-          {__('Go to unlock', 'eleva-crm-for-photographers')}
+          {__('Done — go to unlock screen', 'eleva-crm-for-photographers')}
         </Button>
       </div>
     )
@@ -104,7 +116,7 @@ function FlowLostAuthenticator({ onBack }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <p className="text-sm text-gray-500">
-        {__('Enter your vault password and recovery code to generate a new authenticator entry.', 'eleva-crm-for-photographers')}
+        {__('Enter your vault password and the one-time recovery code to generate a new authenticator entry.', 'eleva-crm-for-photographers')}
       </p>
 
       <FormField label={__('Vault Password', 'eleva-crm-for-photographers')} required htmlFor="rec-password" error={null}>
@@ -135,28 +147,29 @@ function FlowLostAuthenticator({ onBack }) {
       )}
 
       <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-        {loading ? <Spinner size="sm" /> : __('Reset Authenticator', 'eleva-crm-for-photographers')}
+        {loading ? <Spinner size="sm" /> : __('Recover Access', 'eleva-crm-for-photographers')}
       </Button>
     </form>
   )
 }
 
 // ---------------------------------------------------------------------------
-// Flow B: Lost password — have recovery code, set new password
+// Flow B: Lost password — have recovery phrase, set new password
 // ---------------------------------------------------------------------------
 
-function FlowLostPassword({ onUnlocked }) {
+function FlowLostPassword({ onBack, onUnlocked }) {
   const queryClient = useQueryClient()
-  const [form, setForm]     = useState({ recovery_code: '', new_password: '', confirm: '' })
+  const [form, setForm] = useState({ recovery_phrase: '', new_password: '', confirm: '' })
   const [loading, setLoading] = useState(false)
-  const [error, setError]   = useState(null)
+  const [error, setError]     = useState(null)
+  const [success, setSuccess] = useState(false)
 
   const f = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }))
 
   async function handleSubmit(e) {
     e.preventDefault()
     setError(null)
-    if (!form.recovery_code || !form.new_password || !form.confirm) {
+    if (!form.recovery_phrase || !form.new_password || !form.confirm) {
       setError(__('All fields are required.', 'eleva-crm-for-photographers'))
       return
     }
@@ -164,40 +177,57 @@ function FlowLostPassword({ onUnlocked }) {
       setError(__('Passwords do not match.', 'eleva-crm-for-photographers'))
       return
     }
-    if (form.new_password.length < 8) {
-      setError(__('Password must be at least 8 characters.', 'eleva-crm-for-photographers'))
+    if (form.new_password.length < 10) {
+      setError(__('New password must be at least 10 characters.', 'eleva-crm-for-photographers'))
       return
     }
+
     setLoading(true)
     try {
-      await vaultRecoveryResetPassword({
-        recovery_code: form.recovery_code.trim(),
-        new_password: form.new_password,
+      await vaultRecoveryResetPasswordPhrase({
+        recovery_phrase: form.recovery_phrase.trim(),
+        new_password:    form.new_password,
       })
       await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
-      onUnlocked()
+      setSuccess(true)
+      onUnlocked?.()
     } catch (err) {
-      setError(err.message || __('Recovery failed. Check your recovery code and try again.', 'eleva-crm-for-photographers'))
+      setError(err.message || __('Recovery failed. Check your recovery phrase and try again.', 'eleva-crm-for-photographers'))
     } finally {
       setLoading(false)
     }
   }
 
+  if (success) {
+    return (
+      <div className="space-y-4">
+        <div className="rounded-md border border-green-200 bg-green-50 px-4 py-3">
+          <p className="text-sm font-medium text-green-800">
+            {__('Password updated successfully. Please unlock the vault with your new password.', 'eleva-crm-for-photographers')}
+          </p>
+        </div>
+        <Button variant="primary" className="w-full" onClick={onBack}>
+          {__('Go to unlock screen', 'eleva-crm-for-photographers')}
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <p className="text-sm text-gray-500">
-        {__('Enter your recovery code and choose a new vault password. The vault will be unlocked automatically.', 'eleva-crm-for-photographers')}
+        {__('Enter your recovery phrase and a new password to reset vault access.', 'eleva-crm-for-photographers')}
       </p>
 
-      <FormField label={__('Recovery Code', 'eleva-crm-for-photographers')} required htmlFor="rec-code-b" error={null}>
-        <input
-          id="rec-code-b"
-          type="text"
+      <FormField label={__('Recovery Phrase', 'eleva-crm-for-photographers')} required htmlFor="rec-phrase" error={null}>
+        <textarea
+          id="rec-phrase"
           autoComplete="off"
-          placeholder="XXXX-XXXX-XXXX-XXXX"
-          className={inputCls + ' font-mono'}
-          value={form.recovery_code}
-          onChange={f('recovery_code')}
+          placeholder="XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX"
+          rows={2}
+          className={inputCls + ' font-mono resize-none'}
+          value={form.recovery_phrase}
+          onChange={f('recovery_phrase')}
         />
       </FormField>
 
@@ -228,7 +258,7 @@ function FlowLostPassword({ onUnlocked }) {
       )}
 
       <Button type="submit" variant="primary" className="w-full" disabled={loading}>
-        {loading ? <Spinner size="sm" /> : __('Reset Password & Unlock', 'eleva-crm-for-photographers')}
+        {loading ? <Spinner size="sm" /> : __('Reset Password', 'eleva-crm-for-photographers')}
       </Button>
     </form>
   )
@@ -239,8 +269,8 @@ function FlowLostPassword({ onUnlocked }) {
 // ---------------------------------------------------------------------------
 
 const MODES = {
-  PICK: 'pick',
-  LOST_AUTH: 'lost_auth',
+  PICK:          'pick',
+  LOST_AUTH:     'lost_auth',
   LOST_PASSWORD: 'lost_password',
 }
 
@@ -260,8 +290,8 @@ export default function VaultRecoveryPanel({ onBack, onUnlocked }) {
           <ArrowLeft size={18} />
         </button>
         <h2 className="text-base font-semibold text-gray-800">
-          {mode === MODES.PICK && __('Account Recovery', 'eleva-crm-for-photographers')}
-          {mode === MODES.LOST_AUTH && __('Reset Authenticator', 'eleva-crm-for-photographers')}
+          {mode === MODES.PICK          && __('Account Recovery', 'eleva-crm-for-photographers')}
+          {mode === MODES.LOST_AUTH     && __('Reset Authenticator', 'eleva-crm-for-photographers')}
           {mode === MODES.LOST_PASSWORD && __('Reset Password', 'eleva-crm-for-photographers')}
         </h2>
       </div>
@@ -284,7 +314,7 @@ export default function VaultRecoveryPanel({ onBack, onUnlocked }) {
                 {__('Lost authenticator (I know my password)', 'eleva-crm-for-photographers')}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                {__("I can't generate a one-time code but I remember my vault password.", 'eleva-crm-for-photographers')}
+                {__("I can't generate a one-time code but I remember my vault password and have my recovery code.", 'eleva-crm-for-photographers')}
               </p>
             </div>
           </button>
@@ -297,10 +327,10 @@ export default function VaultRecoveryPanel({ onBack, onUnlocked }) {
             <ShieldAlert size={20} className="text-amber-500 shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-gray-800">
-                {__('Lost password (I have my recovery code)', 'eleva-crm-for-photographers')}
+                {__('Lost password (I have my recovery phrase)', 'eleva-crm-for-photographers')}
               </p>
               <p className="text-xs text-gray-500 mt-0.5">
-                {__("I forgot my vault password but I saved the recovery code.", 'eleva-crm-for-photographers')}
+                {__("I forgot my vault password but I saved the recovery phrase.", 'eleva-crm-for-photographers')}
               </p>
             </div>
           </button>
@@ -312,7 +342,7 @@ export default function VaultRecoveryPanel({ onBack, onUnlocked }) {
       )}
 
       {mode === MODES.LOST_PASSWORD && (
-        <FlowLostPassword onUnlocked={onUnlocked} />
+        <FlowLostPassword onBack={() => setMode(MODES.PICK)} onUnlocked={onUnlocked} />
       )}
     </div>
   )

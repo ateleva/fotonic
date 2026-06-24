@@ -22,6 +22,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Quick Notes** — a WYSIWYG notes field on each Work for short reminders visible at a glance
 - **Calendar Color** — assign an event color (12-color palette) to each Work
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
+- **Memory Cards** — keep an inventory of your SD/CF cards with an auto-advancing status (Ready, In Use, Backed Up, Damaged); manage them from the sidebar or assign cards to a shoot inside the Work editor
 
 ---
 
@@ -80,6 +81,21 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 ---
 
 ## Changelog
+
+### 1.3.8
+
+- **Memory Cards**: new SD/CF card inventory with an auto-advancing status (Ready → In Use → Backed Up → Ready); manage from the sidebar or assign cards to a shoot inside the Work editor; in-use cards are protected from deletion
+- **Vault recovery phrase**: optional phrase to reset a forgotten vault password, separate from the one-time recovery code for a lost authenticator
+- **Vault**: credentials now save under a dedicated `crm-vault` password-manager username, keeping them separate from your WordPress login
+- **Vault**: TOTP codes accepted within a ±60s window — fixes spurious "invalid code" errors from server/device clock drift
+- **Vault**: auto-locks after 15 minutes of inactivity; silently re-opens on page refresh while unlocked
+- Fix: sidebar title is now translatable (was always English); tidier sidebar lock button and version footer
+- i18n: Italian (it_IT) updated to 100%, including all Memory Cards and recovery-phrase strings
+
+### 1.3.7
+
+- i18n: Italian (it_IT) completed to 100% — added the previously untranslated vault recovery-code and payment-type strings; corrected leftover pre-rebrand strings
+- i18n: added a `load_plugin_textdomain()` fallback so bundled translations also load on WordPress 6.0–6.6
 
 ### 1.3.6
 

@@ -38,6 +38,7 @@ export function useCreateWork() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['works'] })
       qc.invalidateQueries({ queryKey: ['calendar'] })
+      qc.invalidateQueries({ queryKey: ['memory-cards'] })
     },
   })
 }
@@ -53,6 +54,7 @@ export function useUpdateWork() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['works'] })
       qc.invalidateQueries({ queryKey: ['calendar'] })
+      qc.invalidateQueries({ queryKey: ['memory-cards'] })
     },
   })
 }
@@ -62,6 +64,9 @@ export function useDeleteWork() {
   return useMutation({
     mutationFn: (id) =>
       apiFetch(`works/${id}`, { method: 'DELETE' }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['works'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['works'] })
+      qc.invalidateQueries({ queryKey: ['memory-cards'] })
+    },
   })
 }

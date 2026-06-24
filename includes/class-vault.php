@@ -48,12 +48,16 @@ class Fotonic_Vault {
 	const OPTION_SETUP     = 'fotonic_vault_setup';          // bool — vault has been initialised.
 
 	// Envelope v2 options.
-	const OPTION_SALT_PW   = 'fotonic_vault_salt';          // Alias: same key as OPTION_SALT.
-	const OPTION_WRAP_PW   = 'fotonic_vault_wrap_pw';        // AES-GCM( MK, KEK_pw )  'w1:…'
-	const OPTION_SALT_REC  = 'fotonic_vault_salt_rec';       // PBKDF2 salt for recovery KEK (base64).
-	const OPTION_WRAP_REC  = 'fotonic_vault_wrap_rec';       // AES-GCM( MK, KEK_rec )  'w1:…'
-	const OPTION_WRAP_TOTP = 'fotonic_vault_wrap_totp';      // AES-GCM( totp_secret, MK )  'w1:…'
-	const OPTION_SCHEME    = 'fotonic_vault_scheme';         // int: 1 = legacy, 2 = envelope.
+	const OPTION_SALT_PW     = 'fotonic_vault_salt';          // Alias: same key as OPTION_SALT.
+	const OPTION_WRAP_PW     = 'fotonic_vault_wrap_pw';        // AES-GCM( MK, KEK_pw )  'w1:…'
+	const OPTION_SALT_REC    = 'fotonic_vault_salt_rec';       // PBKDF2 salt for recovery KEK (base64).
+	const OPTION_WRAP_REC    = 'fotonic_vault_wrap_rec';       // AES-GCM( MK, KEK_rec )  'w1:…'
+	const OPTION_WRAP_TOTP   = 'fotonic_vault_wrap_totp';      // AES-GCM( totp_secret, MK )  'w1:…'
+	const OPTION_SCHEME      = 'fotonic_vault_scheme';         // int: 1 = legacy, 2 = envelope.
+
+	// Recovery phrase options (v2 extension).
+	const OPTION_SALT_PHRASE = 'fotonic_vault_salt_phrase';    // PBKDF2 salt for phrase KEK (base64).
+	const OPTION_WRAP_PHRASE = 'fotonic_vault_wrap_phrase';    // AES-GCM( MK, KEK_phrase )  'w1:…'
 
 	// ---------------------------------------------------------------------------
 	// Status helpers
@@ -69,7 +73,8 @@ class Fotonic_Vault {
 	}
 
 	/**
-	 * Whether the vault is currently unlocked (valid session cookie present).
+	 * Whether the vault is currently unlocked.
+	 * Relies solely on the HTTP-Only session cookie (scheme v1/v2).
 	 *
 	 * @return bool
 	 */
@@ -78,13 +83,22 @@ class Fotonic_Vault {
 	}
 
 	/**
-	 * Whether a recovery code wrap is stored.
+	 * Whether a recovery code credential is stored (OPTION_WRAP_REC).
 	 *
 	 * @return bool
 	 */
 	public static function has_recovery(): bool {
 		$wrap = get_option( self::OPTION_WRAP_REC, '' );
 		return ! empty( $wrap );
+	}
+
+	/**
+	 * Whether a recovery phrase credential is stored (OPTION_WRAP_PHRASE).
+	 *
+	 * @return bool
+	 */
+	public static function has_recovery_phrase(): bool {
+		return ! empty( get_option( self::OPTION_WRAP_PHRASE, '' ) );
 	}
 
 	/**
@@ -103,17 +117,18 @@ class Fotonic_Vault {
 	/**
 	 * First-time vault setup using envelope encryption.
 	 *
-	 * Generates a random Master Key, wraps it under the password KEK and a
-	 * fresh recovery code KEK, wraps the TOTP secret under MK, and stores
-	 * everything.  Returns the recovery code ONCE — it is never stored in
-	 * plaintext.
+	 * Generates a random Master Key, wraps it under the password KEK, a
+	 * fresh recovery code KEK, and a recovery phrase KEK.  Wraps the TOTP
+	 * secret under MK.  Stores everything and issues the session cookie.
+	 * Returns the recovery code and recovery phrase ONCE — neither is stored
+	 * in plaintext.
 	 *
 	 * @param string $password    Plain-text vault password.
 	 * @param string $totp_secret Base32 TOTP secret.
-	 * @return array { ok: bool, recovery_code: string }
+	 * @return array { ok: bool, recovery_code: string, recovery_phrase: string }
 	 */
 	public static function setup( string $password, string $totp_secret ): array {
-		$fail = array( 'ok' => false, 'recovery_code' => '' );
+		$fail = array( 'ok' => false, 'recovery_code' => '', 'recovery_phrase' => '' );
 
 		if ( empty( $password ) || empty( $totp_secret ) ) {
 			return $fail;
@@ -130,12 +145,22 @@ class Fotonic_Vault {
 			return $fail;
 		}
 
-		// Recovery KEK.
+		// Recovery code KEK.
 		$recovery_code = Fotonic_Crypto::generate_recovery_code();
 		$salt_rec      = base64_encode( random_bytes( 32 ) );
 		$kek_rec       = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $recovery_code ), $salt_rec );
 		$wrap_rec      = Fotonic_Crypto::wrap( $mk, $kek_rec );
 		if ( empty( $wrap_rec ) ) {
+			return $fail;
+		}
+
+		// Recovery phrase KEK. Normalize (strip dashes/spaces, uppercase) so the
+		// reset path matches regardless of how the user types the phrase back.
+		$phrase      = Fotonic_TOTP::generate_recovery_phrase();
+		$salt_phrase = base64_encode( random_bytes( 32 ) );
+		$kek_phrase  = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $phrase ), $salt_phrase );
+		$wrap_phrase = Fotonic_Crypto::wrap( $mk, $kek_phrase );
+		if ( empty( $wrap_phrase ) ) {
 			return $fail;
 		}
 
@@ -146,18 +171,20 @@ class Fotonic_Vault {
 		}
 
 		// Persist all envelope options.
-		update_option( self::OPTION_SALT_PW,   $salt_pw,   false );
-		update_option( self::OPTION_WRAP_PW,   $wrap_pw,   false );
-		update_option( self::OPTION_SALT_REC,  $salt_rec,  false );
-		update_option( self::OPTION_WRAP_REC,  $wrap_rec,  false );
-		update_option( self::OPTION_WRAP_TOTP, $wrap_totp, false );
-		update_option( self::OPTION_SCHEME,    2,          false );
-		update_option( self::OPTION_SETUP,     true,       false );
+		update_option( self::OPTION_SALT_PW,     $salt_pw,     false );
+		update_option( self::OPTION_WRAP_PW,     $wrap_pw,     false );
+		update_option( self::OPTION_SALT_REC,    $salt_rec,    false );
+		update_option( self::OPTION_WRAP_REC,    $wrap_rec,    false );
+		update_option( self::OPTION_WRAP_TOTP,   $wrap_totp,   false );
+		update_option( self::OPTION_SALT_PHRASE, $salt_phrase, false );
+		update_option( self::OPTION_WRAP_PHRASE, $wrap_phrase, false );
+		update_option( self::OPTION_SCHEME,      2,            false );
+		update_option( self::OPTION_SETUP,       true,         false );
 
 		// Issue session cookie with MK.
 		self::set_session_cookie( $mk );
 
-		return array( 'ok' => true, 'recovery_code' => $recovery_code );
+		return array( 'ok' => true, 'recovery_code' => $recovery_code, 'recovery_phrase' => $phrase );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -205,7 +232,8 @@ class Fotonic_Vault {
 			return false;
 		}
 
-		if ( ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+		// Window=2 gives ±60 s tolerance — covers Docker/VM clock drift after restart.
+		if ( ! Fotonic_TOTP::verify( $otp, $totp_secret, 2 ) ) {
 			return false;
 		}
 
@@ -256,7 +284,7 @@ class Fotonic_Vault {
 			return false;
 		}
 		$totp_secret = Fotonic_Crypto::unwrap( $wrap_totp, $mk );
-		if ( false === $totp_secret || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+		if ( false === $totp_secret || ! Fotonic_TOTP::verify( $otp, $totp_secret, 2 ) ) {
 			return false;
 		}
 
@@ -412,6 +440,84 @@ class Fotonic_Vault {
 	}
 
 	// ---------------------------------------------------------------------------
+	// Recovery: enroll recovery phrase (requires active session)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Generate a new recovery phrase, wrapping MK under the phrase KEK.
+	 * Requires the vault to be unlocked (active session cookie).
+	 *
+	 * @return array|false Array with 'recovery_phrase' on success, false otherwise.
+	 */
+	public static function enroll_recovery_phrase() {
+		$mk = self::get_session_key();
+		if ( null === $mk ) {
+			return false;
+		}
+
+		$phrase      = Fotonic_TOTP::generate_recovery_phrase();
+		$salt_phrase = base64_encode( random_bytes( 32 ) );
+		$kek_phrase  = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $phrase ), $salt_phrase );
+		$wrap_phrase = Fotonic_Crypto::wrap( $mk, $kek_phrase );
+		if ( empty( $wrap_phrase ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_SALT_PHRASE, $salt_phrase, false );
+		update_option( self::OPTION_WRAP_PHRASE, $wrap_phrase, false );
+
+		return array( 'recovery_phrase' => $phrase );
+	}
+
+	// ---------------------------------------------------------------------------
+	// Recovery: reset password via recovery phrase
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Reset the vault password using a recovery phrase (lost-password path).
+	 *
+	 * Verifies the phrase unwraps wrap_phrase, then re-wraps MK under a new
+	 * password KEK.  The session cookie is set so the vault is immediately
+	 * unlocked after the reset.
+	 *
+	 * @param string $recovery_phrase Raw recovery phrase (with or without dashes).
+	 * @param string $new_pw          New password.
+	 * @return bool True on success.
+	 */
+	public static function recover_reset_password_via_phrase( string $recovery_phrase, string $new_pw ): bool {
+		if ( empty( $recovery_phrase ) || empty( $new_pw ) ) {
+			return false;
+		}
+
+		$salt_phrase = (string) get_option( self::OPTION_SALT_PHRASE, '' );
+		$wrap_phrase = (string) get_option( self::OPTION_WRAP_PHRASE, '' );
+		if ( empty( $salt_phrase ) || empty( $wrap_phrase ) ) {
+			return false;
+		}
+
+		// Normalise (strip dashes/spaces, uppercase) — must match the enrol path.
+		$kek_phrase = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $recovery_phrase ), $salt_phrase );
+		$mk         = Fotonic_Crypto::unwrap( $wrap_phrase, $kek_phrase );
+		if ( false === $mk ) {
+			return false;
+		}
+
+		// Re-wrap MK under new password KEK.
+		$new_salt_pw = base64_encode( random_bytes( 32 ) );
+		$new_kek_pw  = Fotonic_Crypto::derive_key( $new_pw, $new_salt_pw );
+		$new_wrap_pw = Fotonic_Crypto::wrap( $mk, $new_kek_pw );
+		if ( empty( $new_wrap_pw ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_SALT_PW, $new_salt_pw, false );
+		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
+
+		self::set_session_cookie( $mk );
+		return true;
+	}
+
+	// ---------------------------------------------------------------------------
 	// Full vault reset
 	// ---------------------------------------------------------------------------
 
@@ -424,6 +530,7 @@ class Fotonic_Vault {
 	 * @return bool True when options deleted successfully.
 	 */
 	public static function reset_vault(): bool {
+		// v1/v2 options.
 		delete_option( self::OPTION_SETUP );
 		delete_option( self::OPTION_SALT );      // also OPTION_SALT_PW.
 		delete_option( self::OPTION_TOTP );
@@ -432,6 +539,16 @@ class Fotonic_Vault {
 		delete_option( self::OPTION_WRAP_REC );
 		delete_option( self::OPTION_WRAP_TOTP );
 		delete_option( self::OPTION_SCHEME );
+		// Recovery phrase options (v2 extension).
+		delete_option( self::OPTION_SALT_PHRASE );
+		delete_option( self::OPTION_WRAP_PHRASE );
+		// Stale v3 option names — clean up any DB rows left from abandoned v3 path.
+		delete_option( 'fotonic_vault_salt_dek_pw' );
+		delete_option( 'fotonic_vault_wrap_dek_pw' );
+		delete_option( 'fotonic_vault_salt_dek_phrase' );
+		delete_option( 'fotonic_vault_wrap_dek_phrase' );
+		delete_option( 'fotonic_vault_totp_enc' );
+		delete_option( 'fotonic_vault_recovery_code_hash' );
 		self::lock();
 		return true;
 	}
@@ -527,7 +644,7 @@ class Fotonic_Vault {
 			return false;
 		}
 
-		if ( ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
+		if ( ! Fotonic_TOTP::verify( $otp, $totp_secret, 2 ) ) {
 			return false;
 		}
 

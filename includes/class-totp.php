@@ -146,6 +146,54 @@ class Fotonic_TOTP {
 	}
 
 	/**
+	 * Generate a 48-character Crockford Base32 recovery phrase, formatted as
+	 * 8 groups of 6 separated by dashes (e.g. "A1B2C3-D4E5F6-…").
+	 *
+	 * Uses 256 bits of CSPRNG entropy.  The Crockford alphabet omits I, L, O, U
+	 * to avoid visual ambiguity.  The phrase is returned once and never stored.
+	 *
+	 * @return string 48-char phrase + 7 dashes = 55-char total string.
+	 */
+	public static function generate_recovery_phrase(): string {
+		$alphabet = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'; // Crockford Base32 (no I, L, O, U)
+		$bytes    = random_bytes( 32 ); // 256 bits
+		// Convert bytes to 5-bit chunks.
+		$bits = '';
+		for ( $i = 0; $i < strlen( $bytes ); $i++ ) {
+			$bits .= str_pad( decbin( ord( $bytes[ $i ] ) ), 8, '0', STR_PAD_LEFT );
+		}
+		// Pad to multiple of 5.
+		$bits  = str_pad( $bits, (int) ceil( strlen( $bits ) / 5 ) * 5, '0', STR_PAD_RIGHT );
+		$chars = '';
+		for ( $i = 0; $i < strlen( $bits ); $i += 5 ) {
+			$chars .= $alphabet[ bindec( substr( $bits, $i, 5 ) ) ];
+		}
+		// Trim to 48 chars (8 groups of 6).
+		$chars = substr( $chars, 0, 48 );
+		return implode( '-', str_split( $chars, 6 ) );
+	}
+
+	/**
+	 * Encode raw binary as RFC 4648 Base32 (uppercase, no padding).
+	 *
+	 * @param string $bytes Raw binary input.
+	 * @return string Base32-encoded string.
+	 */
+	public static function base32_encode( string $bytes ): string {
+		$alphabet = self::BASE32_CHARS;
+		$bits     = '';
+		for ( $i = 0; $i < strlen( $bytes ); $i++ ) {
+			$bits .= str_pad( decbin( ord( $bytes[ $i ] ) ), 8, '0', STR_PAD_LEFT );
+		}
+		$bits   = str_pad( $bits, (int) ceil( strlen( $bits ) / 5 ) * 5, '0', STR_PAD_RIGHT );
+		$output = '';
+		for ( $i = 0; $i < strlen( $bits ); $i += 5 ) {
+			$output .= $alphabet[ bindec( substr( $bits, $i, 5 ) ) ];
+		}
+		return $output;
+	}
+
+	/**
 	 * Decode a base32-encoded string into raw binary.
 	 *
 	 * Handles uppercase, strips padding ('='), ignores invalid characters.

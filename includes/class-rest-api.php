@@ -80,6 +80,18 @@ class Fotonic_REST_API {
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
+		register_rest_route( self::NAMESPACE, '/vault/recovery/enroll-phrase', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_recovery_enroll_phrase' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/recovery/reset-password-phrase', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_recovery_reset_password_phrase' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
 		register_rest_route( self::NAMESPACE, '/vault/reset', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_reset' ],
@@ -99,7 +111,7 @@ class Fotonic_REST_API {
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_customers' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 				'args'                => [
 					'search'   => [ 'type' => 'string',  'default' => '', 'sanitize_callback' => 'sanitize_text_field' ],
 					'page'     => [ 'type' => 'integer', 'default' => 1, 'minimum' => 1 ],
@@ -109,7 +121,7 @@ class Fotonic_REST_API {
 			[
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => [ __CLASS__, 'create_customer' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 		] );
 
@@ -117,17 +129,17 @@ class Fotonic_REST_API {
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_customer' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 			[
 				'methods'             => 'PUT',
 				'callback'            => [ __CLASS__, 'update_customer' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 			[
 				'methods'             => \WP_REST_Server::DELETABLE,
 				'callback'            => [ __CLASS__, 'delete_customer' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 		] );
 
@@ -172,7 +184,7 @@ class Fotonic_REST_API {
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_works' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 				'args'                => [
 					'search'         => [ 'type' => 'string',  'default' => '', 'sanitize_callback' => 'sanitize_text_field' ],
 					'page'           => [ 'type' => 'integer', 'default' => 1,  'minimum' => 1 ],
@@ -188,7 +200,7 @@ class Fotonic_REST_API {
 			[
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => [ __CLASS__, 'create_work' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 		] );
 
@@ -196,17 +208,17 @@ class Fotonic_REST_API {
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_work' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 			[
 				'methods'             => 'PUT',
 				'callback'            => [ __CLASS__, 'update_work' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 			[
 				'methods'             => \WP_REST_Server::DELETABLE,
 				'callback'            => [ __CLASS__, 'delete_work' ],
-				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
 		] );
 
@@ -318,14 +330,24 @@ class Fotonic_REST_API {
 		return current_user_can( 'manage_options' ) && Fotonic_Vault::is_unlocked();
 	}
 
+	/**
+	 * Permission callback for customer/work data endpoints.
+	 * Delegates to the standard admin nonce check.
+	 *
+	 * @return bool
+	 */
+	public static function data_permission(): bool {
+		return self::admin_permission();
+	}
+
 	// ---------------------------------------------------------------------------
 	// Vault endpoints (Phase C)
 	// ---------------------------------------------------------------------------
 
 	/**
 	 * POST /vault/setup
-	 * Body: { password, totp_secret }
-	 * Returns: { setup: true, qr_uri: string }
+	 * Body: { password, totp_secret? }
+	 * Returns: { setup, qr_uri, recovery_code, recovery_phrase }
 	 */
 	public static function vault_setup( \WP_REST_Request $req ): \WP_REST_Response {
 		if ( Fotonic_Vault::is_setup() ) {
@@ -373,9 +395,10 @@ class Fotonic_REST_API {
 		self::audit_log( 'vault_setup' );
 
 		return new \WP_REST_Response( [
-			'setup'         => true,
-			'qr_uri'        => $qr_uri,
-			'recovery_code' => $result['recovery_code'],
+			'setup'           => true,
+			'qr_uri'          => $qr_uri,
+			'recovery_code'   => $result['recovery_code'],
+			'recovery_phrase' => $result['recovery_phrase'],
 		], 200 );
 	}
 
@@ -418,12 +441,7 @@ class Fotonic_REST_API {
 		delete_transient( $fail_key );
 		self::audit_log( 'vault_unlock_ok' );
 
-		// Return the PBKDF2 salt so the browser can derive its own AES-GCM key (Phase C+).
-		// Sent only on successful authentication — never on status polls.
-		return new \WP_REST_Response( [
-			'unlocked' => true,
-			'salt'     => (string) get_option( Fotonic_Vault::OPTION_SALT, '' ),
-		], 200 );
+		return new \WP_REST_Response( [ 'unlocked' => true ], 200 );
 	}
 
 	/**
@@ -438,14 +456,15 @@ class Fotonic_REST_API {
 
 	/**
 	 * GET /vault/status
-	 * Returns: { setup: bool, unlocked: bool }
+	 * Returns: { setup, unlocked, has_recovery_code, has_recovery_phrase, scheme }
 	 */
 	public static function vault_status( \WP_REST_Request $_req ): \WP_REST_Response {
 		return new \WP_REST_Response( [
-			'setup'        => Fotonic_Vault::is_setup(),
-			'unlocked'     => Fotonic_Vault::is_unlocked(),
-			'has_recovery' => Fotonic_Vault::has_recovery(),
-			'scheme'       => Fotonic_Vault::get_scheme(),
+			'setup'               => Fotonic_Vault::is_setup(),
+			'unlocked'            => Fotonic_Vault::is_unlocked(),
+			'has_recovery_code'   => Fotonic_Vault::has_recovery(),
+			'has_recovery_phrase' => Fotonic_Vault::has_recovery_phrase(),
+			'scheme'              => Fotonic_Vault::get_scheme(),
 		], 200 );
 	}
 
@@ -840,7 +859,7 @@ class Fotonic_REST_API {
 	/**
 	 * POST /vault/recovery/regenerate
 	 * Generate a new recovery code (replaces the old one).
-	 * Requires vault to be unlocked.
+	 * Requires vault to be unlocked (active session cookie).
 	 * Rate-limited to 5 attempts / 15 min.
 	 */
 	public static function vault_recovery_regenerate( \WP_REST_Request $_req ): \WP_REST_Response {
@@ -861,6 +880,7 @@ class Fotonic_REST_API {
 		}
 
 		$result = Fotonic_Vault::regenerate_recovery_code();
+
 		if ( false === $result ) {
 			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
 			self::audit_log( 'vault_recovery_regenerate_fail' );
@@ -877,6 +897,93 @@ class Fotonic_REST_API {
 			'regenerated'   => true,
 			'recovery_code' => $result['recovery_code'],
 		], 200 );
+	}
+
+	/**
+	 * POST /vault/recovery/enroll-phrase
+	 * Enroll (or re-enroll) a recovery phrase.
+	 * Requires vault to be unlocked (active session cookie).
+	 * Returns the recovery phrase ONCE — it is never stored in plaintext.
+	 */
+	public static function vault_recovery_enroll_phrase( \WP_REST_Request $_req ): \WP_REST_Response {
+		if ( ! Fotonic_Vault::is_unlocked() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'vault_locked', 'message' => __( 'Vault must be unlocked to enroll a recovery phrase.', 'eleva-crm-for-photographers' ) ],
+				403
+			);
+		}
+
+		$result = Fotonic_Vault::enroll_recovery_phrase();
+		if ( false === $result ) {
+			self::audit_log( 'vault_recovery_enroll_phrase_fail' );
+			return new \WP_REST_Response(
+				[ 'code' => 'enroll_failed', 'message' => __( 'Failed to enroll recovery phrase.', 'eleva-crm-for-photographers' ) ],
+				500
+			);
+		}
+
+		self::audit_log( 'vault_recovery_phrase_enrolled' );
+		return new \WP_REST_Response( [
+			'enrolled'        => true,
+			'recovery_phrase' => $result['recovery_phrase'],
+		], 200 );
+	}
+
+	/**
+	 * POST /vault/recovery/reset-password-phrase
+	 * Body: { recovery_phrase, new_password }
+	 * Reset the vault password using a recovery phrase.
+	 * Rate-limited to 5 attempts / 15 min.
+	 */
+	public static function vault_recovery_reset_password_phrase( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
+				429
+			);
+		}
+
+		$body            = $req->get_json_params();
+		$recovery_phrase = isset( $body['recovery_phrase'] ) ? (string) $body['recovery_phrase'] : '';
+		$new_password    = isset( $body['new_password'] )    ? (string) $body['new_password']    : '';
+
+		if ( empty( $recovery_phrase ) || empty( $new_password ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'missing_fields', 'message' => __( 'Recovery phrase and new password are required.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		if ( strlen( $new_password ) < 12 ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		if ( ! Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		$ok = Fotonic_Vault::recover_reset_password_via_phrase( $recovery_phrase, $new_password );
+		if ( ! $ok ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			self::audit_log( 'vault_recovery_phrase_reset_fail' );
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_recovery_phrase', 'message' => __( 'Invalid recovery phrase.', 'eleva-crm-for-photographers' ) ],
+				401
+			);
+		}
+
+		delete_transient( $fail_key );
+		self::audit_log( 'vault_recovery_phrase_reset' );
+
+		return new \WP_REST_Response( [ 'reset' => true ], 200 );
 	}
 
 	/**
@@ -1378,6 +1485,9 @@ class Fotonic_REST_API {
 			wp_update_post( $update );
 		}
 
+		// Capture previous card list before save_work_meta overwrites it (for removed-card detection in sync).
+		$prev_memory_cards = get_post_meta( $id, '_ftnc_memory_cards', true );
+
 		self::save_work_meta( $id, $body );
 		Fotonic_Meta_Boxes::auto_assign_payment_status( $id );
 
@@ -1388,7 +1498,7 @@ class Fotonic_REST_API {
 		 * @param int   $id   Work post ID.
 		 * @param array $body Decoded request body array.
 		 */
-		do_action( 'ftnc_after_save_work', $id, $body );
+		do_action( 'ftnc_after_save_work', $id, array_merge( $body, [ '_prev_memory_cards' => $prev_memory_cards ] ) );
 
 		return new \WP_REST_Response( self::format_work( get_post( $id ) ), 200 );
 	}
@@ -1402,6 +1512,22 @@ class Fotonic_REST_API {
 				[ 'code' => 'not_found', 'message' => __( 'Work not found.', 'eleva-crm-for-photographers' ) ],
 				404
 			);
+		}
+
+		// Free any memory cards still linked to this work.
+		if ( class_exists( 'Fotonic_Memory_Card_CPT' ) ) {
+			$raw = get_post_meta( $id, '_ftnc_memory_cards', true );
+			if ( ! empty( $raw ) ) {
+				$mc_list = json_decode( $raw, true );
+				if ( is_array( $mc_list ) ) {
+					foreach ( $mc_list as $mc ) {
+						$card_id = (int) ( $mc['card_id'] ?? 0 );
+						if ( $card_id > 0 ) {
+							Fotonic_Memory_Card_CPT::set_card_status( $card_id, 'free' );
+						}
+					}
+				}
+			}
 		}
 
 		wp_trash_post( $id );
@@ -1806,6 +1932,33 @@ class Fotonic_REST_API {
 		if ( isset( $body['quick_notes'] ) ) {
 			update_post_meta( $post_id, '_ftnc_quick_notes', wp_kses_post( $body['quick_notes'] ) );
 		}
+
+		// Memory cards.
+		if ( isset( $body['memory_cards'] ) && is_array( $body['memory_cards'] ) ) {
+			$clean_cards = [];
+			foreach ( $body['memory_cards'] as $mc ) {
+				if ( ! is_array( $mc ) ) {
+					continue;
+				}
+				$card_id = (int) ( $mc['card_id'] ?? 0 );
+				if ( $card_id <= 0 || get_post_type( $card_id ) !== 'ftnc_memory_card' ) {
+					continue;
+				}
+				$clean_cards[] = [
+					'card_id' => $card_id,
+					'notes'   => sanitize_text_field( $mc['notes'] ?? '' ),
+				];
+			}
+			update_post_meta( $post_id, '_ftnc_memory_cards', wp_json_encode( $clean_cards ) );
+		}
+
+		// Backup / formatting / ready-for-next flags.
+		if ( array_key_exists( 'backup_done', $body ) ) {
+			update_post_meta( $post_id, '_ftnc_backup_done', (bool) $body['backup_done'] ? '1' : '0' );
+		}
+		if ( array_key_exists( 'formatting_done', $body ) ) {
+			update_post_meta( $post_id, '_ftnc_formatting_done', (bool) $body['formatting_done'] ? '1' : '0' );
+		}
 	}
 
 	// ---------------------------------------------------------------------------
@@ -2062,6 +2215,34 @@ class Fotonic_REST_API {
 			}
 		}
 
+		// Memory cards.
+		$raw_mc       = get_post_meta( $post->ID, '_ftnc_memory_cards', true );
+		$memory_cards = [];
+		if ( ! empty( $raw_mc ) ) {
+			$dec_mc = json_decode( $raw_mc, true );
+			if ( is_array( $dec_mc ) ) {
+				foreach ( $dec_mc as $mc ) {
+					if ( ! is_array( $mc ) ) {
+						continue;
+					}
+					$card_id   = (int) ( $mc['card_id'] ?? 0 );
+					$card_post = $card_id ? get_post( $card_id ) : null;
+					if ( ! $card_post || $card_post->post_status === 'trash' ) {
+						continue;
+					}
+					$card_status = class_exists( 'Fotonic_Memory_Card_CPT' )
+						? Fotonic_Memory_Card_CPT::get_card_status( $card_id )
+						: '';
+					$memory_cards[] = [
+						'card_id'    => $card_id,
+						'card_title' => $card_post->post_title,
+						'status'     => $card_status,
+						'notes'      => (string) ( $mc['notes'] ?? '' ),
+					];
+				}
+			}
+		}
+
 		return [
 			'id'              => $post->ID,
 			'title'           => $post->post_title,
@@ -2084,6 +2265,9 @@ class Fotonic_REST_API {
 			'notes'           => $notes,
 			'quick_notes'     => (string) get_post_meta( $post->ID, '_ftnc_quick_notes', true ),
 			'color'           => (string) get_post_meta( $post->ID, '_ftnc_color', true ),
+			'memory_cards'    => $memory_cards,
+			'backup_done'     => (bool) get_post_meta( $post->ID, '_ftnc_backup_done', true ),
+			'formatting_done' => (bool) get_post_meta( $post->ID, '_ftnc_formatting_done', true ),
 		];
 	}
 

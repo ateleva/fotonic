@@ -7,15 +7,33 @@ import { formatTime } from '../../utils/date'
 import Button from '../../components/Button'
 
 const KANBAN_COLORS = {
-  todo:        { bg: '#6b7280', label: 'To Do' },
-  in_progress: { bg: '#2563eb', label: 'In Progress' },
-  done:        { bg: '#16a34a', label: 'Done' },
+  todo:        { bg: '#6b7280' },
+  in_progress: { bg: '#2563eb' },
+  done:        { bg: '#16a34a' },
 }
 
 const PAYMENT_COLORS = {
-  paid:    { bg: '#dcfce7', color: '#15803d', label: 'Paid' },
-  partial: { bg: '#fef9c3', color: '#a16207', label: 'Partial' },
-  unpaid:  { bg: '#fee2e2', color: '#b91c1c', label: 'Unpaid' },
+  paid:    { bg: '#dcfce7', color: '#15803d' },
+  partial: { bg: '#fef9c3', color: '#a16207' },
+  unpaid:  { bg: '#fee2e2', color: '#b91c1c' },
+}
+
+function kanbanLabel(status) {
+  switch (status) {
+    case 'todo':        return __('To Do')
+    case 'in_progress': return __('In Progress')
+    case 'done':        return __('Done')
+    default:            return status
+  }
+}
+
+function paymentLabel(status) {
+  switch (status) {
+    case 'paid':    return __('Paid')
+    case 'partial': return __('Partial')
+    case 'unpaid':  return __('Unpaid')
+    default:        return status
+  }
 }
 
 const DAYS_KEYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -164,12 +182,12 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 12, marginTop: 8 }}>
         {kanban && (
           <span style={{ background: kanban.bg, color: '#fff', borderRadius: 99, padding: '2px 8px', fontSize: 11, fontWeight: 600 }}>
-            {__(kanban.label)}
+            {kanbanLabel(event.kanban_status)}
           </span>
         )}
         {payment && (
           <span style={{ background: payment.bg, color: payment.color, borderRadius: 99, padding: '2px 8px', fontSize: 11, fontWeight: 600 }}>
-            {__(payment.label)}
+            {paymentLabel(event.payment_status)}
           </span>
         )}
         {event.gcal_event_id && (

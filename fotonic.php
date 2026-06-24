@@ -3,7 +3,7 @@
  * Plugin Name:       Eleva CRM for Photographers
  * Plugin URI:        https://eleva.alessandrobonacina.com/progetto/eleva-crm-per-fotografi/
  * Description:       CRM and workflow manager for photographers: clients, services, works, payments, encrypted vault for PII, and calendar view.
- * Version:           1.3.7
+ * Version:           1.3.8
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Tested up to:      7.0
@@ -17,17 +17,19 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FOTONIC_VERSION', '1.3.7' );
+define( 'FOTONIC_VERSION', '1.3.8' );
 define( 'FOTONIC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FOTONIC_URL', plugin_dir_url( __FILE__ ) );
 
 require_once FOTONIC_DIR . 'includes/class-i18n.php';
 require_once FOTONIC_DIR . 'includes/class-activator.php';
 require_once FOTONIC_DIR . 'includes/class-cpt-registry.php';
+require_once FOTONIC_DIR . 'includes/class-memory-card-cpt.php';
 require_once FOTONIC_DIR . 'includes/class-crypto.php';
 require_once FOTONIC_DIR . 'includes/class-totp.php';
 require_once FOTONIC_DIR . 'includes/class-vault.php';
 require_once FOTONIC_DIR . 'includes/class-rest-api.php';
+require_once FOTONIC_DIR . 'includes/class-memory-card-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-admin-page.php';
 require_once FOTONIC_DIR . 'includes/class-meta-boxes.php';
 
@@ -37,7 +39,10 @@ register_deactivation_hook( __FILE__, [ 'Fotonic_Activator', 'deactivate' ] );
 add_action( 'init', [ 'Fotonic_i18n', 'load' ], 1 );
 add_action( 'init', [ 'Fotonic_CPT_Registry', 'register' ] );
 add_action( 'init', [ 'Fotonic_CPT_Registry', 'ensure_payment_terms' ], 20 );
+add_action( 'init', [ 'Fotonic_Memory_Card_CPT', 'register' ] );
+add_action( 'init', [ 'Fotonic_Memory_Card_CPT', 'ensure_card_status_terms' ], 20 );
 add_action( 'rest_api_init', [ 'Fotonic_REST_API', 'register_routes' ] );
+add_action( 'rest_api_init', [ 'Fotonic_Memory_Card_REST_API', 'register_routes' ] );
 add_action( 'admin_menu', [ 'Fotonic_Admin_Page', 'add_menu' ] );
 add_action( 'admin_enqueue_scripts', [ 'Fotonic_Admin_Page', 'enqueue_assets' ] );
 add_action( 'all_admin_notices', [ 'Fotonic_Admin_Page', 'suppress_notices' ], PHP_INT_MAX );
@@ -49,6 +54,7 @@ add_action( 'save_post_ftnc_customer', [ 'Fotonic_Meta_Boxes', 'save_customer' ]
 add_action( 'save_post_ftnc_service',  [ 'Fotonic_Meta_Boxes', 'save_service' ],  10, 2 );
 add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'save_work' ],     10, 2 );
 add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'auto_assign_payment_status' ], 20, 1 );
+add_action( 'ftnc_after_save_work',    [ 'Fotonic_Meta_Boxes', 'sync_memory_card_statuses' ], 10, 2 );
 add_filter( 'posts_search', [ 'Fotonic_Meta_Boxes', 'extend_customer_search' ], 10, 2 );
 add_filter( 'posts_join',     [ 'Fotonic_Meta_Boxes', 'extend_customer_search_join' ], 10, 2 );
 add_filter( 'posts_distinct', [ 'Fotonic_Meta_Boxes', 'extend_customer_search_distinct' ], 10, 2 );

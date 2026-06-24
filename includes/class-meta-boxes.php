@@ -1071,6 +1071,66 @@ class Fotonic_Meta_Boxes {
 	}
 
 	// ---------------------------------------------------------------------------
+	// Memory card status sync
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Sync ftnc_memory_card statuses after a work is saved via the REST API.
+	 * Hooked on ftnc_after_save_work (fires after save_work_meta completes).
+	 *
+	 * @param int   $post_id Work post ID.
+	 * @param array $body    Request body; must include '_prev_memory_cards' (raw JSON) when updating.
+	 */
+	public static function sync_memory_card_statuses( int $post_id, array $body = [] ): void {
+		if ( ! class_exists( 'Fotonic_Memory_Card_CPT' ) ) {
+			return;
+		}
+
+		$backup_done     = (bool) get_post_meta( $post_id, '_ftnc_backup_done', true );
+		$formatting_done = (bool) get_post_meta( $post_id, '_ftnc_formatting_done', true );
+
+		$current_ids = self::parse_card_ids( get_post_meta( $post_id, '_ftnc_memory_cards', true ) );
+		$prev_ids    = self::parse_card_ids( $body['_prev_memory_cards'] ?? '' );
+
+		// Free cards that were explicitly removed from the repeater.
+		foreach ( array_diff( $prev_ids, $current_ids ) as $removed_id ) {
+			Fotonic_Memory_Card_CPT::set_card_status( $removed_id, 'free' );
+		}
+
+		// Advance statuses for cards still in the work.
+		foreach ( $current_ids as $card_id ) {
+			$status = Fotonic_Memory_Card_CPT::get_card_status( $card_id );
+
+			if ( 'free' === $status ) {
+				Fotonic_Memory_Card_CPT::set_card_status( $card_id, 'in_use' );
+				$status = 'in_use';
+			}
+
+			if ( $backup_done && 'in_use' === $status ) {
+				Fotonic_Memory_Card_CPT::set_card_status( $card_id, 'backed_up' );
+				$status = 'backed_up';
+			}
+
+			if ( $backup_done && $formatting_done && 'backed_up' === $status ) {
+				Fotonic_Memory_Card_CPT::set_card_status( $card_id, 'free' );
+			}
+		}
+	}
+
+	private static function parse_card_ids( $raw ): array {
+		if ( empty( $raw ) ) {
+			return [];
+		}
+		$dec = json_decode( $raw, true );
+		if ( ! is_array( $dec ) ) {
+			return [];
+		}
+		return array_values( array_unique( array_filter( array_map( function ( $c ) {
+			return (int) ( $c['card_id'] ?? 0 );
+		}, $dec ) ) ) );
+	}
+
+	// ---------------------------------------------------------------------------
 	// Customer search hooks
 	// ---------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.7
+Stable tag: 1.3.8
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -26,6 +26,7 @@ Eleva is a standalone WordPress plugin that provides a modern React-powered CRM 
 * Quick Notes: a dedicated WYSIWYG notes field on each Work, positioned above the main notes editor, for short reminders visible at a glance.
 * Calendar Color: choose an event card color (12-color palette) on each Work.
 * Monthly Calendar: a full monthly calendar view showing all scheduled works as colored pills. Click any entry to see a detail popup with date, customer, payment status, and a link to the work.
+* Memory Cards: keep an inventory of your SD/CF cards and always know which are safe to reuse. Each card has a status — Ready, In Use, Backed Up, or Damaged — that advances automatically as you attach a card to a shoot and tick off backup and formatting. A card in use cannot be deleted by mistake.
 
 = No third-party dependencies =
 
@@ -88,7 +89,22 @@ This plugin's admin interface is a compiled React application. The full, non-com
 10. Settings page — Vault section showing change-password and reset-authenticator-app panels
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
+== Upgrade Notice ==
+
+= 1.3.8 =
+New: Memory Cards inventory to track your SD/CF cards. Safe in-place update — your vault password, authenticator and encrypted client data stay exactly as they are. After updating, unlock the vault as usual; you will be offered an optional recovery phrase. No data migration, no data loss, no required action. Note: the vault now auto-locks after 15 minutes of inactivity.
+
 == Changelog ==
+
+= 1.3.8 =
+* New — Memory Cards: keep an inventory of your SD/CF cards so you always know which ones are safe to reuse. Each card has a status — Ready, In Use, Backed Up, or Damaged — that advances automatically as you attach the card to a shoot and tick off backup and formatting. Manage your full card list from the new sidebar entry, or assign cards to a shoot right inside the Work editor. A card that is currently in use cannot be deleted by mistake.
+* Vault: added a recovery phrase so you can regain access if you forget your vault password (separate from the existing one-time recovery code used for a lost authenticator). After updating, unlock your vault and you will be offered to set one up — this is optional and re-encrypts nothing.
+* Vault: the unlock and setup screens now save credentials in your browser's password manager under a dedicated "crm-vault" username, so the vault password is never confused with — or overwritten on top of — your WordPress login.
+* Vault: authenticator codes are now accepted within a ±60 second window, fixing spurious "invalid code" errors after the server or device clock drifts (e.g. after the machine sleeps).
+* Vault: the vault now auto-locks after 15 minutes of inactivity and silently re-opens on page refresh while it is unlocked.
+* Fix: the sidebar title now follows your site language instead of always appearing in English, and the sidebar lock button and version footer are tidier and easier to use.
+* i18n: Italian (it_IT) translation updated to 100%, including all the new Memory Cards and vault recovery-phrase wording.
+* Updating from 1.3.x is seamless: your vault, password, authenticator and encrypted data are unchanged. Just update and unlock as usual — there is no data migration and no required action.
 
 = 1.3.7 =
 * i18n: Italian (it_IT) translation completed to 100% — added the vault recovery-code and payment-type strings that were previously untranslated, and corrected leftover pre-rebrand strings.

@@ -144,4 +144,5 @@ class Fotonic_Crypto {
     public static function normalize_recovery_code( string $code ): string {
         return strtoupper( preg_replace( '/[^a-zA-Z0-9]/', '', $code ) );
     }
+
 }

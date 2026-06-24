@@ -1,16 +1,23 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Shield, Key, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2 } from 'lucide-react'
+import { Shield, Key, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle } from 'lucide-react'
 import QRCode from 'qrcode'
 import { __ } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
+import { useVault } from '../../context/VaultContext'
+import {
+  vaultChangePassword,
+  vaultResetTotp,
+  vaultRecoveryRegenerate,
+  vaultEnrollPhrase,
+  vaultReset,
+} from '../../api/vault'
 import PageHeader from '../../components/PageHeader'
 import Modal from '../../components/Modal'
 import Button from '../../components/Button'
 import Spinner from '../../components/Spinner'
 import VaultSetup from '../vault/VaultSetup'
 import RecoveryCodeDisplay from '../vault/RecoveryCodeDisplay'
-import { vaultRecoveryRegenerate, vaultReset } from '../../api/vault'
 
 function QrCanvas({ uri, size = 180 }) {
   const ref = useRef(null)
@@ -93,193 +100,27 @@ function VaultStatusRow({ status }) {
 }
 
 // ---------------------------------------------------------------------------
-// Regenerate recovery code
+// Idle warning banner (shown when idleWarning is true from VaultContext)
 // ---------------------------------------------------------------------------
 
-function RegenerateRecoveryCode() {
-  const queryClient = useQueryClient()
-  const [loading, setLoading]         = useState(false)
-  const [error, setError]             = useState(null)
-  const [recoveryCode, setRecoveryCode] = useState(null)
-  const [modalOpen, setModalOpen]     = useState(false)
-
-  async function handleGenerate() {
-    setError(null)
-    setLoading(true)
-    try {
-      const data = await vaultRecoveryRegenerate()
-      setRecoveryCode(data.recovery_code)
-    } catch (err) {
-      setError(err.message || __('Failed to generate recovery code. Ensure the vault is unlocked.', 'eleva-crm-for-photographers'))
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function handleSaved() {
-    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
-    setModalOpen(false)
-    setRecoveryCode(null)
-  }
-
-  function handleOpen() {
-    setRecoveryCode(null)
-    setError(null)
-    setModalOpen(true)
-  }
+function IdleWarningBanner() {
+  const { idleWarning, resetIdle } = useVault()
+  if (!idleWarning) return null
 
   return (
-    <>
-      <div className="pt-1 space-y-2">
-        <p className="text-xs text-gray-500">
-          {__('Generate a new recovery code. The previous code will be invalidated immediately.', 'eleva-crm-for-photographers')}
-        </p>
-        <button
-          type="button"
-          onClick={handleOpen}
-          className="inline-flex items-center gap-2 rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-        >
-          <RefreshCw size={14} />
-          {__('Regenerate Recovery Code', 'eleva-crm-for-photographers')}
-        </button>
+    <div className="flex items-center justify-between rounded-md border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
+      <div className="flex items-center gap-2">
+        <AlertTriangle size={15} className="text-amber-500 shrink-0" />
+        <span>{__("You've been idle for 13 minutes. The vault will lock in 2 minutes.", 'eleva-crm-for-photographers')}</span>
       </div>
-
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={__('Regenerate Recovery Code', 'eleva-crm-for-photographers')}
+      <button
+        type="button"
+        onClick={resetIdle}
+        className="ml-4 shrink-0 text-xs font-medium text-amber-700 underline hover:text-amber-900"
       >
-        <div className="space-y-4">
-          {!recoveryCode && (
-            <>
-              <p className="text-sm text-gray-600">
-                {__('A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe — it will only be shown once.', 'eleva-crm-for-photographers')}
-              </p>
-              {error && (
-                <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
-              )}
-              <div className="flex justify-end gap-3">
-                <Button variant="secondary" onClick={() => setModalOpen(false)}>
-                  {__('Cancel', 'eleva-crm-for-photographers')}
-                </Button>
-                <Button variant="primary" onClick={handleGenerate} disabled={loading}>
-                  {loading ? <Spinner size="sm" /> : __('Generate', 'eleva-crm-for-photographers')}
-                </Button>
-              </div>
-            </>
-          )}
-          {recoveryCode && (
-            <RecoveryCodeDisplay
-              code={recoveryCode}
-              onConfirm={handleSaved}
-              confirmLabel={__("I've saved it — Done", 'eleva-crm-for-photographers')}
-            />
-          )}
-        </div>
-      </Modal>
-    </>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Reset vault (destructive)
-// ---------------------------------------------------------------------------
-
-function ResetVaultAction() {
-  const queryClient = useQueryClient()
-  const [modalOpen, setModalOpen] = useState(false)
-  const [typed, setTyped]         = useState('')
-  const [loading, setLoading]     = useState(false)
-  const [error, setError]         = useState(null)
-
-  const CONFIRM_WORD = 'RESET'
-
-  async function handleReset() {
-    setError(null)
-    setLoading(true)
-    try {
-      await vaultReset()
-      await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
-      setModalOpen(false)
-    } catch (err) {
-      setError(err.message || __('Reset failed.', 'eleva-crm-for-photographers'))
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  function handleClose() {
-    setModalOpen(false)
-    setTyped('')
-    setError(null)
-  }
-
-  return (
-    <>
-      <div className="pt-1 space-y-2">
-        <p className="text-xs text-gray-500">
-          {__('Permanently wipe the vault configuration. All encrypted data will become inaccessible.', 'eleva-crm-for-photographers')}
-        </p>
-        <button
-          type="button"
-          onClick={() => { setTyped(''); setError(null); setModalOpen(true) }}
-          className="inline-flex items-center gap-2 rounded-md border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
-        >
-          <Trash2 size={14} />
-          {__('Reset Vault', 'eleva-crm-for-photographers')}
-        </button>
-      </div>
-
-      <Modal
-        open={modalOpen}
-        onClose={handleClose}
-        title={__('Reset Vault', 'eleva-crm-for-photographers')}
-      >
-        <div className="space-y-4">
-          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3">
-            <p className="text-sm font-medium text-red-800">
-              {__('This action is irreversible.', 'eleva-crm-for-photographers')}
-            </p>
-            <p className="text-sm text-red-700 mt-1">
-              {__('The vault password, TOTP secret, and recovery code will be permanently deleted. All encrypted client data will become unreadable.', 'eleva-crm-for-photographers')}
-            </p>
-          </div>
-
-          <div className="space-y-1">
-            <label className="block text-xs font-medium text-gray-600">
-              {/* translators: %s is the word RESET */}
-              {__('Type RESET to confirm', 'eleva-crm-for-photographers')}
-            </label>
-            <input
-              type="text"
-              value={typed}
-              onChange={(e) => setTyped(e.target.value)}
-              placeholder={CONFIRM_WORD}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500"
-              autoComplete="off"
-              spellCheck={false}
-            />
-          </div>
-
-          {error && (
-            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
-          )}
-
-          <div className="flex justify-end gap-3">
-            <Button variant="secondary" onClick={handleClose}>
-              {__('Cancel', 'eleva-crm-for-photographers')}
-            </Button>
-            <Button
-              variant="danger"
-              onClick={handleReset}
-              disabled={typed !== CONFIRM_WORD || loading}
-            >
-              {loading ? <Spinner size="sm" /> : __('Reset Vault', 'eleva-crm-for-photographers')}
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    </>
+        {__('Stay unlocked', 'eleva-crm-for-photographers')}
+      </button>
+    </div>
   )
 }
 
@@ -288,25 +129,21 @@ function ResetVaultAction() {
 // ---------------------------------------------------------------------------
 
 function ChangePasswordForm() {
-  const [form, setForm] = useState({ current_password: '', otp: '', new_password: '', confirm: '' })
+  const [form, setForm] = useState({ current_password: '', new_password: '', confirm: '', otp: '' })
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const mutation = useMutation({
-    mutationFn: (data) => apiFetch('vault/change-password', { method: 'POST', body: JSON.stringify(data) }),
-    onSuccess: () => {
-      setSuccess(true)
-      setForm({ current_password: '', otp: '', new_password: '', confirm: '' })
-      setError('')
-    },
-    onError: (err) => setError(err.message),
-  })
+  function handleChange(key) {
+    return (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }))
+  }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setError('')
     setSuccess(false)
-    if (!form.current_password || !form.otp || !form.new_password) {
+
+    if (!form.current_password || !form.new_password || !form.otp) {
       setError(__('All fields are required.'))
       return
     }
@@ -314,36 +151,51 @@ function ChangePasswordForm() {
       setError(__('New passwords do not match.'))
       return
     }
-    if (form.new_password.length < 8) {
-      setError(__('New password must be at least 8 characters.'))
+    if (form.new_password.length < 10) {
+      setError(__('New password must be at least 10 characters.'))
       return
     }
-    mutation.mutate({ current_password: form.current_password, otp: form.otp, new_password: form.new_password })
-  }
 
-  const f = (key) => (e) => setForm((prev) => ({ ...prev, [key]: e.target.value }))
+    setLoading(true)
+    try {
+      await vaultChangePassword({
+        current_password: form.current_password,
+        otp:              form.otp,
+        new_password:     form.new_password,
+      })
+      setSuccess(true)
+      setForm({ current_password: '', new_password: '', confirm: '', otp: '' })
+    } catch (err) {
+      setError(err.message || __('Failed to change password.'))
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3 pt-1">
+      <p className="text-xs text-gray-500">
+        {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
+      </p>
       <div className="grid grid-cols-2 gap-3">
         <FieldRow label={__('Current Password')} required>
-          <input type="password" value={form.current_password} onChange={f('current_password')} autoComplete="current-password" className={inputCls} />
+          <input type="password" value={form.current_password} onChange={handleChange('current_password')} autoComplete="current-password" className={inputCls} />
         </FieldRow>
         <FieldRow label={__('Current OTP Code')} required>
-          <input type="text" inputMode="numeric" maxLength={6} value={form.otp} onChange={f('otp')} placeholder="000000" className={inputCls + ' font-mono tracking-widest'} />
+          <input type="text" inputMode="numeric" maxLength={6} value={form.otp} onChange={handleChange('otp')} placeholder="000000" autoComplete="one-time-code" className={inputCls + ' font-mono tracking-widest'} />
         </FieldRow>
         <FieldRow label={__('New Password')} required>
-          <input type="password" value={form.new_password} onChange={f('new_password')} autoComplete="new-password" className={inputCls} />
+          <input type="password" value={form.new_password} onChange={handleChange('new_password')} autoComplete="new-password" className={inputCls} />
         </FieldRow>
         <FieldRow label={__('Confirm New Password')} required>
-          <input type="password" value={form.confirm} onChange={f('confirm')} autoComplete="new-password" className={inputCls} />
+          <input type="password" value={form.confirm} onChange={handleChange('confirm')} autoComplete="new-password" className={inputCls} />
         </FieldRow>
       </div>
       {error && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>}
       {success && <p className="text-xs text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">{__('Password changed successfully.')}</p>}
       <div className="flex justify-end">
-        <button type="submit" disabled={mutation.isPending} className="rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50">
-          {mutation.isPending ? __('Saving…') : __('Change Password')}
+        <button type="submit" disabled={loading} className="rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50">
+          {loading ? __('Saving…') : __('Change Password')}
         </button>
       </div>
     </form>
@@ -360,7 +212,7 @@ function ResetTotpForm() {
   const [qrUri, setQrUri] = useState(null)
 
   const mutation = useMutation({
-    mutationFn: (data) => apiFetch('vault/reset-totp', { method: 'POST', body: JSON.stringify(data) }),
+    mutationFn: (data) => vaultResetTotp(data),
     onSuccess: (data) => {
       setQrUri(data.qr_uri)
       setForm({ password: '', otp: '' })
@@ -428,6 +280,337 @@ function ResetTotpForm() {
 }
 
 // ---------------------------------------------------------------------------
+// Regenerate TOTP recovery code
+// ---------------------------------------------------------------------------
+
+function RegenerateRecoveryCode() {
+  const queryClient = useQueryClient()
+  const [loading, setLoading]           = useState(false)
+  const [error, setError]               = useState(null)
+  const [recoveryCode, setRecoveryCode] = useState(null)
+  const [modalOpen, setModalOpen]       = useState(false)
+
+  async function handleGenerate() {
+    setError(null)
+    setLoading(true)
+    try {
+      const data = await vaultRecoveryRegenerate()
+      setRecoveryCode(data.recovery_code)
+    } catch (err) {
+      setError(err.message || __('Failed to generate recovery code. Ensure the vault is unlocked.', 'eleva-crm-for-photographers'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function handleSaved() {
+    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+    setModalOpen(false)
+    setRecoveryCode(null)
+  }
+
+  function handleOpen() {
+    setRecoveryCode(null)
+    setError(null)
+    setModalOpen(true)
+  }
+
+  return (
+    <>
+      <div className="pt-1 space-y-2">
+        <p className="text-xs text-gray-500">
+          {__('Generate a new TOTP recovery code. The previous code will be invalidated immediately.', 'eleva-crm-for-photographers')}
+        </p>
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="inline-flex items-center gap-2 rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <RefreshCw size={14} />
+          {__('Regenerate Recovery Code', 'eleva-crm-for-photographers')}
+        </button>
+      </div>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={__('Regenerate Recovery Code', 'eleva-crm-for-photographers')}
+      >
+        <div className="space-y-4">
+          {!recoveryCode && (
+            <>
+              <p className="text-sm text-gray-600">
+                {__('A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe — it will only be shown once.', 'eleva-crm-for-photographers')}
+              </p>
+              {error && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
+              )}
+              <div className="flex justify-end gap-3">
+                <Button variant="secondary" onClick={() => setModalOpen(false)}>
+                  {__('Cancel', 'eleva-crm-for-photographers')}
+                </Button>
+                <Button variant="primary" onClick={handleGenerate} disabled={loading}>
+                  {loading ? <Spinner size="sm" /> : __('Generate', 'eleva-crm-for-photographers')}
+                </Button>
+              </div>
+            </>
+          )}
+          {recoveryCode && (
+            <RecoveryCodeDisplay
+              code={recoveryCode}
+              onConfirm={handleSaved}
+              confirmLabel={__("I've saved it — Done", 'eleva-crm-for-photographers')}
+            />
+          )}
+        </div>
+      </Modal>
+    </>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Recovery Phrase section (server-generated)
+// ---------------------------------------------------------------------------
+
+function RecoveryPhraseSection({ hasPhrase }) {
+  const queryClient = useQueryClient()
+  const { isUnlocked } = useVault()
+  const [loading, setLoading]         = useState(false)
+  const [error, setError]             = useState(null)
+  const [newPhrase, setNewPhrase]     = useState(null)
+  const [phraseSaved, setPhraseSaved] = useState(false)
+  const [modalOpen, setModalOpen]     = useState(false)
+  const [copied, setCopied]           = useState(false)
+
+  async function handleGenerate() {
+    setError(null)
+    setLoading(true)
+    try {
+      const data = await vaultEnrollPhrase()
+      setNewPhrase(data.recovery_phrase)
+    } catch (err) {
+      setError(err.message || __('Failed to generate phrase. Ensure the vault is unlocked.', 'eleva-crm-for-photographers'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(newPhrase).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
+
+  function handleOpen() {
+    setNewPhrase(null)
+    setError(null)
+    setPhraseSaved(false)
+    setModalOpen(true)
+  }
+
+  async function handleDone() {
+    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+    setModalOpen(false)
+    setNewPhrase(null)
+    setPhraseSaved(false)
+  }
+
+  if (!isUnlocked) {
+    return (
+      <div className="pt-1">
+        <p className="text-xs text-gray-400">
+          {__('Unlock the vault to manage the recovery phrase.', 'eleva-crm-for-photographers')}
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <>
+      <div className="pt-1 space-y-2">
+        <p className="text-xs text-gray-500">
+          {hasPhrase
+            ? __('Regenerate a new recovery phrase. The previous phrase will stop working immediately.', 'eleva-crm-for-photographers')
+            : __('Set up a recovery phrase so you can reset your password if you ever forget it.', 'eleva-crm-for-photographers')}
+        </p>
+        <button
+          type="button"
+          onClick={handleOpen}
+          className="inline-flex items-center gap-2 rounded-md border border-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+        >
+          <RefreshCw size={14} />
+          {hasPhrase
+            ? __('Regenerate Recovery Phrase', 'eleva-crm-for-photographers')
+            : __('Set Up Recovery Phrase', 'eleva-crm-for-photographers')}
+        </button>
+      </div>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={hasPhrase
+          ? __('Regenerate Recovery Phrase', 'eleva-crm-for-photographers')
+          : __('Set Up Recovery Phrase', 'eleva-crm-for-photographers')}
+      >
+        <div className="space-y-4">
+          {!newPhrase && (
+            <>
+              <p className="text-sm text-gray-600">
+                {hasPhrase
+                  ? __('A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline — it will only be shown once.', 'eleva-crm-for-photographers')
+                  : __('A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline — it will only be shown once.', 'eleva-crm-for-photographers')}
+              </p>
+              {error && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
+              )}
+              <div className="flex justify-end gap-3">
+                <Button variant="secondary" onClick={() => setModalOpen(false)}>
+                  {__('Cancel', 'eleva-crm-for-photographers')}
+                </Button>
+                <Button variant="primary" onClick={handleGenerate} disabled={loading}>
+                  {loading ? <Spinner size="sm" /> : __('Generate', 'eleva-crm-for-photographers')}
+                </Button>
+              </div>
+            </>
+          )}
+          {newPhrase && (
+            <div className="space-y-4">
+              <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
+                <p className="text-xs text-gray-500 mb-2">{__('Your Recovery Phrase', 'eleva-crm-for-photographers')}</p>
+                <p className="text-sm font-mono font-semibold text-amber-900 break-all tracking-widest text-center">
+                  {newPhrase}
+                </p>
+              </div>
+              <Button variant="secondary" className="w-full" onClick={handleCopy}>
+                {copied ? __('Copied!') : __('Copy to clipboard')}
+              </Button>
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={phraseSaved}
+                  onChange={(e) => setPhraseSaved(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 rounded border-gray-300 text-indigo-600"
+                />
+                <span className="text-sm text-gray-700">
+                  {__('I have saved this phrase offline in a secure location.', 'eleva-crm-for-photographers')}
+                </span>
+              </label>
+              <div className="flex justify-end">
+                <Button variant="primary" disabled={!phraseSaved} onClick={handleDone}>
+                  {__('Done', 'eleva-crm-for-photographers')}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+      </Modal>
+    </>
+  )
+}
+
+// ---------------------------------------------------------------------------
+// Reset vault (destructive)
+// ---------------------------------------------------------------------------
+
+function ResetVaultAction() {
+  const queryClient = useQueryClient()
+  const [modalOpen, setModalOpen] = useState(false)
+  const [typed, setTyped]         = useState('')
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(null)
+
+  const CONFIRM_WORD = 'RESET'
+
+  async function handleReset() {
+    setError(null)
+    setLoading(true)
+    try {
+      await vaultReset()
+      await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+      setModalOpen(false)
+    } catch (err) {
+      setError(err.message || __('Reset failed.', 'eleva-crm-for-photographers'))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleClose() {
+    setModalOpen(false)
+    setTyped('')
+    setError(null)
+  }
+
+  return (
+    <>
+      <div className="pt-1 space-y-2">
+        <p className="text-xs text-gray-500">
+          {__('Permanently wipe the vault configuration. All encrypted data will become inaccessible.', 'eleva-crm-for-photographers')}
+        </p>
+        <button
+          type="button"
+          onClick={() => { setTyped(''); setError(null); setModalOpen(true) }}
+          className="inline-flex items-center gap-2 rounded-md border border-red-200 px-3 py-1.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
+        >
+          <Trash2 size={14} />
+          {__('Reset Vault', 'eleva-crm-for-photographers')}
+        </button>
+      </div>
+
+      <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        title={__('Reset Vault', 'eleva-crm-for-photographers')}
+      >
+        <div className="space-y-4">
+          <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3">
+            <p className="text-sm font-medium text-red-800">
+              {__('This action is irreversible.', 'eleva-crm-for-photographers')}
+            </p>
+            <p className="text-sm text-red-700 mt-1">
+              {__('The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable.', 'eleva-crm-for-photographers')}
+            </p>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-gray-600">
+              {__('Type RESET to confirm', 'eleva-crm-for-photographers')}
+            </label>
+            <input
+              type="text"
+              value={typed}
+              onChange={(e) => setTyped(e.target.value)}
+              placeholder={CONFIRM_WORD}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-500"
+              autoComplete="off"
+              spellCheck={false}
+            />
+          </div>
+
+          {error && (
+            <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
+          )}
+
+          <div className="flex justify-end gap-3">
+            <Button variant="secondary" onClick={handleClose}>
+              {__('Cancel', 'eleva-crm-for-photographers')}
+            </Button>
+            <Button
+              variant="danger"
+              onClick={handleReset}
+              disabled={typed !== CONFIRM_WORD || loading}
+            >
+              {loading ? <Spinner size="sm" /> : __('Reset Vault', 'eleva-crm-for-photographers')}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    </>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Main SettingsPage
 // ---------------------------------------------------------------------------
 
@@ -437,6 +620,7 @@ const GCalSettings           = window.FotonicProComponents?.GCalSettings        
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false)
+  const { idleWarning } = useVault()
 
   const { data: vaultStatus } = useQuery({
     queryKey: ['vault-status'],
@@ -448,6 +632,13 @@ export default function SettingsPage() {
     {showSetup && !vaultStatus?.setup && (
       <div className="fixed inset-0 z-[9999]">
         <VaultSetup />
+      </div>
+    )}
+
+    {/* Global idle warning banner — visible on all settings sub-sections */}
+    {idleWarning && (
+      <div className="px-6 pt-4">
+        <IdleWarningBanner />
       </div>
     )}
 
@@ -472,8 +663,9 @@ export default function SettingsPage() {
                   {__('The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.')}
                 </p>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                  <li>{__('Pick a strong master password and store it somewhere safe: there is no way to recover it if forgotten.')}</li>
+                  <li>{__('Pick a strong master password (at least 10 characters) and store it somewhere safe.')}</li>
                   <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.')}</li>
+                  <li>{__('Save the recovery phrase and recovery code offline — these are your fallback if you lose access.')}</li>
                   <li>{__('Lock the Vault when you finish working to keep client details protected.')}</li>
                 </ul>
               </div>
@@ -493,6 +685,9 @@ export default function SettingsPage() {
               <p className="text-sm text-gray-500">
                 {__('All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.')}
               </p>
+              <p className="text-xs text-gray-400">
+                {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
+              </p>
               <div className="space-y-2 pt-1">
                 <Accordion label={__('Change Vault Password')}>
                   <ChangePasswordForm />
@@ -500,8 +695,11 @@ export default function SettingsPage() {
                 <Accordion label={__('Reset Authenticator App')}>
                   <ResetTotpForm />
                 </Accordion>
-                <Accordion label={__('Recovery Code')}>
+                <Accordion label={__('TOTP Recovery Code')}>
                   <RegenerateRecoveryCode />
+                </Accordion>
+                <Accordion label={__('Recovery Phrase')}>
+                  <RecoveryPhraseSection hasPhrase={vaultStatus?.has_recovery_phrase === true} />
                 </Accordion>
                 <Accordion label={__('Reset Vault')}>
                   <ResetVaultAction />

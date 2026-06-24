@@ -15,6 +15,7 @@ import ServicesRepeater from './ServicesRepeater'
 import InstallmentsRepeater from './InstallmentsRepeater'
 import FilesSection from './FilesSection'
 import EventAddressesRepeater from './EventAddressesRepeater'
+import MemoryCardsSection from './MemoryCardsSection'
 import WpEditor from '../../components/WpEditor'
 import { __ } from '../../utils/i18n'
 
@@ -100,6 +101,7 @@ const defaultValues = {
   total_price_taxable: '',
   installments: [],
   color: '',
+  memory_cards: { cards: [], backup_done: false, formatting_done: false },
 }
 
 const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?? null
@@ -170,6 +172,11 @@ export default function WorkForm() {
         total_price_taxable: work.total_price_taxable ?? '',
         installments: work.installments ?? [],
         color: work.color ?? '',
+        memory_cards: {
+          cards: (work.memory_cards ?? []).map((mc) => ({ card_id: mc.card_id, notes: mc.notes ?? '' })),
+          backup_done: work.backup_done ?? false,
+          formatting_done: work.formatting_done ?? false,
+        },
       })
     }
   }, [work, reset])
@@ -202,6 +209,11 @@ export default function WorkForm() {
       })),
       // Send file IDs only
       file_ids: data.files.map((f) => f.id),
+      memory_cards: (data.memory_cards?.cards ?? [])
+        .filter((mc) => mc.card_id)
+        .map((mc) => ({ card_id: Number(mc.card_id), notes: mc.notes ?? '' })),
+      backup_done: data.memory_cards?.backup_done ?? false,
+      formatting_done: data.memory_cards?.formatting_done ?? false,
     }
 
     try {
@@ -357,7 +369,19 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 5 — Notes */}
+        {/* Section 5 — Memory Cards */}
+        <section>
+          <SectionHeading>{__('Memory Cards', 'eleva-crm-for-photographers')}</SectionHeading>
+          <Controller
+            name="memory_cards"
+            control={control}
+            render={({ field }) => (
+              <MemoryCardsSection value={field.value} onChange={field.onChange} />
+            )}
+          />
+        </section>
+
+        {/* Section 6 — Notes */}
         <section>
           <SectionHeading>{__('Notes')}</SectionHeading>
           <Controller

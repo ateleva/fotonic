@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, MemoryStick } from 'lucide-react'
 import logoPng from '../assets/icon-256x256.png'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
@@ -26,11 +26,12 @@ export default function Layout() {
   }, [])
 
   const navItems = [
-    { to: '/dashboard', label: __('Dashboard'), icon: LayoutDashboard },
-    { to: '/customers', label: __('Customers'),  icon: Users },
-    { to: '/services',  label: __('Services'),   icon: Briefcase },
-    { to: '/works',     label: __('Works'),      icon: Camera },
-    { to: '/calendar',  label: __('Calendar'),   icon: CalendarDays },
+    { to: '/dashboard',    label: __('Dashboard'),     icon: LayoutDashboard },
+    { to: '/customers',    label: __('Customers'),     icon: Users },
+    { to: '/services',     label: __('Services'),      icon: Briefcase },
+    { to: '/works',        label: __('Works'),         icon: Camera },
+    { to: '/memory-cards', label: __('Memory Cards'),  icon: MemoryStick },
+    { to: '/calendar',     label: __('Calendar'),      icon: CalendarDays },
   ]
 
   const proNavItems = [
@@ -77,7 +78,7 @@ export default function Layout() {
         <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-2 min-w-0">
           <img src={logoPng} alt="" className="h-8 w-8 object-contain shrink-0" />
           <span style={{ fontFamily: '-apple-system,"Segoe UI",sans-serif', fontSize: '13px', fontWeight: 600, color: '#1d2327', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            Eleva CRM for Photographers
+            {__('Eleva CRM for Photographers')}
           </span>
         </div>
 
@@ -129,7 +130,7 @@ export default function Layout() {
           )}
         </nav>
 
-        <div className="px-3 py-1.5 border-t border-gray-100 space-y-0.5">
+        <div className="px-3 pt-2 pb-3 border-t border-gray-100 flex flex-col gap-1">
           <NavLink
             to="/settings"
             className={({ isActive }) =>
@@ -148,13 +149,13 @@ export default function Layout() {
           {isUnlocked && (
             <button
               onClick={handleLock}
-              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer"
+              className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer w-full text-left"
             >
               <Lock size={16} />
               {__('Lock Vault')}
             </button>
           )}
-          <div className="px-3 flex items-center gap-2 flex-wrap">
+          <div className="px-3 pt-1.5 mt-0.5 border-t border-gray-100 flex items-center gap-2 flex-wrap">
             <span className="text-xs text-gray-400">CRM v{window.FotonicApp?.version ?? '–'}</span>
             {window.FotonicApp?.proVersion && (
               <span className="text-xs text-indigo-400">CRM Pro v{window.FotonicApp.proVersion}</span>

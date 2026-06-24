@@ -605,3 +605,419 @@ msgstr ""
 #: src/src/features/vault/RecoveryCodeBanner.jsx:109
 msgid "Generate Recovery Code"
 msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "Memory Cards"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "Memory Card"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "Add New Memory Card"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "Edit Memory Card"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "New Memory Card"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "View Memory Card"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "Search Memory Cards"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "No memory cards found."
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "No memory cards found in trash."
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "All Memory Cards"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php
+msgid "Card Status"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+msgid "Ready"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+msgid "In Use"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+msgid "Needs Backup"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+msgid "Needs Formatting"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+msgid "Damaged"
+msgstr ""
+
+#: includes/class-memory-card-rest-api.php
+msgid "Card not found."
+msgstr ""
+
+#: includes/class-memory-card-rest-api.php
+msgid "Card title is required."
+msgstr ""
+
+#: includes/class-memory-card-rest-api.php
+msgid "Card is currently in use and cannot be deleted."
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx
+msgid "Card Name"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "Status"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "Add Card"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx
+msgid "No memory cards found. Add your first card."
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "Edit Card"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "New Card"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "e.g. SD-A 128GB SanDisk"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "Card name is required"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "Update Card"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "Create Card"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+msgid "Delete this card? This action cannot be undone."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx src/src/components/Layout.jsx
+msgid "Memory Cards"
+msgstr ""
+
+#: src/src/features/works/MemoryCardsSection.jsx
+msgid "Select a card…"
+msgstr ""
+
+#: src/src/features/works/MemoryCardsSection.jsx
+msgid "Notes…"
+msgstr ""
+
+#: src/src/features/works/MemoryCardsSection.jsx
+msgid "Backup Done"
+msgstr ""
+
+#: src/src/features/works/MemoryCardsSection.jsx
+msgid "Formatting Done"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php:41
+msgid "All Card Statuses"
+msgstr ""
+
+#: includes/class-memory-card-cpt.php:61
+msgid "Backed Up"
+msgstr ""
+
+#: includes/class-rest-api.php:434
+msgid "All DEK wrapping fields are required."
+msgstr ""
+
+#: includes/class-rest-api.php:500
+msgid "OTP is required."
+msgstr ""
+
+#: includes/class-rest-api.php:695
+msgid "salt_dek_pw and wrap_dek_pw are required."
+msgstr ""
+
+#: includes/class-rest-api.php:740
+msgid "recovery_code is required."
+msgstr ""
+
+#: includes/class-rest-api.php:768
+msgid "All migration fields are required."
+msgstr ""
+
+#: includes/class-rest-api.php:780
+msgid "No v2 vault data found."
+msgstr ""
+
+#: includes/class-rest-api.php:788
+msgid "Invalid vault password."
+msgstr ""
+
+#: includes/class-rest-api.php:797
+msgid "No TOTP secret found to migrate."
+msgstr ""
+
+#: includes/class-rest-api.php:804
+msgid "Could not decrypt TOTP secret."
+msgstr ""
+
+#: includes/class-rest-api.php:814
+msgid "Migration failed."
+msgstr ""
+
+#: includes/class-vault.php:663
+msgid "Too many failed attempts. Try again later."
+msgstr ""
+
+#: includes/class-vault.php:671
+msgid "Invalid OTP code."
+msgstr ""
+
+#: includes/class-vault.php:767
+msgid "No recovery code has been set up."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:116
+msgid "Stay unlocked"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:162
+msgid "Generate a new TOTP recovery code. The previous code will be invalidated immediately."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:254
+msgid "Failed to regenerate phrase. Ensure the vault is unlocked."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:278
+msgid "Unlock the vault to regenerate the recovery phrase."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:288
+msgid "Generate a new recovery phrase. The previous phrase will stop working immediately."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:296
+msgid "Regenerate Recovery Phrase"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:309
+msgid "A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline — it will only be shown once."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:342
+msgid "I have saved this phrase offline in a secure location."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:418
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:529
+msgid "Vault auto-locks after 15 minutes of inactivity."
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx:28
+msgid "All"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx:61
+msgid "In Work"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx:77
+msgid "Actions"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardList.jsx:86
+msgid "Edit"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx:123
+msgid "An error occurred. Please try again."
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx:130
+msgid "Saving..."
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx:152
+msgid "Cannot Delete"
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx:155
+msgid "OK"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:88
+msgid "Incorrect vault password."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:105
+msgid "Recovery failed. Check your recovery code."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:131
+msgid "Your vault is now open. After adding the new entry to your app, use the new code next time you unlock."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:144
+msgid "Enter your vault password and the one-time recovery code to generate a new authenticator entry. Your password is used locally — it is never sent to the server."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:175
+msgid "Recover Access"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:206
+msgid "New password must be at least 10 characters."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:224
+msgid "Recovery phrase is incorrect or does not match this vault."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:247
+msgid "Recovery failed. Check your recovery phrase and code, then try again."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:258
+msgid "Password updated successfully. Please unlock the vault with your new password."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:262
+msgid "Go to unlock screen"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:271
+msgid "Enter your recovery phrase, a new password, and a live authenticator code to reset your vault password."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:274
+msgid "Recovery Phrase"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:308
+msgid "Authenticator Code (live OTP)"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:396
+msgid "Lost password (I have my recovery phrase)"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:399
+msgid "I forgot my vault password but I saved the recovery phrase and still have my authenticator."
+msgstr ""
+
+#: includes/class-rest-api.php:911
+msgid "Vault must be unlocked to enroll a recovery phrase."
+msgstr ""
+
+#: includes/class-rest-api.php:920
+msgid "Failed to enroll recovery phrase."
+msgstr ""
+
+#: includes/class-rest-api.php:954
+msgid "Recovery phrase and new password are required."
+msgstr ""
+
+#: includes/class-rest-api.php:978
+msgid "Invalid recovery phrase."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:392
+msgid "Failed to generate phrase. Ensure the vault is unlocked."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:423
+msgid "Unlock the vault to manage the recovery phrase."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:434
+msgid "Regenerate a new recovery phrase. The previous phrase will stop working immediately."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:435
+msgid "Set up a recovery phrase so you can reset your password if you ever forget it."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:445
+msgid "Set Up Recovery Phrase"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:462
+msgid "A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline — it will only be shown once."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:480
+msgid "Your Recovery Phrase"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:93
+msgid "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app, then unlock normally."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:110
+msgid "Done — go to unlock screen"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:119
+msgid "Enter your vault password and the one-time recovery code to generate a new authenticator entry."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:195
+msgid "Recovery failed. Check your recovery phrase and try again."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:219
+msgid "Enter your recovery phrase and a new password to reset vault access."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:333
+msgid "I forgot my vault password but I saved the recovery phrase."
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:36
+msgid "Could not generate recovery phrase. Make sure the vault is unlocked."
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:68
+msgid "Set up your recovery phrase"
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:71
+msgid "Add a recovery phrase so you can regain access if you ever forget your vault password. It takes only a few seconds."
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:110
+msgid "Generate Recovery Phrase"
+msgstr ""

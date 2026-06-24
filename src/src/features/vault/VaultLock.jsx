@@ -9,6 +9,10 @@ import Spinner from '../../components/Spinner'
 import VaultRecoveryPanel from './VaultRecoveryPanel'
 import { __ } from '../../utils/i18n'
 
+/**
+ * VaultLock — shown only when silentReopen() returned false.
+ * Full unlock form: password + OTP.
+ */
 export default function VaultLock() {
   const queryClient = useQueryClient()
   const { unlock } = useVault()
@@ -22,22 +26,20 @@ export default function VaultLock() {
   } = useForm()
 
   const onSubmit = async ({ password, otp }) => {
-    try {
-      // unlock() calls vault/unlock + vault/status + derives browser CryptoKey
-      await unlock(password, otp)
-      await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
-      // VaultGate re-renders with unlocked=true → <RouterProvider>
-    } catch (err) {
+    const result = await unlock(password, otp)
+    if (result?.error) {
       setError('root', {
         type: 'manual',
-        message: err.message || __('Invalid password or code'),
+        message: result.message || __('Incorrect password or code — please try again.'),
       })
+      return
     }
+    // Vault is now unlocked in memory — invalidate status so VaultGate re-renders
+    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
 
   const handleRecoveryUnlocked = async () => {
     await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
-    // VaultGate will re-render with unlocked=true
   }
 
   return (
@@ -62,6 +64,17 @@ export default function VaultLock() {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              {/* Must be inside <form> — browser only links username hint to password fields in the same form */}
+              <input
+                type="text"
+                name="username"
+                autoComplete="username"
+                value="crm-vault"
+                readOnly
+                tabIndex={-1}
+                aria-hidden="true"
+                style={{ position: 'absolute', opacity: 0, width: '1px', height: '1px', pointerEvents: 'none' }}
+              />
               <FormField
                 label={__('Vault Password')}
                 required

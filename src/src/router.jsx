@@ -3,15 +3,17 @@ import { createHashRouter, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Spinner from './components/Spinner'
 
-const Dashboard    = lazy(() => import('./features/dashboard/Dashboard'))
-const CustomerList = lazy(() => import('./features/customers/CustomerList'))
-const CustomerForm = lazy(() => import('./features/customers/CustomerForm'))
-const ServiceList  = lazy(() => import('./features/services/ServiceList'))
-const ServiceForm  = lazy(() => import('./features/services/ServiceForm'))
-const WorkList     = lazy(() => import('./features/works/WorkList'))
-const WorkForm     = lazy(() => import('./features/works/WorkForm'))
-const SettingsPage = lazy(() => import('./features/settings/SettingsPage'))
-const CalendarView = lazy(() => import('./features/calendar/CalendarView').then(m => ({ default: m.CalendarView })))
+const Dashboard      = lazy(() => import('./features/dashboard/Dashboard'))
+const CustomerList   = lazy(() => import('./features/customers/CustomerList'))
+const CustomerForm   = lazy(() => import('./features/customers/CustomerForm'))
+const ServiceList    = lazy(() => import('./features/services/ServiceList'))
+const ServiceForm    = lazy(() => import('./features/services/ServiceForm'))
+const WorkList       = lazy(() => import('./features/works/WorkList'))
+const WorkForm       = lazy(() => import('./features/works/WorkForm'))
+const MemoryCardList = lazy(() => import('./features/memory-cards/MemoryCardList'))
+const MemoryCardForm = lazy(() => import('./features/memory-cards/MemoryCardForm'))
+const SettingsPage   = lazy(() => import('./features/settings/SettingsPage'))
+const CalendarView   = lazy(() => import('./features/calendar/CalendarView').then(m => ({ default: m.CalendarView })))
 
 function Fallback() {
   return (
@@ -42,11 +44,14 @@ export function createRouter() { return createHashRouter([
       { path: 'services',        element: <Lazy component={ServiceList} /> },
       { path: 'services/new',    element: <Lazy component={ServiceForm} /> },
       { path: 'services/:id',    element: <Lazy component={ServiceForm} /> },
-      { path: 'works',           element: <Lazy component={WorkList} /> },
-      { path: 'works/new',       element: <Lazy component={WorkForm} /> },
-      { path: 'works/:id',       element: <Lazy component={WorkForm} /> },
-      { path: 'calendar',        element: <Lazy component={CalendarView} /> },
-      { path: 'settings',        element: <Lazy component={SettingsPage} /> },
+      { path: 'works',             element: <Lazy component={WorkList} /> },
+      { path: 'works/new',         element: <Lazy component={WorkForm} /> },
+      { path: 'works/:id',         element: <Lazy component={WorkForm} /> },
+      { path: 'memory-cards',      element: <Lazy component={MemoryCardList} /> },
+      { path: 'memory-cards/new',  element: <Lazy component={MemoryCardForm} /> },
+      { path: 'memory-cards/:id',  element: <Lazy component={MemoryCardForm} /> },
+      { path: 'calendar',          element: <Lazy component={CalendarView} /> },
+      { path: 'settings',          element: <Lazy component={SettingsPage} /> },
       // Pro routes — only active when FotonicPro bundle is loaded
       ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.KanbanBoard ? [{
         path: 'kanban',

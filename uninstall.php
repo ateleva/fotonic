@@ -19,7 +19,7 @@ global $wpdb;
 // 1. Delete all custom post type posts (force delete — bypass trash).
 // ---------------------------------------------------------------------------
 
-$ftnc_post_types = array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_collaborator' );
+$ftnc_post_types = array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_collaborator', 'ftnc_memory_card' );
 
 foreach ( $ftnc_post_types as $post_type ) {
 	$ftnc_post_ids = get_posts( array(
@@ -59,6 +59,9 @@ $ftnc_meta_prefixes = array(
 	'_ftnc_color',
 	'_ftnc_kanban_status',
 	'_ftnc_collaborators',
+	'_ftnc_memory_cards',
+	'_ftnc_backup_done',
+	'_ftnc_formatting_done',
 );
 
 foreach ( $ftnc_meta_prefixes as $ftnc_key ) {
@@ -67,18 +70,20 @@ foreach ( $ftnc_meta_prefixes as $ftnc_key ) {
 }
 
 // ---------------------------------------------------------------------------
-// 3. Delete taxonomy terms for ftnc_work_payment_status.
+// 3. Delete taxonomy terms (ftnc_work_payment_status, ftnc_card_status).
 // ---------------------------------------------------------------------------
 
-$ftnc_terms = get_terms( array(
-	'taxonomy'   => 'ftnc_work_payment_status',
-	'hide_empty' => false,
-	'fields'     => 'ids',
-) );
+foreach ( array( 'ftnc_work_payment_status', 'ftnc_card_status' ) as $ftnc_taxonomy ) {
+	$ftnc_terms = get_terms( array(
+		'taxonomy'   => $ftnc_taxonomy,
+		'hide_empty' => false,
+		'fields'     => 'ids',
+	) );
 
-if ( is_array( $ftnc_terms ) ) {
-	foreach ( $ftnc_terms as $ftnc_term_id ) {
-		wp_delete_term( (int) $ftnc_term_id, 'ftnc_work_payment_status' );
+	if ( is_array( $ftnc_terms ) ) {
+		foreach ( $ftnc_terms as $ftnc_term_id ) {
+			wp_delete_term( (int) $ftnc_term_id, $ftnc_taxonomy );
+		}
 	}
 }
 
