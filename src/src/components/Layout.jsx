@@ -45,6 +45,10 @@ export default function Layout() {
 
   const handleLock = async () => {
     await lock()
+    // Optimistically mark the cached status locked so VaultGate's reconcile
+    // effect can't resurrect the unlocked state from a stale cache entry.
+    queryClient.setQueryData(['vault-status'], (old) =>
+      old ? { ...old, unlocked: false } : old)
     queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
 

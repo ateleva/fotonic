@@ -3,7 +3,7 @@
  * Plugin Name:       Eleva CRM for Photographers
  * Plugin URI:        https://eleva.alessandrobonacina.com/progetto/eleva-crm-per-fotografi/
  * Description:       CRM and workflow manager for photographers: clients, services, works, payments, encrypted vault for PII, and calendar view.
- * Version:           1.3.8
+ * Version:           1.3.9
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Tested up to:      7.0
@@ -17,7 +17,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FOTONIC_VERSION', '1.3.8' );
+define( 'FOTONIC_VERSION', '1.3.9' );
 define( 'FOTONIC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FOTONIC_URL', plugin_dir_url( __FILE__ ) );
 
@@ -58,3 +58,8 @@ add_action( 'ftnc_after_save_work',    [ 'Fotonic_Meta_Boxes', 'sync_memory_card
 add_filter( 'posts_search', [ 'Fotonic_Meta_Boxes', 'extend_customer_search' ], 10, 2 );
 add_filter( 'posts_join',     [ 'Fotonic_Meta_Boxes', 'extend_customer_search_join' ], 10, 2 );
 add_filter( 'posts_distinct', [ 'Fotonic_Meta_Boxes', 'extend_customer_search_distinct' ], 10, 2 );
+
+// Force a vault re-unlock on each WP login session change: clear the session
+// cookie on login and logout so a fresh login always requires password + OTP.
+add_action( 'wp_login',  [ 'Fotonic_Vault', 'lock' ] );
+add_action( 'wp_logout', [ 'Fotonic_Vault', 'lock' ] );

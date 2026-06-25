@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.8
+Stable tag: 1.3.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -91,10 +91,17 @@ This plugin's admin interface is a compiled React application. The full, non-com
 
 == Upgrade Notice ==
 
+= 1.3.9 =
+Security: the vault now re-locks on every WordPress login/logout, so it no longer stays unlocked across sessions, and the Lock Vault button locks immediately. Safe in-place update — your vault password, authenticator and encrypted client data are unchanged. After updating, unlock the vault as usual.
+
 = 1.3.8 =
 New: Memory Cards inventory to track your SD/CF cards. Safe in-place update — your vault password, authenticator and encrypted client data stay exactly as they are. After updating, unlock the vault as usual; you will be offered an optional recovery phrase. No data migration, no data loss, no required action. Note: the vault now auto-locks after 15 minutes of inactivity.
 
 == Changelog ==
+
+= 1.3.9 =
+* Fix: vault now re-locks on every WordPress login/logout (no longer stays unlocked across sessions).
+* Fix: the Lock Vault button now locks immediately without a page refresh.
 
 = 1.3.8 =
 * New — Memory Cards: keep an inventory of your SD/CF cards so you always know which ones are safe to reuse. Each card has a status — Ready, In Use, Backed Up, or Damaged — that advances automatically as you attach the card to a shoot and tick off backup and formatting. Manage your full card list from the new sidebar entry, or assign cards to a shoot right inside the Work editor. A card that is currently in use cannot be deleted by mistake.

@@ -572,8 +572,8 @@ class Fotonic_Vault {
 
 		$blob = base64_decode( sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE_NAME ] ) ), true );
 
-		// 12-byte nonce + 16-byte GCM tag + 32-byte ciphertext = 60 bytes minimum.
-		if ( false === $blob || strlen( $blob ) < 60 ) {
+		// 12-byte nonce + 16-byte GCM tag + 64-byte plaintext (MK[32] || binding[32]).
+		if ( false === $blob || strlen( $blob ) < 92 ) {
 			return null;
 		}
 
@@ -583,9 +583,18 @@ class Fotonic_Vault {
 
 		$server_key = hash( 'sha256', self::server_secret(), true );
 
-		$key = openssl_decrypt( $ciphertext, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag );
+		$plain = openssl_decrypt( $ciphertext, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag );
 
-		if ( false === $key || strlen( $key ) !== 32 ) {
+		// Plaintext must be exactly MK[32] || login-session binding[32].
+		if ( false === $plain || strlen( $plain ) !== 64 ) {
+			return null;
+		}
+
+		$key  = substr( $plain, 0, 32 );
+		$bind = substr( $plain, 32, 32 );
+
+		// Reject cookies minted under a different WP login session / user.
+		if ( ! hash_equals( self::session_binding(), $bind ) ) {
 			return null;
 		}
 
@@ -713,7 +722,9 @@ class Fotonic_Vault {
 		$server_key = hash( 'sha256', self::server_secret(), true );
 		$iv         = random_bytes( 12 );
 		$tag        = '';
-		$ciphertext = openssl_encrypt( $key, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag, '', 16 );
+		// Bind the session to the current WP login: MK[32] || binding[32].
+		$plain      = $key . self::session_binding();
+		$ciphertext = openssl_encrypt( $plain, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag, '', 16 );
 
 		if ( false === $ciphertext ) {
 			return;
@@ -721,6 +732,21 @@ class Fotonic_Vault {
 
 		$value = base64_encode( $iv . $tag . $ciphertext );
 		self::send_cookie( $value, time() + self::COOKIE_EXPIRY );
+	}
+
+	/**
+	 * Binding hash that ties a vault session to the current WP login session.
+	 *
+	 * A fresh login mints a new session token, so a vault cookie issued under a
+	 * previous login (or a different user) no longer matches and is rejected by
+	 * get_session_key() — forcing a re-unlock per WP login session.
+	 *
+	 * @return string 32 raw bytes.
+	 */
+	private static function session_binding(): string {
+		$uid   = get_current_user_id();
+		$token = function_exists( 'wp_get_session_token' ) ? wp_get_session_token() : '';
+		return hash( 'sha256', $uid . '|' . $token, true );
 	}
 
 	/**

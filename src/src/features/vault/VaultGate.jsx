@@ -153,7 +153,6 @@ export default function VaultGate({ router }) {
   const { silentReopen, isUnlocked, markUnlocked } = useVault()
   const [isTryingReopen, setIsTryingReopen] = useState(false)
   const [reopenDone, setReopenDone]         = useState(false)
-  const [reopenResult, setReopenResult]     = useState(false)
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['vault-status'],
@@ -170,9 +169,9 @@ export default function VaultGate({ router }) {
     let cancelled = false
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsTryingReopen(true)
-    silentReopen().then((opened) => {
+    silentReopen().then(() => {
+      // On success silentReopen() flips context isUnlocked → true itself.
       if (cancelled) return
-      setReopenResult(opened)
       setReopenDone(true)
       setIsTryingReopen(false)
     })
@@ -181,11 +180,12 @@ export default function VaultGate({ router }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data])
 
-  // Sync VaultContext when server reports vault open but context doesn't know.
+  // Sync VaultContext when the SERVER reports the vault open but context doesn't
+  // know. Only fresh server data may open the gate — never stale local state,
+  // otherwise an explicit lock would be immediately resurrected.
   useEffect(() => {
-    const vaultOpen = data?.unlocked === true || reopenResult === true || isUnlocked
-    if (vaultOpen && !isUnlocked) markUnlocked()
-  }, [data, reopenResult, isUnlocked, markUnlocked])
+    if (data?.unlocked === true && !isUnlocked) markUnlocked()
+  }, [data, isUnlocked, markUnlocked])
 
   if (isLoading) {
     return (
@@ -210,8 +210,10 @@ export default function VaultGate({ router }) {
     return <RouterProvider router={router} />
   }
 
-  // Vault set up but locked — try silent reopen first
-  if (data?.setup === true && data?.unlocked === false && !isUnlocked) {
+  // Vault set up but locked. Wait for the initial silent-reopen attempt to
+  // settle (avoids flashing the lock screen on load), then gate on the
+  // reconciled context state — isUnlocked is the single source of truth.
+  if (data?.setup === true && !isUnlocked) {
     if (isTryingReopen || !reopenDone) {
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -219,13 +221,12 @@ export default function VaultGate({ router }) {
         </div>
       )
     }
-    if (!reopenResult) {
-      return <VaultLock />
-    }
+    return <VaultLock />
   }
 
-  // Vault unlocked
-  const isVaultOpen = data?.unlocked === true || reopenResult === true || isUnlocked
+  // Vault unlocked — context is the single source of truth (silentReopen /
+  // markUnlocked / unlock all set isUnlocked from the server status).
+  const isVaultOpen = isUnlocked
   const needsRecoveryPhrase = isVaultOpen && data?.has_recovery_phrase === false
   const needsRecoveryCode   = isVaultOpen && data?.has_recovery_code === false
 
