@@ -89,14 +89,6 @@ This plugin's admin interface is a compiled React application. The full, non-com
 10. Settings page — Vault section showing change-password and reset-authenticator-app panels
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
-== Upgrade Notice ==
-
-= 1.3.9 =
-Security: the vault now re-locks on every WordPress login/logout, so it no longer stays unlocked across sessions, and the Lock Vault button locks immediately. Safe in-place update — your vault password, authenticator and encrypted client data are unchanged. After updating, unlock the vault as usual.
-
-= 1.3.8 =
-New: Memory Cards inventory to track your SD/CF cards. Safe in-place update — your vault password, authenticator and encrypted client data stay exactly as they are. After updating, unlock the vault as usual; you will be offered an optional recovery phrase. No data migration, no data loss, no required action. Note: the vault now auto-locks after 15 minutes of inactivity.
-
 == Changelog ==
 
 = 1.3.9 =
@@ -206,6 +198,12 @@ New: Memory Cards inventory to track your SD/CF cards. Safe in-place update — 
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.9 =
+Security: the vault now re-locks on every WordPress login/logout, so it no longer stays unlocked across sessions, and the Lock Vault button locks immediately. Safe in-place update — your vault password, authenticator and encrypted client data are unchanged. After updating, unlock the vault as usual.
+
+= 1.3.8 =
+New: Memory Cards inventory to track your SD/CF cards. Safe in-place update — your vault password, authenticator and encrypted client data stay exactly as they are. After updating, unlock the vault as usual; you will be offered an optional recovery phrase. No data migration, no data loss, no required action. Note: the vault now auto-locks after 15 minutes of inactivity.
 
 = 1.3.7 =
 Completes the Italian translation (vault recovery + payment types) and improves translation loading on older WordPress versions. No data or breaking changes.

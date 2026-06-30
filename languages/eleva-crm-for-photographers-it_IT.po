@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: eleva-crm-for-photographers 1.3.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eleva-crm-for-photographers\n"
 "POT-Creation-Date: 2026-06-14 10:52+0000\n"
-"PO-Revision-Date: 2026-06-14 10:57+0000\n"
+"PO-Revision-Date: 2026-06-30 00:00+0000\n"
 "Last-Translator: Alessandro Bonacina <bonacina.ale@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "Language: it_IT\n"
@@ -27,7 +27,7 @@ msgstr "Fotonic richiede l'estensione PHP OpenSSL. Abilitala sul tuo server."
 
 #: includes/class-rest-api.php:333
 msgid "Vault is already configured. Use change-password to update credentials."
-msgstr "Il vault è già configurato. Usa la modifica della password per aggiornare le credenziali."
+msgstr "Il Vault è già configurato. Usa la modifica della password per aggiornare le credenziali."
 
 #: includes/class-rest-api.php:344
 msgid "Password is required."
@@ -35,11 +35,11 @@ msgstr "La password è obbligatoria."
 
 #: includes/class-rest-api.php:351
 msgid "Vault password must be at least 12 characters."
-msgstr "La password del vault deve contenere almeno 12 caratteri."
+msgstr "La password del Vault deve contenere almeno 12 caratteri."
 
 #: includes/class-rest-api.php:364
 msgid "Vault setup failed."
-msgstr "Configurazione vault non riuscita."
+msgstr "Configurazione Vault non riuscita."
 
 #: includes/class-rest-api.php:392
 msgid "Too many failed attempts. Try again in 15 minutes."
@@ -71,15 +71,15 @@ msgstr "Tutti i campi sono obbligatori."
 
 #: includes/class-rest-api.php:572
 msgid "New vault password must be at least 12 characters."
-msgstr "La nuova password del vault deve contenere almeno 12 caratteri."
+msgstr "La nuova password del Vault deve contenere almeno 12 caratteri."
 
 #: includes/class-rest-api.php:579
 msgid "Vault is not set up."
-msgstr "Il vault non è configurato."
+msgstr "Il Vault non è configurato."
 
 #: includes/class-rest-api.php:639
 msgid "Vault configuration error."
-msgstr "Errore di configurazione vault."
+msgstr "Errore di configurazione Vault."
 
 #: includes/class-rest-api.php:679
 msgid "Encryption error."
@@ -103,7 +103,7 @@ msgstr "Password o codice di recupero non valido."
 
 #: includes/class-rest-api.php:858
 msgid "Vault must be unlocked to regenerate recovery code."
-msgstr "Il vault deve essere sbloccato per rigenerare il codice di recupero."
+msgstr "Il Vault deve essere sbloccato per rigenerare il codice di recupero."
 
 #: includes/class-rest-api.php:868
 msgid "Failed to regenerate recovery code."
@@ -111,7 +111,7 @@ msgstr "Rigenerazione del codice di recupero non riuscita."
 
 #: includes/class-rest-api.php:893
 msgid "Vault reset failed."
-msgstr "Reimpostazione del vault non riuscita."
+msgstr "Reimpostazione del Vault non riuscita."
 
 #: includes/class-rest-api.php:1042
 msgid "Customer not found."
@@ -257,7 +257,7 @@ msgstr "Servizi"
 
 #: includes/class-meta-boxes.php:349
 msgid "Total Price"
-msgstr "Prezzo Totale"
+msgstr "Prezzo totale"
 
 #: includes/class-meta-boxes.php:350
 msgid "Payment Status"
@@ -613,7 +613,7 @@ msgstr "Lavori totali:"
 
 #: src/src/features/settings/SettingsPage.jsx:113
 msgid "Failed to generate recovery code. Ensure the vault is unlocked."
-msgstr "Generazione del codice di recupero non riuscita. Assicurati che il vault sia sbloccato."
+msgstr "Generazione del codice di recupero non riuscita. Assicurati che il Vault sia sbloccato."
 
 #: src/src/features/settings/SettingsPage.jsx:135
 msgid "Generate a new recovery code. The previous code will be invalidated immediately."
@@ -641,11 +641,11 @@ msgstr "Reimpostazione non riuscita."
 
 #: src/src/features/settings/SettingsPage.jsx:221
 msgid "Permanently wipe the vault configuration. All encrypted data will become inaccessible."
-msgstr "Cancella definitivamente la configurazione del vault. Tutti i dati cifrati diventeranno inaccessibili."
+msgstr "Cancella definitivamente la configurazione del Vault. Tutti i dati cifrati diventeranno inaccessibili."
 
 #: src/src/features/settings/SettingsPage.jsx:229
 msgid "Reset Vault"
-msgstr "Reimposta vault"
+msgstr "Reimposta Vault"
 
 #: src/src/features/settings/SettingsPage.jsx:241
 msgid "This action is irreversible."
@@ -653,7 +653,7 @@ msgstr "Questa azione è irreversibile."
 
 #: src/src/features/settings/SettingsPage.jsx:244
 msgid "The vault password, TOTP secret, and recovery code will be permanently deleted. All encrypted client data will become unreadable."
-msgstr "La password del vault, il segreto TOTP e il codice di recupero verranno eliminati definitivamente. Tutti i dati cifrati dei clienti diventeranno illeggibili."
+msgstr "La password del Vault, il segreto TOTP e il codice di recupero verranno eliminati definitivamente. Tutti i dati cifrati dei clienti diventeranno illeggibili."
 
 #: src/src/features/settings/SettingsPage.jsx:251
 msgid "Type RESET to confirm"
@@ -665,7 +665,7 @@ msgstr "Recupero non riuscito. Controlla la password e il codice di recupero."
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:79
 msgid "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app."
-msgstr "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il vault alla tua app di autenticazione."
+msgstr "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il Vault alla tua app di autenticazione."
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:88
 msgid "Manual entry key:"
@@ -681,11 +681,11 @@ msgstr "Vai allo sblocco"
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:107
 msgid "Enter your vault password and recovery code to generate a new authenticator entry."
-msgstr "Inserisci la password del vault e il codice di recupero per generare una nuova voce nell'app di autenticazione."
+msgstr "Inserisci la password del Vault e il codice di recupero per generare una nuova voce nell'app di autenticazione."
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:110
 msgid "Vault Password"
-msgstr "Password vault"
+msgstr "Password Vault"
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:121
 msgid "Recovery Code"
@@ -709,7 +709,7 @@ msgstr "Recupero non riuscito. Controlla il codice di recupero e riprova."
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:189
 msgid "Enter your recovery code and choose a new vault password. The vault will be unlocked automatically."
-msgstr "Inserisci il codice di recupero e scegli una nuova password del vault. Il vault verrà sbloccato automaticamente."
+msgstr "Inserisci il codice di recupero e scegli una nuova password del Vault. Il Vault verrà sbloccato automaticamente."
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:204
 msgid "New Password"
@@ -749,7 +749,7 @@ msgstr "Password dimenticata (ho il codice di recupero)"
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:303
 msgid "I forgot my vault password but I saved the recovery code."
-msgstr "Ho dimenticato la password del vault ma ho salvato il codice di recupero."
+msgstr "Ho dimenticato la password del Vault ma ho salvato il codice di recupero."
 
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:32
 msgid "This is the ONLY way to recover access if you lose your password or authenticator. It will not be shown again."
@@ -777,7 +777,7 @@ msgstr "Fatto"
 
 #: src/src/features/vault/RecoveryCodeBanner.jsx:37
 msgid "Could not generate recovery code. Make sure the vault is unlocked."
-msgstr "Impossibile generare il codice di recupero. Assicurati che il vault sia sbloccato."
+msgstr "Impossibile generare il codice di recupero. Assicurati che il Vault sia sbloccato."
 
 #: src/src/features/vault/RecoveryCodeBanner.jsx:63
 msgid "Set up your recovery code"
@@ -785,7 +785,7 @@ msgstr "Configura il codice di recupero"
 
 #: src/src/features/vault/RecoveryCodeBanner.jsx:66
 msgid "Your vault has no recovery code. Generate one now so you can regain access if you ever lose your password or authenticator."
-msgstr "Il tuo vault non ha un codice di recupero. Generane uno ora per poter recuperare l'accesso se dovessi perdere la password o l'autenticatore."
+msgstr "Il tuo Vault non ha un codice di recupero. Generane uno ora per poter recuperare l'accesso se dovessi perdere la password o l'autenticatore."
 
 #: src/src/features/vault/RecoveryCodeBanner.jsx:75
 msgid "Set up"
@@ -805,31 +805,31 @@ msgstr "Genera codice di recupero"
 
 #: includes/class-memory-card-cpt.php
 msgid "Memory Cards"
-msgstr "Schede di Memoria"
+msgstr "Schede di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "Memory Card"
-msgstr "Scheda di Memoria"
+msgstr "Scheda di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "Add New Memory Card"
-msgstr "Aggiungi Scheda di Memoria"
+msgstr "Aggiungi scheda di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "Edit Memory Card"
-msgstr "Modifica Scheda di Memoria"
+msgstr "Modifica scheda di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "New Memory Card"
-msgstr "Nuova Scheda di Memoria"
+msgstr "Nuova scheda di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "View Memory Card"
-msgstr "Visualizza Scheda di Memoria"
+msgstr "Visualizza scheda di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "Search Memory Cards"
-msgstr "Cerca Schede di Memoria"
+msgstr "Cerca schede di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "No memory cards found."
@@ -841,11 +841,11 @@ msgstr "Nessuna scheda di memoria nel cestino."
 
 #: includes/class-memory-card-cpt.php
 msgid "All Memory Cards"
-msgstr "Tutte le Schede di Memoria"
+msgstr "Tutte le schede di memoria"
 
 #: includes/class-memory-card-cpt.php
 msgid "Card Status"
-msgstr "Stato Scheda"
+msgstr "Stato scheda"
 
 #: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
 msgid "Ready"
@@ -853,15 +853,15 @@ msgstr "Pronta"
 
 #: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
 msgid "In Use"
-msgstr "In Uso"
+msgstr "In uso"
 
 #: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
 msgid "Needs Backup"
-msgstr "Da Backuppare"
+msgstr "Backup necessario"
 
 #: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
 msgid "Needs Formatting"
-msgstr "Da Formattare"
+msgstr "Da formattare"
 
 #: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
 msgid "Damaged"
@@ -881,11 +881,11 @@ msgstr "La scheda è attualmente in uso e non può essere eliminata."
 
 #: src/src/features/memory-cards/MemoryCardList.jsx
 msgid "Card Name"
-msgstr "Nome Scheda"
+msgstr "Nome scheda"
 
 #: src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
 msgid "Add Card"
-msgstr "Aggiungi Scheda"
+msgstr "Aggiungi scheda"
 
 #: src/src/features/memory-cards/MemoryCardList.jsx
 msgid "No memory cards found. Add your first card."
@@ -893,11 +893,11 @@ msgstr "Nessuna scheda trovata. Aggiungi la prima scheda."
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Edit Card"
-msgstr "Modifica Scheda"
+msgstr "Modifica scheda"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "New Card"
-msgstr "Nuova Scheda"
+msgstr "Nuova scheda"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "e.g. SD-A 128GB SanDisk"
@@ -909,11 +909,11 @@ msgstr "Il nome della scheda è obbligatorio"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Update Card"
-msgstr "Aggiorna Scheda"
+msgstr "Aggiorna scheda"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Create Card"
-msgstr "Crea Scheda"
+msgstr "Crea scheda"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Delete this card? This action cannot be undone."
@@ -929,11 +929,11 @@ msgstr "Note…"
 
 #: src/src/features/works/MemoryCardsSection.jsx
 msgid "Backup Done"
-msgstr "Backup Completato"
+msgstr "Backup completato"
 
 #: src/src/features/works/MemoryCardsSection.jsx
 msgid "Formatting Done"
-msgstr "Formattazione Completata"
+msgstr "Formattazione completata"
 
 msgid "+ Add Collaborator"
 msgstr "+ Aggiungi collaboratore"
@@ -969,7 +969,7 @@ msgid "An error occurred. Please try again."
 msgstr "Si è verificato un errore. Riprova."
 
 msgid "Analytics"
-msgstr "Analisi"
+msgstr "Statistiche"
 
 msgid "Are you sure you want to delete this item? This action cannot be undone."
 msgstr "Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata."
@@ -1122,7 +1122,7 @@ msgid "Files"
 msgstr "File"
 
 msgid "Finalising…"
-msgstr "Finalizzazione…"
+msgstr "Finalizzazione in corso…"
 
 msgid "Finish Setup"
 msgstr "Completa configurazione"
@@ -1140,7 +1140,7 @@ msgid "Generate New Code"
 msgstr "Genera nuovo codice"
 
 msgid "Generating…"
-msgstr "Generazione…"
+msgstr "Generazione in corso…"
 
 msgid "Google Calendar"
 msgstr "Google Calendar"
@@ -1179,7 +1179,7 @@ msgid "Last name"
 msgstr "Cognome"
 
 msgid "Loading…"
-msgstr "Caricamento…"
+msgstr "Caricamento in corso…"
 
 msgid "Lock Vault"
 msgstr "Blocca Vault"
@@ -1347,7 +1347,7 @@ msgid "Remove service"
 msgstr "Rimuovi servizio"
 
 msgid "Removing…"
-msgstr "Rimozione…"
+msgstr "Rimozione in corso…"
 
 msgid "Reset Authenticator App"
 msgstr "Reimposta app di autenticazione"
@@ -1374,10 +1374,10 @@ msgid "Save this credential in your password manager"
 msgstr "Salva queste credenziali nel tuo gestore di password"
 
 msgid "Saving..."
-msgstr "Salvataggio..."
+msgstr "Salvataggio in corso..."
 
 msgid "Saving…"
-msgstr "Salvataggio…"
+msgstr "Salvataggio in corso…"
 
 msgid "Scan QR Code"
 msgstr "Scansiona codice QR"
@@ -1410,7 +1410,7 @@ msgid "Start Upgrade"
 msgstr "Avvia aggiornamento"
 
 msgid "Starting…"
-msgstr "Avvio…"
+msgstr "Avvio in corso…"
 
 msgid "Step"
 msgstr "Passo"
@@ -1425,7 +1425,7 @@ msgid "Synced"
 msgstr "Sincronizzato"
 
 msgid "Syncing…"
-msgstr "Sincronizzazione…"
+msgstr "Sincronizzazione in corso…"
 
 msgid "TOTP Recovery Code"
 msgstr "Codice di recupero TOTP"
@@ -1692,7 +1692,7 @@ msgid "I forgot my vault password but I saved the recovery phrase and still have
 msgstr "Ho dimenticato la password del Vault ma ho salvato la frase di recupero e ho ancora l'autenticatore."
 
 msgid "Vault must be unlocked to enroll a recovery phrase."
-msgstr "Il vault deve essere sbloccato per registrare una frase di recupero."
+msgstr "Il Vault deve essere sbloccato per registrare una frase di recupero."
 
 msgid "Failed to enroll recovery phrase."
 msgstr "Registrazione della frase di recupero non riuscita."
@@ -1704,10 +1704,10 @@ msgid "Invalid recovery phrase."
 msgstr "Frase di recupero non valida."
 
 msgid "Failed to generate phrase. Ensure the vault is unlocked."
-msgstr "Generazione della frase non riuscita. Assicurati che il vault sia sbloccato."
+msgstr "Generazione della frase non riuscita. Assicurati che il Vault sia sbloccato."
 
 msgid "Unlock the vault to manage the recovery phrase."
-msgstr "Sblocca il vault per gestire la frase di recupero."
+msgstr "Sblocca il Vault per gestire la frase di recupero."
 
 msgid "Regenerate a new recovery phrase. The previous phrase will stop working immediately."
 msgstr "Genera una nuova frase di recupero. La frase precedente verrà invalidata immediatamente."
@@ -1719,37 +1719,37 @@ msgid "Set Up Recovery Phrase"
 msgstr "Imposta frase di recupero"
 
 msgid "A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline — it will only be shown once."
-msgstr "Una frase di recupero ti permette di reimpostare la password del vault se dovessi dimenticarla. Conservala in un luogo sicuro offline — verrà mostrata una sola volta."
+msgstr "Una frase di recupero ti permette di reimpostare la password del Vault se dovessi dimenticarla. Conservala in un luogo sicuro offline — verrà mostrata una sola volta."
 
 msgid "Your Recovery Phrase"
 msgstr "La tua frase di recupero"
 
 msgid "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app, then unlock normally."
-msgstr "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il vault alla tua app di autenticazione, quindi sblocca normalmente."
+msgstr "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il Vault alla tua app di autenticazione, quindi sblocca normalmente."
 
 msgid "Done — go to unlock screen"
 msgstr "Fatto — vai alla schermata di sblocco"
 
 msgid "Enter your vault password and the one-time recovery code to generate a new authenticator entry."
-msgstr "Inserisci la password del vault e il codice di recupero monouso per generare una nuova voce nell'autenticatore."
+msgstr "Inserisci la password del Vault e il codice di recupero monouso per generare una nuova voce nell'autenticatore."
 
 msgid "Recovery failed. Check your recovery phrase and try again."
 msgstr "Recupero non riuscito. Controlla la frase di recupero e riprova."
 
 msgid "Enter your recovery phrase and a new password to reset vault access."
-msgstr "Inserisci la frase di recupero e una nuova password per reimpostare l'accesso al vault."
+msgstr "Inserisci la frase di recupero e una nuova password per reimpostare l'accesso al Vault."
 
 msgid "I forgot my vault password but I saved the recovery phrase."
-msgstr "Ho dimenticato la password del vault ma ho salvato la frase di recupero."
+msgstr "Ho dimenticato la password del Vault ma ho salvato la frase di recupero."
 
 msgid "Could not generate recovery phrase. Make sure the vault is unlocked."
-msgstr "Impossibile generare la frase di recupero. Assicurati che il vault sia sbloccato."
+msgstr "Impossibile generare la frase di recupero. Assicurati che il Vault sia sbloccato."
 
 msgid "Set up your recovery phrase"
 msgstr "Imposta la tua frase di recupero"
 
 msgid "Add a recovery phrase so you can regain access if you ever forget your vault password. It takes only a few seconds."
-msgstr "Aggiungi una frase di recupero per poter recuperare l'accesso se dovessi dimenticare la password del vault. Bastano pochi secondi."
+msgstr "Aggiungi una frase di recupero per poter recuperare l'accesso se dovessi dimenticare la password del Vault. Bastano pochi secondi."
 
 msgid "Generate Recovery Phrase"
 msgstr "Genera frase di recupero"
