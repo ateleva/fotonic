@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: eleva-crm-for-photographers 1.3.8\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eleva-crm-for-photographers\n"
 "POT-Creation-Date: 2026-06-14 10:52+0000\n"
-"PO-Revision-Date: 2026-06-30 00:00+0000\n"
+"PO-Revision-Date: 2026-07-01 00:00+0000\n"
 "Last-Translator: Alessandro Bonacina <bonacina.ale@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "Language: it_IT\n"
@@ -31,7 +31,7 @@ msgstr "Il Vault è già configurato. Usa la modifica della password per aggiorn
 
 #: includes/class-rest-api.php:344
 msgid "Password is required."
-msgstr "La password è obbligatoria."
+msgstr "La password è richiesta."
 
 #: includes/class-rest-api.php:351
 msgid "Vault password must be at least 12 characters."
@@ -47,7 +47,7 @@ msgstr "Troppi tentativi falliti. Riprova tra 15 minuti."
 
 #: includes/class-rest-api.php:403
 msgid "Password and OTP are required."
-msgstr "Password e OTP sono obbligatori."
+msgstr "Password e OTP sono richiesti."
 
 #: includes/class-rest-api.php:413
 msgid "Invalid password or OTP code."
@@ -67,7 +67,7 @@ msgstr "Accesso negato."
 
 #: includes/class-rest-api.php:565
 msgid "All fields are required."
-msgstr "Tutti i campi sono obbligatori."
+msgstr "Tutti i campi sono richiesti."
 
 #: includes/class-rest-api.php:572
 msgid "New vault password must be at least 12 characters."
@@ -87,7 +87,7 @@ msgstr "Errore di cifratura."
 
 #: includes/class-rest-api.php:751
 msgid "Recovery code and new password are required."
-msgstr "Il codice di recupero e la nuova password sono obbligatori."
+msgstr "Il codice di recupero e la nuova password sono richiesti."
 
 #: includes/class-rest-api.php:775
 msgid "Invalid recovery code."
@@ -95,7 +95,7 @@ msgstr "Codice di recupero non valido."
 
 #: includes/class-rest-api.php:809
 msgid "Password and recovery code are required."
-msgstr "La password e il codice di recupero sono obbligatori."
+msgstr "La password e il codice di recupero sono richiesti."
 
 #: includes/class-rest-api.php:826
 msgid "Invalid password or recovery code."
@@ -119,7 +119,7 @@ msgstr "Cliente non trovato."
 
 #: includes/class-rest-api.php:1060
 msgid "Title is required."
-msgstr "Il titolo è obbligatorio."
+msgstr "Il titolo è richiesto."
 
 #: includes/class-rest-api.php:1155
 msgid "Service not found."
@@ -139,7 +139,7 @@ msgstr "Sconto"
 
 #: includes/class-rest-api.php:2308
 msgid "Label is required."
-msgstr "L'etichetta è obbligatoria."
+msgstr "L'etichetta è richiesta."
 
 #: includes/class-rest-api.php:2314
 msgid "A payment type with this slug already exists."
@@ -873,11 +873,11 @@ msgstr "Scheda non trovata."
 
 #: includes/class-memory-card-rest-api.php
 msgid "Card title is required."
-msgstr "Il nome della scheda è obbligatorio."
+msgstr "Il nome della scheda è richiesto."
 
 #: includes/class-memory-card-rest-api.php
 msgid "Card is currently in use and cannot be deleted."
-msgstr "La scheda è attualmente in uso e non può essere eliminata."
+msgstr "La scheda è in uso: impossibile eliminarla."
 
 #: src/src/features/memory-cards/MemoryCardList.jsx
 msgid "Card Name"
@@ -905,7 +905,7 @@ msgstr "es. SD-A 128GB SanDisk"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Card name is required"
-msgstr "Il nome della scheda è obbligatorio"
+msgstr "Il nome della scheda è richiesto"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Update Card"
@@ -917,7 +917,7 @@ msgstr "Crea scheda"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Delete this card? This action cannot be undone."
-msgstr "Eliminare questa scheda? L'azione non può essere annullata."
+msgstr "Eliminare questa scheda? Questa azione è irreversibile."
 
 #: src/src/features/works/MemoryCardsSection.jsx
 msgid "Select a card…"
@@ -972,7 +972,7 @@ msgid "Analytics"
 msgstr "Statistiche"
 
 msgid "Are you sure you want to delete this item? This action cannot be undone."
-msgstr "Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata."
+msgstr "Sei sicuro di voler eliminare questo elemento? Questa azione è irreversibile."
 
 msgid "Authenticator Code"
 msgstr "Codice autenticatore"
@@ -1005,7 +1005,7 @@ msgid "Close"
 msgstr "Chiudi"
 
 msgid "Code is required"
-msgstr "Il codice è obbligatorio"
+msgstr "Il codice è richiesto"
 
 msgid "Collaborator"
 msgstr "Collaboratore"
@@ -1050,16 +1050,16 @@ msgid "Delete"
 msgstr "Elimina"
 
 msgid "Delete this customer? This action cannot be undone."
-msgstr "Eliminare questo cliente? Questa azione non può essere annullata."
+msgstr "Eliminare questo cliente? Questa azione è irreversibile."
 
 msgid "Delete this payment type? Existing installments will keep their current type."
 msgstr "Eliminare questo metodo di pagamento? Le rate esistenti manterranno il tipo attuale."
 
 msgid "Delete this service? This action cannot be undone."
-msgstr "Eliminare questo servizio? Questa azione non può essere annullata."
+msgstr "Eliminare questo servizio? Questa azione è irreversibile."
 
 msgid "Delete this work? This action cannot be undone."
-msgstr "Eliminare questo lavoro? Questa azione non può essere annullata."
+msgstr "Eliminare questo lavoro? Questa azione è irreversibile."
 
 msgid "Do not close this tab."
 msgstr "Non chiudere questa scheda."
@@ -1206,7 +1206,7 @@ msgid "Name"
 msgstr "Nome"
 
 msgid "Name is required."
-msgstr "Il nome è obbligatorio."
+msgstr "Il nome è richiesto."
 
 msgid "New Recovery Phrase"
 msgstr "Nuova frase di recupero"
@@ -1275,13 +1275,13 @@ msgid "Password"
 msgstr "Password"
 
 msgid "Password and OTP code are required."
-msgstr "La password e il codice OTP sono obbligatori."
+msgstr "La password e il codice OTP sono richiesti."
 
 msgid "Password changed successfully."
 msgstr "Password modificata con successo."
 
 msgid "Password is required"
-msgstr "La password è obbligatoria"
+msgstr "La password è richiesta"
 
 msgid "Passwords do not match"
 msgstr "Le password non coincidono"
@@ -1443,7 +1443,7 @@ msgid "This phrase lets you recover access if you forget your password. Store it
 msgstr "Questa frase ti permette di recuperare l'accesso se dimentichi la password. Conservala in un luogo sicuro offline — non verrà più mostrata."
 
 msgid "Title is required"
-msgstr "Il titolo è obbligatorio"
+msgstr "Il titolo è richiesto"
 
 msgid "To Do"
 msgstr "Da fare"
@@ -1581,19 +1581,19 @@ msgid "Backed Up"
 msgstr "Backup effettuato"
 
 msgid "All DEK wrapping fields are required."
-msgstr "Tutti i campi di cifratura DEK sono obbligatori."
+msgstr "Tutti i campi di cifratura DEK sono richiesti."
 
 msgid "OTP is required."
-msgstr "L'OTP è obbligatorio."
+msgstr "L'OTP è richiesto."
 
 msgid "salt_dek_pw and wrap_dek_pw are required."
-msgstr "salt_dek_pw e wrap_dek_pw sono obbligatori."
+msgstr "salt_dek_pw e wrap_dek_pw sono richiesti."
 
 msgid "recovery_code is required."
-msgstr "Il recovery_code è obbligatorio."
+msgstr "Il recovery_code è richiesto."
 
 msgid "All migration fields are required."
-msgstr "Tutti i campi di migrazione sono obbligatori."
+msgstr "Tutti i campi di migrazione sono richiesti."
 
 msgid "No v2 vault data found."
 msgstr "Nessun dato Vault v2 trovato."
@@ -1698,7 +1698,7 @@ msgid "Failed to enroll recovery phrase."
 msgstr "Registrazione della frase di recupero non riuscita."
 
 msgid "Recovery phrase and new password are required."
-msgstr "La frase di recupero e la nuova password sono obbligatorie."
+msgstr "La frase di recupero e la nuova password sono richieste."
 
 msgid "Invalid recovery phrase."
 msgstr "Frase di recupero non valida."

@@ -1,1522 +1,218 @@
 {
-    "translation-revision-date": "2026-06-30 00:00+0000",
-    "generator": "Claude Code wp-code-translate",
-    "domain": "messages",
-    "locale_data": {
-        "messages": {
-            "": {
-                "domain": "messages",
-                "plural-forms": "nplurals=2; plural=(n != 1);",
-                "lang": "it_IT"
-            },
-            "CRM": [
-                "CRM"
-            ],
-            "Fotonic requires the PHP OpenSSL extension. Please enable it on your server.": [
-                "Fotonic richiede l'estensione PHP OpenSSL. Abilitala sul tuo server."
-            ],
-            "Vault is already configured. Use change-password to update credentials.": [
-                "Il Vault è già configurato. Usa la modifica della password per aggiornare le credenziali."
-            ],
-            "Password is required.": [
-                "La password è obbligatoria."
-            ],
-            "Vault password must be at least 12 characters.": [
-                "La password del Vault deve contenere almeno 12 caratteri."
-            ],
-            "Vault setup failed.": [
-                "Configurazione Vault non riuscita."
-            ],
-            "Too many failed attempts. Try again in 15 minutes.": [
-                "Troppi tentativi falliti. Riprova tra 15 minuti."
-            ],
-            "Password and OTP are required.": [
-                "Password e OTP sono obbligatori."
-            ],
-            "Invalid password or OTP code.": [
-                "Password o codice OTP non valido."
-            ],
-            "File not found.": [
-                "File non trovato."
-            ],
-            "File not found on disk.": [
-                "File non trovato sul disco."
-            ],
-            "Access denied.": [
-                "Accesso negato."
-            ],
-            "All fields are required.": [
-                "Tutti i campi sono obbligatori."
-            ],
-            "New vault password must be at least 12 characters.": [
-                "La nuova password del Vault deve contenere almeno 12 caratteri."
-            ],
-            "Vault is not set up.": [
-                "Il Vault non è configurato."
-            ],
-            "Vault configuration error.": [
-                "Errore di configurazione Vault."
-            ],
-            "Encryption error.": [
-                "Errore di cifratura."
-            ],
-            "Recovery code and new password are required.": [
-                "Il codice di recupero e la nuova password sono obbligatori."
-            ],
-            "Invalid recovery code.": [
-                "Codice di recupero non valido."
-            ],
-            "Password and recovery code are required.": [
-                "La password e il codice di recupero sono obbligatori."
-            ],
-            "Invalid password or recovery code.": [
-                "Password o codice di recupero non valido."
-            ],
-            "Vault must be unlocked to regenerate recovery code.": [
-                "Il Vault deve essere sbloccato per rigenerare il codice di recupero."
-            ],
-            "Failed to regenerate recovery code.": [
-                "Rigenerazione del codice di recupero non riuscita."
-            ],
-            "Vault reset failed.": [
-                "Reimpostazione del Vault non riuscita."
-            ],
-            "Customer not found.": [
-                "Cliente non trovato."
-            ],
-            "Title is required.": [
-                "Il titolo è obbligatorio."
-            ],
-            "Service not found.": [
-                "Servizio non trovato."
-            ],
-            "Work not found.": [
-                "Lavoro non trovato."
-            ],
-            "Payment": [
-                "Pagamento"
-            ],
-            "Discount": [
-                "Sconto"
-            ],
-            "Label is required.": [
-                "L'etichetta è obbligatoria."
-            ],
-            "A payment type with this slug already exists.": [
-                "Esiste già un tipo di pagamento con questo slug."
-            ],
-            "Payment type not found.": [
-                "Tipo di pagamento non trovato."
-            ],
-            "At least one payment type must remain.": [
-                "Deve rimanere almeno un tipo di pagamento."
-            ],
-            "Linked to %1$d work: %2$s": [
-                "",
-                "Collegato a %1$d lavoro: %2$s",
-                "Collegato a %1$d lavori: %2$s"
-            ],
-            "People": [
-                "Persone"
-            ],
-            "Works": [
-                "Lavori"
-            ],
-            "Service Details": [
-                "Dettagli servizio"
-            ],
-            "Work Details": [
-                "Dettagli lavoro"
-            ],
-            "Quick Notes": [
-                "Note veloci"
-            ],
-            "First Name": [
-                "Nome"
-            ],
-            "Last Name": [
-                "Cognome"
-            ],
-            "Email": [
-                "Email"
-            ],
-            "Phone": [
-                "Telefono"
-            ],
-            "Nationality": [
-                "Nazionalità"
-            ],
-            "Instagram": [
-                "Instagram"
-            ],
-            "Address": [
-                "Indirizzo"
-            ],
-            "TIN": [
-                "CF/P.IVA"
-            ],
-            "Main": [
-                "Principale"
-            ],
-            "+ Add Person": [
-                "+ Aggiungi persona"
-            ],
-            "Remove": [
-                "Rimuovi"
-            ],
-            "At least one person is required.": [
-                "È richiesta almeno una persona."
-            ],
-            "Paid": [
-                "Pagato"
-            ],
-            "Partial": [
-                "Parziale"
-            ],
-            "Unpaid": [
-                "Non pagato"
-            ],
-            "No works yet.": [
-                "Nessun lavoro registrato."
-            ],
-            "Title": [
-                "Titolo"
-            ],
-            "Date": [
-                "Data"
-            ],
-            "Services": [
-                "Servizi"
-            ],
-            "Total Price": [
-                "Prezzo totale"
-            ],
-            "Payment Status": [
-                "Stato pagamento"
-            ],
-            "(no title)": [
-                "(senza titolo)"
-            ],
-            "Total works: %d": [
-                "Lavori totali: %d"
-            ],
-            "Paid:": [
-                "Pagato:"
-            ],
-            "Unpaid:": [
-                "Da pagare:"
-            ],
-            "Base Price (€)": [
-                "Prezzo base (€)"
-            ],
-            "Notes": [
-                "Note"
-            ],
-            "1. Event Details": [
-                "1. Dettagli evento"
-            ],
-            "Event Date": [
-                "Data evento"
-            ],
-            "Event Time From": [
-                "Orario inizio"
-            ],
-            "Event Time To": [
-                "Orario fine"
-            ],
-            "Addresses": [
-                "Indirizzi"
-            ],
-            "Label": [
-                "Etichetta"
-            ],
-            "Street": [
-                "Via"
-            ],
-            "+ Add Address": [
-                "+ Aggiungi indirizzo"
-            ],
-            "2. Customer": [
-                "2. Cliente"
-            ],
-            "Customer": [
-                "Cliente"
-            ],
-            "— Select customer —": [
-                "— Seleziona cliente —"
-            ],
-            "3. Calendar Color": [
-                "3. Colore calendario"
-            ],
-            "Choose the event card color shown in the calendar view.": [
-                "Scegli il colore della scheda evento mostrato nella vista calendario."
-            ],
-            "Default": [
-                "Predefinito"
-            ],
-            "Tomato": [
-                "Pomodoro"
-            ],
-            "Flamingo": [
-                "Fenicottero"
-            ],
-            "Tangerine": [
-                "Mandarino"
-            ],
-            "Banana": [
-                "Banana"
-            ],
-            "Sage": [
-                "Salvia"
-            ],
-            "Basil": [
-                "Basilico"
-            ],
-            "Peacock": [
-                "Pavone"
-            ],
-            "Blueberry": [
-                "Mirtillo"
-            ],
-            "Lavender": [
-                "Lavanda"
-            ],
-            "Grape": [
-                "Uva"
-            ],
-            "Graphite": [
-                "Grafite"
-            ],
-            "6. Services Included": [
-                "6. Servizi inclusi"
-            ],
-            "Service": [
-                "Servizio"
-            ],
-            "Price Override (€)": [
-                "Prezzo personalizzato (€)"
-            ],
-            "Notes Override": [
-                "Note personalizzate"
-            ],
-            "— Add a service —": [
-                "— Aggiungi un servizio —"
-            ],
-            "Add": [
-                "Aggiungi"
-            ],
-            "7. Files": [
-                "7. File"
-            ],
-            "+ Add File": [
-                "+ Aggiungi file"
-            ],
-            "8. Payments": [
-                "8. Pagamenti"
-            ],
-            "Total Price (€)": [
-                "Prezzo totale (€)"
-            ],
-            "Installments": [
-                "Rate"
-            ],
-            "Type": [
-                "Tipo"
-            ],
-            "Amount (€)": [
-                "Importo (€)"
-            ],
-            "Status": [
-                "Stato"
-            ],
-            "+ Add Installment": [
-                "+ Aggiungi rata"
-            ],
-            "e.g. Church": [
-                "es. Chiesa"
-            ],
-            "Via Roma 1, Milano": [
-                "Via Roma 1, Milano"
-            ],
-            "Media library not available.": [
-                "Libreria media non disponibile."
-            ],
-            "Select Files": [
-                "Seleziona file"
-            ],
-            "Add to Work": [
-                "Aggiungi al lavoro"
-            ],
-            "Attachment ID": [
-                "ID allegato"
-            ],
-            "Coupon": [
-                "Buono sconto"
-            ],
-            "Customers": [
-                "Clienti"
-            ],
-            "Add New": [
-                "Aggiungi nuovo"
-            ],
-            "Add New Customer": [
-                "Aggiungi nuovo cliente"
-            ],
-            "Edit Customer": [
-                "Modifica cliente"
-            ],
-            "New Customer": [
-                "Nuovo cliente"
-            ],
-            "View Customer": [
-                "Visualizza cliente"
-            ],
-            "Search Customers": [
-                "Cerca clienti"
-            ],
-            "No customers found.": [
-                "Nessun cliente trovato."
-            ],
-            "No customers found in trash.": [
-                "Nessun cliente trovato nel cestino."
-            ],
-            "All Customers": [
-                "Tutti i clienti"
-            ],
-            "Add New Service": [
-                "Aggiungi nuovo servizio"
-            ],
-            "Edit Service": [
-                "Modifica servizio"
-            ],
-            "New Service": [
-                "Nuovo servizio"
-            ],
-            "View Service": [
-                "Visualizza servizio"
-            ],
-            "Search Services": [
-                "Cerca servizi"
-            ],
-            "No services found.": [
-                "Nessun servizio trovato."
-            ],
-            "No services found in trash.": [
-                "Nessun servizio trovato nel cestino."
-            ],
-            "All Services": [
-                "Tutti i servizi"
-            ],
-            "Work": [
-                "Lavoro"
-            ],
-            "Add New Work": [
-                "Aggiungi nuovo lavoro"
-            ],
-            "Edit Work": [
-                "Modifica lavoro"
-            ],
-            "New Work": [
-                "Nuovo lavoro"
-            ],
-            "View Work": [
-                "Visualizza lavoro"
-            ],
-            "Search Works": [
-                "Cerca lavori"
-            ],
-            "No works found.": [
-                "Nessun lavoro trovato."
-            ],
-            "No works found in trash.": [
-                "Nessun lavoro trovato nel cestino."
-            ],
-            "All Works": [
-                "Tutti i lavori"
-            ],
-            "All Payment Statuses": [
-                "Tutti gli stati di pagamento"
-            ],
-            "Edit Payment Status": [
-                "Modifica stato pagamento"
-            ],
-            "Update Payment Status": [
-                "Aggiorna stato pagamento"
-            ],
-            "Add New Payment Status": [
-                "Aggiungi nuovo stato pagamento"
-            ],
-            "New Payment Status Name": [
-                "Nuovo nome stato pagamento"
-            ],
-            "Search Payment Statuses": [
-                "Cerca stati di pagamento"
-            ],
-            "Total works:": [
-                "Lavori totali:"
-            ],
-            "Failed to generate recovery code. Ensure the vault is unlocked.": [
-                "Generazione del codice di recupero non riuscita. Assicurati che il Vault sia sbloccato."
-            ],
-            "Generate a new recovery code. The previous code will be invalidated immediately.": [
-                "Genera un nuovo codice di recupero. Il codice precedente verrà invalidato immediatamente."
-            ],
-            "Regenerate Recovery Code": [
-                "Rigenera codice di recupero"
-            ],
-            "A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe — it will only be shown once.": [
-                "Verrà generato un nuovo codice di recupero. Il codice esistente non funzionerà più. Conserva il nuovo codice in un luogo sicuro — verrà mostrato una sola volta."
-            ],
-            "Cancel": [
-                "Annulla"
-            ],
-            "Generate": [
-                "Genera"
-            ],
-            "Reset failed.": [
-                "Reimpostazione non riuscita."
-            ],
-            "Permanently wipe the vault configuration. All encrypted data will become inaccessible.": [
-                "Cancella definitivamente la configurazione del Vault. Tutti i dati cifrati diventeranno inaccessibili."
-            ],
-            "Reset Vault": [
-                "Reimposta Vault"
-            ],
-            "This action is irreversible.": [
-                "Questa azione è irreversibile."
-            ],
-            "The vault password, TOTP secret, and recovery code will be permanently deleted. All encrypted client data will become unreadable.": [
-                "La password del Vault, il segreto TOTP e il codice di recupero verranno eliminati definitivamente. Tutti i dati cifrati dei clienti diventeranno illeggibili."
-            ],
-            "Type RESET to confirm": [
-                "Digita RESET per confermare"
-            ],
-            "Recovery failed. Check your password and recovery code.": [
-                "Recupero non riuscito. Controlla la password e il codice di recupero."
-            ],
-            "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app.": [
-                "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il Vault alla tua app di autenticazione."
-            ],
-            "Manual entry key:": [
-                "Chiave di inserimento manuale:"
-            ],
-            "After adding it to your app, return to the unlock screen and sign in.": [
-                "Dopo averlo aggiunto all'app, torna alla schermata di sblocco e accedi."
-            ],
-            "Go to unlock": [
-                "Vai allo sblocco"
-            ],
-            "Enter your vault password and recovery code to generate a new authenticator entry.": [
-                "Inserisci la password del Vault e il codice di recupero per generare una nuova voce nell'app di autenticazione."
-            ],
-            "Vault Password": [
-                "Password Vault"
-            ],
-            "Recovery Code": [
-                "Codice di recupero"
-            ],
-            "Reset Authenticator": [
-                "Reimposta autenticatore"
-            ],
-            "Passwords do not match.": [
-                "Le password non coincidono."
-            ],
-            "Password must be at least 8 characters.": [
-                "La password deve contenere almeno 8 caratteri."
-            ],
-            "Recovery failed. Check your recovery code and try again.": [
-                "Recupero non riuscito. Controlla il codice di recupero e riprova."
-            ],
-            "Enter your recovery code and choose a new vault password. The vault will be unlocked automatically.": [
-                "Inserisci il codice di recupero e scegli una nuova password del Vault. Il Vault verrà sbloccato automaticamente."
-            ],
-            "New Password": [
-                "Nuova password"
-            ],
-            "Confirm New Password": [
-                "Conferma nuova password"
-            ],
-            "Reset Password & Unlock": [
-                "Reimposta password e sblocca"
-            ],
-            "Back": [
-                "Indietro"
-            ],
-            "Account Recovery": [
-                "Recupero dell'account"
-            ],
-            "Reset Password": [
-                "Reimposta password"
-            ],
-            "What do you need help with?": [
-                "Di cosa hai bisogno?"
-            ],
-            "Lost authenticator (I know my password)": [
-                "Autenticatore smarrito (conosco la password)"
-            ],
-            "Lost password (I have my recovery code)": [
-                "Password dimenticata (ho il codice di recupero)"
-            ],
-            "I forgot my vault password but I saved the recovery code.": [
-                "Ho dimenticato la password del Vault ma ho salvato il codice di recupero."
-            ],
-            "This is the ONLY way to recover access if you lose your password or authenticator. It will not be shown again.": [
-                "Questo è l'UNICO modo per recuperare l'accesso se perdi la password o l'autenticatore. Non verrà mostrato di nuovo."
-            ],
-            "Your recovery code": [
-                "Il tuo codice di recupero"
-            ],
-            "Copy to clipboard": [
-                "Copia negli appunti"
-            ],
-            "Store it in a password manager or write it down and keep it secure.": [
-                "Conservalo in un gestore di password oppure annotalo e tienilo al sicuro."
-            ],
-            "I have saved my recovery code in a safe place.": [
-                "Ho salvato il mio codice di recupero in un luogo sicuro."
-            ],
-            "Done": [
-                "Fatto"
-            ],
-            "Could not generate recovery code. Make sure the vault is unlocked.": [
-                "Impossibile generare il codice di recupero. Assicurati che il Vault sia sbloccato."
-            ],
-            "Set up your recovery code": [
-                "Configura il codice di recupero"
-            ],
-            "Your vault has no recovery code. Generate one now so you can regain access if you ever lose your password or authenticator.": [
-                "Il tuo Vault non ha un codice di recupero. Generane uno ora per poter recuperare l'accesso se dovessi perdere la password o l'autenticatore."
-            ],
-            "Set up": [
-                "Configura"
-            ],
-            "Dismiss": [
-                "Ignora"
-            ],
-            "Generate a one-time recovery code. Store it somewhere safe — it will only be shown once.": [
-                "Genera un codice di recupero monouso. Conservalo in un luogo sicuro — verrà mostrato una sola volta."
-            ],
-            "Generate Recovery Code": [
-                "Genera codice di recupero"
-            ],
-            "Memory Cards": [
-                "Schede di memoria"
-            ],
-            "Memory Card": [
-                "Scheda di memoria"
-            ],
-            "Add New Memory Card": [
-                "Aggiungi scheda di memoria"
-            ],
-            "Edit Memory Card": [
-                "Modifica scheda di memoria"
-            ],
-            "New Memory Card": [
-                "Nuova scheda di memoria"
-            ],
-            "View Memory Card": [
-                "Visualizza scheda di memoria"
-            ],
-            "Search Memory Cards": [
-                "Cerca schede di memoria"
-            ],
-            "No memory cards found.": [
-                "Nessuna scheda di memoria trovata."
-            ],
-            "No memory cards found in trash.": [
-                "Nessuna scheda di memoria nel cestino."
-            ],
-            "All Memory Cards": [
-                "Tutte le schede di memoria"
-            ],
-            "Card Status": [
-                "Stato scheda"
-            ],
-            "Ready": [
-                "Pronta"
-            ],
-            "In Use": [
-                "In uso"
-            ],
-            "Needs Backup": [
-                "Backup necessario"
-            ],
-            "Needs Formatting": [
-                "Da formattare"
-            ],
-            "Damaged": [
-                "Danneggiata"
-            ],
-            "Card not found.": [
-                "Scheda non trovata."
-            ],
-            "Card title is required.": [
-                "Il nome della scheda è obbligatorio."
-            ],
-            "Card is currently in use and cannot be deleted.": [
-                "La scheda è attualmente in uso e non può essere eliminata."
-            ],
-            "Card Name": [
-                "Nome scheda"
-            ],
-            "Add Card": [
-                "Aggiungi scheda"
-            ],
-            "No memory cards found. Add your first card.": [
-                "Nessuna scheda trovata. Aggiungi la prima scheda."
-            ],
-            "Edit Card": [
-                "Modifica scheda"
-            ],
-            "New Card": [
-                "Nuova scheda"
-            ],
-            "e.g. SD-A 128GB SanDisk": [
-                "es. SD-A 128GB SanDisk"
-            ],
-            "Card name is required": [
-                "Il nome della scheda è obbligatorio"
-            ],
-            "Update Card": [
-                "Aggiorna scheda"
-            ],
-            "Create Card": [
-                "Crea scheda"
-            ],
-            "Delete this card? This action cannot be undone.": [
-                "Eliminare questa scheda? L'azione non può essere annullata."
-            ],
-            "Select a card…": [
-                "Seleziona una scheda…"
-            ],
-            "Notes…": [
-                "Note…"
-            ],
-            "Backup Done": [
-                "Backup completato"
-            ],
-            "Formatting Done": [
-                "Formattazione completata"
-            ],
-            "+ Add Collaborator": [
-                "+ Aggiungi collaboratore"
-            ],
-            "Actions": [
-                "Azioni"
-            ],
-            "Add Address": [
-                "Aggiungi indirizzo"
-            ],
-            "Add Customer": [
-                "Aggiungi cliente"
-            ],
-            "Add Installment": [
-                "Aggiungi rata"
-            ],
-            "Add Person": [
-                "Aggiungi persona"
-            ],
-            "Add Service": [
-                "Aggiungi servizio"
-            ],
-            "Add Work": [
-                "Aggiungi lavoro"
-            ],
-            "All Statuses": [
-                "Tutti gli stati"
-            ],
-            "All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.": [
-                "Tutti i dati personali dei clienti sono protetti. Sblocca il Vault con la tua password e un codice monouso dalla tua app di autenticazione per visualizzare o modificare le informazioni di contatto."
-            ],
-            "An error occurred. Please try again.": [
-                "Si è verificato un errore. Riprova."
-            ],
-            "Analytics": [
-                "Statistiche"
-            ],
-            "Are you sure you want to delete this item? This action cannot be undone.": [
-                "Sei sicuro di voler eliminare questo elemento? Questa azione non può essere annullata."
-            ],
-            "Authenticator Code": [
-                "Codice autenticatore"
-            ],
-            "Base Price": [
-                "Prezzo base"
-            ],
-            "Calendar": [
-                "Calendario"
-            ],
-            "Calendar Color": [
-                "Colore calendario"
-            ],
-            "Cannot Delete": [
-                "Impossibile eliminare"
-            ],
-            "Change Password": [
-                "Cambia password"
-            ],
-            "Change Vault Password": [
-                "Cambia password Vault"
-            ],
-            "Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault.": [
-                "Scegli una password robusta per proteggere i dati crittografati. Ti servirà ogni volta che sblocchi il Vault."
-            ],
-            "Choose the event card color in the calendar view.": [
-                "Scegli il colore della scheda evento nella vista calendario."
-            ],
-            "Close": [
-                "Chiudi"
-            ],
-            "Code is required": [
-                "Il codice è obbligatorio"
-            ],
-            "Collaborator": [
-                "Collaboratore"
-            ],
-            "Collaborators": [
-                "Collaboratori"
-            ],
-            "Confirm Authenticator Code": [
-                "Conferma codice autenticatore"
-            ],
-            "Confirm Delete": [
-                "Conferma eliminazione"
-            ],
-            "Confirm Password": [
-                "Conferma password"
-            ],
-            "Copied!": [
-                "Copiato!"
-            ],
-            "Copy": [
-                "Copia"
-            ],
-            "Could not reach the vault. Please reload the page.": [
-                "Impossibile raggiungere il Vault. Ricarica la pagina."
-            ],
-            "Create Customer": [
-                "Crea cliente"
-            ],
-            "Create Service": [
-                "Crea servizio"
-            ],
-            "Create Work": [
-                "Crea lavoro"
-            ],
-            "Current OTP Code": [
-                "Codice OTP attuale"
-            ],
-            "Dashboard": [
-                "Dashboard"
-            ],
-            "Delete": [
-                "Elimina"
-            ],
-            "Delete this customer? This action cannot be undone.": [
-                "Eliminare questo cliente? Questa azione non può essere annullata."
-            ],
-            "Delete this payment type? Existing installments will keep their current type.": [
-                "Eliminare questo metodo di pagamento? Le rate esistenti manterranno il tipo attuale."
-            ],
-            "Delete this service? This action cannot be undone.": [
-                "Eliminare questo servizio? Questa azione non può essere annullata."
-            ],
-            "Delete this work? This action cannot be undone.": [
-                "Eliminare questo lavoro? Questa azione non può essere annullata."
-            ],
-            "Do not close this tab.": [
-                "Non chiudere questa scheda."
-            ],
-            "Done — Unlock Vault": [
-                "Fatto — Sblocca Vault"
-            ],
-            "Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.": [
-                "Scarica gratuitamente un'app di autenticazione sul telefono (Google Authenticator, Authy o simili) e scansiona un codice QR per aggiungere una verifica aggiuntiva ogni volta che apri il Vault."
-            ],
-            "Download file": [
-                "Scarica file"
-            ],
-            "Edit": [
-                "Modifica"
-            ],
-            "Edit customer": [
-                "Modifica cliente"
-            ],
-            "Eleva CRM for Photographers": [
-                "Eleva CRM per Fotografi"
-            ],
-            "Eleva Pro License": [
-                "Licenza Eleva Pro"
-            ],
-            "Email Notifications": [
-                "Notifiche email"
-            ],
-            "Enter a 6-digit code": [
-                "Inserisci un codice a 6 cifre"
-            ],
-            "Enter the 6-digit code shown in your authenticator app to complete setup.": [
-                "Inserisci il codice a 6 cifre mostrato nella tua app di autenticazione per completare la configurazione."
-            ],
-            "Enter your vault password and authenticator code to access your data.": [
-                "Inserisci la password del Vault e il codice autenticatore per accedere ai tuoi dati."
-            ],
-            "Enter your vault password to begin.": [
-                "Inserisci la password del Vault per iniziare."
-            ],
-            "Error adding type.": [
-                "Errore nell'aggiunta del tipo."
-            ],
-            "Error updating type.": [
-                "Errore nell'aggiornamento del tipo."
-            ],
-            "Event Details": [
-                "Dettagli evento"
-            ],
-            "Expenses": [
-                "Spese"
-            ],
-            "Failed to change password.": [
-                "Modifica della password non riuscita."
-            ],
-            "Filename": [
-                "Nome file"
-            ],
-            "Files": [
-                "File"
-            ],
-            "Finalising…": [
-                "Finalizzazione in corso…"
-            ],
-            "Finish Setup": [
-                "Completa configurazione"
-            ],
-            "First name": [
-                "Nome"
-            ],
-            "GCal Activity ✓": [
-                "Attività GCal ✓"
-            ],
-            "GCal ✓": [
-                "GCal ✓"
-            ],
-            "Generate New Code": [
-                "Genera nuovo codice"
-            ],
-            "Generating…": [
-                "Generazione in corso…"
-            ],
-            "Google Calendar": [
-                "Google Calendar"
-            ],
-            "I have saved this phrase offline in a secure location.": [
-                "Ho salvato questa frase offline in un luogo sicuro."
-            ],
-            "I've scanned the code — Next": [
-                "Ho scansionato il codice — Avanti"
-            ],
-            "Images, PDF, DOC, DOCX · max 10 MB each": [
-                "Immagini, PDF, DOC, DOCX · max 10 MB ciascuno"
-            ],
-            "In Progress": [
-                "In corso"
-            ],
-            "Incorrect password — please try again.": [
-                "Password errata — riprova."
-            ],
-            "Invalid code or password mismatch — check your authenticator app": [
-                "Codice non valido o password errata — controlla l'app di autenticazione"
-            ],
-            "Invalid code — check your authenticator app": [
-                "Codice non valido — controlla l'app di autenticazione"
-            ],
-            "Invalid password or code": [
-                "Password o codice non validi"
-            ],
-            "Kanban": [
-                "Kanban"
-            ],
-            "Keep your client data safe": [
-                "Proteggi i dati dei tuoi clienti"
-            ],
-            "Last name": [
-                "Cognome"
-            ],
-            "Loading…": [
-                "Caricamento in corso…"
-            ],
-            "Lock Vault": [
-                "Blocca Vault"
-            ],
-            "Lock the Vault when you finish working to keep client details protected.": [
-                "Blocca il Vault quando hai finito di lavorare per proteggere i dati dei clienti."
-            ],
-            "Locked": [
-                "Bloccato"
-            ],
-            "Lost your password or authenticator?": [
-                "Hai perso la password o l'autenticatore?"
-            ],
-            "Main Contact": [
-                "Contatto principale"
-            ],
-            "Me": [
-                "Io"
-            ],
-            "Minimum 10 characters": [
-                "Minimo 10 caratteri"
-            ],
-            "Name": [
-                "Nome"
-            ],
-            "Name is required.": [
-                "Il nome è obbligatorio."
-            ],
-            "New Recovery Phrase": [
-                "Nuova frase di recupero"
-            ],
-            "New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm.": [
-                "Nuovo codice autenticatore generato. Scansiona il codice QR con la tua app, poi sblocca il Vault per confermare."
-            ],
-            "New password must be at least 10 characters.": [
-                "La nuova password deve contenere almeno 10 caratteri."
-            ],
-            "New passwords do not match.": [
-                "Le nuove password non coincidono."
-            ],
-            "New payment type…": [
-                "Nuovo metodo di pagamento…"
-            ],
-            "Next": [
-                "Avanti"
-            ],
-            "No collaborators available. Add one in the Collaborators section.": [
-                "Nessun collaboratore disponibile. Aggiungine uno nella sezione Collaboratori."
-            ],
-            "No customers found. Add your first customer.": [
-                "Nessun cliente trovato. Aggiungi il tuo primo cliente."
-            ],
-            "No data": [
-                "Nessun dato"
-            ],
-            "No files attached.": [
-                "Nessun file allegato."
-            ],
-            "No payment types yet.": [
-                "Nessun metodo di pagamento."
-            ],
-            "No services found. Add your first service.": [
-                "Nessun servizio trovato. Aggiungi il tuo primo servizio."
-            ],
-            "No works found. Add your first work.": [
-                "Nessun lavoro trovato. Aggiungi il tuo primo lavoro."
-            ],
-            "Not configured": [
-                "Non configurato"
-            ],
-            "OK": [
-                "OK"
-            ],
-            "One-Time Code": [
-                "Codice monouso"
-            ],
-            "Open Work →": [
-                "Apri lavoro →"
-            ],
-            "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below.": [
-                "Apri la tua app di autenticazione (Google Authenticator, Authy, ecc.) e scansiona il codice QR qui sotto."
-            ],
-            "Optional notes about this service...": [
-                "Note opzionali su questo servizio..."
-            ],
-            "Optional notes...": [
-                "Note opzionali..."
-            ],
-            "Or enter this key manually:": [
-                "Oppure inserisci questa chiave manualmente:"
-            ],
-            "Password": [
-                "Password"
-            ],
-            "Password and OTP code are required.": [
-                "La password e il codice OTP sono obbligatori."
-            ],
-            "Password changed successfully.": [
-                "Password modificata con successo."
-            ],
-            "Password is required": [
-                "La password è obbligatoria"
-            ],
-            "Passwords do not match": [
-                "Le password non coincidono"
-            ],
-            "Payment Types": [
-                "Metodi di pagamento"
-            ],
-            "Payment types used": [
-                "Metodi di pagamento utilizzati"
-            ],
-            "Payments": [
-                "Pagamenti"
-            ],
-            "Payments to receive": [
-                "Pagamenti da ricevere"
-            ],
-            "Person": [
-                "Persona"
-            ],
-            "Pick a strong master password (at least 10 characters) and store it somewhere safe.": [
-                "Scegli una password principale robusta (almeno 10 caratteri) e conservala in un luogo sicuro."
-            ],
-            "Please confirm your password": [
-                "Conferma la tua password"
-            ],
-            "Price (€)": [
-                "Prezzo (€)"
-            ],
-            "Price must be 0 or more": [
-                "Il prezzo deve essere 0 o superiore"
-            ],
-            "Pro": [
-                "Pro"
-            ],
-            "Products": [
-                "Prodotti"
-            ],
-            "Recent Works": [
-                "Lavori recenti"
-            ],
-            "Recovery Phrase": [
-                "Frase di recupero"
-            ],
-            "Reload the page to load email settings.": [
-                "Ricarica la pagina per caricare le impostazioni email."
-            ],
-            "Remove address": [
-                "Rimuovi indirizzo"
-            ],
-            "Remove file": [
-                "Rimuovi file"
-            ],
-            "Remove from Google Calendar": [
-                "Rimuovi da Google Calendar"
-            ],
-            "Remove installment": [
-                "Rimuovi rata"
-            ],
-            "Remove person": [
-                "Rimuovi persona"
-            ],
-            "Remove service": [
-                "Rimuovi servizio"
-            ],
-            "Removing…": [
-                "Rimozione in corso…"
-            ],
-            "Reset Authenticator App": [
-                "Reimposta app di autenticazione"
-            ],
-            "Reset again": [
-                "Reimposta di nuovo"
-            ],
-            "Revenue": [
-                "Ricavi"
-            ],
-            "Save": [
-                "Salva"
-            ],
-            "Save Your Recovery Code": [
-                "Salva il tuo codice di recupero"
-            ],
-            "Save Your Recovery Phrase": [
-                "Salva la tua frase di recupero"
-            ],
-            "Save the recovery phrase and recovery code offline — these are your fallback if you lose access.": [
-                "Salva la frase di recupero e il codice di recupero offline — sono il tuo piano B se perdi l'accesso."
-            ],
-            "Save this credential in your password manager": [
-                "Salva queste credenziali nel tuo gestore di password"
-            ],
-            "Saving...": [
-                "Salvataggio in corso..."
-            ],
-            "Saving…": [
-                "Salvataggio in corso…"
-            ],
-            "Scan QR Code": [
-                "Scansiona codice QR"
-            ],
-            "Scheduled Notifications": [
-                "Notifiche programmate"
-            ],
-            "Search customers...": [
-                "Cerca clienti..."
-            ],
-            "Search works...": [
-                "Cerca lavori..."
-            ],
-            "Services Included": [
-                "Servizi inclusi"
-            ],
-            "Set Up Vault": [
-                "Configura Vault"
-            ],
-            "Set Vault Password": [
-                "Imposta password Vault"
-            ],
-            "Setting up vault…": [
-                "Configurazione Vault in corso…"
-            ],
-            "Settings": [
-                "Impostazioni"
-            ],
-            "Start Upgrade": [
-                "Avvia aggiornamento"
-            ],
-            "Starting…": [
-                "Avvio in corso…"
-            ],
-            "Step": [
-                "Passo"
-            ],
-            "Suppliers": [
-                "Fornitori"
-            ],
-            "Sync failed. Try again.": [
-                "Sincronizzazione non riuscita. Riprova."
-            ],
-            "Synced": [
-                "Sincronizzato"
-            ],
-            "Syncing…": [
-                "Sincronizzazione in corso…"
-            ],
-            "TOTP Recovery Code": [
-                "Codice di recupero TOTP"
-            ],
-            "Task": [
-                "Attività"
-            ],
-            "The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.": [
-                "Il Vault protegge i dati personali che memorizzi per ogni cliente: nomi, numeri di telefono, indirizzi email e indirizzi di casa. Una volta attivo, tutto ciò è protetto in modo che nessun altro possa leggerlo, anche se accede direttamente al tuo sito o al database."
-            ],
-            "These files exceed the 10 MB limit and were skipped:": [
-                "Questi file superano il limite di 10 MB e sono stati ignorati:"
-            ],
-            "This phrase lets you recover access if you forget your password. Store it somewhere safe offline — it will never be shown again.": [
-                "Questa frase ti permette di recuperare l'accesso se dimentichi la password. Conservala in un luogo sicuro offline — non verrà più mostrata."
-            ],
-            "Title is required": [
-                "Il titolo è obbligatorio"
-            ],
-            "To Do": [
-                "Da fare"
-            ],
-            "To Pay": [
-                "Da pagare"
-            ],
-            "Total": [
-                "Totale"
-            ],
-            "Try Again": [
-                "Riprova"
-            ],
-            "Try again": [
-                "Riprova"
-            ],
-            "Unable to check references. Please try again.": [
-                "Impossibile verificare i riferimenti. Riprova."
-            ],
-            "Unlock Vault": [
-                "Sblocca Vault"
-            ],
-            "Unlocked": [
-                "Sbloccato"
-            ],
-            "Update Customer": [
-                "Aggiorna cliente"
-            ],
-            "Update Service": [
-                "Aggiorna servizio"
-            ],
-            "Update Work": [
-                "Aggiorna lavoro"
-            ],
-            "Upgrade Complete": [
-                "Aggiornamento completato"
-            ],
-            "Upgrade Failed": [
-                "Aggiornamento non riuscito"
-            ],
-            "Upgrading Vault…": [
-                "Aggiornamento Vault in corso…"
-            ],
-            "Upload File": [
-                "Carica file"
-            ],
-            "Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity.": [
-                "Usa questa opzione se hai perso l'accesso alla tua app di autenticazione. Avrai bisogno della password del Vault e dell'OTP attuale per confermare la tua identità."
-            ],
-            "Username": [
-                "Nome utente"
-            ],
-            "Using a separate username prevents your browser from confusing the vault password with your WordPress login.": [
-                "Usare un nome utente separato impedisce al browser di confondere la password del Vault con le credenziali WordPress."
-            ],
-            "Vault": [
-                "Vault"
-            ],
-            "Vault Locked": [
-                "Vault bloccato"
-            ],
-            "Vault Security Upgrade": [
-                "Aggiornamento sicurezza Vault"
-            ],
-            "Vault Setup": [
-                "Configurazione Vault"
-            ],
-            "Vault configured": [
-                "Vault configurato"
-            ],
-            "Vault password": [
-                "Password Vault"
-            ],
-            "Vault password is required to complete the migration.": [
-                "La password del Vault è necessaria per completare la migrazione."
-            ],
-            "Verify & Unlock": [
-                "Verifica e sblocca"
-            ],
-            "Your vault needs a one-time upgrade to a stronger encryption scheme. This will re-encrypt your client data with a new key and takes a few seconds.": [
-                "Il tuo Vault necessita di un aggiornamento una tantum a uno schema di crittografia più robusto. I dati dei clienti verranno ri-crittografati con una nuova chiave: richiede pochi secondi."
-            ],
-            "Your vault now uses stronger encryption. Save your new recovery phrase — the old one no longer works.": [
-                "Il tuo Vault ora utilizza una crittografia più robusta. Salva la nuova frase di recupero — quella precedente non è più valida."
-            ],
-            "e.g. Deposit": [
-                "es. Acconto"
-            ],
-            "e.g. Elisa & Edoardo": [
-                "es. Elisa & Edoardo"
-            ],
-            "e.g. Matrimonio Rossi": [
-                "es. Matrimonio Rossi"
-            ],
-            "e.g. Wedding Photography": [
-                "es. Fotografia di Matrimonio"
-            ],
-            "error": [
-                "errore"
-            ],
-            "errors": [
-                "errori"
-            ],
-            "last year": [
-                "anno scorso"
-            ],
-            "next year": [
-                "anno prossimo"
-            ],
-            "of": [
-                "di"
-            ],
-            "this year": [
-                "quest'anno"
-            ],
-            "work": [
-                "lavoro"
-            ],
-            "works": [
-                "lavori"
-            ],
-            "— Select service —": [
-                "— Seleziona servizio —"
-            ],
-            "← Back": [
-                "← Indietro"
-            ],
-            "↑ Sync to Google Calendar": [
-                "↑ Sincronizza con Google Calendar"
-            ],
-            "All Card Statuses": [
-                "Tutti gli stati schede"
-            ],
-            "Backed Up": [
-                "Backup effettuato"
-            ],
-            "All DEK wrapping fields are required.": [
-                "Tutti i campi di cifratura DEK sono obbligatori."
-            ],
-            "OTP is required.": [
-                "L'OTP è obbligatorio."
-            ],
-            "salt_dek_pw and wrap_dek_pw are required.": [
-                "salt_dek_pw e wrap_dek_pw sono obbligatori."
-            ],
-            "recovery_code is required.": [
-                "Il recovery_code è obbligatorio."
-            ],
-            "All migration fields are required.": [
-                "Tutti i campi di migrazione sono obbligatori."
-            ],
-            "No v2 vault data found.": [
-                "Nessun dato Vault v2 trovato."
-            ],
-            "Invalid vault password.": [
-                "Password Vault non valida."
-            ],
-            "No TOTP secret found to migrate.": [
-                "Nessun segreto TOTP trovato per la migrazione."
-            ],
-            "Could not decrypt TOTP secret.": [
-                "Impossibile decrittare il segreto TOTP."
-            ],
-            "Migration failed.": [
-                "Migrazione non riuscita."
-            ],
-            "Too many failed attempts. Try again later.": [
-                "Troppi tentativi falliti. Riprova più tardi."
-            ],
-            "Invalid OTP code.": [
-                "Codice OTP non valido."
-            ],
-            "No recovery code has been set up.": [
-                "Nessun codice di recupero configurato."
-            ],
-            "Stay unlocked": [
-                "Rimani sbloccato"
-            ],
-            "Generate a new TOTP recovery code. The previous code will be invalidated immediately.": [
-                "Genera un nuovo codice di recupero TOTP. Il codice precedente verrà invalidato immediatamente."
-            ],
-            "Failed to regenerate phrase. Ensure the vault is unlocked.": [
-                "Impossibile rigenerare la frase. Assicurati che il Vault sia sbloccato."
-            ],
-            "Unlock the vault to regenerate the recovery phrase.": [
-                "Sblocca il Vault per rigenerare la frase di recupero."
-            ],
-            "Generate a new recovery phrase. The previous phrase will stop working immediately.": [
-                "Genera una nuova frase di recupero. La frase precedente cesserà di funzionare immediatamente."
-            ],
-            "Regenerate Recovery Phrase": [
-                "Rigenera frase di recupero"
-            ],
-            "A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline — it will only be shown once.": [
-                "Verrà generata una nuova frase di recupero. La vecchia frase non funzionerà più. Conservala in un luogo sicuro offline — verrà mostrata una sola volta."
-            ],
-            "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable.": [
-                "La password del Vault, il segreto TOTP e le credenziali di recupero verranno eliminati definitivamente. Tutti i dati crittografati dei clienti diventeranno illeggibili."
-            ],
-            "Vault auto-locks after 15 minutes of inactivity.": [
-                "Il Vault si blocca automaticamente dopo 15 minuti di inattività."
-            ],
-            "All": [
-                "Tutti"
-            ],
-            "In Work": [
-                "Nel lavoro"
-            ],
-            "Incorrect vault password.": [
-                "Password Vault errata."
-            ],
-            "Recovery failed. Check your recovery code.": [
-                "Recupero non riuscito. Controlla il codice di recupero."
-            ],
-            "Your vault is now open. After adding the new entry to your app, use the new code next time you unlock.": [
-                "Il tuo Vault è ora aperto. Dopo aver aggiunto la nuova voce nella tua app, usa il nuovo codice la prossima volta che sblocchi."
-            ],
-            "Enter your vault password and the one-time recovery code to generate a new authenticator entry. Your password is used locally — it is never sent to the server.": [
-                "Inserisci la password del Vault e il codice di recupero monouso per generare una nuova voce nell'autenticatore. La password viene usata localmente — non viene mai inviata al server."
-            ],
-            "Recover Access": [
-                "Recupera accesso"
-            ],
-            "Recovery phrase is incorrect or does not match this vault.": [
-                "La frase di recupero non è corretta o non corrisponde a questo Vault."
-            ],
-            "Recovery failed. Check your recovery phrase and code, then try again.": [
-                "Recupero non riuscito. Controlla la frase di recupero e il codice, poi riprova."
-            ],
-            "Password updated successfully. Please unlock the vault with your new password.": [
-                "Password aggiornata con successo. Sblocca il Vault con la nuova password."
-            ],
-            "Go to unlock screen": [
-                "Vai alla schermata di sblocco"
-            ],
-            "Enter your recovery phrase, a new password, and a live authenticator code to reset your vault password.": [
-                "Inserisci la frase di recupero, una nuova password e un codice autenticatore attivo per reimpostare la password del Vault."
-            ],
-            "Authenticator Code (live OTP)": [
-                "Codice autenticatore (OTP attivo)"
-            ],
-            "Lost password (I have my recovery phrase)": [
-                "Password dimenticata (ho la frase di recupero)"
-            ],
-            "I forgot my vault password but I saved the recovery phrase and still have my authenticator.": [
-                "Ho dimenticato la password del Vault ma ho salvato la frase di recupero e ho ancora l'autenticatore."
-            ],
-            "Vault must be unlocked to enroll a recovery phrase.": [
-                "Il Vault deve essere sbloccato per registrare una frase di recupero."
-            ],
-            "Failed to enroll recovery phrase.": [
-                "Registrazione della frase di recupero non riuscita."
-            ],
-            "Recovery phrase and new password are required.": [
-                "La frase di recupero e la nuova password sono obbligatorie."
-            ],
-            "Invalid recovery phrase.": [
-                "Frase di recupero non valida."
-            ],
-            "Failed to generate phrase. Ensure the vault is unlocked.": [
-                "Generazione della frase non riuscita. Assicurati che il Vault sia sbloccato."
-            ],
-            "Unlock the vault to manage the recovery phrase.": [
-                "Sblocca il Vault per gestire la frase di recupero."
-            ],
-            "Regenerate a new recovery phrase. The previous phrase will stop working immediately.": [
-                "Genera una nuova frase di recupero. La frase precedente verrà invalidata immediatamente."
-            ],
-            "Set up a recovery phrase so you can reset your password if you ever forget it.": [
-                "Imposta una frase di recupero per poter reimpostare la password se dovessi dimenticarla."
-            ],
-            "Set Up Recovery Phrase": [
-                "Imposta frase di recupero"
-            ],
-            "A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline — it will only be shown once.": [
-                "Una frase di recupero ti permette di reimpostare la password del Vault se dovessi dimenticarla. Conservala in un luogo sicuro offline — verrà mostrata una sola volta."
-            ],
-            "Your Recovery Phrase": [
-                "La tua frase di recupero"
-            ],
-            "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app, then unlock normally.": [
-                "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il Vault alla tua app di autenticazione, quindi sblocca normalmente."
-            ],
-            "Done — go to unlock screen": [
-                "Fatto — vai alla schermata di sblocco"
-            ],
-            "Enter your vault password and the one-time recovery code to generate a new authenticator entry.": [
-                "Inserisci la password del Vault e il codice di recupero monouso per generare una nuova voce nell'autenticatore."
-            ],
-            "Recovery failed. Check your recovery phrase and try again.": [
-                "Recupero non riuscito. Controlla la frase di recupero e riprova."
-            ],
-            "Enter your recovery phrase and a new password to reset vault access.": [
-                "Inserisci la frase di recupero e una nuova password per reimpostare l'accesso al Vault."
-            ],
-            "I forgot my vault password but I saved the recovery phrase.": [
-                "Ho dimenticato la password del Vault ma ho salvato la frase di recupero."
-            ],
-            "Could not generate recovery phrase. Make sure the vault is unlocked.": [
-                "Impossibile generare la frase di recupero. Assicurati che il Vault sia sbloccato."
-            ],
-            "Set up your recovery phrase": [
-                "Imposta la tua frase di recupero"
-            ],
-            "Add a recovery phrase so you can regain access if you ever forget your vault password. It takes only a few seconds.": [
-                "Aggiungi una frase di recupero per poter recuperare l'accesso se dovessi dimenticare la password del Vault. Bastano pochi secondi."
-            ],
-            "Generate Recovery Phrase": [
-                "Genera frase di recupero"
-            ]
-        }
+  "translation-revision-date": "2026-07-01 00:00+0000",
+  "generator": "claude-code",
+  "domain": "messages",
+  "locale_data": {
+    "messages": {
+      "": {
+        "domain": "messages",
+        "plural-forms": "nplurals=2; plural=(n != 1);",
+        "lang": "it_IT"
+      },
+      "Total works:": [
+        "Lavori totali:"
+      ],
+      "Failed to generate recovery code. Ensure the vault is unlocked.": [
+        "Generazione del codice di recupero non riuscita. Assicurati che il Vault sia sbloccato."
+      ],
+      "Generate a new recovery code. The previous code will be invalidated immediately.": [
+        "Genera un nuovo codice di recupero. Il codice precedente verrà invalidato immediatamente."
+      ],
+      "Regenerate Recovery Code": [
+        "Rigenera codice di recupero"
+      ],
+      "A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe — it will only be shown once.": [
+        "Verrà generato un nuovo codice di recupero. Il codice esistente non funzionerà più. Conserva il nuovo codice in un luogo sicuro — verrà mostrato una sola volta."
+      ],
+      "Cancel": [
+        "Annulla"
+      ],
+      "Generate": [
+        "Genera"
+      ],
+      "Reset failed.": [
+        "Reimpostazione non riuscita."
+      ],
+      "Permanently wipe the vault configuration. All encrypted data will become inaccessible.": [
+        "Cancella definitivamente la configurazione del Vault. Tutti i dati cifrati diventeranno inaccessibili."
+      ],
+      "Reset Vault": [
+        "Reimposta Vault"
+      ],
+      "This action is irreversible.": [
+        "Questa azione è irreversibile."
+      ],
+      "The vault password, TOTP secret, and recovery code will be permanently deleted. All encrypted client data will become unreadable.": [
+        "La password del Vault, il segreto TOTP e il codice di recupero verranno eliminati definitivamente. Tutti i dati cifrati dei clienti diventeranno illeggibili."
+      ],
+      "Type RESET to confirm": [
+        "Digita RESET per confermare"
+      ],
+      "Recovery failed. Check your password and recovery code.": [
+        "Recupero non riuscito. Controlla la password e il codice di recupero."
+      ],
+      "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app.": [
+        "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il Vault alla tua app di autenticazione."
+      ],
+      "Manual entry key:": [
+        "Chiave di inserimento manuale:"
+      ],
+      "After adding it to your app, return to the unlock screen and sign in.": [
+        "Dopo averlo aggiunto all'app, torna alla schermata di sblocco e accedi."
+      ],
+      "Go to unlock": [
+        "Vai allo sblocco"
+      ],
+      "Enter your vault password and recovery code to generate a new authenticator entry.": [
+        "Inserisci la password del Vault e il codice di recupero per generare una nuova voce nell'app di autenticazione."
+      ],
+      "Vault Password": [
+        "Password Vault"
+      ],
+      "Recovery Code": [
+        "Codice di recupero"
+      ],
+      "Reset Authenticator": [
+        "Reimposta autenticatore"
+      ],
+      "Passwords do not match.": [
+        "Le password non coincidono."
+      ],
+      "Password must be at least 8 characters.": [
+        "La password deve contenere almeno 8 caratteri."
+      ],
+      "Recovery failed. Check your recovery code and try again.": [
+        "Recupero non riuscito. Controlla il codice di recupero e riprova."
+      ],
+      "Enter your recovery code and choose a new vault password. The vault will be unlocked automatically.": [
+        "Inserisci il codice di recupero e scegli una nuova password del Vault. Il Vault verrà sbloccato automaticamente."
+      ],
+      "New Password": [
+        "Nuova password"
+      ],
+      "Confirm New Password": [
+        "Conferma nuova password"
+      ],
+      "Reset Password & Unlock": [
+        "Reimposta password e sblocca"
+      ],
+      "Back": [
+        "Indietro"
+      ],
+      "Account Recovery": [
+        "Recupero dell'account"
+      ],
+      "Reset Password": [
+        "Reimposta password"
+      ],
+      "What do you need help with?": [
+        "Di cosa hai bisogno?"
+      ],
+      "Lost authenticator (I know my password)": [
+        "Autenticatore smarrito (conosco la password)"
+      ],
+      "Lost password (I have my recovery code)": [
+        "Password dimenticata (ho il codice di recupero)"
+      ],
+      "I forgot my vault password but I saved the recovery code.": [
+        "Ho dimenticato la password del Vault ma ho salvato il codice di recupero."
+      ],
+      "This is the ONLY way to recover access if you lose your password or authenticator. It will not be shown again.": [
+        "Questo è l'UNICO modo per recuperare l'accesso se perdi la password o l'autenticatore. Non verrà mostrato di nuovo."
+      ],
+      "Your recovery code": [
+        "Il tuo codice di recupero"
+      ],
+      "Copy to clipboard": [
+        "Copia negli appunti"
+      ],
+      "Store it in a password manager or write it down and keep it secure.": [
+        "Conservalo in un gestore di password oppure annotalo e tienilo al sicuro."
+      ],
+      "I have saved my recovery code in a safe place.": [
+        "Ho salvato il mio codice di recupero in un luogo sicuro."
+      ],
+      "Done": [
+        "Fatto"
+      ],
+      "Could not generate recovery code. Make sure the vault is unlocked.": [
+        "Impossibile generare il codice di recupero. Assicurati che il Vault sia sbloccato."
+      ],
+      "Set up your recovery code": [
+        "Configura il codice di recupero"
+      ],
+      "Your vault has no recovery code. Generate one now so you can regain access if you ever lose your password or authenticator.": [
+        "Il tuo Vault non ha un codice di recupero. Generane uno ora per poter recuperare l'accesso se dovessi perdere la password o l'autenticatore."
+      ],
+      "Set up": [
+        "Configura"
+      ],
+      "Dismiss": [
+        "Ignora"
+      ],
+      "Generate a one-time recovery code. Store it somewhere safe — it will only be shown once.": [
+        "Genera un codice di recupero monouso. Conservalo in un luogo sicuro — verrà mostrato una sola volta."
+      ],
+      "Generate Recovery Code": [
+        "Genera codice di recupero"
+      ],
+      "Ready": [
+        "Pronta"
+      ],
+      "In Use": [
+        "In uso"
+      ],
+      "Needs Backup": [
+        "Backup necessario"
+      ],
+      "Needs Formatting": [
+        "Da formattare"
+      ],
+      "Damaged": [
+        "Danneggiata"
+      ],
+      "Card Name": [
+        "Nome scheda"
+      ],
+      "Add Card": [
+        "Aggiungi scheda"
+      ],
+      "No memory cards found. Add your first card.": [
+        "Nessuna scheda trovata. Aggiungi la prima scheda."
+      ],
+      "Edit Card": [
+        "Modifica scheda"
+      ],
+      "New Card": [
+        "Nuova scheda"
+      ],
+      "e.g. SD-A 128GB SanDisk": [
+        "es. SD-A 128GB SanDisk"
+      ],
+      "Card name is required": [
+        "Il nome della scheda è richiesto"
+      ],
+      "Update Card": [
+        "Aggiorna scheda"
+      ],
+      "Create Card": [
+        "Crea scheda"
+      ],
+      "Delete this card? This action cannot be undone.": [
+        "Eliminare questa scheda? Questa azione è irreversibile."
+      ],
+      "Select a card…": [
+        "Seleziona una scheda…"
+      ],
+      "Notes…": [
+        "Note…"
+      ],
+      "Backup Done": [
+        "Backup completato"
+      ],
+      "Formatting Done": [
+        "Formattazione completata"
+      ]
     }
+  }
 }
