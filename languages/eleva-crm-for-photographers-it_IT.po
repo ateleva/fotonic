@@ -917,7 +917,7 @@ msgstr "Crea scheda"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Delete this card? This action cannot be undone."
-msgstr "Eliminare questa scheda? Questa azione è irreversibile."
+msgstr "Vuoi eliminare questa scheda? Questa azione è irreversibile."
 
 #: src/src/features/works/MemoryCardsSection.jsx
 msgid "Select a card…"
@@ -1050,16 +1050,16 @@ msgid "Delete"
 msgstr "Elimina"
 
 msgid "Delete this customer? This action cannot be undone."
-msgstr "Eliminare questo cliente? Questa azione è irreversibile."
+msgstr "Vuoi eliminare questo cliente? Questa azione è irreversibile."
 
 msgid "Delete this payment type? Existing installments will keep their current type."
-msgstr "Eliminare questo metodo di pagamento? Le rate esistenti manterranno il tipo attuale."
+msgstr "Vuoi eliminare questo metodo di pagamento? Le rate esistenti manterranno il tipo attuale."
 
 msgid "Delete this service? This action cannot be undone."
-msgstr "Eliminare questo servizio? Questa azione è irreversibile."
+msgstr "Vuoi eliminare questo servizio? Questa azione è irreversibile."
 
 msgid "Delete this work? This action cannot be undone."
-msgstr "Eliminare questo lavoro? Questa azione è irreversibile."
+msgstr "Vuoi eliminare questo lavoro? Questa azione è irreversibile."
 
 msgid "Do not close this tab."
 msgstr "Non chiudere questa scheda."
