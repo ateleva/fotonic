@@ -3,7 +3,7 @@
  * Plugin Name:       Eleva CRM for Photographers
  * Plugin URI:        https://eleva.alessandrobonacina.com/progetto/eleva-crm-per-fotografi/
  * Description:       CRM and workflow manager for photographers: clients, services, works, payments, encrypted vault for PII, and calendar view.
- * Version:           1.3.9
+ * Version:           1.3.10
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Tested up to:      7.0
@@ -17,7 +17,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FOTONIC_VERSION', '1.3.9' );
+define( 'FOTONIC_VERSION', '1.3.10' );
 define( 'FOTONIC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FOTONIC_URL', plugin_dir_url( __FILE__ ) );
 

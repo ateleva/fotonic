@@ -6,7 +6,8 @@ export default function WpEditor({ value = '', onChange }) {
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
 
-  const internalChange = useRef(false)
+  const valueRef = useRef(value)
+  valueRef.current = value
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.tinymce) return
@@ -21,12 +22,10 @@ export default function WpEditor({ value = '', onChange }) {
       content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; margin: 8px; }',
       setup(editor) {
         editor.on('init', () => {
-          editor.setContent(value || '')
+          editor.setContent(valueRef.current || '')
         })
         editor.on('change input keyup', () => {
-          internalChange.current = true
           onChangeRef.current(editor.getContent())
-          internalChange.current = false
         })
       },
     })
@@ -38,7 +37,6 @@ export default function WpEditor({ value = '', onChange }) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    if (internalChange.current) return
     const editor = window.tinymce?.get(EDITOR_ID)
     if (!editor) return
     if (editor.getContent() !== (value || '')) {

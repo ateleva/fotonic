@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.3.10] — 2026-07-13
+
+### Added
+
+- Customers, Services, Works and Memory Cards lists: the row title is now a clickable link (WordPress admin theme color, underlined) to the record's edit page.
+- Work form gains optional Work Owner, Collaborators and Taxable Price sections when Eleva CRM Pro is active, rendered via `window.FotonicProComponents` — no change in behavior without Pro.
+
+### Fixed
+
+- Dashboard "Recent Works" title links now use the WordPress admin theme color with a permanent underline instead of a hardcoded blue shown only on hover.
+- Work file downloads now go through an authenticated `fetch()` + blob download instead of a plain anchor link.
+- Notes field (`WpEditor`) no longer appears to go blank after external re-renders.
+
+---
+
 ## [1.3.6] — 2026-06-05
 
 ### Changed

@@ -63,7 +63,7 @@ export default function Dashboard() {
       label: __('Title'),
       render: (row) => (
         <button
-          className="border-0 bg-transparent p-0 text-blue-600 hover:underline font-medium text-left cursor-pointer"
+          className="border-0 bg-transparent p-0 text-fotonic-primary underline font-medium text-left cursor-pointer hover:opacity-80"
           onClick={() => navigate(`/works/${row.id}`)}
         >
           {row.title}

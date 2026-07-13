@@ -105,6 +105,9 @@ const defaultValues = {
 }
 
 const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?? null
+const OwnerField = window.FotonicProComponents?.OwnerField ?? null
+const CollaboratorsSection = window.FotonicProComponents?.CollaboratorsSection ?? null
+const TaxablePriceField = window.FotonicProComponents?.TaxablePriceField ?? null
 
 export default function WorkForm() {
   const { id } = useParams()
@@ -147,8 +150,12 @@ export default function WorkForm() {
     handleSubmit,
     reset,
     control,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
+
+  const [ownerType, ownerId] = watch(['owner_type', 'owner_id'])
 
   useEffect(() => {
     if (work) {
@@ -266,30 +273,32 @@ export default function WorkForm() {
                 />
               </FormField>
             </div>
-            <FormField label={__('Event Date')} htmlFor="event_date">
-              <input
-                id="event_date"
-                type="date"
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                {...register('event_date')}
-              />
-            </FormField>
-            <FormField label={__('Event Time From')} htmlFor="event_time_from">
-              <input
-                id="event_time_from"
-                type="time"
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                {...register('event_time_from')}
-              />
-            </FormField>
-            <FormField label={__('Event Time To')} htmlFor="event_time_to">
-              <input
-                id="event_time_to"
-                type="time"
-                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                {...register('event_time_to')}
-              />
-            </FormField>
+            <div className="col-span-2 grid grid-cols-3 gap-4">
+              <FormField label={__('Event Date')} htmlFor="event_date">
+                <input
+                  id="event_date"
+                  type="date"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('event_date')}
+                />
+              </FormField>
+              <FormField label={__('Event Time From')} htmlFor="event_time_from">
+                <input
+                  id="event_time_from"
+                  type="time"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('event_time_from')}
+                />
+              </FormField>
+              <FormField label={__('Event Time To')} htmlFor="event_time_to">
+                <input
+                  id="event_time_to"
+                  type="time"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('event_time_to')}
+                />
+              </FormField>
+            </div>
             <div className="col-span-2">
               <FormField label={__('Addresses')}>
                 <Controller
@@ -341,7 +350,15 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 4 — Services */}
+        {/* Section 4 — Work Owner (Pro only) */}
+        {OwnerField && window.FotonicApp?.features?.collaborators && (
+          <section>
+            <SectionHeading>{__('Work Owner')}</SectionHeading>
+            <OwnerField ownerType={ownerType} ownerId={ownerId} setValue={setValue} />
+          </section>
+        )}
+
+        {/* Section 5 — Services */}
         <section>
           <SectionHeading>{__('Services Included')}</SectionHeading>
           <Controller
@@ -357,7 +374,21 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 4 — Files */}
+        {/* Section 6 — Collaborators (Pro only) */}
+        {CollaboratorsSection && window.FotonicApp?.features?.collaborators && (
+          <section>
+            <SectionHeading>{__('Collaborators')}</SectionHeading>
+            <Controller
+              name="collaborators"
+              control={control}
+              render={({ field }) => (
+                <CollaboratorsSection value={field.value} onChange={field.onChange} />
+              )}
+            />
+          </section>
+        )}
+
+        {/* Section 7 — Files */}
         <section>
           <SectionHeading>{__('Files')}</SectionHeading>
           <Controller
@@ -369,7 +400,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 5 — Memory Cards */}
+        {/* Section 8 — Memory Cards */}
         <section>
           <SectionHeading>{__('Memory Cards', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -381,7 +412,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 6 — Notes */}
+        {/* Section 9 — Notes */}
         <section>
           <SectionHeading>{__('Notes')}</SectionHeading>
           <Controller
@@ -393,7 +424,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 6 — Payments */}
+        {/* Section 10 — Payments */}
         <section>
           <SectionHeading>{__('Payments')}</SectionHeading>
           <div className="space-y-4">
@@ -409,7 +440,7 @@ export default function WorkForm() {
                   {...register('total_price')}
                 />
               </FormField>
-
+              {TaxablePriceField && window.FotonicApp?.features?.taxable_price && <TaxablePriceField register={register} />}
             </div>
 
             <div>
@@ -425,7 +456,7 @@ export default function WorkForm() {
           </div>
         </section>
 
-        {/* Section 7 — Notifications (Pro only, edit mode only) */}
+        {/* Section 11 — Notifications (Pro only, edit mode only) */}
         {isEdit && NotificationsSection && window.FotonicApp?.features?.notifications && (
           <section>
             <SectionHeading>{__('Scheduled Notifications')}</SectionHeading>

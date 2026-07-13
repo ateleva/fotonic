@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.9
+Stable tag: 1.3.10
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -90,6 +90,13 @@ This plugin's admin interface is a compiled React application. The full, non-com
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
 == Changelog ==
+
+= 1.3.10 =
+* New: Customers, Services, Works and Memory Cards lists now show a clickable title that opens the record's edit page directly, in your WordPress admin theme color with an underline — matching the existing Edit button shortcut.
+* Fix: Dashboard's "Recent Works" title links now use your WordPress admin theme color with a permanent underline, instead of a hardcoded blue that only underlined on hover.
+* Fix: file downloads on a Work's Files section now use an authenticated request instead of a plain link, so downloads work correctly when the vault is involved.
+* Fix: the Notes field on a Work no longer appears to reset after external re-renders (the data was always saved correctly; only the on-screen display was affected).
+* New (requires Pro): the Work form gains Work Owner, Collaborators and Taxable Price sections when Eleva CRM Pro is active, using the same optional add-on pattern already used for Kanban, Analytics and Notifications — no change in behavior without Pro.
 
 = 1.3.9 =
 * Fix: vault now re-locks on every WordPress login/logout (no longer stays unlocked across sessions).
@@ -198,6 +205,9 @@ This plugin's admin interface is a compiled React application. The full, non-com
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.10 =
+New: clickable title links on Customers/Services/Works/Memory Cards lists and the Dashboard. Fix: Work file downloads and the Notes field. Safe in-place update — no data or breaking changes.
 
 = 1.3.9 =
 Security: the vault now re-locks on every WordPress login/logout, so it no longer stays unlocked across sessions, and the Lock Vault button locks immediately. Safe in-place update — your vault password, authenticator and encrypted client data are unchanged. After updating, unlock the vault as usual.

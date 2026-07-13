@@ -82,6 +82,14 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.3.10
+
+- **New**: Customers, Services, Works and Memory Cards lists now show a clickable title link (WordPress admin theme color, underlined) to the record's edit page
+- Fix: Dashboard "Recent Works" title links now use the WordPress admin theme color with a permanent underline instead of a hardcoded blue shown only on hover
+- Fix: Work file downloads now use an authenticated request instead of a plain link
+- Fix: the Notes field on a Work no longer appears to go blank after external re-renders
+- **New (requires Pro)**: the Work form gains optional Work Owner, Collaborators and Taxable Price sections when Eleva CRM Pro is active
+
 ### 1.3.8
 
 - **Memory Cards**: new SD/CF card inventory with an auto-advancing status (Ready → In Use → Backed Up → Ready); manage from the sidebar or assign cards to a shoot inside the Work editor; in-use cards are protected from deletion

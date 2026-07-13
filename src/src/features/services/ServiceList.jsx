@@ -31,7 +31,13 @@ export default function ServiceList() {
       key: 'title',
       label: __('Name'),
       render: (row) => (
-        <span className="font-medium text-gray-900">{row.title}</span>
+        <button
+          type="button"
+          className="border-0 bg-transparent p-0 text-left font-medium text-fotonic-primary underline cursor-pointer hover:opacity-80"
+          onClick={() => navigate(`/services/${row.id}`)}
+        >
+          {row.title}
+        </button>
       ),
     },
     {

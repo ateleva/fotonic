@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Download, Trash2, Upload } from 'lucide-react'
 import Button from '../../components/Button'
 import { __ } from '../../utils/i18n'
@@ -13,8 +14,36 @@ const ALLOWED_TYPES = [
 const MAX_BYTES = 10 * 1024 * 1024 // 10 MB
 
 export default function FilesSection({ value = [], onChange }) {
+  const [downloadingId, setDownloadingId] = useState(null)
+
   function removeFile(id) {
     onChange(value.filter((f) => f.id !== id))
+  }
+
+  async function handleDownload(file) {
+    setDownloadingId(file.id)
+    try {
+      const res = await fetch(`${BASE}vault-download/${file.id}`, {
+        headers: { 'X-WP-Nonce': window.FotonicApp?.nonce ?? '' },
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}))
+        // eslint-disable-next-line no-alert
+        window.alert(body.message ?? __('Unable to download file.'))
+        return
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = file.filename
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } finally {
+      setDownloadingId(null)
+    }
   }
 
   function openMediaFrame() {
@@ -73,15 +102,15 @@ ${names}`)
                   <td className="px-4 py-2 text-gray-500 text-xs">{file.mime}</td>
                   <td className="px-4 py-2">
                     <div className="flex items-center gap-2">
-                      <a
-                        href={`${BASE}vault-download/${file.id}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-indigo-600 hover:text-indigo-800 transition-colors"
+                      <button
+                        type="button"
+                        onClick={() => handleDownload(file)}
+                        disabled={downloadingId === file.id}
+                        className="text-indigo-600 hover:text-indigo-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label={__('Download file')}
                       >
                         <Download size={15} />
-                      </a>
+                      </button>
                       <button
                         type="button"
                         onClick={() => removeFile(file.id)}
