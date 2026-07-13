@@ -88,7 +88,11 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 - Fix: Dashboard "Recent Works" title links now use the WordPress admin theme color with a permanent underline instead of a hardcoded blue shown only on hover
 - Fix: Work file downloads now use an authenticated request instead of a plain link
 - Fix: the Notes field on a Work no longer appears to go blank after external re-renders
-- **New (requires Pro)**: the Work form gains optional Work Owner, Collaborators and Taxable Price sections when Eleva CRM Pro is active
+
+### 1.3.9
+
+- Security: vault now re-locks on every WordPress login/logout instead of staying unlocked across sessions
+- Fix: the Lock Vault button now locks immediately without a page refresh
 
 ### 1.3.8
 

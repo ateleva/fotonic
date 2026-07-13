@@ -5,7 +5,6 @@
 ### Added
 
 - Customers, Services, Works and Memory Cards lists: the row title is now a clickable link (WordPress admin theme color, underlined) to the record's edit page.
-- Work form gains optional Work Owner, Collaborators and Taxable Price sections when Eleva CRM Pro is active, rendered via `window.FotonicProComponents` — no change in behavior without Pro.
 
 ### Fixed
 

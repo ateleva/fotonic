@@ -96,7 +96,6 @@ This plugin's admin interface is a compiled React application. The full, non-com
 * Fix: Dashboard's "Recent Works" title links now use your WordPress admin theme color with a permanent underline, instead of a hardcoded blue that only underlined on hover.
 * Fix: file downloads on a Work's Files section now use an authenticated request instead of a plain link, so downloads work correctly when the vault is involved.
 * Fix: the Notes field on a Work no longer appears to reset after external re-renders (the data was always saved correctly; only the on-screen display was affected).
-* New (requires Pro): the Work form gains Work Owner, Collaborators and Taxable Price sections when Eleva CRM Pro is active, using the same optional add-on pattern already used for Kanban, Analytics and Notifications — no change in behavior without Pro.
 
 = 1.3.9 =
 * Fix: vault now re-locks on every WordPress login/logout (no longer stays unlocked across sessions).
