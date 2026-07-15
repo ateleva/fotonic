@@ -519,12 +519,21 @@ class Fotonic_REST_API {
 		$linked = false;
 		foreach ( $candidates as $raw ) {
 			$decoded = json_decode( $raw, true );
-			if ( is_array( $decoded ) ) {
-				foreach ( $decoded as $maybe_id ) {
-					if ( (int) $maybe_id === (int) $id ) {
-						$linked = true;
-						break 2;
-					}
+			if ( ! is_array( $decoded ) ) {
+				continue;
+			}
+			foreach ( $decoded as $entry ) {
+				if ( is_numeric( $entry ) ) {
+					$maybe_id = (int) $entry;
+				} elseif ( is_array( $entry ) && ( $entry['type'] ?? 'attachment' ) !== 'link' ) {
+					// Link entries have no local attachment ID to protect here.
+					$maybe_id = (int) ( $entry['id'] ?? 0 );
+				} else {
+					continue;
+				}
+				if ( $maybe_id === (int) $id ) {
+					$linked = true;
+					break 2;
 				}
 			}
 		}
@@ -1876,18 +1885,38 @@ class Fotonic_REST_API {
 			update_post_meta( $post_id, '_ftnc_work_services', wp_json_encode( $clean ) );
 		}
 
-		// Files.
+		// Files. Each entry is either an uploaded attachment or an external link,
+		// optionally with an admin-set display label overriding the filename/URL.
 		if ( isset( $body['files'] ) && is_array( $body['files'] ) ) {
-			// Body may send full objects or plain IDs.
-			$ids = [];
+			$clean = [];
 			foreach ( $body['files'] as $f ) {
 				if ( is_numeric( $f ) ) {
-					$ids[] = (int) $f;
-				} elseif ( is_array( $f ) && isset( $f['id'] ) ) {
-					$ids[] = (int) $f['id'];
+					// Legacy shape: bare attachment ID.
+					$id = (int) $f;
+					if ( $id > 0 ) {
+						$clean[] = [ 'type' => 'attachment', 'id' => $id ];
+					}
+					continue;
+				}
+				if ( ! is_array( $f ) ) {
+					continue;
+				}
+				$type  = ( $f['type'] ?? 'attachment' ) === 'link' ? 'link' : 'attachment';
+				$label = sanitize_text_field( $f['label'] ?? '' );
+				if ( 'link' === $type ) {
+					$url = esc_url_raw( $f['url'] ?? '' );
+					if ( ! $url || ! preg_match( '#^https?://#i', $url ) ) {
+						continue;
+					}
+					$clean[] = [ 'type' => 'link', 'url' => $url, 'label' => $label ];
+				} else {
+					$id = (int) ( $f['id'] ?? 0 );
+					if ( $id > 0 ) {
+						$clean[] = [ 'type' => 'attachment', 'id' => $id, 'label' => $label ];
+					}
 				}
 			}
-			update_post_meta( $post_id, '_ftnc_work_files', wp_json_encode( array_values( array_filter( $ids ) ) ) );
+			update_post_meta( $post_id, '_ftnc_work_files', wp_json_encode( array_values( $clean ) ) );
 		}
 
 		// Payments.
@@ -2086,25 +2115,48 @@ class Fotonic_REST_API {
 			}
 		}
 
-		// Files.
+		// Files. Normalizes legacy bare-attachment-ID entries and today's richer
+		// { type: 'attachment'|'link', id|url, label } objects to one output shape.
 		$raw_files = get_post_meta( $post->ID, '_ftnc_work_files', true );
 		$files     = [];
 		if ( ! empty( $raw_files ) ) {
 			$dec = json_decode( $raw_files, true );
 			if ( is_array( $dec ) ) {
-				foreach ( $dec as $attach_id ) {
-					$attach_id  = (int) $attach_id;
-					$url        = wp_get_attachment_url( $attach_id );
-					$metadata   = wp_get_attachment_metadata( $attach_id );
+				foreach ( $dec as $entry ) {
+					if ( is_numeric( $entry ) ) {
+						$entry = [ 'type' => 'attachment', 'id' => (int) $entry ];
+					}
+					if ( ! is_array( $entry ) ) {
+						continue;
+					}
+					$label = (string) ( $entry['label'] ?? '' );
+
+					if ( ( $entry['type'] ?? 'attachment' ) === 'link' ) {
+						$url = esc_url( $entry['url'] ?? '' );
+						if ( ! $url ) {
+							continue;
+						}
+						$files[] = [
+							'type'  => 'link',
+							'url'   => $url,
+							'label' => $label,
+						];
+						continue;
+					}
+
+					$attach_id   = (int) ( $entry['id'] ?? 0 );
+					$url         = wp_get_attachment_url( $attach_id );
 					$post_attach = get_post( $attach_id );
 					if ( ! $url || ! $post_attach ) {
 						continue;
 					}
 					$files[] = [
+						'type'     => 'attachment',
 						'id'       => $attach_id,
 						'url'      => $url,
 						'filename' => basename( get_attached_file( $attach_id ) ),
 						'mime'     => $post_attach->post_mime_type,
+						'label'    => $label,
 					];
 				}
 			}
@@ -2260,6 +2312,7 @@ class Fotonic_REST_API {
 			'files'           => $files,
 			'total_price'         => (float) get_post_meta( $post->ID, '_ftnc_total_price', true ),
 			'total_price_taxable' => self::format_taxable_price( $post->ID ),
+			'gcal_sync'           => (bool) get_post_meta( $post->ID, '_ftnc_gcal_sync', true ),
 			'installments'        => $installments,
 			'payment_status'  => $payment_status,
 			'notes'           => $notes,

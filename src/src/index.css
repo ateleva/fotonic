@@ -44,3 +44,46 @@
   background-color: color-mix(in srgb, var(--fotonic-nav, #1d2327) 12%, white);
   color: var(--fotonic-nav, #1d2327);
 }
+
+/* PDF preview text layer (pdf.js TextLayer) — minimal rules for selectable/searchable text.
+   Kept intentionally small: only the positioning rules pdf.js itself needs, not the full
+   pdfjs-dist/web/pdf_viewer.css (which also styles the annotation/XFA layers we don't use). */
+#fotonic-app-root .ftnc-pdf-textlayer {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  opacity: 1;
+  line-height: 1;
+  text-align: initial;
+  transform-origin: 0 0;
+  z-index: 1;
+}
+
+#fotonic-app-root .ftnc-pdf-textlayer span,
+#fotonic-app-root .ftnc-pdf-textlayer br {
+  color: transparent;
+  position: absolute;
+  white-space: pre;
+  cursor: text;
+  transform-origin: 0% 0%;
+  user-select: text;
+}
+
+#fotonic-app-root .ftnc-pdf-textlayer ::selection {
+  background: rgba(37, 99, 235, 0.35);
+}
+
+#fotonic-app-root .ftnc-pdf-highlight {
+  background: rgba(250, 204, 21, 0.55);
+  border-radius: 2px;
+}
+
+#fotonic-app-root .ftnc-pdf-page {
+  position: relative;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+#fotonic-app-root .ftnc-pdf-page canvas {
+  display: block;
+}

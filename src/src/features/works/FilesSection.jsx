@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { Download, Trash2, Upload } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Download, Trash2, Upload, PlusCircle, Link as LinkIcon, Eye, ExternalLink, Pencil } from 'lucide-react'
 import Button from '../../components/Button'
+import Modal from '../../components/Modal'
+import FilePreviewModal from '../../components/FilePreviewModal'
+import { fetchFileBlob } from '../../api/files'
 import { __ } from '../../utils/i18n'
-
-const BASE = window.FotonicApp?.restUrl ?? '/wp-json/fotonic/v1/'
 
 const ALLOWED_TYPES = [
   'image',
@@ -13,40 +14,79 @@ const ALLOWED_TYPES = [
 ]
 const MAX_BYTES = 10 * 1024 * 1024 // 10 MB
 
+function displayNameOf(file) {
+  const type = file.type ?? 'attachment'
+  if (file.label) return file.label
+  return type === 'link' ? file.url : file.filename
+}
+
+function hostnameOf(url) {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return url
+  }
+}
+
 export default function FilesSection({ value = [], onChange }) {
   const [downloadingId, setDownloadingId] = useState(null)
+  const [previewFile, setPreviewFile] = useState(null)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [linkFormOpen, setLinkFormOpen] = useState(false)
+  const [linkUrl, setLinkUrl] = useState('')
+  const [linkLabel, setLinkLabel] = useState('')
+  const [editingIdx, setEditingIdx] = useState(null)
+  const [labelDraft, setLabelDraft] = useState('')
+  const menuRef = useRef(null)
 
-  function removeFile(id) {
-    onChange(value.filter((f) => f.id !== id))
+  useEffect(() => {
+    if (!menuOpen) return undefined
+    function handleClickOutside(e) {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [menuOpen])
+
+  function removeFileAt(idx) {
+    onChange(value.filter((_, i) => i !== idx))
+  }
+
+  function updateLabelAt(idx, label) {
+    onChange(value.map((f, i) => (i === idx ? { ...f, label } : f)))
+  }
+
+  function startEditLabel(idx, file) {
+    setLabelDraft(file.label || '')
+    setEditingIdx(idx)
+  }
+
+  function commitLabel(idx) {
+    updateLabelAt(idx, labelDraft.trim())
+    setEditingIdx(null)
   }
 
   async function handleDownload(file) {
     setDownloadingId(file.id)
     try {
-      const res = await fetch(`${BASE}vault-download/${file.id}`, {
-        headers: { 'X-WP-Nonce': window.FotonicApp?.nonce ?? '' },
-      })
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}))
-        // eslint-disable-next-line no-alert
-        window.alert(body.message ?? __('Unable to download file.'))
-        return
-      }
-      const blob = await res.blob()
+      const blob = await fetchFileBlob(file)
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
-      a.download = file.filename
+      a.download = file.label || file.filename
       document.body.appendChild(a)
       a.click()
       a.remove()
       URL.revokeObjectURL(url)
+    } catch (err) {
+      window.alert(err.message || __('Unable to download file.'))
     } finally {
       setDownloadingId(null)
     }
   }
 
   function openMediaFrame() {
+    setMenuOpen(false)
     if (!window.wp || !window.wp.media) return
 
     const frame = window.wp.media({
@@ -62,25 +102,38 @@ export default function FilesSection({ value = [], onChange }) {
       const oversized = selected.filter((a) => (a.filesizeInBytes ?? 0) > MAX_BYTES)
       if (oversized.length > 0) {
         const names = oversized.map((a) => a.filename).join(', ')
-        // eslint-disable-next-line no-alert
         window.alert(`${__('These files exceed the 10 MB limit and were skipped:')}
 ${names}`)
       }
 
       const valid = selected.filter((a) => (a.filesizeInBytes ?? 0) <= MAX_BYTES)
       const newFiles = valid.map((a) => ({
+        type: 'attachment',
         id: a.id,
         url: a.url,
         filename: a.filename,
         mime: a.mime,
+        label: '',
       }))
 
-      const existingIds = new Set(value.map((f) => f.id))
+      const existingIds = new Set(
+        value.filter((f) => (f.type ?? 'attachment') === 'attachment').map((f) => f.id)
+      )
       const merged = [...value, ...newFiles.filter((f) => !existingIds.has(f.id))]
       onChange(merged)
     })
 
     frame.open()
+  }
+
+  function submitLink(e) {
+    e.preventDefault()
+    const url = linkUrl.trim()
+    if (!url) return
+    onChange([...value, { type: 'link', url, label: linkLabel.trim() }])
+    setLinkUrl('')
+    setLinkLabel('')
+    setLinkFormOpen(false)
   }
 
   return (
@@ -96,33 +149,92 @@ ${names}`)
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {value.map((file) => (
-                <tr key={file.id}>
-                  <td className="px-4 py-2 text-gray-700">{file.filename}</td>
-                  <td className="px-4 py-2 text-gray-500 text-xs">{file.mime}</td>
-                  <td className="px-4 py-2">
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleDownload(file)}
-                        disabled={downloadingId === file.id}
-                        className="text-indigo-600 hover:text-indigo-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                        aria-label={__('Download file')}
-                      >
-                        <Download size={15} />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => removeFile(file.id)}
-                        className="text-gray-400 hover:text-red-500 transition-colors"
-                        aria-label={__('Remove file')}
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {value.map((file, index) => {
+                const type = file.type ?? 'attachment'
+                const isLink = type === 'link'
+                const isPreviewable = !isLink && (file.mime === 'application/pdf' || file.mime?.startsWith('image/'))
+                const name = displayNameOf(file)
+
+                return (
+                  <tr key={index}>
+                    <td className="px-4 py-2 text-gray-700">
+                      {editingIdx === index ? (
+                        <input
+                          autoFocus
+                          type="text"
+                          value={labelDraft}
+                          onChange={(e) => setLabelDraft(e.target.value)}
+                          onBlur={() => commitLabel(index)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') e.currentTarget.blur()
+                            if (e.key === 'Escape') setEditingIdx(null)
+                          }}
+                          placeholder={name}
+                          className="w-full rounded border border-indigo-300 px-1.5 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                        />
+                      ) : (
+                        <div className="flex items-center gap-1.5 group">
+                          {isPreviewable ? (
+                            <button
+                              type="button"
+                              onClick={() => setPreviewFile(file)}
+                              className="text-fotonic-primary hover:underline inline-flex items-center gap-1"
+                            >
+                              {name}
+                              <Eye size={12} className="opacity-60" />
+                            </button>
+                          ) : isLink ? (
+                            <button
+                              type="button"
+                              onClick={() => window.open(file.url, '_blank', 'noopener,noreferrer')}
+                              className="text-fotonic-primary hover:underline inline-flex items-center gap-1"
+                            >
+                              {name}
+                              <ExternalLink size={12} className="opacity-60" />
+                            </button>
+                          ) : (
+                            <span>{name}</span>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => startEditLabel(index, file)}
+                            className="text-gray-300 hover:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                            aria-label={__('Rename')}
+                          >
+                            <Pencil size={11} />
+                          </button>
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-gray-500 text-xs">
+                      {isLink ? `${__('Link')} · ${hostnameOf(file.url)}` : file.mime}
+                    </td>
+                    <td className="px-4 py-2">
+                      <div className="flex items-center gap-2">
+                        {!isLink && (
+                          <button
+                            type="button"
+                            onClick={() => handleDownload(file)}
+                            disabled={downloadingId === file.id}
+                            className="text-indigo-600 hover:text-indigo-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            aria-label={__('Download file')}
+                          >
+                            <Download size={15} />
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => removeFileAt(index)}
+                          className="text-gray-400 hover:text-red-500 transition-colors"
+                          aria-label={__('Remove file')}
+                        >
+                          <Trash2 size={15} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
@@ -131,14 +243,81 @@ ${names}`)
       )}
 
       <div>
-        <Button type="button" variant="secondary" size="sm" onClick={openMediaFrame}>
-          <Upload size={14} />
-          {__('Upload File')}
-        </Button>
+        <div className="relative inline-block" ref={menuRef}>
+          <Button type="button" variant="secondary" size="sm" onClick={() => setMenuOpen((v) => !v)}>
+            <PlusCircle size={14} />
+            {__('Add File')}
+          </Button>
+          {menuOpen && (
+            <div className="absolute z-10 mt-1 w-56 rounded-md border border-gray-200 bg-white shadow-lg py-1">
+              <button
+                type="button"
+                onClick={openMediaFrame}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+              >
+                <Upload size={14} />
+                {__('Upload from Media Library')}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setLinkFormOpen(true)
+                }}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
+              >
+                <LinkIcon size={14} />
+                {__('Add Link')}
+              </button>
+            </div>
+          )}
+        </div>
         <p className="text-xs text-gray-400 mt-1">
-          {__('Images, PDF, DOC, DOCX · max 10 MB each')}
+          {__('Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max 10 MB per uploaded file.')}
         </p>
       </div>
+
+      <Modal open={linkFormOpen} onClose={() => setLinkFormOpen(false)} title={__('Add Link')}>
+        {/* Plain div, not <form>: this is portaled by Radix Dialog, but React bubbles
+            events along the component tree (not the DOM tree) — a nested <form>'s submit
+            would still reach WorkForm's outer <form onSubmit> and save/redirect the whole work. */}
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">{__('URL')}</label>
+            <input
+              type="url"
+              required
+              autoFocus
+              value={linkUrl}
+              onChange={(e) => setLinkUrl(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && submitLink(e)}
+              placeholder="https://drive.google.com/…"
+              className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-gray-600 mb-1">{__('Label (optional)')}</label>
+            <input
+              type="text"
+              value={linkLabel}
+              onChange={(e) => setLinkLabel(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && submitLink(e)}
+              placeholder={__('e.g. Contract')}
+              className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div className="flex justify-end gap-2 pt-2">
+            <Button type="button" variant="secondary" size="sm" onClick={() => setLinkFormOpen(false)}>
+              {__('Cancel')}
+            </Button>
+            <Button type="button" variant="primary" size="sm" onClick={submitLink}>
+              {__('Add')}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+
+      <FilePreviewModal file={previewFile} onClose={() => setPreviewFile(null)} />
     </div>
   )
 }

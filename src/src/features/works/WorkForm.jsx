@@ -101,6 +101,7 @@ const defaultValues = {
   total_price_taxable: '',
   installments: [],
   color: '',
+  gcal_sync: false,
   memory_cards: { cards: [], backup_done: false, formatting_done: false },
 }
 
@@ -108,6 +109,7 @@ const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?
 const OwnerField = window.FotonicProComponents?.OwnerField ?? null
 const CollaboratorsSection = window.FotonicProComponents?.CollaboratorsSection ?? null
 const TaxablePriceField = window.FotonicProComponents?.TaxablePriceField ?? null
+const GCalSyncField = window.FotonicProComponents?.GCalSyncField ?? null
 
 export default function WorkForm() {
   const { id } = useParams()
@@ -179,6 +181,7 @@ export default function WorkForm() {
         total_price_taxable: work.total_price_taxable ?? '',
         installments: work.installments ?? [],
         color: work.color ?? '',
+        gcal_sync: work.gcal_sync ?? false,
         memory_cards: {
           cards: (work.memory_cards ?? []).map((mc) => ({ card_id: mc.card_id, notes: mc.notes ?? '' })),
           backup_done: work.backup_done ?? false,
@@ -343,11 +346,24 @@ export default function WorkForm() {
         {/* Section 3 — Calendar Color */}
         <section>
           <SectionHeading>{__('Calendar Color')}</SectionHeading>
-          <Controller
-            name="color"
-            control={control}
-            render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
-          />
+          <div className="flex flex-col lg:flex-row lg:items-start gap-8">
+            <div className="lg:flex-1">
+              <Controller
+                name="color"
+                control={control}
+                render={({ field }) => <ColorPicker value={field.value} onChange={field.onChange} />}
+              />
+            </div>
+            {GCalSyncField && window.FotonicApp?.features?.gcal && (
+              <div className="lg:flex-1">
+                <Controller
+                  name="gcal_sync"
+                  control={control}
+                  render={({ field }) => <GCalSyncField value={field.value} onChange={field.onChange} />}
+                />
+              </div>
+            )}
+          </div>
         </section>
 
         {/* Section 4 — Work Owner (Pro only) */}
@@ -358,7 +374,21 @@ export default function WorkForm() {
           </section>
         )}
 
-        {/* Section 5 — Services */}
+        {/* Section 5 — Collaborators (Pro only) */}
+        {CollaboratorsSection && window.FotonicApp?.features?.collaborators && (
+          <section>
+            <SectionHeading>{__('Collaborators')}</SectionHeading>
+            <Controller
+              name="collaborators"
+              control={control}
+              render={({ field }) => (
+                <CollaboratorsSection value={field.value} onChange={field.onChange} ownerType={ownerType} />
+              )}
+            />
+          </section>
+        )}
+
+        {/* Section 6 — Services */}
         <section>
           <SectionHeading>{__('Services Included')}</SectionHeading>
           <Controller
@@ -373,20 +403,6 @@ export default function WorkForm() {
             )}
           />
         </section>
-
-        {/* Section 6 — Collaborators (Pro only) */}
-        {CollaboratorsSection && window.FotonicApp?.features?.collaborators && (
-          <section>
-            <SectionHeading>{__('Collaborators')}</SectionHeading>
-            <Controller
-              name="collaborators"
-              control={control}
-              render={({ field }) => (
-                <CollaboratorsSection value={field.value} onChange={field.onChange} />
-              )}
-            />
-          </section>
-        )}
 
         {/* Section 7 — Files */}
         <section>
@@ -440,7 +456,9 @@ export default function WorkForm() {
                   {...register('total_price')}
                 />
               </FormField>
-              {TaxablePriceField && window.FotonicApp?.features?.taxable_price && <TaxablePriceField register={register} />}
+              {TaxablePriceField && window.FotonicApp?.features?.taxable_price && (
+                <TaxablePriceField register={register} error={errors.total_price_taxable?.message} />
+              )}
             </div>
 
             <div>

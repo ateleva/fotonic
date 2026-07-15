@@ -75,6 +75,8 @@ Eleva CRM for Photographers collects no personal data of any kind, makes no exte
 
 This plugin's admin interface is a compiled React application. The full, non-compiled human-readable source is included with the plugin under the `src/` directory and is also publicly maintained at https://github.com/ateleva/fotonic. Build instructions for developers are in `src/README.md`.
 
+The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io/pdf.js/) by Mozilla, licensed under the Apache License 2.0. It is bundled from the public `pdfjs-dist` package (declared in `src/package.json`) and compiled in via the same build pipeline as the rest of the admin interface — it is never loaded from a CDN.
+
 == Screenshots ==
 
 1. Dashboard showing annual revenue, payments to receive, payment type breakdown, and upcoming works list

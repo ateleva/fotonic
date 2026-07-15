@@ -484,11 +484,21 @@ class Fotonic_Meta_Boxes {
 			}
 		}
 
+		// This legacy screen only ever managed bare attachment IDs — flatten today's
+		// richer { type, id|url, label } shape back to ints for it; link entries (added
+		// via the REST/React UI) are invisible here but preserved on save, see save_work().
 		$work_files = [];
 		if ( ! empty( $raw_files ) ) {
 			$dec = json_decode( $raw_files, true );
 			if ( is_array( $dec ) ) {
-				$work_files = $dec;
+				foreach ( $dec as $entry ) {
+					if ( is_numeric( $entry ) ) {
+						$work_files[] = (int) $entry;
+					} elseif ( is_array( $entry ) && ( $entry['type'] ?? 'attachment' ) !== 'link' ) {
+						$work_files[] = (int) ( $entry['id'] ?? 0 );
+					}
+				}
+				$work_files = array_values( array_filter( $work_files ) );
 			}
 		}
 
@@ -957,16 +967,36 @@ class Fotonic_Meta_Boxes {
 			update_post_meta( $post_id, '_ftnc_work_services', wp_json_encode( $clean ) );
 		}
 
-		// Section 5 — Files JSON.
+		// Section 5 — Files JSON. This legacy screen's JS only manages attachment IDs;
+		// merge those back with any existing link entries (added via the REST/React UI)
+		// so a classic-editor save can't silently destroy them.
 		if ( isset( $_POST['ftnc_work_files_json'] ) ) {
 			$raw = wp_unslash( $_POST['ftnc_work_files_json'] );
 			$dec = json_decode( $raw, true );
 			if ( ! is_array( $dec ) ) {
 				$dec = [];
 			}
-			$clean = array_values( array_map( 'absint', $dec ) );
-			$clean = array_filter( $clean );
-			update_post_meta( $post_id, '_ftnc_work_files', wp_json_encode( array_values( $clean ) ) );
+
+			$attachments = [];
+			foreach ( $dec as $entry ) {
+				$id = is_numeric( $entry ) ? (int) $entry : (int) ( is_array( $entry ) ? ( $entry['id'] ?? 0 ) : 0 );
+				if ( $id > 0 ) {
+					$attachments[] = [ 'type' => 'attachment', 'id' => $id ];
+				}
+			}
+
+			$existing_raw = get_post_meta( $post_id, '_ftnc_work_files', true );
+			$existing_dec = ! empty( $existing_raw ) ? json_decode( $existing_raw, true ) : [];
+			$links        = [];
+			if ( is_array( $existing_dec ) ) {
+				foreach ( $existing_dec as $entry ) {
+					if ( is_array( $entry ) && ( $entry['type'] ?? '' ) === 'link' ) {
+						$links[] = $entry;
+					}
+				}
+			}
+
+			update_post_meta( $post_id, '_ftnc_work_files', wp_json_encode( array_values( array_merge( $attachments, $links ) ) ) );
 		}
 
 		// Section 6 — Payments.

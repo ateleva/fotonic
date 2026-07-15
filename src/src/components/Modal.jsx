@@ -1,7 +1,12 @@
 import * as Dialog from '@radix-ui/react-dialog'
 import { X } from 'lucide-react'
 
-export default function Modal({ open, onClose, title, children }) {
+const SIZE_CLASSES = {
+  md: 'max-w-md p-6',
+  full: 'max-w-5xl w-[90vw] h-[85vh] p-6 flex flex-col',
+}
+
+export default function Modal({ open, onClose, title, size = 'md', children }) {
   return (
     <Dialog.Root open={open} onOpenChange={(v) => !v && onClose()}>
       <Dialog.Portal container={document.getElementById('fotonic-app-root')}>
@@ -9,13 +14,14 @@ export default function Modal({ open, onClose, title, children }) {
         <Dialog.Content
           className={[
             'fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
-            'bg-white rounded-lg shadow-xl w-full max-w-md p-6',
+            'bg-white rounded-lg shadow-xl w-full',
+            SIZE_CLASSES[size],
             'data-[state=open]:animate-in data-[state=closed]:animate-out',
             'data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
             'data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
           ].join(' ')}
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 shrink-0">
             <Dialog.Title className="text-base font-semibold text-gray-900">
               {title}
             </Dialog.Title>
@@ -28,7 +34,11 @@ export default function Modal({ open, onClose, title, children }) {
               </button>
             </Dialog.Close>
           </div>
-          {children}
+          {size === 'full' ? (
+            <div className="flex-1 min-h-0">{children}</div>
+          ) : (
+            children
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
