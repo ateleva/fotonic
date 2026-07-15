@@ -1753,3 +1753,57 @@ msgstr "Aggiungi una frase di recupero per poter recuperare l'accesso se dovessi
 
 msgid "Generate Recovery Phrase"
 msgstr "Genera frase di recupero"
+
+msgid "Unable to download file."
+msgstr "Impossibile scaricare il file."
+
+msgid "Rename"
+msgstr "Rinomina"
+
+msgid "Link"
+msgstr "Link"
+
+msgid "Add File"
+msgstr "Aggiungi file"
+
+msgid "Upload from Media Library"
+msgstr "Carica dalla libreria media"
+
+msgid "Add Link"
+msgstr "Aggiungi link"
+
+msgid "Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max 10 MB per uploaded file."
+msgstr "Immagini e PDF possono essere visualizzati in anteprima dopo il caricamento · DOC/DOCX e i link si aprono in una nuova scheda · max 10 MB per file caricato."
+
+msgid "URL"
+msgstr "URL"
+
+msgid "Label (optional)"
+msgstr "Etichetta (opzionale)"
+
+msgid "e.g. Contract"
+msgstr "es. Contratto"
+
+msgid "Unable to load this file."
+msgstr "Impossibile caricare questo file."
+
+msgid "Unable to render this PDF."
+msgstr "Impossibile visualizzare questo PDF."
+
+msgid "Search in document…"
+msgstr "Cerca nel documento…"
+
+msgid "Previous match"
+msgstr "Corrispondenza precedente"
+
+msgid "Next match"
+msgstr "Corrispondenza successiva"
+
+msgid "Zoom out"
+msgstr "Riduci zoom"
+
+msgid "Zoom in"
+msgstr "Aumenta zoom"
+
+msgid "Page number"
+msgstr "Numero di pagina"

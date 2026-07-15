@@ -1021,3 +1021,95 @@ msgstr ""
 #: src/src/features/vault/VaultGate.jsx:110
 msgid "Generate Recovery Phrase"
 msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:82
+msgid "Unable to download file."
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:105
+msgid "These files exceed the 10 MB limit and were skipped:"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:146
+msgid "Filename"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:202
+msgid "Rename"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:210
+msgid "Link"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:220
+msgid "Download file"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:229
+msgid "Remove file"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:242
+msgid "No files attached."
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:249
+msgid "Add File"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:259
+msgid "Upload from Media Library"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:270
+msgid "Add Link"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:276
+msgid "Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max 10 MB per uploaded file."
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:286
+msgid "URL"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:299
+msgid "Label (optional)"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:305
+msgid "e.g. Contract"
+msgstr ""
+
+#: src/src/components/FilePreviewModal.jsx:61
+msgid "Unable to load this file."
+msgstr ""
+
+#: src/src/components/PdfViewer.jsx:287
+msgid "Unable to render this PDF."
+msgstr ""
+
+#: src/src/components/PdfViewer.jsx:303
+msgid "Search in document…"
+msgstr ""
+
+#: src/src/components/PdfViewer.jsx:315
+msgid "Previous match"
+msgstr ""
+
+#: src/src/components/PdfViewer.jsx:324
+msgid "Next match"
+msgstr ""
+
+#: src/src/components/PdfViewer.jsx:331
+msgid "Zoom out"
+msgstr ""
+
+#: src/src/components/PdfViewer.jsx:334
+msgid "Zoom in"
+msgstr ""
+
+#: src/src/components/PdfViewer.jsx:349
+msgid "Page number"
+msgstr ""

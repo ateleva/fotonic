@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.10
+Stable tag: 1.3.11
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -92,6 +92,10 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
 == Changelog ==
+
+= 1.3.11 =
+* New: the Files section on a Work now accepts external links (Google Drive, Dropbox, etc.) alongside uploaded files, with an optional custom display label.
+* New: images and PDFs in the Files section now open in a full-size in-browser preview instead of only downloading — the PDF viewer includes zoom, page navigation, and full-document search.
 
 = 1.3.10 =
 * New: Customers, Services, Works and Memory Cards lists now show a clickable title that opens the record's edit page directly, in your WordPress admin theme color with an underline — matching the existing Edit button shortcut.
@@ -206,6 +210,9 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.11 =
+New: Files section now supports external links and a full-size in-browser preview for images and PDFs. Safe in-place update — no data or breaking changes.
 
 = 1.3.10 =
 New: clickable title links on Customers/Services/Works/Memory Cards lists and the Dashboard. Fix: Work file downloads and the Notes field. Safe in-place update — no data or breaking changes.

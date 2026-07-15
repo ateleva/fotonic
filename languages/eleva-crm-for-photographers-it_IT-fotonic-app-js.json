@@ -212,6 +212,75 @@
       ],
       "Formatting Done": [
         "Formattazione completata"
+      ],
+      "Unable to download file.": [
+        "Impossibile scaricare il file."
+      ],
+      "Rename": [
+        "Rinomina"
+      ],
+      "Link": [
+        "Link"
+      ],
+      "Add File": [
+        "Aggiungi file"
+      ],
+      "Upload from Media Library": [
+        "Carica dalla libreria media"
+      ],
+      "Add Link": [
+        "Aggiungi link"
+      ],
+      "Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max 10 MB per uploaded file.": [
+        "Immagini e PDF possono essere visualizzati in anteprima dopo il caricamento · DOC/DOCX e i link si aprono in una nuova scheda · max 10 MB per file caricato."
+      ],
+      "URL": [
+        "URL"
+      ],
+      "Label (optional)": [
+        "Etichetta (opzionale)"
+      ],
+      "e.g. Contract": [
+        "es. Contratto"
+      ],
+      "Unable to load this file.": [
+        "Impossibile caricare questo file."
+      ],
+      "Unable to render this PDF.": [
+        "Impossibile visualizzare questo PDF."
+      ],
+      "Search in document…": [
+        "Cerca nel documento…"
+      ],
+      "Previous match": [
+        "Corrispondenza precedente"
+      ],
+      "Next match": [
+        "Corrispondenza successiva"
+      ],
+      "Zoom out": [
+        "Riduci zoom"
+      ],
+      "Zoom in": [
+        "Aumenta zoom"
+      ],
+      "Page number": [
+        "Numero di pagina"
+      ],
+      "Filename": [
+        "Nome file"
+      ],
+      "Download file": [
+        "Scarica file"
+      ],
+      "Remove file": [
+        "Rimuovi file"
+      ],
+      "No files attached.": [
+        "Nessun file allegato."
+      ],
+      "These files exceed the 10 MB limit and were skipped:": [
+        "Questi file superano il limite di 10 MB e sono stati ignorati:"
       ]
     }
   }
