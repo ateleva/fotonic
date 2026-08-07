@@ -121,7 +121,7 @@ function RecoveryPhraseBanner() {
                 </p>
               </div>
               <Button variant="secondary" className="w-full" onClick={handleCopy}>
-                {copied ? __('Copied!') : __('Copy to clipboard')}
+                {copied ? __('Copied!', 'eleva-crm-for-photographers') : __('Copy to clipboard', 'eleva-crm-for-photographers')}
               </Button>
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
@@ -199,7 +199,7 @@ export default function VaultGate({ router }) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <p className="text-sm text-red-600">
-          {__('Could not reach the vault. Please reload the page.')}
+          {__('Could not reach the vault. Please reload the page.', 'eleva-crm-for-photographers')}
         </p>
       </div>
     )

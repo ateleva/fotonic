@@ -46,11 +46,11 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Type')}</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Title')}</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Amount (€)')}</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Date')}</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-28">{__('Status')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Type', 'eleva-crm-for-photographers')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Title', 'eleva-crm-for-photographers')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Amount (€)', 'eleva-crm-for-photographers')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Date', 'eleva-crm-for-photographers')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-28">{__('Status', 'eleva-crm-for-photographers')}</th>
                 <th className="px-3 py-2 w-10"></th>
               </tr>
             </thead>
@@ -77,7 +77,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                       value={row.title}
                       onChange={(e) => updateRow(index, 'title', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder={__('e.g. Deposit')}
+                      placeholder={__('e.g. Deposit', 'eleva-crm-for-photographers')}
                     />
                   </td>
                   <td className="px-3 py-2">
@@ -110,7 +110,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                           : 'bg-red-100 text-red-800 hover:bg-red-200',
                       ].join(' ')}
                     >
-                      {row.status === 'paid' ? __('Paid') : __('Unpaid')}
+                      {row.status === 'paid' ? __('Paid', 'eleva-crm-for-photographers') : __('Unpaid', 'eleva-crm-for-photographers')}
                     </button>
                   </td>
                   <td className="px-3 py-2">
@@ -118,7 +118,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                       type="button"
                       onClick={() => removeRow(index)}
                       className="text-gray-400 hover:text-red-500 transition-colors"
-                      aria-label={__('Remove installment')}
+                      aria-label={__('Remove installment', 'eleva-crm-for-photographers')}
                     >
                       <Trash2 size={15} />
                     </button>
@@ -132,16 +132,16 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
 
       <Button type="button" variant="secondary" size="sm" onClick={addRow}>
         <PlusCircle size={14} />
-        {__('Add Installment')}
+        {__('Add Installment', 'eleva-crm-for-photographers')}
       </Button>
 
       {value.length > 0 && (
         <div className="flex gap-6 text-sm pt-1">
           <span className="text-green-700 font-medium">
-            {__('Paid')}: €{totalPaid.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {__('Paid', 'eleva-crm-for-photographers')}: €{totalPaid.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
           <span className="text-red-700 font-medium">
-            {__('Unpaid')}: €{totalUnpaid.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {__('Unpaid', 'eleva-crm-for-photographers')}: €{totalUnpaid.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           </span>
         </div>
       )}

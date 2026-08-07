@@ -38,20 +38,20 @@ export default function PaymentTypeManager() {
   function handleAdd(e) {
     e.preventDefault()
     const label = addName.trim()
-    if (!label) { setAddError(__('Name is required.')); return }
+    if (!label) { setAddError(__('Name is required.', 'eleva-crm-for-photographers')); return }
     createMutation.mutate(label, {
       onSuccess: () => { setAddName(''); setAddError(null) },
-      onError: (err) => setAddError(err?.message ?? __('Error adding type.')),
+      onError: (err) => setAddError(err?.message ?? __('Error adding type.', 'eleva-crm-for-photographers')),
     })
   }
 
   function handleUpdate(e) {
     e.preventDefault()
     const label = editName.trim()
-    if (!label) { setEditError(__('Name is required.')); return }
+    if (!label) { setEditError(__('Name is required.', 'eleva-crm-for-photographers')); return }
     updateMutation.mutate({ id: editId, label }, {
       onSuccess: () => cancelEdit(),
-      onError: (err) => setEditError(err?.message ?? __('Error updating type.')),
+      onError: (err) => setEditError(err?.message ?? __('Error updating type.', 'eleva-crm-for-photographers')),
     })
   }
 
@@ -62,7 +62,7 @@ export default function PaymentTypeManager() {
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none"
       >
-        <span>{__('Payment Types')}</span>
+        <span>{__('Payment Types', 'eleva-crm-for-photographers')}</span>
         <span className="text-gray-400 text-xs">{open ? '▲' : '▼'}</span>
       </button>
 
@@ -73,14 +73,14 @@ export default function PaymentTypeManager() {
             <input
               value={addName}
               onChange={(e) => { setAddName(e.target.value); setAddError(null) }}
-              placeholder={__('New payment type…')}
+              placeholder={__('New payment type…', 'eleva-crm-for-photographers')}
               className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-56"
             />
             <Button type="submit" variant="primary" size="sm" disabled={createMutation.isPending}>
               {createMutation.isPending
                 ? <Loader size={13} className="animate-spin" />
                 : <PlusCircle size={13} />}
-              {__('Add')}
+              {__('Add', 'eleva-crm-for-photographers')}
             </Button>
             {addError && <span className="text-red-600 text-xs">{addError}</span>}
           </form>
@@ -91,7 +91,7 @@ export default function PaymentTypeManager() {
               <Loader size={20} className="animate-spin text-gray-400" />
             </div>
           ) : types.length === 0 ? (
-            <p className="text-sm text-gray-400 italic">{__('No payment types yet.')}</p>
+            <p className="text-sm text-gray-400 italic">{__('No payment types yet.', 'eleva-crm-for-photographers')}</p>
           ) : (
             <div className="divide-y divide-gray-100 rounded-md border border-gray-200 overflow-hidden">
               {types.map((t) => (
@@ -116,22 +116,22 @@ export default function PaymentTypeManager() {
                       <>
                         <Button variant="primary" size="sm" onClick={handleUpdate} disabled={updateMutation.isPending}>
                           <Check size={13} />
-                          {__('Save')}
+                          {__('Save', 'eleva-crm-for-photographers')}
                         </Button>
                         <Button variant="secondary" size="sm" onClick={cancelEdit}>
                           <X size={13} />
-                          {__('Cancel')}
+                          {__('Cancel', 'eleva-crm-for-photographers')}
                         </Button>
                       </>
                     ) : (
                       <>
                         <Button variant="secondary" size="sm" onClick={() => startEdit(t)}>
                           <Pencil size={13} />
-                          {__('Edit')}
+                          {__('Edit', 'eleva-crm-for-photographers')}
                         </Button>
                         <Button variant="danger" size="sm" onClick={() => setDeleteId(t.id)} disabled={types.length <= 1}>
                           <Trash2 size={13} />
-                          {__('Delete')}
+                          {__('Delete', 'eleva-crm-for-photographers')}
                         </Button>
                       </>
                     )}
@@ -148,18 +148,18 @@ export default function PaymentTypeManager() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
             <p className="text-sm text-gray-700 mb-5">
-              {__('Delete this payment type? Existing installments will keep their current type.')}
+              {__('Delete this payment type? Existing installments will keep their current type.', 'eleva-crm-for-photographers')}
             </p>
             <div className="flex justify-end gap-2">
               <Button variant="secondary" onClick={() => setDeleteId(null)}>
-                {__('Cancel')}
+                {__('Cancel', 'eleva-crm-for-photographers')}
               </Button>
               <Button
                 variant="danger"
                 onClick={() => deleteMutation.mutate(deleteId, { onSuccess: () => setDeleteId(null) })}
                 disabled={deleteMutation.isPending}
               >
-                {__('Delete')}
+                {__('Delete', 'eleva-crm-for-photographers')}
               </Button>
             </div>
           </div>

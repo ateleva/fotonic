@@ -42,9 +42,9 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Service')}</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-32">{__('Price (€)')}</th>
-                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Notes')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Service', 'eleva-crm-for-photographers')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-32">{__('Price (€)', 'eleva-crm-for-photographers')}</th>
+                <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Notes', 'eleva-crm-for-photographers')}</th>
                 <th className="px-3 py-2 w-10"></th>
               </tr>
             </thead>
@@ -57,7 +57,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                       onChange={(e) => updateRow(index, 'service_id', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      <option value="">{__('— Select service —')}</option>
+                      <option value="">{__('— Select service —', 'eleva-crm-for-photographers')}</option>
                       {services.map((svc) => (
                         <option key={svc.id} value={svc.id}>
                           {svc.title}
@@ -82,11 +82,11 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                       value={row.notes_override}
                       onChange={(e) => updateRow(index, 'notes_override', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                      placeholder={__('Optional notes...')}
+                      placeholder={__('Optional notes...', 'eleva-crm-for-photographers')}
                     />
                   </td>
                   <td className="px-3 py-2">
-                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove service')}>
+                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove service', 'eleva-crm-for-photographers')}>
                       <Trash2 size={14} />
                     </Button>
                   </td>
@@ -99,7 +99,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
 
       <Button type="button" variant="secondary" size="sm" onClick={addRow}>
         <PlusCircle size={14} />
-        {__('Add Service')}
+        {__('Add Service', 'eleva-crm-for-photographers')}
       </Button>
     </div>
   )

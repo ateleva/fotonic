@@ -31,7 +31,7 @@ export default function CustomerList() {
   const columns = [
     {
       key: 'title',
-      label: __('Title'),
+      label: __('Title', 'eleva-crm-for-photographers'),
       render: (row) => (
         <button
           type="button"
@@ -44,7 +44,7 @@ export default function CustomerList() {
     },
     {
       key: 'main_contact',
-      label: __('Main Contact'),
+      label: __('Main Contact', 'eleva-crm-for-photographers'),
       render: (row) => {
         const main = (row.people ?? []).find((p) => p.is_main)
         if (!main) return <span className="text-gray-400">—</span>
@@ -57,7 +57,7 @@ export default function CustomerList() {
     },
     {
       key: 'email',
-      label: __('Email'),
+      label: __('Email', 'eleva-crm-for-photographers'),
       render: (row) => {
         const main = (row.people ?? []).find((p) => p.is_main)
         return main?.email ? (
@@ -69,7 +69,7 @@ export default function CustomerList() {
     },
     {
       key: 'phone',
-      label: __('Phone'),
+      label: __('Phone', 'eleva-crm-for-photographers'),
       render: (row) => {
         const main = (row.people ?? []).find((p) => p.is_main)
         return main?.phone ? (
@@ -81,17 +81,17 @@ export default function CustomerList() {
     },
     {
       key: 'actions',
-      label: __('Actions'),
+      label: __('Actions', 'eleva-crm-for-photographers'),
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
             variant="secondary"
             size="sm"
             onClick={() => navigate(`/customers/${row.id}`)}
-            aria-label={__('Edit customer')}
+            aria-label={__('Edit customer', 'eleva-crm-for-photographers')}
           >
             <Pencil size={14} />
-            {__('Edit')}
+            {__('Edit', 'eleva-crm-for-photographers')}
           </Button>
         </div>
       ),
@@ -101,11 +101,11 @@ export default function CustomerList() {
   return (
     <div className="p-6">
       <PageHeader
-        title={__('Customers')}
+        title={__('Customers', 'eleva-crm-for-photographers')}
         action={
           <Button onClick={() => navigate('/customers/new')}>
             <UserPlus size={15} />
-            {__('Add Customer')}
+            {__('Add Customer', 'eleva-crm-for-photographers')}
           </Button>
         }
       />
@@ -115,7 +115,7 @@ export default function CustomerList() {
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={__('Search customers...')}
+          placeholder={__('Search customers...', 'eleva-crm-for-photographers')}
           className="w-full max-w-sm rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
       </div>
@@ -128,7 +128,7 @@ export default function CustomerList() {
         <Table
           columns={columns}
           data={customers}
-          emptyMessage={__('No customers found. Add your first customer.')}
+          emptyMessage={__('No customers found. Add your first customer.', 'eleva-crm-for-photographers')}
         />
       )}
 

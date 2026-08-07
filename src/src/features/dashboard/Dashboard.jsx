@@ -60,7 +60,7 @@ export default function Dashboard() {
   const upcomingColumns = [
     {
       key: 'title',
-      label: __('Title'),
+      label: __('Title', 'eleva-crm-for-photographers'),
       render: (row) => (
         <button
           className="border-0 bg-transparent p-0 text-fotonic-primary underline font-medium text-left cursor-pointer hover:opacity-80"
@@ -72,22 +72,22 @@ export default function Dashboard() {
     },
     {
       key: 'event_date',
-      label: __('Date'),
+      label: __('Date', 'eleva-crm-for-photographers'),
       render: (row) => formatDate(row.event_date),
     },
     {
       key: 'customer',
-      label: __('Customer'),
+      label: __('Customer', 'eleva-crm-for-photographers'),
       render: (row) => row.customer_title ?? <span className="text-gray-400">—</span>,
     },
     {
       key: 'revenue',
-      label: __('Revenue'),
+      label: __('Revenue', 'eleva-crm-for-photographers'),
       render: (row) => formatEuro(workRevenue(row)),
     },
     {
       key: 'payment_status',
-      label: __('Payment Status'),
+      label: __('Payment Status', 'eleva-crm-for-photographers'),
       render: (row) => <Badge status={row.payment_status ?? 'unpaid'} />,
     },
   ]
@@ -97,50 +97,50 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 space-y-8">
-      <h1 className="text-xl font-semibold text-gray-900">{__('Dashboard')}</h1>
+      <h1 className="text-xl font-semibold text-gray-900">{__('Dashboard', 'eleva-crm-for-photographers')}</h1>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
         {/* Works */}
         <StatCard
-          title={__('Works')}
+          title={__('Works', 'eleva-crm-for-photographers')}
           mainValue={stats?.works?.this_year ?? 0}
-          mainLabel={__('this year')}
+          mainLabel={__('this year', 'eleva-crm-for-photographers')}
           rows={[
-            { value: stats?.works?.next_year ?? 0, label: __('next year') },
-            { value: stats?.works?.last_year ?? 0, label: __('last year') },
+            { value: stats?.works?.next_year ?? 0, label: __('next year', 'eleva-crm-for-photographers') },
+            { value: stats?.works?.last_year ?? 0, label: __('last year', 'eleva-crm-for-photographers') },
           ]}
         />
 
         {/* Revenue */}
         <StatCard
-          title={__('Revenue')}
+          title={__('Revenue', 'eleva-crm-for-photographers')}
           mainValue={formatEuro(stats?.revenue?.this_year)}
-          mainLabel={__('this year')}
+          mainLabel={__('this year', 'eleva-crm-for-photographers')}
           rows={[
-            { value: formatEuro(stats?.revenue?.next_year), label: __('next year') },
-            { value: formatEuro(stats?.revenue?.last_year), label: __('last year') },
+            { value: formatEuro(stats?.revenue?.next_year), label: __('next year', 'eleva-crm-for-photographers') },
+            { value: formatEuro(stats?.revenue?.last_year), label: __('last year', 'eleva-crm-for-photographers') },
           ]}
         />
 
         {/* Payments to receive */}
         <StatCard
-          title={__('Payments to receive')}
+          title={__('Payments to receive', 'eleva-crm-for-photographers')}
           mainValue={formatEuro(stats?.payments_to_receive?.this_year)}
-          mainLabel={__('this year')}
+          mainLabel={__('this year', 'eleva-crm-for-photographers')}
           rows={
             stats?.payments_to_receive?.show_last_year
-              ? [{ value: formatEuro(stats?.payments_to_receive?.last_year), label: __('last year') }]
+              ? [{ value: formatEuro(stats?.payments_to_receive?.last_year), label: __('last year', 'eleva-crm-for-photographers') }]
               : []
           }
         />
 
         {/* Payment types used */}
         <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">{__('Payment types used')}</span>
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">{__('Payment types used', 'eleva-crm-for-photographers')}</span>
           {paymentTypes.length === 0 ? (
-            <span className="text-sm text-gray-400">{__('No data')}</span>
+            <span className="text-sm text-gray-400">{__('No data', 'eleva-crm-for-photographers')}</span>
           ) : (
             <div className="flex flex-col gap-1">
               {paymentTypes.map((t) => (
@@ -152,7 +152,7 @@ export default function Dashboard() {
               ))}
               {totalPT > 0 && (
                 <div className="border-t border-gray-100 pt-1 mt-1 flex items-center gap-2 text-sm">
-                  <span className="text-gray-400 flex-1">{__('Total')}</span>
+                  <span className="text-gray-400 flex-1">{__('Total', 'eleva-crm-for-photographers')}</span>
                   <span className="font-bold text-gray-800">{formatEuro(totalPT)}</span>
                 </div>
               )}
@@ -165,15 +165,15 @@ export default function Dashboard() {
       {/* Recent Works */}
       <div>
         <h2 className="text-base font-semibold text-gray-800 mb-3">
-          {__('Recent Works')}
+          {__('Recent Works', 'eleva-crm-for-photographers')}
         </h2>
         {upcomingWorks.length === 0 ? (
-          <p className="text-sm text-gray-400">{__('No works found.')}</p>
+          <p className="text-sm text-gray-400">{__('No works found.', 'eleva-crm-for-photographers')}</p>
         ) : (
           <Table
             columns={upcomingColumns}
             data={upcomingWorks}
-            emptyMessage={__('No works found.')}
+            emptyMessage={__('No works found.', 'eleva-crm-for-photographers')}
           />
         )}
       </div>

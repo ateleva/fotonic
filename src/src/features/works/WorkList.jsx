@@ -41,7 +41,7 @@ export default function WorkList() {
   const columns = [
     {
       key: 'title',
-      label: __('Title'),
+      label: __('Title', 'eleva-crm-for-photographers'),
       render: (row) => (
         <button
           type="button"
@@ -54,27 +54,27 @@ export default function WorkList() {
     },
     {
       key: 'event_date',
-      label: __('Event Date'),
+      label: __('Event Date', 'eleva-crm-for-photographers'),
       render: (row) => formatDate(row.event_date),
     },
     {
       key: 'customer',
-      label: __('Customer'),
+      label: __('Customer', 'eleva-crm-for-photographers'),
       render: (row) => row.customer_title ?? <span className="text-gray-400">—</span>,
     },
     {
       key: 'payment_status',
-      label: __('Payment Status'),
+      label: __('Payment Status', 'eleva-crm-for-photographers'),
       render: (row) => <Badge status={row.payment_status ?? 'unpaid'} />,
     },
     {
       key: 'total_price',
-      label: __('Total Price'),
+      label: __('Total Price', 'eleva-crm-for-photographers'),
       render: (row) => formatPrice(row.total_price),
     },
     {
       key: 'actions',
-      label: __('Actions'),
+      label: __('Actions', 'eleva-crm-for-photographers'),
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
@@ -83,7 +83,7 @@ export default function WorkList() {
             onClick={() => navigate(`/works/${row.id}`)}
           >
             <Pencil size={14} />
-            {__('Edit')}
+            {__('Edit', 'eleva-crm-for-photographers')}
           </Button>
         </div>
       ),
@@ -93,11 +93,11 @@ export default function WorkList() {
   return (
     <div className="p-6">
       <PageHeader
-        title={__('Works')}
+        title={__('Works', 'eleva-crm-for-photographers')}
         action={
           <Button onClick={() => navigate('/works/new')}>
             <PlusCircle size={15} />
-            {__('Add Work')}
+            {__('Add Work', 'eleva-crm-for-photographers')}
           </Button>
         }
       />
@@ -107,7 +107,7 @@ export default function WorkList() {
           type="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder={__('Search works...')}
+          placeholder={__('Search works...', 'eleva-crm-for-photographers')}
           className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-64"
         />
         <select
@@ -116,10 +116,10 @@ export default function WorkList() {
           className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           style={{ width: 'auto', minWidth: 'max-content', paddingRight: '2rem' }}
         >
-          <option value="">{__('All Statuses')}</option>
-          <option value="paid">{__('Paid')}</option>
-          <option value="partial">{__('Partial')}</option>
-          <option value="unpaid">{__('Unpaid')}</option>
+          <option value="">{__('All Statuses', 'eleva-crm-for-photographers')}</option>
+          <option value="paid">{__('Paid', 'eleva-crm-for-photographers')}</option>
+          <option value="partial">{__('Partial', 'eleva-crm-for-photographers')}</option>
+          <option value="unpaid">{__('Unpaid', 'eleva-crm-for-photographers')}</option>
         </select>
       </div>
 
@@ -131,7 +131,7 @@ export default function WorkList() {
         <Table
           columns={columns}
           data={works}
-          emptyMessage={__('No works found. Add your first work.')}
+          emptyMessage={__('No works found. Add your first work.', 'eleva-crm-for-photographers')}
         />
       )}
 

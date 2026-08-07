@@ -26,21 +26,21 @@ export default function Layout() {
   }, [])
 
   const navItems = [
-    { to: '/dashboard',    label: __('Dashboard'),     icon: LayoutDashboard },
-    { to: '/customers',    label: __('Customers'),     icon: Users },
-    { to: '/services',     label: __('Services'),      icon: Briefcase },
-    { to: '/works',        label: __('Works'),         icon: Camera },
-    { to: '/memory-cards', label: __('Memory Cards'),  icon: MemoryStick },
-    { to: '/calendar',     label: __('Calendar'),      icon: CalendarDays },
+    { to: '/dashboard',    label: __('Dashboard', 'eleva-crm-for-photographers'),     icon: LayoutDashboard },
+    { to: '/customers',    label: __('Customers', 'eleva-crm-for-photographers'),     icon: Users },
+    { to: '/services',     label: __('Services', 'eleva-crm-for-photographers'),      icon: Briefcase },
+    { to: '/works',        label: __('Works', 'eleva-crm-for-photographers'),         icon: Camera },
+    { to: '/memory-cards', label: __('Memory Cards', 'eleva-crm-for-photographers'),  icon: MemoryStick },
+    { to: '/calendar',     label: __('Calendar', 'eleva-crm-for-photographers'),      icon: CalendarDays },
   ]
 
   const proNavItems = [
-    { to: '/kanban',         label: __('Kanban'),         icon: Kanban,       feature: 'kanban' },
-    { to: '/analytics',     label: __('Analytics'),      icon: BarChart2,    feature: 'analytics' },
-    { to: '/collaborators', label: __('Collaborators'),  icon: UserCheck,    feature: 'collaborators' },
-    { to: '/products',      label: __('Products'),       icon: Package,      feature: 'products' },
-    { to: '/suppliers',     label: __('Suppliers'),      icon: Store,        feature: 'suppliers' },
-    { to: '/expenses',      label: __('Expenses'),       icon: Receipt,      feature: 'expenses' },
+    { to: '/kanban',         label: __('Kanban', 'eleva-crm-for-photographers'),         icon: Kanban,       feature: 'kanban' },
+    { to: '/analytics',     label: __('Analytics', 'eleva-crm-for-photographers'),      icon: BarChart2,    feature: 'analytics' },
+    { to: '/collaborators', label: __('Collaborators', 'eleva-crm-for-photographers'),  icon: UserCheck,    feature: 'collaborators' },
+    { to: '/products',      label: __('Products', 'eleva-crm-for-photographers'),       icon: Package,      feature: 'products' },
+    { to: '/suppliers',     label: __('Suppliers', 'eleva-crm-for-photographers'),      icon: Store,        feature: 'suppliers' },
+    { to: '/expenses',      label: __('Expenses', 'eleva-crm-for-photographers'),       icon: Receipt,      feature: 'expenses' },
   ]
 
   const handleLock = async () => {
@@ -82,7 +82,7 @@ export default function Layout() {
         <div className="px-4 py-2 border-b border-gray-100 flex items-center gap-2 min-w-0">
           <img src={logoPng} alt="" className="h-8 w-8 object-contain shrink-0" />
           <span style={{ fontFamily: '-apple-system,"Segoe UI",sans-serif', fontSize: '13px', fontWeight: 600, color: '#1d2327', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-            {__('Eleva CRM for Photographers')}
+            {__('Eleva CRM for Photographers', 'eleva-crm-for-photographers')}
           </span>
         </div>
 
@@ -110,7 +110,7 @@ export default function Layout() {
           {proNavItems.some(({ feature }) => features[feature]) && (
             <>
               <div className="pt-1 pb-0.5 px-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">{__('Pro')}</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">{__('Pro', 'eleva-crm-for-photographers')}</span>
               </div>
               {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon }) => (
                 <NavLink
@@ -148,7 +148,7 @@ export default function Layout() {
             }
           >
             <Settings size={16} />
-            {__('Settings')}
+            {__('Settings', 'eleva-crm-for-photographers')}
           </NavLink>
           {isUnlocked && (
             <button
@@ -156,7 +156,7 @@ export default function Layout() {
               className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors cursor-pointer w-full text-left"
             >
               <Lock size={16} />
-              {__('Lock Vault')}
+              {__('Lock Vault', 'eleva-crm-for-photographers')}
             </button>
           )}
           <div className="px-3 pt-1.5 mt-0.5 border-t border-gray-100 flex items-center gap-2 flex-wrap">

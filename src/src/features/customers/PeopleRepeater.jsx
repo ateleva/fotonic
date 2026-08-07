@@ -50,7 +50,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
         >
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">
-              {__('Person')} {index + 1}
+              {__('Person', 'eleva-crm-for-photographers')} {index + 1}
             </span>
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-1.5 text-sm text-gray-600 cursor-pointer">
@@ -61,7 +61,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
                   onChange={() => update(index, 'is_main', true)}
                   className="text-indigo-600"
                 />
-                {__('Main Contact')}
+                {__('Main Contact', 'eleva-crm-for-photographers')}
               </label>
               <Button
                 type="button"
@@ -69,7 +69,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
                 size="sm"
                 onClick={() => removePerson(index)}
                 disabled={people.length <= 1}
-                aria-label={__('Remove person')}
+                aria-label={__('Remove person', 'eleva-crm-for-photographers')}
               >
                 <Trash2 size={14} />
               </Button>
@@ -79,31 +79,31 @@ export default function PeopleRepeater({ value = [], onChange }) {
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('First Name')}
+                {__('First Name', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="text"
                 value={person.first_name}
                 onChange={(e) => update(index, 'first_name', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder={__('First name')}
+                placeholder={__('First name', 'eleva-crm-for-photographers')}
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('Last Name')}
+                {__('Last Name', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="text"
                 value={person.last_name}
                 onChange={(e) => update(index, 'last_name', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder={__('Last name')}
+                placeholder={__('Last name', 'eleva-crm-for-photographers')}
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('Email')}
+                {__('Email', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="email"
@@ -115,7 +115,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('Phone')}
+                {__('Phone', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="tel"
@@ -127,7 +127,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('Nationality')}
+                {__('Nationality', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="text"
@@ -139,7 +139,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('Instagram')}
+                {__('Instagram', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="text"
@@ -151,19 +151,19 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
             <div className="col-span-2">
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('Address')}
+                {__('Address', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="text"
                 value={person.address ?? ''}
                 onChange={(e) => update(index, 'address', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder={__('Via Roma 1, Milano')}
+                placeholder={__('Via Roma 1, Milano', 'eleva-crm-for-photographers')}
               />
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
-                {__('TIN')}
+                {__('TIN', 'eleva-crm-for-photographers')}
               </label>
               <input
                 type="text"
@@ -179,7 +179,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
 
       <Button type="button" variant="secondary" size="sm" onClick={addPerson}>
         <PlusCircle size={14} />
-        {__('Add Person')}
+        {__('Add Person', 'eleva-crm-for-photographers')}
       </Button>
     </div>
   )

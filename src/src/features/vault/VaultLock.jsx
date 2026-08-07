@@ -30,7 +30,7 @@ export default function VaultLock() {
     if (result?.error) {
       setError('root', {
         type: 'manual',
-        message: result.message || __('Incorrect password or code — please try again.'),
+        message: result.message || __('Incorrect password or code — please try again.', 'eleva-crm-for-photographers'),
       })
       return
     }
@@ -57,9 +57,9 @@ export default function VaultLock() {
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-50 mb-3">
                 <Lock size={28} className="text-indigo-600" />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">{__('Vault Locked')}</h1>
+              <h1 className="text-xl font-bold text-gray-900">{__('Vault Locked', 'eleva-crm-for-photographers')}</h1>
               <p className="text-sm text-gray-500 mt-1">
-                {__('Enter your vault password and authenticator code to access your data.')}
+                {__('Enter your vault password and authenticator code to access your data.', 'eleva-crm-for-photographers')}
               </p>
             </div>
 
@@ -76,7 +76,7 @@ export default function VaultLock() {
                 style={{ position: 'absolute', opacity: 0, width: '1px', height: '1px', pointerEvents: 'none' }}
               />
               <FormField
-                label={__('Vault Password')}
+                label={__('Vault Password', 'eleva-crm-for-photographers')}
                 required
                 htmlFor="password"
                 error={errors.password?.message}
@@ -86,12 +86,12 @@ export default function VaultLock() {
                   type="password"
                   autoComplete="current-password"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  {...register('password', { required: __('Password is required') })}
+                  {...register('password', { required: __('Password is required', 'eleva-crm-for-photographers') })}
                 />
               </FormField>
 
               <FormField
-                label={__('Authenticator Code')}
+                label={__('Authenticator Code', 'eleva-crm-for-photographers')}
                 required
                 htmlFor="otp"
                 error={errors.otp?.message}
@@ -105,8 +105,8 @@ export default function VaultLock() {
                   placeholder="000000"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   {...register('otp', {
-                    required: __('Code is required'),
-                    pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code') },
+                    required: __('Code is required', 'eleva-crm-for-photographers'),
+                    pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code', 'eleva-crm-for-photographers') },
                   })}
                 />
               </FormField>
@@ -121,7 +121,7 @@ export default function VaultLock() {
                 className="w-full mt-2"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? <Spinner size="sm" /> : __('Unlock Vault')}
+                {isSubmitting ? <Spinner size="sm" /> : __('Unlock Vault', 'eleva-crm-for-photographers')}
               </Button>
             </form>
 
@@ -131,7 +131,7 @@ export default function VaultLock() {
                 onClick={() => setShowRecovery(true)}
                 className="text-xs text-indigo-500 hover:text-indigo-700 underline cursor-pointer"
               >
-                {__('Lost your password or authenticator?')}
+                {__('Lost your password or authenticator?', 'eleva-crm-for-photographers')}
               </button>
             </div>
           </>

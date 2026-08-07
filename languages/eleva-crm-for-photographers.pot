@@ -1113,3 +1113,703 @@ msgstr ""
 #: src/src/components/PdfViewer.jsx:349
 msgid "Page number"
 msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:140
+msgid "Unable to check references. Please try again."
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:232
+msgid "e.g. Elisa & Edoardo"
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:234
+msgid "Title is required"
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:260
+msgid "Update Customer"
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:260
+msgid "Create Customer"
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:278
+msgid "Delete this customer? This action cannot be undone."
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:53
+msgid "Person"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:64
+msgid "Main Contact"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:72
+msgid "Remove person"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:89
+msgid "First name"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:101
+msgid "Last name"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:182
+msgid "Add Person"
+msgstr ""
+
+#: src/src/features/customers/CustomerList.jsx:91
+msgid "Edit customer"
+msgstr ""
+
+#: src/src/features/customers/CustomerList.jsx:108
+msgid "Add Customer"
+msgstr ""
+
+#: src/src/features/customers/CustomerList.jsx:118
+msgid "Search customers..."
+msgstr ""
+
+#: src/src/features/customers/CustomerList.jsx:131
+msgid "No customers found. Add your first customer."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:80
+msgid "Loading…"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:89
+msgid "Vault configured"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:89
+msgid "Not configured"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:96
+msgid "Unlocked"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:96
+msgid "Locked"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:151
+msgid "New passwords do not match."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:169
+msgid "Failed to change password."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:181
+msgid "Current Password"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:184
+msgid "Current OTP Code"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:195
+msgid "Password changed successfully."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:198
+msgid "Saving…"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:198
+msgid "Change Password"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:229
+msgid "Password and OTP code are required."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:239
+msgid "Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:243
+msgid "New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:250
+msgid "Or enter this key manually:"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:256
+msgid "Reset again"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:273
+msgid "Generating…"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:273
+msgid "Generate New Code"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:486
+msgid "Copied!"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:646
+msgid "Settings"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:649
+msgid "Eleva Pro License"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:654
+msgid "Vault"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:661
+msgid "Keep your client data safe"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:663
+msgid "The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:666
+msgid "Pick a strong master password (at least 10 characters) and store it somewhere safe."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:667
+msgid "Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:668
+msgid "Save the recovery phrase and recovery code offline — these are your fallback if you lose access."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:669
+msgid "Lock the Vault when you finish working to keep client details protected."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:678
+msgid "Set Up Vault"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:686
+msgid "All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:692
+msgid "Change Vault Password"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:695
+msgid "Reset Authenticator App"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:698
+msgid "TOTP Recovery Code"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:714
+msgid "Google Calendar"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:720
+msgid "Email Notifications"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:727
+msgid "Reload the page to load email settings."
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:23
+msgid "To Do"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:24
+msgid "In Progress"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:140
+msgid "Close"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:149
+msgid "Task"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:195
+msgid "GCal Activity ✓"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:195
+msgid "GCal ✓"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:210
+msgid "Removing…"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:210
+msgid "Remove from Google Calendar"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:223
+msgid "Open Work →"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:272
+msgid "Synced"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:272
+msgid "works"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:272
+msgid "work"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:272
+msgid "errors"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:272
+msgid "error"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:274
+msgid "Sync failed. Try again."
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:294
+msgid "Calendar"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:303
+msgid "Syncing…"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:303
+msgid "↑ Sync to Google Calendar"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:85
+msgid "Revenue"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:100
+msgid "Dashboard"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:109
+msgid "this year"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:111
+msgid "next year"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:112
+msgid "last year"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:129
+msgid "Payments to receive"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:141
+msgid "Payment types used"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:143
+msgid "No data"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:155
+msgid "Total"
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:168
+msgid "Recent Works"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:80
+msgid "e.g. Deposit"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:121
+msgid "Remove installment"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:135
+msgid "Add Installment"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:40
+msgid "Choose the event card color in the calendar view."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:261
+msgid "Event Details"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:273
+msgid "e.g. Matrimonio Rossi"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:348
+msgid "Calendar Color"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:372
+msgid "Work Owner"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:380
+msgid "Collaborators"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:393
+msgid "Services Included"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:409
+msgid "Files"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:445
+msgid "Payments"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:480
+msgid "Scheduled Notifications"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:496
+msgid "Update Work"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:497
+msgid "Create Work"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:514
+msgid "Delete this work? This action cannot be undone."
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:41
+msgid "Name is required."
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:44
+msgid "Error adding type."
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:54
+msgid "Error updating type."
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:65
+msgid "Payment Types"
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:76
+msgid "New payment type…"
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:94
+msgid "No payment types yet."
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:119
+msgid "Save"
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:134
+msgid "Delete"
+msgstr ""
+
+#: src/src/features/works/PaymentTypeManager.jsx:151
+msgid "Delete this payment type? Existing installments will keep their current type."
+msgstr ""
+
+#: src/src/features/works/EventAddressesRepeater.jsx:62
+msgid "Remove address"
+msgstr ""
+
+#: src/src/features/works/EventAddressesRepeater.jsx:76
+msgid "Add Address"
+msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:46
+msgid "Price (€)"
+msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:60
+msgid "— Select service —"
+msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:85
+msgid "Optional notes..."
+msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:89
+msgid "Remove service"
+msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:102
+msgid "Add Service"
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:100
+msgid "Add Work"
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:110
+msgid "Search works..."
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:119
+msgid "All Statuses"
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:134
+msgid "No works found. Add your first work."
+msgstr ""
+
+#: src/src/features/services/ServiceList.jsx:32
+msgid "Name"
+msgstr ""
+
+#: src/src/features/services/ServiceList.jsx:45
+msgid "Base Price"
+msgstr ""
+
+#: src/src/features/services/ServiceList.jsx:95
+msgid "No services found. Add your first service."
+msgstr ""
+
+#: src/src/features/services/ServiceForm.jsx:110
+msgid "e.g. Wedding Photography"
+msgstr ""
+
+#: src/src/features/services/ServiceForm.jsx:129
+msgid "Price must be 0 or more"
+msgstr ""
+
+#: src/src/features/services/ServiceForm.jsx:138
+msgid "Optional notes about this service..."
+msgstr ""
+
+#: src/src/features/services/ServiceForm.jsx:155
+msgid "Update Service"
+msgstr ""
+
+#: src/src/features/services/ServiceForm.jsx:156
+msgid "Create Service"
+msgstr ""
+
+#: src/src/features/services/ServiceForm.jsx:173
+msgid "Delete this service? This action cannot be undone."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:80
+msgid "Set Vault Password"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:82
+msgid "Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:98
+msgid "Password"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:109
+msgid "Password is required"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:110
+msgid "Minimum 10 characters"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:116
+msgid "Confirm Password"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:127
+msgid "Please confirm your password"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:129
+msgid "Passwords do not match"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:136
+msgid "Save this credential in your password manager"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:140
+msgid "Username"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:148
+msgid "Copy"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:152
+msgid "Using a separate username prevents your browser from confusing the vault password with your WordPress login."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:158
+msgid "Next"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:196
+msgid "Try again"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:205
+msgid "Setting up vault…"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:219
+msgid "Scan QR Code"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:221
+msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:264
+msgid "Invalid code or password mismatch — check your authenticator app"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:274
+msgid "Confirm Authenticator Code"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:276
+msgid "Enter the 6-digit code shown in your authenticator app to complete setup."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:280
+msgid "One-Time Code"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:294
+msgid "Code is required"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:295
+msgid "Enter a 6-digit code"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:306
+msgid "Verify & Unlock"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:329
+msgid "Save Your Recovery Phrase"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:331
+msgid "This phrase lets you recover access if you forget your password. Store it somewhere safe offline — it will never be shown again."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:375
+msgid "Save Your Recovery Code"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:379
+msgid "Finish Setup"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:431
+msgid "Vault Setup"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:432
+msgid "Step"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:432
+msgid "of"
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:202
+msgid "Could not reach the vault. Please reload the page."
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:33
+msgid "Incorrect password or code — please try again."
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:60
+msgid "Vault Locked"
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:62
+msgid "Enter your vault password and authenticator code to access your data."
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:94
+msgid "Authenticator Code"
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:124
+msgid "Unlock Vault"
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:134
+msgid "Lost your password or authenticator?"
+msgstr ""
+
+#: src/src/components/Layout.jsx:38
+msgid "Kanban"
+msgstr ""
+
+#: src/src/components/Layout.jsx:39
+msgid "Analytics"
+msgstr ""
+
+#: src/src/components/Layout.jsx:41
+msgid "Products"
+msgstr ""
+
+#: src/src/components/Layout.jsx:42
+msgid "Suppliers"
+msgstr ""
+
+#: src/src/components/Layout.jsx:43
+msgid "Expenses"
+msgstr ""
+
+#: src/src/components/Layout.jsx:85
+msgid "Eleva CRM for Photographers"
+msgstr ""
+
+#: src/src/components/Layout.jsx:113
+msgid "Pro"
+msgstr ""
+
+#: src/src/components/Layout.jsx:159
+msgid "Lock Vault"
+msgstr ""
+
+#: src/src/components/ConfirmDialog.jsx:13
+msgid "Are you sure you want to delete this item? This action cannot be undone."
+msgstr ""
+
+#: src/src/components/ConfirmDialog.jsx:15
+msgid "Confirm Delete"
+msgstr ""
+
+#: src/src/components/PageHeader.jsx:11
+msgid "← Back"
+msgstr ""

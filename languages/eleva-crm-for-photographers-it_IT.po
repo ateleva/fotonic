@@ -1807,3 +1807,12 @@ msgstr "Aumenta zoom"
 
 msgid "Page number"
 msgstr "Numero di pagina"
+
+msgid "Current Password"
+msgstr "Password attuale"
+
+msgid "Incorrect password or code — please try again."
+msgstr "Password o codice errati — riprova."
+
+msgid "Work Owner"
+msgstr "Titolare del Lavoro"

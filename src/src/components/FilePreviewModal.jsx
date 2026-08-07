@@ -58,7 +58,7 @@ export default function FilePreviewModal({ file, onClose }) {
 
       {state.status === 'error' && (
         <div className="flex items-center justify-center h-full text-sm text-red-600">
-          {state.error || __('Unable to load this file.')}
+          {state.error || __('Unable to load this file.', 'eleva-crm-for-photographers')}
         </div>
       )}
 

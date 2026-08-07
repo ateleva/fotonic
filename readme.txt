@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.11
+Stable tag: 1.3.12
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -92,6 +92,9 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
 == Changelog ==
+
+= 1.3.12 =
+* Fix: Italian (it_IT) translation now covers the Customers, Services, and Works list screens, the Dashboard, and the Calendar view — these previously displayed in English regardless of the site or user language setting, even though the rest of the plugin was translated.
 
 = 1.3.11 =
 * New: the Files section on a Work now accepts external links (Google Drive, Dropbox, etc.) alongside uploaded files, with an optional custom display label.
@@ -210,6 +213,9 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.3.12 =
+Fix: Italian translation now covers list screens, Dashboard, and Calendar. Safe in-place update — no data or breaking changes.
 
 = 1.3.11 =
 New: Files section now supports external links and a full-size in-browser preview for images and PDFs. Safe in-place update — no data or breaking changes.

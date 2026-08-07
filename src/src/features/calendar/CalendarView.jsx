@@ -20,18 +20,18 @@ const PAYMENT_COLORS = {
 
 function kanbanLabel(status) {
   switch (status) {
-    case 'todo':        return __('To Do')
-    case 'in_progress': return __('In Progress')
-    case 'done':        return __('Done')
+    case 'todo':        return __('To Do', 'eleva-crm-for-photographers')
+    case 'in_progress': return __('In Progress', 'eleva-crm-for-photographers')
+    case 'done':        return __('Done', 'eleva-crm-for-photographers')
     default:            return status
   }
 }
 
 function paymentLabel(status) {
   switch (status) {
-    case 'paid':    return __('Paid')
-    case 'partial': return __('Partial')
-    case 'unpaid':  return __('Unpaid')
+    case 'paid':    return __('Paid', 'eleva-crm-for-photographers')
+    case 'partial': return __('Partial', 'eleva-crm-for-photographers')
+    case 'unpaid':  return __('Unpaid', 'eleva-crm-for-photographers')
     default:        return status
   }
 }
@@ -137,7 +137,7 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
       <button
         onClick={onClose}
         style={{ position: 'absolute', top: 10, right: 10, background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af', fontSize: 16, lineHeight: 1, padding: 2 }}
-        aria-label={__('Close')}
+        aria-label={__('Close', 'eleva-crm-for-photographers')}
       >✕</button>
 
       {/* Colour strip */}
@@ -146,7 +146,7 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
       {/* Task badge */}
       {isTask && (
         <div style={{ marginBottom: 6 }}>
-          <span style={{ background: '#f3f4f6', color: '#6b7280', borderRadius: 99, padding: '2px 8px', fontSize: 11, fontWeight: 600 }}>{__('Task')}</span>
+          <span style={{ background: '#f3f4f6', color: '#6b7280', borderRadius: 99, padding: '2px 8px', fontSize: 11, fontWeight: 600 }}>{__('Task', 'eleva-crm-for-photographers')}</span>
         </div>
       )}
 
@@ -192,7 +192,7 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
         )}
         {event.gcal_event_id && (
           <span style={{ background: '#eff6ff', color: '#2563eb', borderRadius: 99, padding: '2px 8px', fontSize: 11, fontWeight: 600 }}>
-            {event.gcal_entry_type === 'activity' ? __('GCal Activity ✓') : __('GCal ✓')}
+            {event.gcal_entry_type === 'activity' ? __('GCal Activity ✓', 'eleva-crm-for-photographers') : __('GCal ✓', 'eleva-crm-for-photographers')}
           </span>
         )}
       </div>
@@ -207,7 +207,7 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
             disabled={unlinkMut.isPending}
             style={{ width: '100%' }}
           >
-            {unlinkMut.isPending ? __('Removing…') : __('Remove from Google Calendar')}
+            {unlinkMut.isPending ? __('Removing…', 'eleva-crm-for-photographers') : __('Remove from Google Calendar', 'eleva-crm-for-photographers')}
           </Button>
         </div>
       )}
@@ -220,7 +220,7 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
           onClick={() => { onClose(); onOpen(event.id) }}
           style={{ width: '100%' }}
         >
-          {__('Open Work →')}
+          {__('Open Work →', 'eleva-crm-for-photographers')}
         </Button>
       )}
     </div>
@@ -269,9 +269,9 @@ export function CalendarView() {
     setSyncMsg('')
     try {
       const res = await syncAll.mutateAsync()
-      setSyncMsg(`${__('Synced')} ${res.synced} ${res.synced !== 1 ? __('works') : __('work')}${res.errors ? `, ${res.errors} ${res.errors !== 1 ? __('errors') : __('error')}` : ''}.`)
+      setSyncMsg(`${__('Synced', 'eleva-crm-for-photographers')} ${res.synced} ${res.synced !== 1 ? __('works', 'eleva-crm-for-photographers') : __('work', 'eleva-crm-for-photographers')}${res.errors ? `, ${res.errors} ${res.errors !== 1 ? __('errors', 'eleva-crm-for-photographers') : __('error', 'eleva-crm-for-photographers')}` : ''}.`)
     } catch {
-      setSyncMsg(__('Sync failed. Try again.'))
+      setSyncMsg(__('Sync failed. Try again.', 'eleva-crm-for-photographers'))
     }
     setTimeout(() => setSyncMsg(''), 5000)
   }
@@ -291,7 +291,7 @@ export function CalendarView() {
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-        <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#111827' }}>{__('Calendar')}</h2>
+        <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#111827' }}>{__('Calendar', 'eleva-crm-for-photographers')}</h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {gcalEnabled && (
             <Button
@@ -300,7 +300,7 @@ export function CalendarView() {
               onClick={e => { e.stopPropagation(); handleSyncAll() }}
               disabled={syncAll.isPending}
             >
-              {syncAll.isPending ? __('Syncing…') : __('↑ Sync to Google Calendar')}
+              {syncAll.isPending ? __('Syncing…', 'eleva-crm-for-photographers') : __('↑ Sync to Google Calendar', 'eleva-crm-for-photographers')}
             </Button>
           )}
         </div>
@@ -334,7 +334,7 @@ export function CalendarView() {
 
         {/* Cells */}
         {isLoading ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>{__('Loading…')}</div>
+          <div style={{ padding: '2rem', textAlign: 'center', color: '#9ca3af' }}>{__('Loading…', 'eleva-crm-for-photographers')}</div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)' }}>
             {grid.map((day, idx) => {

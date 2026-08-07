@@ -77,9 +77,9 @@ function StepPassword({ onNext }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Set Vault Password')}</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Set Vault Password', 'eleva-crm-for-photographers')}</h2>
       <p className="text-sm text-gray-500">
-        {__('Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault.')}
+        {__('Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault.', 'eleva-crm-for-photographers')}
       </p>
 
       {/* Must be inside <form> — browser only links username hint to password fields in the same form */}
@@ -95,7 +95,7 @@ function StepPassword({ onNext }) {
       />
 
       <FormField
-        label={__('Password')}
+        label={__('Password', 'eleva-crm-for-photographers')}
         required
         htmlFor="password"
         error={errors.password?.message}
@@ -106,14 +106,14 @@ function StepPassword({ onNext }) {
           autoComplete="new-password"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('password', {
-            required: __('Password is required'),
-            minLength: { value: 10, message: __('Minimum 10 characters') },
+            required: __('Password is required', 'eleva-crm-for-photographers'),
+            minLength: { value: 10, message: __('Minimum 10 characters', 'eleva-crm-for-photographers') },
           })}
         />
       </FormField>
 
       <FormField
-        label={__('Confirm Password')}
+        label={__('Confirm Password', 'eleva-crm-for-photographers')}
         required
         htmlFor="confirm"
         error={errors.confirm?.message}
@@ -124,20 +124,20 @@ function StepPassword({ onNext }) {
           autoComplete="new-password"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('confirm', {
-            required: __('Please confirm your password'),
+            required: __('Please confirm your password', 'eleva-crm-for-photographers'),
             validate: (val) =>
-              val === watch('password') || __('Passwords do not match'),
+              val === watch('password') || __('Passwords do not match', 'eleva-crm-for-photographers'),
           })}
         />
       </FormField>
 
       <div className="rounded-md bg-blue-50 border border-blue-100 p-3 space-y-1.5">
         <p className="text-xs font-medium text-blue-700">
-          {__('Save this credential in your password manager')}
+          {__('Save this credential in your password manager', 'eleva-crm-for-photographers')}
         </p>
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-xs text-gray-500">{__('Username')}</span>
+            <span className="text-xs text-gray-500">{__('Username', 'eleva-crm-for-photographers')}</span>
             <p className="text-sm font-mono font-semibold text-gray-800">crm-vault</p>
           </div>
           <button
@@ -145,17 +145,17 @@ function StepPassword({ onNext }) {
             onClick={() => navigator.clipboard.writeText('crm-vault')}
             className="text-xs text-blue-500 hover:text-blue-700 underline cursor-pointer"
           >
-            {__('Copy')}
+            {__('Copy', 'eleva-crm-for-photographers')}
           </button>
         </div>
         <p className="text-xs text-gray-400">
-          {__('Using a separate username prevents your browser from confusing the vault password with your WordPress login.')}
+          {__('Using a separate username prevents your browser from confusing the vault password with your WordPress login.', 'eleva-crm-for-photographers')}
         </p>
       </div>
 
       <div className="pt-2">
         <Button type="submit" variant="primary" className="w-full">
-          {__('Next')}
+          {__('Next', 'eleva-crm-for-photographers')}
         </Button>
       </div>
     </form>
@@ -193,7 +193,7 @@ function StepSetupCall({ password, onNext }) {
       <div className="space-y-4">
         <p className="text-sm text-red-600">{error}</p>
         <Button variant="secondary" onClick={() => window.location.reload()}>
-          {__('Try again')}
+          {__('Try again', 'eleva-crm-for-photographers')}
         </Button>
       </div>
     )
@@ -202,7 +202,7 @@ function StepSetupCall({ password, onNext }) {
   return (
     <div className="flex flex-col items-center gap-4 py-8">
       <Spinner size="lg" />
-      <p className="text-sm text-gray-500">{__('Setting up vault…')}</p>
+      <p className="text-sm text-gray-500">{__('Setting up vault…', 'eleva-crm-for-photographers')}</p>
     </div>
   )
 }
@@ -216,9 +216,9 @@ function StepScanQR({ qrUri, onNext }) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Scan QR Code')}</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Scan QR Code', 'eleva-crm-for-photographers')}</h2>
       <p className="text-sm text-gray-500">
-        {__('Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below.')}
+        {__('Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below.', 'eleva-crm-for-photographers')}
       </p>
 
       {qrUri && (
@@ -227,7 +227,7 @@ function StepScanQR({ qrUri, onNext }) {
             <QrCanvas uri={qrUri} size={200} />
           </div>
           <div className="w-full rounded-md bg-gray-50 border border-gray-200 p-3">
-            <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:')}</p>
+            <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:', 'eleva-crm-for-photographers')}</p>
             <p className="text-sm font-mono font-semibold text-gray-800 break-all">
               {secretB32}
             </p>
@@ -261,7 +261,7 @@ function StepOTP({ password, onSuccess }) {
     if (result?.error) {
       setError('otp', {
         type: 'manual',
-        message: result.message || __('Invalid code or password mismatch — check your authenticator app'),
+        message: result.message || __('Invalid code or password mismatch — check your authenticator app', 'eleva-crm-for-photographers'),
       })
       return
     }
@@ -271,13 +271,13 @@ function StepOTP({ password, onSuccess }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Confirm Authenticator Code')}</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Confirm Authenticator Code', 'eleva-crm-for-photographers')}</h2>
       <p className="text-sm text-gray-500">
-        {__('Enter the 6-digit code shown in your authenticator app to complete setup.')}
+        {__('Enter the 6-digit code shown in your authenticator app to complete setup.', 'eleva-crm-for-photographers')}
       </p>
 
       <FormField
-        label={__('One-Time Code')}
+        label={__('One-Time Code', 'eleva-crm-for-photographers')}
         required
         htmlFor="otp"
         error={errors.otp?.message}
@@ -291,8 +291,8 @@ function StepOTP({ password, onSuccess }) {
           placeholder="000000"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('otp', {
-            required: __('Code is required'),
-            pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code') },
+            required: __('Code is required', 'eleva-crm-for-photographers'),
+            pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code', 'eleva-crm-for-photographers') },
           })}
         />
       </FormField>
@@ -303,7 +303,7 @@ function StepOTP({ password, onSuccess }) {
         className="w-full"
         disabled={isSubmitting}
       >
-        {isSubmitting ? <Spinner size="sm" /> : __('Verify & Unlock')}
+        {isSubmitting ? <Spinner size="sm" /> : __('Verify & Unlock', 'eleva-crm-for-photographers')}
       </Button>
     </form>
   )
@@ -326,9 +326,9 @@ function StepRecoveryPhrase({ recoveryPhrase, onNext }) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Phrase')}</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Phrase', 'eleva-crm-for-photographers')}</h2>
       <p className="text-sm text-gray-500">
-        {__('This phrase lets you recover access if you forget your password. Store it somewhere safe offline — it will never be shown again.')}
+        {__('This phrase lets you recover access if you forget your password. Store it somewhere safe offline — it will never be shown again.', 'eleva-crm-for-photographers')}
       </p>
 
       <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
@@ -338,7 +338,7 @@ function StepRecoveryPhrase({ recoveryPhrase, onNext }) {
       </div>
 
       <Button variant="secondary" className="w-full" onClick={handleCopy}>
-        {copied ? __('Copied!') : __('Copy to clipboard')}
+        {copied ? __('Copied!', 'eleva-crm-for-photographers') : __('Copy to clipboard', 'eleva-crm-for-photographers')}
       </Button>
 
       <label className="flex items-start gap-3 cursor-pointer">
@@ -349,7 +349,7 @@ function StepRecoveryPhrase({ recoveryPhrase, onNext }) {
           className="mt-0.5 h-4 w-4 rounded border-gray-300 text-indigo-600"
         />
         <span className="text-sm text-gray-700">
-          {__('I have saved this phrase offline in a secure location.')}
+          {__('I have saved this phrase offline in a secure location.', 'eleva-crm-for-photographers')}
         </span>
       </label>
 
@@ -359,7 +359,7 @@ function StepRecoveryPhrase({ recoveryPhrase, onNext }) {
         disabled={!saved}
         onClick={onNext}
       >
-        {__('Next')}
+        {__('Next', 'eleva-crm-for-photographers')}
       </Button>
     </div>
   )
@@ -372,11 +372,11 @@ function StepRecoveryPhrase({ recoveryPhrase, onNext }) {
 function StepRecoveryCode({ recoveryCode, onDone }) {
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Code')}</h2>
+      <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Code', 'eleva-crm-for-photographers')}</h2>
       <RecoveryCodeDisplay
         code={recoveryCode}
         onConfirm={onDone}
-        confirmLabel={__('Finish Setup')}
+        confirmLabel={__('Finish Setup', 'eleva-crm-for-photographers')}
       />
     </div>
   )
@@ -428,8 +428,8 @@ export default function VaultSetup() {
       <div className="bg-white rounded-xl shadow-md w-full max-w-md p-8">
         <div className="text-center mb-6">
           <span className="text-3xl">&#x1F510;</span>
-          <h1 className="mt-2 text-xl font-bold text-gray-900">{__('Vault Setup')}</h1>
-          <p className="text-xs text-gray-400 mt-1">{__('Step')} {step} {__('of')} {totalSteps}</p>
+          <h1 className="mt-2 text-xl font-bold text-gray-900">{__('Vault Setup', 'eleva-crm-for-photographers')}</h1>
+          <p className="text-xs text-gray-400 mt-1">{__('Step', 'eleva-crm-for-photographers')} {step} {__('of', 'eleva-crm-for-photographers')} {totalSteps}</p>
         </div>
 
         {step > 1 && step <= totalSteps && (

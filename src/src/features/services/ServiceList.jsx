@@ -29,7 +29,7 @@ export default function ServiceList() {
   const columns = [
     {
       key: 'title',
-      label: __('Name'),
+      label: __('Name', 'eleva-crm-for-photographers'),
       render: (row) => (
         <button
           type="button"
@@ -42,21 +42,21 @@ export default function ServiceList() {
     },
     {
       key: 'base_price',
-      label: __('Base Price'),
+      label: __('Base Price', 'eleva-crm-for-photographers'),
       render: (row) => (
         <span className="text-gray-700">{formatPrice(row.base_price)}</span>
       ),
     },
     {
       key: 'notes',
-      label: __('Notes'),
+      label: __('Notes', 'eleva-crm-for-photographers'),
       render: (row) => (
         <span className="text-gray-500">{truncate(row.notes)}</span>
       ),
     },
     {
       key: 'actions',
-      label: __('Actions'),
+      label: __('Actions', 'eleva-crm-for-photographers'),
       render: (row) => (
         <div className="flex items-center gap-2">
           <Button
@@ -65,7 +65,7 @@ export default function ServiceList() {
             onClick={() => navigate(`/services/${row.id}`)}
           >
             <Pencil size={14} />
-            {__('Edit')}
+            {__('Edit', 'eleva-crm-for-photographers')}
           </Button>
         </div>
       ),
@@ -75,11 +75,11 @@ export default function ServiceList() {
   return (
     <div className="p-6">
       <PageHeader
-        title={__('Services')}
+        title={__('Services', 'eleva-crm-for-photographers')}
         action={
           <Button onClick={() => navigate('/services/new')}>
             <PlusCircle size={15} />
-            {__('Add Service')}
+            {__('Add Service', 'eleva-crm-for-photographers')}
           </Button>
         }
       />
@@ -92,7 +92,7 @@ export default function ServiceList() {
         <Table
           columns={columns}
           data={services}
-          emptyMessage={__('No services found. Add your first service.')}
+          emptyMessage={__('No services found. Add your first service.', 'eleva-crm-for-photographers')}
         />
       )}
 

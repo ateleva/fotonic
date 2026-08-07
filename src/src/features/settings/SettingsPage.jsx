@@ -77,7 +77,7 @@ const inputCls = 'w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm f
 
 function VaultStatusRow({ status }) {
   if (!status) {
-    return <p className="text-sm text-gray-400">{__('Loading…')}</p>
+    return <p className="text-sm text-gray-400">{__('Loading…', 'eleva-crm-for-photographers')}</p>
   }
   return (
     <div className="flex flex-wrap gap-3 text-sm">
@@ -86,14 +86,14 @@ function VaultStatusRow({ status }) {
         status.setup ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600',
       ].join(' ')}>
         {status.setup ? <CheckCircle size={12} /> : <XCircle size={12} />}
-        {status.setup ? __('Vault configured') : __('Not configured')}
+        {status.setup ? __('Vault configured', 'eleva-crm-for-photographers') : __('Not configured', 'eleva-crm-for-photographers')}
       </span>
       <span className={[
         'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium',
         status.unlocked ? 'bg-indigo-100 text-indigo-700' : 'bg-yellow-100 text-yellow-700',
       ].join(' ')}>
         {status.unlocked ? <CheckCircle size={12} /> : <XCircle size={12} />}
-        {status.unlocked ? __('Unlocked') : __('Locked')}
+        {status.unlocked ? __('Unlocked', 'eleva-crm-for-photographers') : __('Locked', 'eleva-crm-for-photographers')}
       </span>
     </div>
   )
@@ -144,15 +144,15 @@ function ChangePasswordForm() {
     setSuccess(false)
 
     if (!form.current_password || !form.new_password || !form.otp) {
-      setError(__('All fields are required.'))
+      setError(__('All fields are required.', 'eleva-crm-for-photographers'))
       return
     }
     if (form.new_password !== form.confirm) {
-      setError(__('New passwords do not match.'))
+      setError(__('New passwords do not match.', 'eleva-crm-for-photographers'))
       return
     }
     if (form.new_password.length < 10) {
-      setError(__('New password must be at least 10 characters.'))
+      setError(__('New password must be at least 10 characters.', 'eleva-crm-for-photographers'))
       return
     }
 
@@ -166,7 +166,7 @@ function ChangePasswordForm() {
       setSuccess(true)
       setForm({ current_password: '', new_password: '', confirm: '', otp: '' })
     } catch (err) {
-      setError(err.message || __('Failed to change password.'))
+      setError(err.message || __('Failed to change password.', 'eleva-crm-for-photographers'))
     } finally {
       setLoading(false)
     }
@@ -178,24 +178,24 @@ function ChangePasswordForm() {
         {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
       </p>
       <div className="grid grid-cols-2 gap-3">
-        <FieldRow label={__('Current Password')} required>
+        <FieldRow label={__('Current Password', 'eleva-crm-for-photographers')} required>
           <input type="password" value={form.current_password} onChange={handleChange('current_password')} autoComplete="current-password" className={inputCls} />
         </FieldRow>
-        <FieldRow label={__('Current OTP Code')} required>
+        <FieldRow label={__('Current OTP Code', 'eleva-crm-for-photographers')} required>
           <input type="text" inputMode="numeric" maxLength={6} value={form.otp} onChange={handleChange('otp')} placeholder="000000" autoComplete="one-time-code" className={inputCls + ' font-mono tracking-widest'} />
         </FieldRow>
-        <FieldRow label={__('New Password')} required>
+        <FieldRow label={__('New Password', 'eleva-crm-for-photographers')} required>
           <input type="password" value={form.new_password} onChange={handleChange('new_password')} autoComplete="new-password" className={inputCls} />
         </FieldRow>
-        <FieldRow label={__('Confirm New Password')} required>
+        <FieldRow label={__('Confirm New Password', 'eleva-crm-for-photographers')} required>
           <input type="password" value={form.confirm} onChange={handleChange('confirm')} autoComplete="new-password" className={inputCls} />
         </FieldRow>
       </div>
       {error && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>}
-      {success && <p className="text-xs text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">{__('Password changed successfully.')}</p>}
+      {success && <p className="text-xs text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">{__('Password changed successfully.', 'eleva-crm-for-photographers')}</p>}
       <div className="flex justify-end">
         <button type="submit" disabled={loading} className="rounded-md bg-indigo-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50">
-          {loading ? __('Saving…') : __('Change Password')}
+          {loading ? __('Saving…', 'eleva-crm-for-photographers') : __('Change Password', 'eleva-crm-for-photographers')}
         </button>
       </div>
     </form>
@@ -226,7 +226,7 @@ function ResetTotpForm() {
     setError('')
     setQrUri(null)
     if (!form.password || !form.otp) {
-      setError(__('Password and OTP code are required.'))
+      setError(__('Password and OTP code are required.', 'eleva-crm-for-photographers'))
       return
     }
     mutation.mutate(form)
@@ -236,41 +236,41 @@ function ResetTotpForm() {
 
   return (
     <div className="space-y-3 pt-1">
-      <p className="text-xs text-gray-500">{__('Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity.')}</p>
+      <p className="text-xs text-gray-500">{__('Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity.', 'eleva-crm-for-photographers')}</p>
       {qrUri ? (
         <div className="space-y-3">
           <p className="text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
-            {__('New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm.')}
+            {__('New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm.', 'eleva-crm-for-photographers')}
           </p>
           <div className="flex flex-col items-center gap-3">
             <div className="rounded border border-gray-200 p-2">
               <QrCanvas uri={qrUri} size={180} />
             </div>
             <div className="w-full rounded bg-gray-50 border border-gray-200 p-3">
-              <p className="text-xs text-gray-500 mb-1">{__('Or enter this key manually:')}</p>
+              <p className="text-xs text-gray-500 mb-1">{__('Or enter this key manually:', 'eleva-crm-for-photographers')}</p>
               <p className="text-xs font-mono font-semibold text-gray-800 break-all">
                 {qrUri.match(/secret=([A-Z2-7]+)/i)?.[1] ?? ''}
               </p>
             </div>
             <button type="button" onClick={() => setQrUri(null)} className="text-xs text-gray-400 hover:text-gray-600 underline">
-              {__('Reset again')}
+              {__('Reset again', 'eleva-crm-for-photographers')}
             </button>
           </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
-            <FieldRow label={__('Vault Password')} required>
+            <FieldRow label={__('Vault Password', 'eleva-crm-for-photographers')} required>
               <input type="password" value={form.password} onChange={f('password')} autoComplete="current-password" className={inputCls} />
             </FieldRow>
-            <FieldRow label={__('Current OTP Code')} required>
+            <FieldRow label={__('Current OTP Code', 'eleva-crm-for-photographers')} required>
               <input type="text" inputMode="numeric" maxLength={6} value={form.otp} onChange={f('otp')} placeholder="000000" className={inputCls + ' font-mono tracking-widest'} />
             </FieldRow>
           </div>
           {error && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>}
           <div className="flex justify-end">
             <button type="submit" disabled={mutation.isPending} className="rounded-md bg-red-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50">
-              {mutation.isPending ? __('Generating…') : __('Generate New Code')}
+              {mutation.isPending ? __('Generating…', 'eleva-crm-for-photographers') : __('Generate New Code', 'eleva-crm-for-photographers')}
             </button>
           </div>
         </form>
@@ -483,7 +483,7 @@ function RecoveryPhraseSection({ hasPhrase }) {
                 </p>
               </div>
               <Button variant="secondary" className="w-full" onClick={handleCopy}>
-                {copied ? __('Copied!') : __('Copy to clipboard')}
+                {copied ? __('Copied!', 'eleva-crm-for-photographers') : __('Copy to clipboard', 'eleva-crm-for-photographers')}
               </Button>
               <label className="flex items-start gap-3 cursor-pointer">
                 <input
@@ -643,30 +643,30 @@ export default function SettingsPage() {
     )}
 
     <div className="p-6 space-y-6">
-      <PageHeader title={__('Settings')} />
+      <PageHeader title={__('Settings', 'eleva-crm-for-photographers')} />
 
       {LicenseSettingsSection && (
-        <SectionCard title={__('Eleva Pro License')} icon={Key}>
+        <SectionCard title={__('Eleva Pro License', 'eleva-crm-for-photographers')} icon={Key}>
           <LicenseSettingsSection />
         </SectionCard>
       )}
 
-      <SectionCard title={__('Vault')} icon={Shield}>
+      <SectionCard title={__('Vault', 'eleva-crm-for-photographers')} icon={Shield}>
         <div className="space-y-4">
           <VaultStatusRow status={vaultStatus} />
 
           {vaultStatus && !vaultStatus.setup && (
             <div className="pt-1 space-y-3">
               <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
-                <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe')}</p>
+                <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe', 'eleva-crm-for-photographers')}</p>
                 <p className="text-sm text-blue-800">
-                  {__('The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.')}
+                  {__('The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.', 'eleva-crm-for-photographers')}
                 </p>
                 <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                  <li>{__('Pick a strong master password (at least 10 characters) and store it somewhere safe.')}</li>
-                  <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.')}</li>
-                  <li>{__('Save the recovery phrase and recovery code offline — these are your fallback if you lose access.')}</li>
-                  <li>{__('Lock the Vault when you finish working to keep client details protected.')}</li>
+                  <li>{__('Pick a strong master password (at least 10 characters) and store it somewhere safe.', 'eleva-crm-for-photographers')}</li>
+                  <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.', 'eleva-crm-for-photographers')}</li>
+                  <li>{__('Save the recovery phrase and recovery code offline — these are your fallback if you lose access.', 'eleva-crm-for-photographers')}</li>
+                  <li>{__('Lock the Vault when you finish working to keep client details protected.', 'eleva-crm-for-photographers')}</li>
                 </ul>
               </div>
               <button
@@ -675,7 +675,7 @@ export default function SettingsPage() {
                 className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <Shield size={14} />
-                {__('Set Up Vault')}
+                {__('Set Up Vault', 'eleva-crm-for-photographers')}
               </button>
             </div>
           )}
@@ -683,25 +683,25 @@ export default function SettingsPage() {
           {vaultStatus?.setup && (
             <div className="space-y-2">
               <p className="text-sm text-gray-500">
-                {__('All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.')}
+                {__('All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.', 'eleva-crm-for-photographers')}
               </p>
               <p className="text-xs text-gray-400">
                 {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
               </p>
               <div className="space-y-2 pt-1">
-                <Accordion label={__('Change Vault Password')}>
+                <Accordion label={__('Change Vault Password', 'eleva-crm-for-photographers')}>
                   <ChangePasswordForm />
                 </Accordion>
-                <Accordion label={__('Reset Authenticator App')}>
+                <Accordion label={__('Reset Authenticator App', 'eleva-crm-for-photographers')}>
                   <ResetTotpForm />
                 </Accordion>
-                <Accordion label={__('TOTP Recovery Code')}>
+                <Accordion label={__('TOTP Recovery Code', 'eleva-crm-for-photographers')}>
                   <RegenerateRecoveryCode />
                 </Accordion>
-                <Accordion label={__('Recovery Phrase')}>
+                <Accordion label={__('Recovery Phrase', 'eleva-crm-for-photographers')}>
                   <RecoveryPhraseSection hasPhrase={vaultStatus?.has_recovery_phrase === true} />
                 </Accordion>
-                <Accordion label={__('Reset Vault')}>
+                <Accordion label={__('Reset Vault', 'eleva-crm-for-photographers')}>
                   <ResetVaultAction />
                 </Accordion>
               </div>
@@ -711,20 +711,20 @@ export default function SettingsPage() {
       </SectionCard>
 
       {GCalSettings && (
-        <SectionCard title={__('Google Calendar')} icon={Key}>
+        <SectionCard title={__('Google Calendar', 'eleva-crm-for-photographers')} icon={Key}>
           <GCalSettings />
         </SectionCard>
       )}
 
       {SmtpSettingsSection && (
-        <SectionCard title={__('Email Notifications')} icon={Key}>
+        <SectionCard title={__('Email Notifications', 'eleva-crm-for-photographers')} icon={Key}>
           <SmtpSettingsSection />
         </SectionCard>
       )}
 
       {!SmtpSettingsSection && window.FotonicApp?.isPro && (
-        <SectionCard title={__('Email Notifications')} icon={Key}>
-          <p className="text-sm text-gray-400">{__('Reload the page to load email settings.')}</p>
+        <SectionCard title={__('Email Notifications', 'eleva-crm-for-photographers')} icon={Key}>
+          <p className="text-sm text-gray-400">{__('Reload the page to load email settings.', 'eleva-crm-for-photographers')}</p>
         </SectionCard>
       )}
     </div>

@@ -37,7 +37,7 @@ const COLOR_PALETTE = [
 function ColorPicker({ value, onChange }) {
   return (
     <div>
-      <p className="text-sm text-gray-500 mb-3">{__('Choose the event card color in the calendar view.')}</p>
+      <p className="text-sm text-gray-500 mb-3">{__('Choose the event card color in the calendar view.', 'eleva-crm-for-photographers')}</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
         {COLOR_PALETTE.map(({ label, hex }) => {
           const isSelected = value === hex
@@ -138,7 +138,7 @@ export default function WorkForm() {
         setBlockReason(res.reason)
       }
     } catch {
-      setBlockReason(__('Unable to check references. Please try again.'))
+      setBlockReason(__('Unable to check references. Please try again.', 'eleva-crm-for-photographers'))
     } finally {
       setCheckingDelete(false)
     }
@@ -250,7 +250,7 @@ export default function WorkForm() {
     <>
     <div className="p-6">
       <PageHeader
-        title={isEdit ? __('Edit Work') : __('New Work')}
+        title={isEdit ? __('Edit Work', 'eleva-crm-for-photographers') : __('New Work', 'eleva-crm-for-photographers')}
         backTo="/works"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
@@ -258,11 +258,11 @@ export default function WorkForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* Section 1 — Event */}
         <section>
-          <SectionHeading>{__('Event Details')}</SectionHeading>
+          <SectionHeading>{__('Event Details', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <FormField
-                label={__('Title')}
+                label={__('Title', 'eleva-crm-for-photographers')}
                 htmlFor="title"
                 required
                 error={errors.title?.message}
@@ -270,14 +270,14 @@ export default function WorkForm() {
                 <input
                   id="title"
                   type="text"
-                  placeholder={__('e.g. Matrimonio Rossi')}
+                  placeholder={__('e.g. Matrimonio Rossi', 'eleva-crm-for-photographers')}
                   className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                  {...register('title', { required: __('Title is required') })}
+                  {...register('title', { required: __('Title is required', 'eleva-crm-for-photographers') })}
                 />
               </FormField>
             </div>
             <div className="col-span-2 grid grid-cols-3 gap-4">
-              <FormField label={__('Event Date')} htmlFor="event_date">
+              <FormField label={__('Event Date', 'eleva-crm-for-photographers')} htmlFor="event_date">
                 <input
                   id="event_date"
                   type="date"
@@ -285,7 +285,7 @@ export default function WorkForm() {
                   {...register('event_date')}
                 />
               </FormField>
-              <FormField label={__('Event Time From')} htmlFor="event_time_from">
+              <FormField label={__('Event Time From', 'eleva-crm-for-photographers')} htmlFor="event_time_from">
                 <input
                   id="event_time_from"
                   type="time"
@@ -293,7 +293,7 @@ export default function WorkForm() {
                   {...register('event_time_from')}
                 />
               </FormField>
-              <FormField label={__('Event Time To')} htmlFor="event_time_to">
+              <FormField label={__('Event Time To', 'eleva-crm-for-photographers')} htmlFor="event_time_to">
                 <input
                   id="event_time_to"
                   type="time"
@@ -303,7 +303,7 @@ export default function WorkForm() {
               </FormField>
             </div>
             <div className="col-span-2">
-              <FormField label={__('Addresses')}>
+              <FormField label={__('Addresses', 'eleva-crm-for-photographers')}>
                 <Controller
                   name="event_addresses"
                   control={control}
@@ -318,8 +318,8 @@ export default function WorkForm() {
 
         {/* Section 2 — Customer */}
         <section>
-          <SectionHeading>{__('Customer')}</SectionHeading>
-          <FormField label={__('Customer')} htmlFor="customer_id">
+          <SectionHeading>{__('Customer', 'eleva-crm-for-photographers')}</SectionHeading>
+          <FormField label={__('Customer', 'eleva-crm-for-photographers')} htmlFor="customer_id">
             <Controller
               name="customer_id"
               control={control}
@@ -331,7 +331,7 @@ export default function WorkForm() {
                   onChange={(e) => field.onChange(e.target.value)}
                   onBlur={field.onBlur}
                 >
-                  <option value="">{__('— Select customer —')}</option>
+                  <option value="">{__('— Select customer —', 'eleva-crm-for-photographers')}</option>
                   {customers.map((c) => (
                     <option key={c.id} value={String(c.id)}>
                       {c.title}
@@ -345,7 +345,7 @@ export default function WorkForm() {
 
         {/* Section 3 — Calendar Color */}
         <section>
-          <SectionHeading>{__('Calendar Color')}</SectionHeading>
+          <SectionHeading>{__('Calendar Color', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="flex flex-col lg:flex-row lg:items-start gap-8">
             <div className="lg:flex-1">
               <Controller
@@ -369,7 +369,7 @@ export default function WorkForm() {
         {/* Section 4 — Work Owner (Pro only) */}
         {OwnerField && window.FotonicApp?.features?.collaborators && (
           <section>
-            <SectionHeading>{__('Work Owner')}</SectionHeading>
+            <SectionHeading>{__('Work Owner', 'eleva-crm-for-photographers')}</SectionHeading>
             <OwnerField ownerType={ownerType} ownerId={ownerId} setValue={setValue} />
           </section>
         )}
@@ -377,7 +377,7 @@ export default function WorkForm() {
         {/* Section 5 — Collaborators (Pro only) */}
         {CollaboratorsSection && window.FotonicApp?.features?.collaborators && (
           <section>
-            <SectionHeading>{__('Collaborators')}</SectionHeading>
+            <SectionHeading>{__('Collaborators', 'eleva-crm-for-photographers')}</SectionHeading>
             <Controller
               name="collaborators"
               control={control}
@@ -390,7 +390,7 @@ export default function WorkForm() {
 
         {/* Section 6 — Services */}
         <section>
-          <SectionHeading>{__('Services Included')}</SectionHeading>
+          <SectionHeading>{__('Services Included', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
             name="services"
             control={control}
@@ -406,7 +406,7 @@ export default function WorkForm() {
 
         {/* Section 7 — Files */}
         <section>
-          <SectionHeading>{__('Files')}</SectionHeading>
+          <SectionHeading>{__('Files', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
             name="files"
             control={control}
@@ -430,7 +430,7 @@ export default function WorkForm() {
 
         {/* Section 9 — Notes */}
         <section>
-          <SectionHeading>{__('Notes')}</SectionHeading>
+          <SectionHeading>{__('Notes', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
             name="notes"
             control={control}
@@ -442,10 +442,10 @@ export default function WorkForm() {
 
         {/* Section 10 — Payments */}
         <section>
-          <SectionHeading>{__('Payments')}</SectionHeading>
+          <SectionHeading>{__('Payments', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="space-y-4">
             <div className="flex flex-wrap gap-6">
-              <FormField label={__('Total Price (€)')} htmlFor="total_price">
+              <FormField label={__('Total Price (€)', 'eleva-crm-for-photographers')} htmlFor="total_price">
                 <input
                   id="total_price"
                   type="number"
@@ -462,7 +462,7 @@ export default function WorkForm() {
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-3">{__('Installments')}</p>
+              <p className="text-sm font-medium text-gray-700 mb-3">{__('Installments', 'eleva-crm-for-photographers')}</p>
               <Controller
                 name="installments"
                 control={control}
@@ -477,31 +477,31 @@ export default function WorkForm() {
         {/* Section 11 — Notifications (Pro only, edit mode only) */}
         {isEdit && NotificationsSection && window.FotonicApp?.features?.notifications && (
           <section>
-            <SectionHeading>{__('Scheduled Notifications')}</SectionHeading>
+            <SectionHeading>{__('Scheduled Notifications', 'eleva-crm-for-photographers')}</SectionHeading>
             <NotificationsSection workId={id} />
           </section>
         )}
 
         {mutation.error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-            {mutation.error.message ?? __('An error occurred. Please try again.')}
+            {mutation.error.message ?? __('An error occurred. Please try again.', 'eleva-crm-for-photographers')}
           </p>
         )}
 
         <div className="flex items-center gap-3 pt-2">
           <Button type="submit" disabled={isSubmitting || mutation.isPending}>
             {mutation.isPending
-              ? __('Saving...')
+              ? __('Saving...', 'eleva-crm-for-photographers')
               : isEdit
-              ? __('Update Work')
-              : __('Create Work')}
+              ? __('Update Work', 'eleva-crm-for-photographers')
+              : __('Create Work', 'eleva-crm-for-photographers')}
           </Button>
           <Button
             type="button"
             variant="secondary"
             onClick={() => navigate('/works')}
           >
-            {__('Cancel')}
+            {__('Cancel', 'eleva-crm-for-photographers')}
           </Button>
         </div>
       </form>
@@ -511,12 +511,12 @@ export default function WorkForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteWork.mutate(id, { onSuccess: () => navigate('/works') })}
-      message={__('Delete this work? This action cannot be undone.')}
+      message={__('Delete this work? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
-    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete')}>
+    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
       <p className="text-sm text-gray-600 mb-6">{blockReason}</p>
       <div className="flex justify-end">
-        <Button onClick={() => setBlockReason(null)}>{__('OK')}</Button>
+        <Button onClick={() => setBlockReason(null)}>{__('OK', 'eleva-crm-for-photographers')}</Button>
       </div>
     </Modal>
     </>

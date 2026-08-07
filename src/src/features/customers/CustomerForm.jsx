@@ -61,7 +61,7 @@ function CustomerWorksSection({ customerId }) {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
-                {[__('Title'), __('Date', 'eleva-crm-for-photographers'), __('Services', 'eleva-crm-for-photographers'), __('Total Price', 'eleva-crm-for-photographers'), __('Payment Status', 'eleva-crm-for-photographers')].map((h) => (
+                {[__('Title', 'eleva-crm-for-photographers'), __('Date', 'eleva-crm-for-photographers'), __('Services', 'eleva-crm-for-photographers'), __('Total Price', 'eleva-crm-for-photographers'), __('Payment Status', 'eleva-crm-for-photographers')].map((h) => (
                   <th key={h} style={{ padding: '0.625rem 0.875rem', textAlign: 'left', fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
@@ -137,7 +137,7 @@ export default function CustomerForm() {
         setBlockReason(res.reason)
       }
     } catch {
-      setBlockReason(__('Unable to check references. Please try again.'))
+      setBlockReason(__('Unable to check references. Please try again.', 'eleva-crm-for-photographers'))
     } finally {
       setCheckingDelete(false)
     }
@@ -214,14 +214,14 @@ export default function CustomerForm() {
     <>
     <div className="p-6">
       <PageHeader
-        title={isEdit ? __('Edit Customer') : __('New Customer')}
+        title={isEdit ? __('Edit Customer', 'eleva-crm-for-photographers') : __('New Customer', 'eleva-crm-for-photographers')}
         backTo="/customers"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <FormField
-          label={__('Title')}
+          label={__('Title', 'eleva-crm-for-photographers')}
           htmlFor="title"
           required
           error={errors.title?.message}
@@ -229,14 +229,14 @@ export default function CustomerForm() {
           <input
             id="title"
             type="text"
-            placeholder={__('e.g. Elisa & Edoardo')}
+            placeholder={__('e.g. Elisa & Edoardo', 'eleva-crm-for-photographers')}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-            {...register('title', { required: __('Title is required') })}
+            {...register('title', { required: __('Title is required', 'eleva-crm-for-photographers') })}
           />
         </FormField>
 
         <div>
-          <p className="text-sm font-medium text-gray-700 mb-3">{__('People')}</p>
+          <p className="text-sm font-medium text-gray-700 mb-3">{__('People', 'eleva-crm-for-photographers')}</p>
           <Controller
             name="people"
             control={control}
@@ -248,7 +248,7 @@ export default function CustomerForm() {
 
         {mutationError && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-            {mutationError.message ?? __('An error occurred. Please try again.')}
+            {mutationError.message ?? __('An error occurred. Please try again.', 'eleva-crm-for-photographers')}
           </p>
         )}
 
@@ -257,14 +257,14 @@ export default function CustomerForm() {
             type="submit"
             disabled={isSubmitting || mutation.isPending}
           >
-            {mutation.isPending ? __('Saving...') : isEdit ? __('Update Customer') : __('Create Customer')}
+            {mutation.isPending ? __('Saving...', 'eleva-crm-for-photographers') : isEdit ? __('Update Customer', 'eleva-crm-for-photographers') : __('Create Customer', 'eleva-crm-for-photographers')}
           </Button>
           <Button
             type="button"
             variant="secondary"
             onClick={() => navigate('/customers')}
           >
-            {__('Cancel')}
+            {__('Cancel', 'eleva-crm-for-photographers')}
           </Button>
         </div>
       </form>
@@ -275,12 +275,12 @@ export default function CustomerForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteCustomer.mutate(id, { onSuccess: () => navigate('/customers') })}
-      message={__('Delete this customer? This action cannot be undone.')}
+      message={__('Delete this customer? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
-    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete')}>
+    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
       <p className="text-sm text-gray-600 mb-6">{blockReason}</p>
       <div className="flex justify-end">
-        <Button onClick={() => setBlockReason(null)}>{__('OK')}</Button>
+        <Button onClick={() => setBlockReason(null)}>{__('OK', 'eleva-crm-for-photographers')}</Button>
       </div>
     </Modal>
     </>

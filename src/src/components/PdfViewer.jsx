@@ -284,7 +284,7 @@ export default function PdfViewer({ data }) {
   if (status === 'error') {
     return (
       <div className="flex items-center justify-center h-full text-sm text-red-600">
-        {__('Unable to render this PDF.')}
+        {__('Unable to render this PDF.', 'eleva-crm-for-photographers')}
       </div>
     )
   }
@@ -300,7 +300,7 @@ export default function PdfViewer({ data }) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder={__('Search in document…')}
+            placeholder={__('Search in document…', 'eleva-crm-for-photographers')}
             className="w-full pl-7 pr-2 py-1 text-sm border border-gray-300 rounded"
           />
         </div>
@@ -312,7 +312,7 @@ export default function PdfViewer({ data }) {
           onClick={prevMatch}
           disabled={!matches.length}
           className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30"
-          aria-label={__('Previous match')}
+          aria-label={__('Previous match', 'eleva-crm-for-photographers')}
         >
           <ChevronUp size={16} />
         </button>
@@ -321,17 +321,17 @@ export default function PdfViewer({ data }) {
           onClick={nextMatch}
           disabled={!matches.length}
           className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30"
-          aria-label={__('Next match')}
+          aria-label={__('Next match', 'eleva-crm-for-photographers')}
         >
           <ChevronDown size={16} />
         </button>
 
         <div className="w-px h-5 bg-gray-200 mx-1" />
 
-        <button type="button" onClick={zoomOut} className="p-1 text-gray-500 hover:text-gray-700" aria-label={__('Zoom out')}>
+        <button type="button" onClick={zoomOut} className="p-1 text-gray-500 hover:text-gray-700" aria-label={__('Zoom out', 'eleva-crm-for-photographers')}>
           <ZoomOut size={16} />
         </button>
-        <button type="button" onClick={zoomIn} className="p-1 text-gray-500 hover:text-gray-700" aria-label={__('Zoom in')}>
+        <button type="button" onClick={zoomIn} className="p-1 text-gray-500 hover:text-gray-700" aria-label={__('Zoom in', 'eleva-crm-for-photographers')}>
           <ZoomIn size={16} />
         </button>
 
@@ -346,7 +346,7 @@ export default function PdfViewer({ data }) {
             onKeyDown={(e) => e.key === 'Enter' && e.currentTarget.blur()}
             onBlur={handlePageInputCommit}
             className="w-10 text-center border border-gray-300 rounded py-0.5"
-            aria-label={__('Page number')}
+            aria-label={__('Page number', 'eleva-crm-for-photographers')}
           />
           <span>/ {numPages || '…'}</span>
         </div>
