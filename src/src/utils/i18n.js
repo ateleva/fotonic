@@ -4,3 +4,11 @@ export function __(text) {
   }
   return text
 }
+
+export function sprintf(format, ...args) {
+  if (typeof window !== 'undefined' && window.wp && window.wp.i18n) {
+    return window.wp.i18n.sprintf(format, ...args)
+  }
+  let i = 0
+  return format.replace(/%s/g, () => args[i++] ?? '')
+}

@@ -25,6 +25,7 @@ require_once FOTONIC_DIR . 'includes/class-i18n.php';
 require_once FOTONIC_DIR . 'includes/class-activator.php';
 require_once FOTONIC_DIR . 'includes/class-cpt-registry.php';
 require_once FOTONIC_DIR . 'includes/class-memory-card-cpt.php';
+require_once FOTONIC_DIR . 'includes/class-uploads.php';
 require_once FOTONIC_DIR . 'includes/class-crypto.php';
 require_once FOTONIC_DIR . 'includes/class-totp.php';
 require_once FOTONIC_DIR . 'includes/class-vault.php';

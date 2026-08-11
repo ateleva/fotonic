@@ -119,15 +119,16 @@ class Fotonic_Admin_Page {
         $pro_installed = defined( 'FOTO_PRO_VERSION' );
 
         wp_localize_script( 'fotonic-app-js', 'FotonicApp', [
-            'restUrl'    => rest_url( 'fotonic/v1/' ),
-            'nonce'      => wp_create_nonce( 'wp_rest' ),
-            'isPro'      => $pro_installed,
-            'version'    => FOTONIC_VERSION,
-            'proVersion' => $pro_installed ? FOTO_PRO_VERSION : null,
-            'locale'     => get_locale(),
-            'dateFormat' => get_option( 'date_format', 'd/m/Y' ),
-            'timeFormat' => get_option( 'time_format', 'H:i' ),
-            'features'   => apply_filters( 'ftnc_app_features', array( 'calendar' => true ) ),
+            'restUrl'        => rest_url( 'fotonic/v1/' ),
+            'nonce'          => wp_create_nonce( 'wp_rest' ),
+            'isPro'          => $pro_installed,
+            'version'        => FOTONIC_VERSION,
+            'proVersion'     => $pro_installed ? FOTO_PRO_VERSION : null,
+            'locale'         => get_locale(),
+            'dateFormat'     => get_option( 'date_format', 'd/m/Y' ),
+            'timeFormat'     => get_option( 'time_format', 'H:i' ),
+            'features'       => apply_filters( 'ftnc_app_features', array( 'calendar' => true ) ),
+            'maxUploadBytes' => Fotonic_Uploads::max_file_bytes(),
         ] );
     }
 }

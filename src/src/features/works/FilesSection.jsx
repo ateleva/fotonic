@@ -4,7 +4,7 @@ import Button from '../../components/Button'
 import Modal from '../../components/Modal'
 import FilePreviewModal from '../../components/FilePreviewModal'
 import { fetchFileBlob } from '../../api/files'
-import { __ } from '../../utils/i18n'
+import { __, sprintf } from '../../utils/i18n'
 
 const ALLOWED_TYPES = [
   'image',
@@ -12,7 +12,7 @@ const ALLOWED_TYPES = [
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ]
-const MAX_BYTES = 10 * 1024 * 1024 // 10 MB
+const MAX_BYTES = window.FotonicApp?.maxUploadBytes ?? 10 * 1024 * 1024
 
 function displayNameOf(file) {
   const type = file.type ?? 'attachment'
@@ -26,6 +26,12 @@ function hostnameOf(url) {
   } catch {
     return url
   }
+}
+
+function formatBytes(bytes) {
+  const mb = Math.round((bytes / (1024 * 1024)) * 10) / 10
+  if (mb >= 1) return `${mb} MB`
+  return `${Math.max(1, Math.round(bytes / 1024))} KB`
 }
 
 export default function FilesSection({ value = [], onChange }) {
@@ -102,7 +108,9 @@ export default function FilesSection({ value = [], onChange }) {
       const oversized = selected.filter((a) => (a.filesizeInBytes ?? 0) > MAX_BYTES)
       if (oversized.length > 0) {
         const names = oversized.map((a) => a.filename).join(', ')
-        window.alert(`${__('These files exceed the 10 MB limit and were skipped:', 'eleva-crm-for-photographers')}
+        /* translators: %s is a file size, e.g. "50 MB". */
+        const limitMessage = sprintf(__('These files exceed the %s limit and were skipped:', 'eleva-crm-for-photographers'), formatBytes(MAX_BYTES))
+        window.alert(`${limitMessage}
 ${names}`)
       }
 
@@ -273,7 +281,8 @@ ${names}`)
           )}
         </div>
         <p className="text-xs text-gray-400 mt-1">
-          {__('Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max 10 MB per uploaded file.', 'eleva-crm-for-photographers')}
+          {/* translators: %s is a file size, e.g. "50 MB". */}
+          {sprintf(__('Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max %s per uploaded file.', 'eleva-crm-for-photographers'), formatBytes(MAX_BYTES))}
         </p>
       </div>
 
