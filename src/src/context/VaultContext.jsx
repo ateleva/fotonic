@@ -1,7 +1,25 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { fetchVaultStatus, vaultUnlock, vaultLock } from '../api/vault'
 
-const VaultContext = createContext(null)
+// A real default (not null) so any render that happens outside VaultProvider,
+// or in the brief window before it commits, degrades to "vault appears
+// locked, actions are safe no-ops" instead of throwing on destructure. Seen
+// in practice as an intermittent crash on Settings (both a bare
+// `Cannot destructure property 'idleWarning' of null` and, once, a
+// downstream React DOM reconciliation error) that a fresh page load can hit
+// during the error-boundary recovery cycle. Shape must match VaultProvider's
+// real `value` below.
+const VAULT_CONTEXT_DEFAULT = {
+  isUnlocked: false,
+  idleWarning: false,
+  unlock: async () => ({ error: 'no_provider', message: 'Vault is not available yet.' }),
+  silentReopen: async () => false,
+  lock: async () => {},
+  markUnlocked: () => {},
+  resetIdle: () => {},
+}
+
+const VaultContext = createContext(VAULT_CONTEXT_DEFAULT)
 
 // Idle timer thresholds
 const IDLE_WARN_MS  = 13 * 60 * 1000  // 13 min → warning
