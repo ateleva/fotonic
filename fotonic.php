@@ -30,6 +30,8 @@ require_once FOTONIC_DIR . 'includes/class-backup-registry.php';
 require_once FOTONIC_DIR . 'includes/class-crypto.php';
 require_once FOTONIC_DIR . 'includes/class-totp.php';
 require_once FOTONIC_DIR . 'includes/class-vault.php';
+require_once FOTONIC_DIR . 'includes/class-backup-keys.php';
+require_once FOTONIC_DIR . 'includes/class-backup-cipher.php';
 require_once FOTONIC_DIR . 'includes/class-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-memory-card-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-admin-page.php';

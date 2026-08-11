@@ -181,6 +181,9 @@ class Fotonic_Vault {
 		update_option( self::OPTION_SCHEME,      2,            false );
 		update_option( self::OPTION_SETUP,       true,         false );
 
+		// Provision the backup keypair while MK is available (idempotent).
+		Fotonic_Backup_Keys::setup( $mk );
+
 		// Issue session cookie with MK.
 		self::set_session_cookie( $mk );
 
@@ -238,6 +241,11 @@ class Fotonic_Vault {
 		}
 
 		self::set_session_cookie( $mk );
+
+		// Backfill the backup keypair for vaults that predate the backup feature.
+		// Idempotent, so this is a no-op on every unlock after the first.
+		Fotonic_Backup_Keys::setup( $mk );
+
 		return true;
 	}
 
@@ -549,6 +557,9 @@ class Fotonic_Vault {
 		delete_option( 'fotonic_vault_wrap_dek_phrase' );
 		delete_option( 'fotonic_vault_totp_enc' );
 		delete_option( 'fotonic_vault_recovery_code_hash' );
+		// Destroying MK strands the wrapped backup private key — it could never be
+		// unwrapped again. Drop both halves so the next setup() mints a fresh pair.
+		Fotonic_Backup_Keys::delete_all();
 		self::lock();
 		return true;
 	}
@@ -685,6 +696,15 @@ class Fotonic_Vault {
 		delete_option( self::OPTION_TOTP );
 
 		self::set_session_cookie( $mk );
+
+		// This is the ONE path that replaces MK rather than re-wrapping it, so any
+		// existing backup private key must move to the new MK or it is stranded.
+		// In practice a legacy v1 vault has no keypair yet (provisioning only
+		// happens on the v2 unlock path, which a v1 vault never reaches), so this
+		// is normally a no-op — but it must not silently depend on that.
+		Fotonic_Backup_Keys::rewrap( $old_key, $mk );
+		Fotonic_Backup_Keys::setup( $mk );
+
 		return true;
 	}
 
