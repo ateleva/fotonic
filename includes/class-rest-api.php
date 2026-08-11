@@ -105,6 +105,28 @@ class Fotonic_REST_API {
 		] );
 
 		// ------------------------------------------------------------------
+		// Backup (Phase 6): manual encrypted archive, no destination.
+		// ------------------------------------------------------------------
+
+		register_rest_route( self::NAMESPACE, '/backup/status', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'backup_status' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/backup/create', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'backup_create' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/backup/download/(?P<token>[a-f0-9]{32})', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'backup_download' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		// ------------------------------------------------------------------
 		// Customers
 		// ------------------------------------------------------------------
 		register_rest_route( self::NAMESPACE, '/customers', [
@@ -2608,6 +2630,225 @@ class Fotonic_REST_API {
 		}
 		self::save_payment_types_option( $filtered );
 		return new \WP_REST_Response( [ 'deleted' => true ], 200 );
+	}
+
+	// ---------------------------------------------------------------------------
+	// Backup endpoints (Phase 6): manual encrypted archive, no destination.
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * GET /backup/status
+	 * Returns: { vault_setup, sodium_available, zip_available, keys_ready, ready,
+	 *            unavailable_reason, last_backup: {filename,size,created_at}|null,
+	 *            drift_count }
+	 */
+	public static function backup_status( \WP_REST_Request $_req ): \WP_REST_Response {
+		$vault_setup      = Fotonic_Vault::is_setup();
+		$sodium_available = Fotonic_Backup_Keys::is_supported();
+		$zip_available    = class_exists( 'ZipArchive' );
+		$keys_ready       = Fotonic_Backup_Keys::is_ready();
+
+		$backups     = self::local_backups();
+		$last_backup = null;
+		if ( ! empty( $backups ) ) {
+			$last_backup = [
+				'filename'   => basename( $backups[0]['path'] ),
+				'size'       => (int) filesize( $backups[0]['path'] ),
+				'created_at' => gmdate( 'c', $backups[0]['mtime'] ),
+			];
+		}
+
+		return new \WP_REST_Response( [
+			'vault_setup'        => $vault_setup,
+			'sodium_available'   => $sodium_available,
+			'zip_available'      => $zip_available,
+			'keys_ready'         => $keys_ready,
+			'ready'              => $vault_setup && $sodium_available && $zip_available && $keys_ready,
+			'unavailable_reason' => Fotonic_Backup_Keys::unavailable_reason(),
+			'last_backup'        => $last_backup,
+			'drift_count'        => count( Fotonic_Backup_Registry::audit() ),
+		], 200 );
+	}
+
+	/**
+	 * POST /backup/create
+	 * Builds an encrypted archive and returns a short-lived, single-use download
+	 * token. The token keeps the filesystem path out of the URL; it is not the
+	 * authorization (admin_permission still gates this route). Rate limited to 3
+	 * per 15 minutes per user: this walks the whole database and every attached
+	 * file, so it must not be callable in a tight loop.
+	 * Returns: { token, filename, size, manifest }
+	 */
+	public static function backup_create( \WP_REST_Request $_req ): \WP_REST_Response {
+		$rate_key = 'fotonic_backup_rate_' . get_current_user_id();
+		$attempts = (int) get_transient( $rate_key );
+		if ( $attempts >= 3 ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many backups created recently. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
+				429
+			);
+		}
+		set_transient( $rate_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+
+		$result = Fotonic_Backup_Archive::create();
+
+		if ( is_wp_error( $result ) ) {
+			// Environment/capability failures (missing extensions, a half-broken
+			// server) are 500s; a not-yet-ready vault or a build already in
+			// flight are states the user can act on, so they get 4xx.
+			$status_map = [
+				'ftnc_backup_keys_not_ready'  => 400,
+				'ftnc_backup_no_sodium'       => 400,
+				'ftnc_backup_no_zip'          => 500,
+				'ftnc_backup_no_openssl'      => 500,
+				'ftnc_backup_already_running' => 409,
+			];
+			$status = $status_map[ $result->get_error_code() ] ?? 500;
+
+			return new \WP_REST_Response(
+				[ 'code' => $result->get_error_code(), 'message' => $result->get_error_message() ],
+				$status
+			);
+		}
+
+		self::enforce_local_retention();
+
+		$token = bin2hex( random_bytes( 16 ) );
+		set_transient( 'fotonic_backup_token_' . $token, $result['path'], 15 * MINUTE_IN_SECONDS );
+
+		self::audit_log( 'backup_created', [ 'filename' => basename( $result['path'] ), 'size' => $result['size'] ] );
+
+		return new \WP_REST_Response( [
+			'token'    => $token,
+			'filename' => basename( $result['path'] ),
+			'size'     => $result['size'],
+			'manifest' => $result['manifest'],
+		], 200 );
+	}
+
+	/**
+	 * GET /backup/download/{token}
+	 * Streams the archive the token points to. The token is single-use: it is
+	 * deleted as soon as it resolves, before the file is streamed, so a repeat
+	 * request (replay, browser retry, etc.) always fails clean rather than
+	 * re-serving the same bytes.
+	 *
+	 * Returns WP_REST_Response for error cases. For the success path, outputs
+	 * headers and calls readfile() + exit(), the same recognised exception to
+	 * the "return WP_REST_Response" convention as vault_download().
+	 *
+	 * @return \WP_REST_Response On error only; success path terminates via exit().
+	 */
+	public static function backup_download( \WP_REST_Request $req ): \WP_REST_Response {
+		$token         = (string) $req->get_param( 'token' );
+		$transient_key = 'fotonic_backup_token_' . $token;
+		$path          = get_transient( $transient_key );
+
+		if ( empty( $path ) || ! is_string( $path ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_token', 'message' => __( 'This download link has expired or was already used. Create a new backup to download it.', 'eleva-crm-for-photographers' ) ],
+				404
+			);
+		}
+
+		// Single-use: invalidate the token now, before any output. A failure
+		// below (missing file, path check) must not leave it reusable either.
+		delete_transient( $transient_key );
+
+		if ( ! file_exists( $path ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'file_missing', 'message' => __( 'The archive file is no longer on disk.', 'eleva-crm-for-photographers' ) ],
+				404
+			);
+		}
+
+		// Verify the resolved path is inside the backups directory (path traversal guard).
+		$real_file    = realpath( $path );
+		$real_basedir = realpath( Fotonic_Backup_Archive::backup_dir() );
+		if ( ! $real_file || ! $real_basedir || strpos( $real_file, rtrim( $real_basedir, '/' ) . '/' ) !== 0 ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'forbidden', 'message' => __( 'Access denied.', 'eleva-crm-for-photographers' ) ],
+				403
+			);
+		}
+
+		// Strip any CRLF that could cause header injection.
+		$filename = sanitize_file_name( basename( $real_file ) );
+		$filename = str_replace( [ "\r", "\n" ], '', $filename );
+
+		// Disable output buffering to stream efficiently.
+		if ( ob_get_level() ) {
+			ob_end_clean();
+		}
+
+		nocache_headers();
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- filename sanitized above.
+		header( 'Content-Type: application/zip' );
+		header( 'Content-Disposition: attachment; filename="' . esc_attr( $filename ) . '"' );
+		header( 'Content-Length: ' . (int) filesize( $real_file ) );
+		header( 'X-Content-Type-Options: nosniff' );
+
+		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
+		readfile( $real_file );
+		exit; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary stream requires exit to prevent WP HTML appended after file content.
+	}
+
+	// ---------------------------------------------------------------------------
+	// Backup helpers
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Locally-created archives in uploads/fotonic/backups/, newest first.
+	 *
+	 * @return array<int, array{path: string, mtime: int}>
+	 */
+	private static function local_backups(): array {
+		$dir   = Fotonic_Backup_Archive::backup_dir();
+		$files = glob( $dir . '/eleva-backup-*.zip' );
+		if ( ! is_array( $files ) ) {
+			return [];
+		}
+
+		$rows = [];
+		foreach ( $files as $path ) {
+			// PHP's filemtime() always truncates to whole seconds, even though the
+			// filesystem itself (APFS, ext4, ...) stores sub-second precision. This
+			// is a long-standing PHP limitation, not an OS one. Two archives built back
+			// to back (e.g. a rapid burst of manual creates before the rate limiter
+			// engages) can land in the same second, making mtime alone ambiguous
+			// about which is actually newer. The inode number is monotonically
+			// assigned for files created in sequence on the same volume, so it
+			// breaks the tie reliably without needing sub-second filesystem access.
+			$rows[] = [ 'path' => $path, 'mtime' => (int) filemtime( $path ), 'inode' => (int) fileinode( $path ) ];
+		}
+
+		usort( $rows, function ( $a, $b ) {
+			if ( $a['mtime'] !== $b['mtime'] ) {
+				return $b['mtime'] - $a['mtime'];
+			}
+			return $b['inode'] - $a['inode'];
+		} );
+
+		return $rows;
+	}
+
+	/**
+	 * Keep only the 2 most recent locally-created archives; delete the rest.
+	 * Manual downloads must not be able to fill the disk. Pro's Drive retention
+	 * (Phase 9) is separate and never touches these local files.
+	 *
+	 * @return void
+	 */
+	private static function enforce_local_retention(): void {
+		$backups = self::local_backups();
+		if ( count( $backups ) <= 2 ) {
+			return;
+		}
+
+		foreach ( array_slice( $backups, 2 ) as $old ) {
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- best-effort retention cleanup.
+			@unlink( $old['path'] );
+		}
 	}
 
 	/**

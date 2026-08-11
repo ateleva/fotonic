@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Shield, Key, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle } from 'lucide-react'
+import { Shield, Key, Archive, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle } from 'lucide-react'
 import QRCode from 'qrcode'
 import { __ } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
@@ -18,6 +18,7 @@ import Button from '../../components/Button'
 import Spinner from '../../components/Spinner'
 import VaultSetup from '../vault/VaultSetup'
 import RecoveryCodeDisplay from '../vault/RecoveryCodeDisplay'
+import BackupSettingsSection from './BackupSettingsSection'
 
 function QrCanvas({ uri, size = 180 }) {
   const ref = useRef(null)
@@ -708,6 +709,12 @@ export default function SettingsPage() {
             </div>
           )}
         </div>
+      </SectionCard>
+
+      {/* Placed directly below Vault, and above Pro's Drive panel slot (Phase 10):
+          the free manual download reads as the baseline, Drive as the upgrade. */}
+      <SectionCard title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
+        <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />
       </SectionCard>
 
       {GCalSettings && (
