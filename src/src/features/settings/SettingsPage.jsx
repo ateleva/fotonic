@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Shield, Key, Archive, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle } from 'lucide-react'
+import { Shield, Key, Archive, UploadCloud, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle } from 'lucide-react'
 import QRCode from 'qrcode'
 import { __ } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
@@ -618,6 +618,7 @@ function ResetVaultAction() {
 const SmtpSettingsSection    = window.FotonicProComponents?.SmtpSettingsSection    ?? null
 const LicenseSettingsSection = window.FotonicProComponents?.LicenseSettingsSection ?? null
 const GCalSettings           = window.FotonicProComponents?.GCalSettings           ?? null
+const ProBackupSettingsSection = window.FotonicProComponents?.BackupSettingsSection ?? null
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false)
@@ -716,6 +717,20 @@ export default function SettingsPage() {
       <SectionCard title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
         <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />
       </SectionCard>
+
+      {ProBackupSettingsSection && window.FotonicApp?.features?.backup && (
+        <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
+          <ProBackupSettingsSection />
+        </SectionCard>
+      )}
+
+      {window.FotonicApp?.isPro && !window.FotonicApp?.features?.backup && (
+        <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
+          <p className="text-sm text-gray-400">
+            {__('Automatic backups to Google Drive require an active Eleva Pro license.', 'eleva-crm-for-photographers')}
+          </p>
+        </SectionCard>
+      )}
 
       {GCalSettings && (
         <SectionCard title={__('Google Calendar', 'eleva-crm-for-photographers')} icon={Key}>

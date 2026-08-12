@@ -362,6 +362,12 @@ class Fotonic_Backup_Archive {
      * it declares its attachment-bearing field the same way free's ftnc_work_files
      * does: 'json:[].<key>|attachment'.
      *
+     * A ref_fields value is usually a single kind string, but a field can carry
+     * more than one reference kind at once (e.g. Pro's _ftnc_collaborators holds
+     * both a collaborator post id and term ids) — declared as an array of kind
+     * strings in that case. `(array) $kind` normalizes a bare string to a
+     * single-element array so both shapes go through the same loop unchanged.
+     *
      * @param array $dataset Dataset definition.
      * @param array $record  Record already collected for this post (reads ->meta).
      * @return int[] Attachment IDs referenced by this record.
@@ -369,20 +375,22 @@ class Fotonic_Backup_Archive {
     private static function extract_attachment_ids( array $dataset, array $record ): array {
         $ids = array();
 
-        foreach ( $dataset['ref_fields'] as $meta_key => $kind ) {
-            if ( 'attachment' === $kind ) {
-                $id = (int) ( $record['meta'][ $meta_key ] ?? 0 );
-                if ( $id > 0 ) {
-                    $ids[] = $id;
+        foreach ( $dataset['ref_fields'] as $meta_key => $kinds ) {
+            foreach ( (array) $kinds as $kind ) {
+                if ( 'attachment' === $kind ) {
+                    $id = (int) ( $record['meta'][ $meta_key ] ?? 0 );
+                    if ( $id > 0 ) {
+                        $ids[] = $id;
+                    }
+                    continue;
                 }
-                continue;
-            }
 
-            if ( 0 === strpos( $kind, 'json:[].' ) && self::str_ends_with( $kind, '|attachment' ) ) {
-                $field = substr( $kind, 8, -11 ); // strip 'json:[].' prefix and '|attachment' suffix.
-                $raw   = $record['meta'][ $meta_key ] ?? '';
-                foreach ( self::extract_json_array_ids( $raw, $field ) as $id ) {
-                    $ids[] = $id;
+                if ( 0 === strpos( $kind, 'json:[].' ) && self::str_ends_with( $kind, '|attachment' ) ) {
+                    $field = substr( $kind, 8, -11 ); // strip 'json:[].' prefix and '|attachment' suffix.
+                    $raw   = $record['meta'][ $meta_key ] ?? '';
+                    foreach ( self::extract_json_array_ids( $raw, $field ) as $id ) {
+                        $ids[] = $id;
+                    }
                 }
             }
         }
