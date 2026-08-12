@@ -23,10 +23,20 @@ class Fotonic_Activator {
         add_option( 'fotonic_vault_enabled', false );
         add_option( 'fotonic_vault_salt', wp_generate_password( 64, true, true ) );
 
+        // Best-effort recurring backup tick. Free schedules it unconditionally
+        // (it has no way to know whether Pro is installed at all, let alone
+        // active); the hook does nothing until Pro's Fotonic_Backup_Scheduler
+        // registers a listener for it. wp_next_scheduled() guards against
+        // double-scheduling if activate() ever runs more than once.
+        if ( ! wp_next_scheduled( 'fotonic_backup_run' ) ) {
+            wp_schedule_event( time(), 'daily', 'fotonic_backup_run' );
+        }
+
         flush_rewrite_rules();
     }
 
     public static function deactivate(): void {
+        wp_clear_scheduled_hook( 'fotonic_backup_run' );
         flush_rewrite_rules();
     }
 }
