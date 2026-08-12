@@ -3,7 +3,7 @@ Contributors: eleva
 Tags: photography, crm, workflow, photographers, event-photography
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.3.12
+Stable tag: 1.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -102,6 +102,11 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
 
 == Changelog ==
+
+= 1.4.0 =
+* New: encrypted CRM backup. Download a single archive of all your CRM data (customers, works, services, memory cards, and every attached file) from the Settings page, protected by your Vault password and authenticator code — nobody, including us, can open it without them.
+* New: ships a standalone, dependency-free command-line decrypt tool with the plugin (`tools/`), so a backup can be restored on any machine with just PHP, no WordPress or plugin install required.
+* Note: with Eleva CRM Pro connected to Google Drive, backups also run automatically on a schedule — see the Pro changelog.
 
 = 1.3.12 =
 * Fix: Italian (it_IT) translation now covers the Customers, Services, and Works list screens, the Dashboard, and the Calendar view — these previously displayed in English regardless of the site or user language setting, even though the rest of the plugin was translated.
@@ -223,6 +228,9 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+New: download a single encrypted backup of all your CRM data from Settings, protected by your Vault password and authenticator code. Safe in-place update — no data or breaking changes. Update Eleva CRM Pro to 1.4.0+ for automatic scheduled backups to Google Drive.
 
 = 1.3.12 =
 Fix: Italian translation now covers list screens, Dashboard, and Calendar. Safe in-place update — no data or breaking changes.

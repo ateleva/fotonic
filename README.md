@@ -23,6 +23,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Calendar Color** — assign an event color (12-color palette) to each Work
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
 - **Memory Cards** — keep an inventory of your SD/CF cards with an auto-advancing status (Ready, In Use, Backed Up, Damaged); manage them from the sidebar or assign cards to a shoot inside the Work editor
+- **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password and authenticator code; a standalone command-line decrypt tool ships with the plugin for restoring on any machine
 
 ---
 
@@ -81,6 +82,21 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 ---
 
 ## Changelog
+
+### 1.4.0
+
+- **New**: encrypted CRM backup — download a single archive of all your CRM data (customers, works, services, memory cards, and every attached file) from Settings, protected by your Vault password and authenticator code
+- **New**: ships a standalone, dependency-free command-line decrypt tool (`tools/`) so a backup can be restored on any machine with just PHP
+- Note: with Eleva CRM Pro connected to Google Drive, backups also run automatically on a schedule — see the Pro changelog
+
+### 1.3.12
+
+- Fix: Italian (it_IT) translation now covers the Customers, Services, and Works list screens, the Dashboard, and the Calendar view
+
+### 1.3.11
+
+- **New**: the Files section on a Work now accepts external links (Google Drive, Dropbox, etc.) alongside uploaded files, with an optional custom display label
+- **New**: images and PDFs in the Files section open in a full-size in-browser preview (with zoom, page navigation and search for PDFs) instead of only downloading
 
 ### 1.3.10
 
