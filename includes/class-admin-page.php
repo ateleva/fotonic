@@ -50,6 +50,21 @@ class Fotonic_Admin_Page {
         // Intentionally empty.
     }
 
+    /**
+     * A Local by Flywheel site exists only on this one computer -- surfaced as
+     * a small contextual note in the Backups settings section, not a global
+     * admin notice (those render once per full page load and, in a hash-routed
+     * SPA, can end up looking "stuck" for an entire session with no way to
+     * dismiss them). Pure filesystem check, no Pro dependency.
+     */
+    private static function is_local_wp(): bool {
+        $site_root = dirname( ABSPATH, 2 );
+        if ( is_dir( $site_root . '/conf/php' ) && is_dir( $site_root . '/logs' ) ) {
+            return true;
+        }
+        return file_exists( $site_root . '/.localbackupaddonignore.txt' );
+    }
+
     public static function enqueue_assets( string $hook ): void {
         if ( 'toplevel_page_fotonic' !== $hook ) {
             return;
@@ -129,6 +144,7 @@ class Fotonic_Admin_Page {
             'timeFormat'     => get_option( 'time_format', 'H:i' ),
             'features'       => apply_filters( 'ftnc_app_features', array( 'calendar' => true ) ),
             'maxUploadBytes' => Fotonic_Uploads::max_file_bytes(),
+            'isLocalWp'      => self::is_local_wp(),
         ] );
     }
 }

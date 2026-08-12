@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Download, Clock, CheckCircle, XCircle, AlertTriangle, Loader } from 'lucide-react'
+import { Download, Clock, CheckCircle, XCircle, AlertTriangle, Loader, Info } from 'lucide-react'
 import { __, sprintf } from '../../utils/i18n'
 import { fetchBackupStatus, createBackup, fetchBackupBlob } from '../../api/backup'
 import Button from '../../components/Button'
@@ -119,6 +119,12 @@ export default function BackupSettingsSection({ onSetupVault }) {
 
   return (
     <div className="space-y-4">
+      {window.FotonicApp?.isLocalWp && (
+        <p className="text-xs text-gray-500 flex items-start gap-1.5">
+          <Info size={12} className="shrink-0 mt-0.5" />
+          {__('This site runs on Local by Flywheel and exists only on this computer. Local\'s own Cloud Backups are manual.', 'eleva-crm-for-photographers')}
+        </p>
+      )}
       <p className="text-sm text-gray-500">
         {__('Download a single encrypted archive of all your CRM data: customers, works, services, memory cards, and every attached file.', 'eleva-crm-for-photographers')}
       </p>
