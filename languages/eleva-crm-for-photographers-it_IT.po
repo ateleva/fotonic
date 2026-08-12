@@ -1816,3 +1816,111 @@ msgstr "Password o codice errati — riprova."
 
 msgid "Work Owner"
 msgstr "Titolare del Lavoro"
+
+msgid "A backup is already running."
+msgstr "Un backup è già in corso."
+
+msgid "AES-256-GCM is not available on this server."
+msgstr "AES-256-GCM non è disponibile su questo server."
+
+msgid "Automatic Backups"
+msgstr "Backup automatici"
+
+msgid "Automatic backups to Google Drive require an active Eleva Pro license."
+msgstr "I backup automatici su Google Drive richiedono una licenza Eleva Pro attiva."
+
+msgid "Backup created and downloaded."
+msgstr "Backup creato e scaricato."
+
+msgid "Backup keys are not set up yet. Unlock the vault once to generate them."
+msgstr "Le chiavi di backup non sono ancora configurate. Sblocca il Vault una volta per generarle."
+
+msgid "Backup keys have not been generated yet. Unlock the Vault once to enable encrypted backups."
+msgstr "Le chiavi di backup non sono ancora state generate. Sblocca il Vault una volta per abilitare i backup cifrati."
+
+msgid "Backup registry audit"
+msgstr "Controllo del registro backup"
+
+msgid "Backup registry audit: no stale meta keys found. Registry is in sync."
+msgstr "Controllo del registro backup: nessuna chiave meta obsoleta trovata. Il registro è sincronizzato."
+
+msgid "Backups"
+msgstr "Backup"
+
+msgid "Building archive…"
+msgstr "Creazione dell'archivio…"
+
+msgid "Could not load backup status."
+msgstr "Impossibile caricare lo stato del backup."
+
+msgid "Download a single encrypted archive of all your CRM data: customers, works, services, memory cards, and every attached file."
+msgstr "Scarica un unico archivio cifrato di tutti i dati del tuo CRM: clienti, lavori, servizi, schede di memoria e ogni file allegato."
+
+msgid "Download encrypted backup"
+msgstr "Scarica backup cifrato"
+
+msgid "Encrypted backups need the PHP Sodium and Zip extensions, and this server has neither. Ask your host to enable them."
+msgstr "I backup cifrati richiedono le estensioni PHP Sodium e Zip, e questo server non ne ha nessuna. Chiedi al tuo host di abilitarle."
+
+msgid "Encrypted backups need the PHP Sodium extension, which this server does not have. Ask your host to enable it."
+msgstr "I backup cifrati richiedono l'estensione PHP Sodium, che questo server non ha. Chiedi al tuo host di abilitarla."
+
+msgid "Encrypted backups need the PHP Zip extension, which this server does not have. Ask your host to enable it."
+msgstr "I backup cifrati richiedono l'estensione PHP Zip, che questo server non ha. Chiedi al tuo host di abilitarla."
+
+msgid "Encrypted backups reuse your Vault password and authenticator, so the Vault must be set up first."
+msgstr "I backup cifrati riutilizzano la password del Vault e l'autenticatore, quindi il Vault deve essere configurato prima."
+
+msgid "Failed to create backup."
+msgstr "Creazione del backup non riuscita."
+
+msgid "If you lose your vault password and your recovery code and your recovery phrase, this archive can never be opened."
+msgstr "Se perdi la password del Vault, il codice di recupero e la frase di recupero, questo archivio non potrà mai più essere aperto."
+
+msgid "Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max %s per uploaded file."
+msgstr "Immagini e PDF possono essere visualizzate in anteprima dopo il caricamento · DOC/DOCX e link si aprono in una nuova scheda · max %s per file caricato."
+
+msgid "Last backup: %s (%s)"
+msgstr "Ultimo backup: %s (%s)"
+
+msgid "Meta keys found in the database that are not declared in the backup registry:"
+msgstr "Chiavi meta trovate nel database non dichiarate nel registro dei backup:"
+
+msgid "No backup has been downloaded yet."
+msgstr "Nessun backup è ancora stato scaricato."
+
+msgid "Set up your vault to enable encrypted backups"
+msgstr "Configura il Vault per abilitare i backup cifrati"
+
+msgid "The PHP Zip extension is not available on this server."
+msgstr "L'estensione PHP Zip non è disponibile su questo server."
+
+msgid "The archive file is no longer on disk."
+msgstr "Il file dell'archivio non è più presente sul disco."
+
+msgid "These files exceed the %s limit and were skipped:"
+msgstr "Questi file superano il limite di %s e sono stati saltati:"
+
+msgid "This archive can only be opened with your vault password and authenticator code. Nobody else can read it."
+msgstr "Questo archivio può essere aperto solo con la password del Vault e il codice dell'autenticatore. Nessun altro può leggerlo."
+
+msgid "This backs up your CRM data, not your whole WordPress site."
+msgstr "Questo esegue il backup dei dati del CRM, non dell’intero sito WordPress."
+
+msgid "This backup may be missing recently added fields. Contact support if a restored backup ever looks incomplete."
+msgstr "Questo backup potrebbe non includere i campi aggiunti di recente. Contatta l'assistenza se un backup ripristinato dovesse risultare incompleto."
+
+msgid "This download link has expired or was already used. Create a new backup to download it."
+msgstr "Questo link di download è scaduto o è già stato utilizzato. Crea un nuovo backup per scaricarlo."
+
+msgid "This site runs on Local by Flywheel and exists only on this computer. Local's own Cloud Backups are manual."
+msgstr "Questo sito è eseguito su Local by Flywheel ed esiste solo su questo computer. I Cloud Backup di Local sono manuali."
+
+msgid "Too many backups created recently. Try again in 15 minutes."
+msgstr "Troppi backup creati di recente. Riprova tra 15 minuti."
+
+msgid "Unavailable on this server: the Sodium extension is missing."
+msgstr "Non disponibile su questo server: l'estensione Sodium non è presente."
+
+msgid "You do not have permission to run this."
+msgstr "Non hai i permessi per eseguire questa operazione."

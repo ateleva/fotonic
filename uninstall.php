@@ -99,6 +99,8 @@ $ftnc_options = array(
 	'fotonic_server_secret_fallback',
 	'fotonic_payment_types',
 	'fotonic_pro_license_key',
+	'fotonic_backup_pubkey',
+	'fotonic_backup_wrap_priv',
 );
 
 foreach ( $ftnc_options as $ftnc_option ) {
@@ -147,6 +149,31 @@ if ( is_dir( $ftnc_vault_dir ) ) {
 	}
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
 	rmdir( $ftnc_vault_dir );
+}
+
+// ---------------------------------------------------------------------------
+// 6b. Remove the backup archive directory and its files (same rationale and
+//     direct-filesystem approach as the vault directory above).
+// ---------------------------------------------------------------------------
+
+$ftnc_backups_dir = $ftnc_upload_dir['basedir'] . '/fotonic/backups';
+
+if ( is_dir( $ftnc_backups_dir ) ) {
+	$ftnc_backup_items = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $ftnc_backups_dir, RecursiveDirectoryIterator::SKIP_DOTS ),
+		RecursiveIteratorIterator::CHILD_FIRST
+	);
+	foreach ( $ftnc_backup_items as $ftnc_backup_item ) {
+		if ( $ftnc_backup_item->isDir() ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+			rmdir( $ftnc_backup_item->getPathname() );
+		} else {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+			unlink( $ftnc_backup_item->getPathname() );
+		}
+	}
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+	rmdir( $ftnc_backups_dir );
 }
 
 // Remove the fotonic uploads parent directory only if now empty.

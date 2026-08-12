@@ -67,6 +67,16 @@ All data is stored exclusively in your own WordPress database (wp_posts and wp_p
 
 This plugin makes zero external HTTP requests. Your data never leaves your server.
 
+= Does Eleva back up my data? =
+
+Yes. From the Settings page you can download a single encrypted archive containing all your CRM data: customers, works, services, memory cards, and every attached file. This download is entirely local — the archive is built on your own server and saved to your own computer, and this free plugin never sends it anywhere.
+
+The archive is encrypted with your Vault password and authenticator code before it ever leaves the database. Nobody, including us, can open it without them. If you lose your Vault password, your recovery code, and your recovery phrase, the archive can never be opened — there is no back door.
+
+This backs up your CRM data, not your whole WordPress site. Themes, other plugins, and unrelated posts are not included.
+
+Automatic, scheduled backups that push this same encrypted archive to your own Google Drive require **Eleva CRM Pro**. The free plugin only ever performs a manual, on-demand download.
+
 == Privacy Policy ==
 
 Eleva CRM for Photographers collects no personal data of any kind, makes no external HTTP requests, and transmits nothing to external servers. All data is stored in your own WordPress database.
