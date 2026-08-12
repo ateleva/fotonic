@@ -175,9 +175,9 @@ done. The tool creates it readable only by you.
 **What a backup does and does not contain.** It contains the plugin's data:
 customers, works, services, memory cards, tasks, the settings that matter, and every
 file attached to a work. It does not contain your WordPress site itself: themes,
-other plugins, pages, or the site design, and it never contains your SMTP password
-or your Google Calendar connection, because those are tied to the old server and
-would not work anywhere else. You re-enter those two by hand after a restore.
+other plugins, pages, or the site design, and it never contains your Google Calendar
+connection, because that is tied to the old server and would not work anywhere else.
+You re-enter it by hand after a restore.
 
 ---
 

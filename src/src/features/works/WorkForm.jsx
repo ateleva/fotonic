@@ -105,7 +105,6 @@ const defaultValues = {
   memory_cards: { cards: [], backup_done: false, formatting_done: false },
 }
 
-const NotificationsSection = window.FotonicProComponents?.NotificationsSection ?? null
 const OwnerField = window.FotonicProComponents?.OwnerField ?? null
 const CollaboratorsSection = window.FotonicProComponents?.CollaboratorsSection ?? null
 const TaxablePriceField = window.FotonicProComponents?.TaxablePriceField ?? null
@@ -473,14 +472,6 @@ export default function WorkForm() {
             </div>
           </div>
         </section>
-
-        {/* Section 11 — Notifications (Pro only, edit mode only) */}
-        {isEdit && NotificationsSection && window.FotonicApp?.features?.notifications && (
-          <section>
-            <SectionHeading>{__('Scheduled Notifications', 'eleva-crm-for-photographers')}</SectionHeading>
-            <NotificationsSection workId={id} />
-          </section>
-        )}
 
         {mutation.error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">

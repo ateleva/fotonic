@@ -136,19 +136,12 @@ class Fotonic_Backup_Registry {
      * unmodified. NOT filterable: this must win even over a Pro bug that allowlists
      * one of these by mistake.
      *
-     * `fotonic_smtp_settings` is the one entry here that is NOT a pure exclusion —
-     * per the master plan it must still reach the archive as a redacted struct
-     * (password blanked). It is denied from the generic options-copy path on
-     * purpose; whichever phase collects it must build the redacted copy itself
-     * rather than relying on this list to let it through.
-     *
      * @return string[]
      */
     public static function denied_options(): array {
         return [
             'fotonic_server_secret_fallback',
             'fotonic_gcal_refresh_token',
-            'fotonic_smtp_settings',
             'fotonic_pro_slm_secret',
             'fotonic_pro_license_last_valid',
             'fotonic_pro_license_expiry',

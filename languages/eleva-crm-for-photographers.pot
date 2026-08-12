@@ -18,590 +18,807 @@ msgstr ""
 #: includes/class-admin-page.php:17
 msgid "CRM"
 msgstr ""
+
 #: includes/class-activator.php:8
-msgid "Fotonic requires the PHP OpenSSL extension. Please enable it on your server."
+msgid ""
+"Fotonic requires the PHP OpenSSL extension. Please enable it on your server."
 msgstr ""
+
 #: includes/class-rest-api.php:333
-msgid "Vault is already configured. Use change-password to update credentials."
+msgid ""
+"Vault is already configured. Use change-password to update credentials."
 msgstr ""
+
 #: includes/class-rest-api.php:344
 msgid "Password is required."
 msgstr ""
+
 #: includes/class-rest-api.php:351
 msgid "Vault password must be at least 12 characters."
 msgstr ""
+
 #: includes/class-rest-api.php:364
 msgid "Vault setup failed."
 msgstr ""
+
 #: includes/class-rest-api.php:392
 msgid "Too many failed attempts. Try again in 15 minutes."
 msgstr ""
+
 #: includes/class-rest-api.php:403
 msgid "Password and OTP are required."
 msgstr ""
+
 #: includes/class-rest-api.php:413
 msgid "Invalid password or OTP code."
 msgstr ""
+
 #: includes/class-rest-api.php:468
 msgid "File not found."
 msgstr ""
+
 #: includes/class-rest-api.php:476
 msgid "File not found on disk."
 msgstr ""
+
 #: includes/class-rest-api.php:486
 msgid "Access denied."
 msgstr ""
+
 #: includes/class-rest-api.php:565
 msgid "All fields are required."
 msgstr ""
+
 #: includes/class-rest-api.php:572
 msgid "New vault password must be at least 12 characters."
 msgstr ""
+
 #: includes/class-rest-api.php:579
 msgid "Vault is not set up."
 msgstr ""
+
 #: includes/class-rest-api.php:639
 msgid "Vault configuration error."
 msgstr ""
+
 #: includes/class-rest-api.php:679
 msgid "Encryption error."
 msgstr ""
+
 #: includes/class-rest-api.php:751
 msgid "Recovery code and new password are required."
 msgstr ""
+
 #: includes/class-rest-api.php:775
 msgid "Invalid recovery code."
 msgstr ""
+
 #: includes/class-rest-api.php:809
 msgid "Password and recovery code are required."
 msgstr ""
+
 #: includes/class-rest-api.php:826
 msgid "Invalid password or recovery code."
 msgstr ""
+
 #: includes/class-rest-api.php:858
 msgid "Vault must be unlocked to regenerate recovery code."
 msgstr ""
+
 #: includes/class-rest-api.php:868
 msgid "Failed to regenerate recovery code."
 msgstr ""
+
 #: includes/class-rest-api.php:893
 msgid "Vault reset failed."
 msgstr ""
+
 #: includes/class-rest-api.php:1042
 msgid "Customer not found."
 msgstr ""
+
 #: includes/class-rest-api.php:1060
 msgid "Title is required."
 msgstr ""
+
 #: includes/class-rest-api.php:1155
 msgid "Service not found."
 msgstr ""
+
 #: includes/class-rest-api.php:1302
 msgid "Work not found."
 msgstr ""
+
 #: includes/class-rest-api.php:2146
 msgid "Payment"
 msgstr ""
+
 #: includes/class-rest-api.php:2147
 msgid "Discount"
 msgstr ""
+
 #: includes/class-rest-api.php:2308
 msgid "Label is required."
 msgstr ""
+
 #: includes/class-rest-api.php:2314
 msgid "A payment type with this slug already exists."
 msgstr ""
+
 #: includes/class-rest-api.php:2348
 msgid "Payment type not found."
 msgstr ""
+
 #: includes/class-rest-api.php:2358
 msgid "At least one payment type must remain."
 msgstr ""
+
 #: includes/class-rest-api.php:1444
 msgid "Linked to %1$d work: %2$s"
 msgid_plural "Linked to %1$d works: %2$s"
 msgstr[0] ""
 msgstr[1] ""
+
 #: includes/class-meta-boxes.php:84
 msgid "People"
 msgstr ""
+
 #: includes/class-meta-boxes.php:93
 msgid "Works"
 msgstr ""
+
 #: includes/class-meta-boxes.php:102
 msgid "Service Details"
 msgstr ""
+
 #: includes/class-meta-boxes.php:111
 msgid "Work Details"
 msgstr ""
+
 #: includes/class-meta-boxes.php:129
 msgid "Quick Notes"
 msgstr ""
+
 #: includes/class-meta-boxes.php:189
 msgid "First Name"
 msgstr ""
+
 #: includes/class-meta-boxes.php:190
 msgid "Last Name"
 msgstr ""
+
 #: includes/class-meta-boxes.php:191
 msgid "Email"
 msgstr ""
+
 #: includes/class-meta-boxes.php:192
 msgid "Phone"
 msgstr ""
+
 #: includes/class-meta-boxes.php:193
 msgid "Nationality"
 msgstr ""
+
 #: includes/class-meta-boxes.php:194
 msgid "Instagram"
 msgstr ""
+
 #: includes/class-meta-boxes.php:195
 msgid "Address"
 msgstr ""
+
 #: includes/class-meta-boxes.php:196
 msgid "TIN"
 msgstr ""
+
 #: includes/class-meta-boxes.php:197
 msgid "Main"
 msgstr ""
+
 #: includes/class-meta-boxes.php:205
 msgid "+ Add Person"
 msgstr ""
+
 #: includes/class-meta-boxes.php:218
 msgid "Remove"
 msgstr ""
+
 #: includes/class-meta-boxes.php:219
 msgid "At least one person is required."
 msgstr ""
+
 #: includes/class-meta-boxes.php:319
 msgid "Paid"
 msgstr ""
+
 #: includes/class-meta-boxes.php:320
 msgid "Partial"
 msgstr ""
+
 #: includes/class-meta-boxes.php:321
 msgid "Unpaid"
 msgstr ""
+
 #: includes/class-meta-boxes.php:341
 msgid "No works yet."
 msgstr ""
+
 #: includes/class-meta-boxes.php:346
 msgid "Title"
 msgstr ""
+
 #: includes/class-meta-boxes.php:347
 msgid "Date"
 msgstr ""
+
 #: includes/class-meta-boxes.php:348
 msgid "Services"
 msgstr ""
+
 #: includes/class-meta-boxes.php:349
 msgid "Total Price"
 msgstr ""
+
 #: includes/class-meta-boxes.php:350
 msgid "Payment Status"
 msgstr ""
+
 #: includes/class-meta-boxes.php:366
 msgid "(no title)"
 msgstr ""
+
 #: includes/class-meta-boxes.php:382
 msgid "Total works: %d"
 msgstr ""
+
 #: includes/class-meta-boxes.php:387
 msgid "Paid:"
 msgstr ""
+
 #: includes/class-meta-boxes.php:389
 msgid "Unpaid:"
 msgstr ""
+
 #: includes/class-meta-boxes.php:414
 msgid "Base Price (€)"
 msgstr ""
+
 #: includes/class-meta-boxes.php:424
 msgid "Notes"
 msgstr ""
+
 #: includes/class-meta-boxes.php:543
 msgid "1. Event Details"
 msgstr ""
+
 #: includes/class-meta-boxes.php:549
 msgid "Event Date"
 msgstr ""
+
 #: includes/class-meta-boxes.php:553
 msgid "Event Time From"
 msgstr ""
+
 #: includes/class-meta-boxes.php:557
 msgid "Event Time To"
 msgstr ""
+
 #: includes/class-meta-boxes.php:564
 msgid "Addresses"
 msgstr ""
+
 #: includes/class-meta-boxes.php:569
 msgid "Label"
 msgstr ""
+
 #: includes/class-meta-boxes.php:570
 msgid "Street"
 msgstr ""
+
 #: includes/class-meta-boxes.php:578
 msgid "+ Add Address"
 msgstr ""
+
 #: includes/class-meta-boxes.php:589
 msgid "2. Customer"
 msgstr ""
+
 #: includes/class-meta-boxes.php:592
 msgid "Customer"
 msgstr ""
+
 #: includes/class-meta-boxes.php:595
 msgid "— Select customer —"
 msgstr ""
+
 #: includes/class-meta-boxes.php:611
 msgid "3. Calendar Color"
 msgstr ""
+
 #: includes/class-meta-boxes.php:612
 msgid "Choose the event card color shown in the calendar view."
 msgstr ""
+
 #: includes/class-meta-boxes.php:616
 msgid "Default"
 msgstr ""
+
 #: includes/class-meta-boxes.php:617
 msgid "Tomato"
 msgstr ""
+
 #: includes/class-meta-boxes.php:618
 msgid "Flamingo"
 msgstr ""
+
 #: includes/class-meta-boxes.php:619
 msgid "Tangerine"
 msgstr ""
+
 #: includes/class-meta-boxes.php:620
 msgid "Banana"
 msgstr ""
+
 #: includes/class-meta-boxes.php:621
 msgid "Sage"
 msgstr ""
+
 #: includes/class-meta-boxes.php:622
 msgid "Basil"
 msgstr ""
+
 #: includes/class-meta-boxes.php:623
 msgid "Peacock"
 msgstr ""
+
 #: includes/class-meta-boxes.php:624
 msgid "Blueberry"
 msgstr ""
+
 #: includes/class-meta-boxes.php:625
 msgid "Lavender"
 msgstr ""
+
 #: includes/class-meta-boxes.php:626
 msgid "Grape"
 msgstr ""
+
 #: includes/class-meta-boxes.php:627
 msgid "Graphite"
 msgstr ""
+
 #: includes/class-meta-boxes.php:654
 msgid "6. Services Included"
 msgstr ""
+
 #: includes/class-meta-boxes.php:658
 msgid "Service"
 msgstr ""
+
 #: includes/class-meta-boxes.php:659
 msgid "Price Override (€)"
 msgstr ""
+
 #: includes/class-meta-boxes.php:660
 msgid "Notes Override"
 msgstr ""
+
 #: includes/class-meta-boxes.php:668
 msgid "— Add a service —"
 msgstr ""
+
 #: includes/class-meta-boxes.php:677
 msgid "Add"
 msgstr ""
+
 #: includes/class-meta-boxes.php:684
 msgid "7. Files"
 msgstr ""
+
 #: includes/class-meta-boxes.php:688
 msgid "+ Add File"
 msgstr ""
+
 #: includes/class-meta-boxes.php:696
 msgid "8. Payments"
 msgstr ""
+
 #: includes/class-meta-boxes.php:699
 msgid "Total Price (€)"
 msgstr ""
+
 #: includes/class-meta-boxes.php:703
 msgid "Installments"
 msgstr ""
+
 #: includes/class-meta-boxes.php:707
 msgid "Type"
 msgstr ""
+
 #: includes/class-meta-boxes.php:709
 msgid "Amount (€)"
 msgstr ""
+
 #: includes/class-meta-boxes.php:710
 msgid "Status"
 msgstr ""
+
 #: includes/class-meta-boxes.php:718
 msgid "+ Add Installment"
 msgstr ""
+
 #: includes/class-meta-boxes.php:737
 msgid "e.g. Church"
 msgstr ""
+
 #: includes/class-meta-boxes.php:738
 msgid "Via Roma 1, Milano"
 msgstr ""
+
 #: includes/class-meta-boxes.php:740
 msgid "Media library not available."
 msgstr ""
+
 #: includes/class-meta-boxes.php:741
 msgid "Select Files"
 msgstr ""
+
 #: includes/class-meta-boxes.php:742
 msgid "Add to Work"
 msgstr ""
+
 #: includes/class-meta-boxes.php:743
 msgid "Attachment ID"
 msgstr ""
+
 #: includes/class-meta-boxes.php:746
 msgid "Coupon"
 msgstr ""
+
 #: includes/class-cpt-registry.php:14
 msgid "Customers"
 msgstr ""
+
 #: includes/class-cpt-registry.php:16
 msgid "Add New"
 msgstr ""
+
 #: includes/class-cpt-registry.php:17
 msgid "Add New Customer"
 msgstr ""
+
 #: includes/class-cpt-registry.php:18
 msgid "Edit Customer"
 msgstr ""
+
 #: includes/class-cpt-registry.php:19
 msgid "New Customer"
 msgstr ""
+
 #: includes/class-cpt-registry.php:20
 msgid "View Customer"
 msgstr ""
+
 #: includes/class-cpt-registry.php:21
 msgid "Search Customers"
 msgstr ""
+
 #: includes/class-cpt-registry.php:22
 msgid "No customers found."
 msgstr ""
+
 #: includes/class-cpt-registry.php:23
 msgid "No customers found in trash."
 msgstr ""
+
 #: includes/class-cpt-registry.php:24
 msgid "All Customers"
 msgstr ""
+
 #: includes/class-cpt-registry.php:43
 msgid "Add New Service"
 msgstr ""
+
 #: includes/class-cpt-registry.php:44
 msgid "Edit Service"
 msgstr ""
+
 #: includes/class-cpt-registry.php:45
 msgid "New Service"
 msgstr ""
+
 #: includes/class-cpt-registry.php:46
 msgid "View Service"
 msgstr ""
+
 #: includes/class-cpt-registry.php:47
 msgid "Search Services"
 msgstr ""
+
 #: includes/class-cpt-registry.php:48
 msgid "No services found."
 msgstr ""
+
 #: includes/class-cpt-registry.php:49
 msgid "No services found in trash."
 msgstr ""
+
 #: includes/class-cpt-registry.php:50
 msgid "All Services"
 msgstr ""
+
 #: includes/class-cpt-registry.php:67
 msgid "Work"
 msgstr ""
+
 #: includes/class-cpt-registry.php:69
 msgid "Add New Work"
 msgstr ""
+
 #: includes/class-cpt-registry.php:70
 msgid "Edit Work"
 msgstr ""
+
 #: includes/class-cpt-registry.php:71
 msgid "New Work"
 msgstr ""
+
 #: includes/class-cpt-registry.php:72
 msgid "View Work"
 msgstr ""
+
 #: includes/class-cpt-registry.php:73
 msgid "Search Works"
 msgstr ""
+
 #: includes/class-cpt-registry.php:74
 msgid "No works found."
 msgstr ""
+
 #: includes/class-cpt-registry.php:75
 msgid "No works found in trash."
 msgstr ""
+
 #: includes/class-cpt-registry.php:76
 msgid "All Works"
 msgstr ""
+
 #: includes/class-cpt-registry.php:95
 msgid "All Payment Statuses"
 msgstr ""
+
 #: includes/class-cpt-registry.php:96
 msgid "Edit Payment Status"
 msgstr ""
+
 #: includes/class-cpt-registry.php:97
 msgid "Update Payment Status"
 msgstr ""
+
 #: includes/class-cpt-registry.php:98
 msgid "Add New Payment Status"
 msgstr ""
+
 #: includes/class-cpt-registry.php:99
 msgid "New Payment Status Name"
 msgstr ""
+
 #: includes/class-cpt-registry.php:100
 msgid "Search Payment Statuses"
 msgstr ""
+
 #: src/src/features/customers/CustomerForm.jsx:96
 msgid "Total works:"
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:113
 msgid "Failed to generate recovery code. Ensure the vault is unlocked."
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:135
-msgid "Generate a new recovery code. The previous code will be invalidated immediately."
+msgid ""
+"Generate a new recovery code. The previous code will be invalidated "
+"immediately."
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:143
 msgid "Regenerate Recovery Code"
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:156
-msgid "A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe — it will only be shown once."
+msgid ""
+"A new recovery code will be generated. Your existing recovery code will no "
+"longer work. Store the new code somewhere safe — it will only be shown once."
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:163
 msgid "Cancel"
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:166
 msgid "Generate"
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:205
 msgid "Reset failed."
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:221
-msgid "Permanently wipe the vault configuration. All encrypted data will become inaccessible."
+msgid ""
+"Permanently wipe the vault configuration. All encrypted data will become "
+"inaccessible."
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:229
 msgid "Reset Vault"
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:241
 msgid "This action is irreversible."
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:244
-msgid "The vault password, TOTP secret, and recovery code will be permanently deleted. All encrypted client data will become unreadable."
+msgid ""
+"The vault password, TOTP secret, and recovery code will be permanently "
+"deleted. All encrypted client data will become unreadable."
 msgstr ""
+
 #: src/src/features/settings/SettingsPage.jsx:251
 msgid "Type RESET to confirm"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:67
 msgid "Recovery failed. Check your password and recovery code."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:79
-msgid "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app."
+msgid ""
+"Authenticator reset. Scan the QR code to re-add your vault to your "
+"authenticator app."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:88
 msgid "Manual entry key:"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:94
 msgid "After adding it to your app, return to the unlock screen and sign in."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:98
 msgid "Go to unlock"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:107
-msgid "Enter your vault password and recovery code to generate a new authenticator entry."
+msgid ""
+"Enter your vault password and recovery code to generate a new authenticator "
+"entry."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:110
 msgid "Vault Password"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:121
 msgid "Recovery Code"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:138
 msgid "Reset Authenticator"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:164
 msgid "Passwords do not match."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:168
 msgid "Password must be at least 8 characters."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:180
 msgid "Recovery failed. Check your recovery code and try again."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:189
-msgid "Enter your recovery code and choose a new vault password. The vault will be unlocked automatically."
+msgid ""
+"Enter your recovery code and choose a new vault password. The vault will be "
+"unlocked automatically."
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:204
 msgid "New Password"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:215
 msgid "Confirm New Password"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:231
 msgid "Reset Password & Unlock"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:258
 msgid "Back"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:263
 msgid "Account Recovery"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:265
 msgid "Reset Password"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:273
 msgid "What do you need help with?"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:284
 msgid "Lost authenticator (I know my password)"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:300
 msgid "Lost password (I have my recovery code)"
 msgstr ""
+
 #: src/src/features/vault/VaultRecoveryPanel.jsx:303
 msgid "I forgot my vault password but I saved the recovery code."
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:32
-msgid "This is the ONLY way to recover access if you lose your password or authenticator. It will not be shown again."
+msgid ""
+"This is the ONLY way to recover access if you lose your password or "
+"authenticator. It will not be shown again."
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:38
 msgid "Your recovery code"
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:46
 msgid "Copy to clipboard"
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:53
 msgid "Store it in a password manager or write it down and keep it secure."
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:66
 msgid "I have saved my recovery code in a safe place."
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:76
 msgid "Done"
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeBanner.jsx:37
 msgid "Could not generate recovery code. Make sure the vault is unlocked."
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeBanner.jsx:63
 msgid "Set up your recovery code"
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeBanner.jsx:66
-msgid "Your vault has no recovery code. Generate one now so you can regain access if you ever lose your password or authenticator."
+msgid ""
+"Your vault has no recovery code. Generate one now so you can regain access "
+"if you ever lose your password or authenticator."
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeBanner.jsx:75
 msgid "Set up"
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeBanner.jsx:81
 msgid "Dismiss"
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeBanner.jsx:98
-msgid "Generate a one-time recovery code. Store it somewhere safe — it will only be shown once."
+msgid ""
+"Generate a one-time recovery code. Store it somewhere safe — it will only be"
+" shown once."
 msgstr ""
+
 #: src/src/features/vault/RecoveryCodeBanner.jsx:109
 msgid "Generate Recovery Code"
 msgstr ""
@@ -650,23 +867,38 @@ msgstr ""
 msgid "Card Status"
 msgstr ""
 
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
+#: src/src/features/memory-cards/MemoryCardList.jsx
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+#: src/src/features/works/MemoryCardsSection.jsx
 msgid "Ready"
 msgstr ""
 
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
+#: src/src/features/memory-cards/MemoryCardList.jsx
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+#: src/src/features/works/MemoryCardsSection.jsx
 msgid "In Use"
 msgstr ""
 
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
+#: src/src/features/memory-cards/MemoryCardList.jsx
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+#: src/src/features/works/MemoryCardsSection.jsx
 msgid "Needs Backup"
 msgstr ""
 
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
+#: src/src/features/memory-cards/MemoryCardList.jsx
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+#: src/src/features/works/MemoryCardsSection.jsx
 msgid "Needs Formatting"
 msgstr ""
 
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx src/src/features/works/MemoryCardsSection.jsx
+#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
+#: src/src/features/memory-cards/MemoryCardList.jsx
+#: src/src/features/memory-cards/MemoryCardForm.jsx
+#: src/src/features/works/MemoryCardsSection.jsx
 msgid "Damaged"
 msgstr ""
 
@@ -686,11 +918,13 @@ msgstr ""
 msgid "Card Name"
 msgstr ""
 
-#: src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx
+#: src/src/features/memory-cards/MemoryCardList.jsx
+#: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Status"
 msgstr ""
 
-#: src/src/features/memory-cards/MemoryCardList.jsx src/src/features/memory-cards/MemoryCardForm.jsx
+#: src/src/features/memory-cards/MemoryCardList.jsx
+#: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Add Card"
 msgstr ""
 
@@ -811,7 +1045,9 @@ msgid "Stay unlocked"
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:162
-msgid "Generate a new TOTP recovery code. The previous code will be invalidated immediately."
+msgid ""
+"Generate a new TOTP recovery code. The previous code will be invalidated "
+"immediately."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:254
@@ -823,7 +1059,9 @@ msgid "Unlock the vault to regenerate the recovery phrase."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:288
-msgid "Generate a new recovery phrase. The previous phrase will stop working immediately."
+msgid ""
+"Generate a new recovery phrase. The previous phrase will stop working "
+"immediately."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:296
@@ -831,7 +1069,10 @@ msgid "Regenerate Recovery Phrase"
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:309
-msgid "A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline — it will only be shown once."
+msgid ""
+"A new recovery phrase will be generated. Your old phrase will no longer "
+"work. Store the new phrase somewhere safe offline — it will only be shown "
+"once."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:342
@@ -839,7 +1080,9 @@ msgid "I have saved this phrase offline in a secure location."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:418
-msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable."
+msgid ""
+"The vault password, TOTP secret, and recovery credentials will be "
+"permanently deleted. All encrypted client data will become unreadable."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:529
@@ -887,11 +1130,16 @@ msgid "Recovery failed. Check your recovery code."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:131
-msgid "Your vault is now open. After adding the new entry to your app, use the new code next time you unlock."
+msgid ""
+"Your vault is now open. After adding the new entry to your app, use the new "
+"code next time you unlock."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:144
-msgid "Enter your vault password and the one-time recovery code to generate a new authenticator entry. Your password is used locally — it is never sent to the server."
+msgid ""
+"Enter your vault password and the one-time recovery code to generate a new "
+"authenticator entry. Your password is used locally — it is never sent to the"
+" server."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:175
@@ -911,7 +1159,9 @@ msgid "Recovery failed. Check your recovery phrase and code, then try again."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:258
-msgid "Password updated successfully. Please unlock the vault with your new password."
+msgid ""
+"Password updated successfully. Please unlock the vault with your new "
+"password."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:262
@@ -919,7 +1169,9 @@ msgid "Go to unlock screen"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:271
-msgid "Enter your recovery phrase, a new password, and a live authenticator code to reset your vault password."
+msgid ""
+"Enter your recovery phrase, a new password, and a live authenticator code to"
+" reset your vault password."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:274
@@ -935,7 +1187,9 @@ msgid "Lost password (I have my recovery phrase)"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:399
-msgid "I forgot my vault password but I saved the recovery phrase and still have my authenticator."
+msgid ""
+"I forgot my vault password but I saved the recovery phrase and still have my"
+" authenticator."
 msgstr ""
 
 #: includes/class-rest-api.php:911
@@ -963,11 +1217,15 @@ msgid "Unlock the vault to manage the recovery phrase."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:434
-msgid "Regenerate a new recovery phrase. The previous phrase will stop working immediately."
+msgid ""
+"Regenerate a new recovery phrase. The previous phrase will stop working "
+"immediately."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:435
-msgid "Set up a recovery phrase so you can reset your password if you ever forget it."
+msgid ""
+"Set up a recovery phrase so you can reset your password if you ever forget "
+"it."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:445
@@ -975,7 +1233,9 @@ msgid "Set Up Recovery Phrase"
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:462
-msgid "A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline — it will only be shown once."
+msgid ""
+"A recovery phrase lets you reset your vault password if you ever forget it. "
+"Store it somewhere safe offline — it will only be shown once."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:480
@@ -983,7 +1243,9 @@ msgid "Your Recovery Phrase"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:93
-msgid "Authenticator reset. Scan the QR code to re-add your vault to your authenticator app, then unlock normally."
+msgid ""
+"Authenticator reset. Scan the QR code to re-add your vault to your "
+"authenticator app, then unlock normally."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:110
@@ -991,7 +1253,9 @@ msgid "Done — go to unlock screen"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:119
-msgid "Enter your vault password and the one-time recovery code to generate a new authenticator entry."
+msgid ""
+"Enter your vault password and the one-time recovery code to generate a new "
+"authenticator entry."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:195
@@ -1015,7 +1279,9 @@ msgid "Set up your recovery phrase"
 msgstr ""
 
 #: src/src/features/vault/VaultGate.jsx:71
-msgid "Add a recovery phrase so you can regain access if you ever forget your vault password. It takes only a few seconds."
+msgid ""
+"Add a recovery phrase so you can regain access if you ever forget your vault"
+" password. It takes only a few seconds."
 msgstr ""
 
 #: src/src/features/vault/VaultGate.jsx:110
@@ -1067,7 +1333,9 @@ msgid "Add Link"
 msgstr ""
 
 #: src/src/features/works/FilesSection.jsx:276
-msgid "Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max 10 MB per uploaded file."
+msgid ""
+"Images and PDF can be previewed after upload · DOC/DOCX and links open in a "
+"new tab · max 10 MB per uploaded file."
 msgstr ""
 
 #: src/src/features/works/FilesSection.jsx:286
@@ -1231,11 +1499,15 @@ msgid "Password and OTP code are required."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:239
-msgid "Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity."
+msgid ""
+"Use this if you lost access to your authenticator app. You will need your "
+"current vault password and OTP to confirm your identity."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:243
-msgid "New authenticator code generated. Scan the QR code with your app, then unlock the vault to confirm."
+msgid ""
+"New authenticator code generated. Scan the QR code with your app, then "
+"unlock the vault to confirm."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:250
@@ -1275,23 +1547,35 @@ msgid "Keep your client data safe"
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:663
-msgid "The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database."
+msgid ""
+"The Vault protects the personal details you store for each client: names, "
+"phone numbers, email addresses, and home addresses. Once active, all of this"
+" is locked so nobody else can read it, even if they get direct access to "
+"your website or database."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:666
-msgid "Pick a strong master password (at least 10 characters) and store it somewhere safe."
+msgid ""
+"Pick a strong master password (at least 10 characters) and store it "
+"somewhere safe."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:667
-msgid "Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault."
+msgid ""
+"Download any free authenticator app on your phone (Google Authenticator, "
+"Authy, or similar) and scan a QR code to add a second check each time you "
+"open the Vault."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:668
-msgid "Save the recovery phrase and recovery code offline — these are your fallback if you lose access."
+msgid ""
+"Save the recovery phrase and recovery code offline — these are your fallback"
+" if you lose access."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:669
-msgid "Lock the Vault when you finish working to keep client details protected."
+msgid ""
+"Lock the Vault when you finish working to keep client details protected."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:678
@@ -1299,7 +1583,10 @@ msgid "Set Up Vault"
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:686
-msgid "All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information."
+msgid ""
+"All client personal details are protected. Unlock the Vault with your "
+"password and a one-time code from your authenticator app to view or edit "
+"contact information."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:692
@@ -1316,14 +1603,6 @@ msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:714
 msgid "Google Calendar"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:720
-msgid "Email Notifications"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:727
-msgid "Reload the page to load email settings."
 msgstr ""
 
 #: src/src/features/calendar/CalendarView.jsx:23
@@ -1486,10 +1765,6 @@ msgstr ""
 msgid "Payments"
 msgstr ""
 
-#: src/src/features/works/WorkForm.jsx:480
-msgid "Scheduled Notifications"
-msgstr ""
-
 #: src/src/features/works/WorkForm.jsx:496
 msgid "Update Work"
 msgstr ""
@@ -1535,7 +1810,9 @@ msgid "Delete"
 msgstr ""
 
 #: src/src/features/works/PaymentTypeManager.jsx:151
-msgid "Delete this payment type? Existing installments will keep their current type."
+msgid ""
+"Delete this payment type? Existing installments will keep their current "
+"type."
 msgstr ""
 
 #: src/src/features/works/EventAddressesRepeater.jsx:62
@@ -1623,7 +1900,9 @@ msgid "Set Vault Password"
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:82
-msgid "Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault."
+msgid ""
+"Choose a strong password to protect your encrypted data. You will need it "
+"each time you unlock the vault."
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:98
@@ -1663,7 +1942,9 @@ msgid "Copy"
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:152
-msgid "Using a separate username prevents your browser from confusing the vault password with your WordPress login."
+msgid ""
+"Using a separate username prevents your browser from confusing the vault "
+"password with your WordPress login."
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:158
@@ -1683,7 +1964,9 @@ msgid "Scan QR Code"
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:221
-msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below."
+msgid ""
+"Open your authenticator app (Google Authenticator, Authy, etc.) and scan the"
+" QR code below."
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:264
@@ -1695,7 +1978,8 @@ msgid "Confirm Authenticator Code"
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:276
-msgid "Enter the 6-digit code shown in your authenticator app to complete setup."
+msgid ""
+"Enter the 6-digit code shown in your authenticator app to complete setup."
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:280
@@ -1719,7 +2003,9 @@ msgid "Save Your Recovery Phrase"
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:331
-msgid "This phrase lets you recover access if you forget your password. Store it somewhere safe offline — it will never be shown again."
+msgid ""
+"This phrase lets you recover access if you forget your password. Store it "
+"somewhere safe offline — it will never be shown again."
 msgstr ""
 
 #: src/src/features/vault/VaultSetup.jsx:375
@@ -1803,7 +2089,8 @@ msgid "Lock Vault"
 msgstr ""
 
 #: src/src/components/ConfirmDialog.jsx:13
-msgid "Are you sure you want to delete this item? This action cannot be undone."
+msgid ""
+"Are you sure you want to delete this item? This action cannot be undone."
 msgstr ""
 
 #: src/src/components/ConfirmDialog.jsx:15
@@ -1819,7 +2106,8 @@ msgid "Unavailable on this server: the Sodium extension is missing."
 msgstr ""
 
 #: includes/class-backup-keys.php:76
-msgid "Backup keys are not set up yet. Unlock the vault once to generate them."
+msgid ""
+"Backup keys are not set up yet. Unlock the vault once to generate them."
 msgstr ""
 
 #: includes/class-rest-api.php:2687
@@ -1827,7 +2115,9 @@ msgid "Too many backups created recently. Try again in 15 minutes."
 msgstr ""
 
 #: includes/class-rest-api.php:2749
-msgid "This download link has expired or was already used. Create a new backup to download it."
+msgid ""
+"This download link has expired or was already used. Create a new backup to "
+"download it."
 msgstr ""
 
 #: includes/class-rest-api.php:2760
@@ -1859,7 +2149,9 @@ msgid "Backup registry audit"
 msgstr ""
 
 #: includes/class-backup-registry.php:254
-msgid "Meta keys found in the database that are not declared in the backup registry:"
+msgid ""
+"Meta keys found in the database that are not declared in the backup "
+"registry:"
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:59
@@ -1875,7 +2167,9 @@ msgid "Could not load backup status."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:80
-msgid "Encrypted backups reuse your Vault password and authenticator, so the Vault must be set up first."
+msgid ""
+"Encrypted backups reuse your Vault password and authenticator, so the Vault "
+"must be set up first."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:87
@@ -1883,27 +2177,39 @@ msgid "Set up your vault to enable encrypted backups"
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:101
-msgid "Encrypted backups need the PHP Sodium and Zip extensions, and this server has neither. Ask your host to enable them."
+msgid ""
+"Encrypted backups need the PHP Sodium and Zip extensions, and this server "
+"has neither. Ask your host to enable them."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:103
-msgid "Encrypted backups need the PHP Sodium extension, which this server does not have. Ask your host to enable it."
+msgid ""
+"Encrypted backups need the PHP Sodium extension, which this server does not "
+"have. Ask your host to enable it."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:104
-msgid "Encrypted backups need the PHP Zip extension, which this server does not have. Ask your host to enable it."
+msgid ""
+"Encrypted backups need the PHP Zip extension, which this server does not "
+"have. Ask your host to enable it."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:115
-msgid "Backup keys have not been generated yet. Unlock the Vault once to enable encrypted backups."
+msgid ""
+"Backup keys have not been generated yet. Unlock the Vault once to enable "
+"encrypted backups."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:125
-msgid "This site runs on Local by Flywheel and exists only on this computer. Local's own Cloud Backups are manual."
+msgid ""
+"This site runs on Local by Flywheel and exists only on this computer. "
+"Local's own Cloud Backups are manual."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:129
-msgid "Download a single encrypted archive of all your CRM data: customers, works, services, memory cards, and every attached file."
+msgid ""
+"Download a single encrypted archive of all your CRM data: customers, works, "
+"services, memory cards, and every attached file."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:138
@@ -1923,15 +2229,21 @@ msgid "Download encrypted backup"
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:174
-msgid "This backup may be missing recently added fields. Contact support if a restored backup ever looks incomplete."
+msgid ""
+"This backup may be missing recently added fields. Contact support if a "
+"restored backup ever looks incomplete."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:180
-msgid "This archive can only be opened with your vault password and authenticator code. Nobody else can read it."
+msgid ""
+"This archive can only be opened with your vault password and authenticator "
+"code. Nobody else can read it."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:183
-msgid "If you lose your vault password and your recovery code and your recovery phrase, this archive can never be opened."
+msgid ""
+"If you lose your vault password and your recovery code and your recovery "
+"phrase, this archive can never be opened."
 msgstr ""
 
 #: src/src/features/settings/BackupSettingsSection.jsx:186
@@ -1955,5 +2267,7 @@ msgid "These files exceed the %s limit and were skipped:"
 msgstr ""
 
 #: src/src/features/works/FilesSection.jsx:285
-msgid "Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max %s per uploaded file."
+msgid ""
+"Images and PDF can be previewed after upload · DOC/DOCX and links open in a "
+"new tab · max %s per uploaded file."
 msgstr ""

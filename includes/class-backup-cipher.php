@@ -82,8 +82,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Failure policy: every corruption throws \RuntimeException. This class NEVER
  * returns plaintext it could not authenticate, and never falls back to
- * returning the input on failure (an anti-pattern present in Pro's
- * decrypt_smtp_password(), fixed separately in Phase 7).
+ * returning the input on failure.
  *
  * This class never touches the vault. It takes a raw key argument and nothing
  * else, so it is safe on the cron path where the vault is locked.

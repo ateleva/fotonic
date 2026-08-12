@@ -615,7 +615,6 @@ function ResetVaultAction() {
 // Main SettingsPage
 // ---------------------------------------------------------------------------
 
-const SmtpSettingsSection    = window.FotonicProComponents?.SmtpSettingsSection    ?? null
 const LicenseSettingsSection = window.FotonicProComponents?.LicenseSettingsSection ?? null
 const GCalSettings           = window.FotonicProComponents?.GCalSettings           ?? null
 const ProBackupSettingsSection = window.FotonicProComponents?.BackupSettingsSection ?? null
@@ -735,18 +734,6 @@ export default function SettingsPage() {
       {GCalSettings && (
         <SectionCard title={__('Google Calendar', 'eleva-crm-for-photographers')} icon={Key}>
           <GCalSettings />
-        </SectionCard>
-      )}
-
-      {SmtpSettingsSection && (
-        <SectionCard title={__('Email Notifications', 'eleva-crm-for-photographers')} icon={Key}>
-          <SmtpSettingsSection />
-        </SectionCard>
-      )}
-
-      {!SmtpSettingsSection && window.FotonicApp?.isPro && (
-        <SectionCard title={__('Email Notifications', 'eleva-crm-for-photographers')} icon={Key}>
-          <p className="text-sm text-gray-400">{__('Reload the page to load email settings.', 'eleva-crm-for-photographers')}</p>
         </SectionCard>
       )}
     </div>

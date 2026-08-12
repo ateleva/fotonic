@@ -62,6 +62,7 @@ $ftnc_meta_prefixes = array(
 	'_ftnc_memory_cards',
 	'_ftnc_backup_done',
 	'_ftnc_formatting_done',
+	'_ftnc_notifications',
 );
 
 foreach ( $ftnc_meta_prefixes as $ftnc_key ) {
@@ -101,6 +102,7 @@ $ftnc_options = array(
 	'fotonic_pro_license_key',
 	'fotonic_backup_pubkey',
 	'fotonic_backup_wrap_priv',
+	'fotonic_smtp_settings',
 );
 
 foreach ( $ftnc_options as $ftnc_option ) {
