@@ -2228,3 +2228,6 @@ msgstr "Sab"
 
 msgid "Sun"
 msgstr "Dom"
+
+msgid "Reminders"
+msgstr "Promemoria"

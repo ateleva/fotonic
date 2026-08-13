@@ -1442,7 +1442,7 @@ class Fotonic_REST_API {
 			);
 		}
 
-		return new \WP_REST_Response( self::format_work( $post ), 200 );
+		return new \WP_REST_Response( self::format_work( $post, true ), 200 );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1486,7 +1486,7 @@ class Fotonic_REST_API {
 		 */
 		do_action( 'ftnc_after_save_work', $post_id, $body );
 
-		return new \WP_REST_Response( self::format_work( get_post( $post_id ) ), 201 );
+		return new \WP_REST_Response( self::format_work( get_post( $post_id ), true ), 201 );
 	}
 
 	public static function update_work( \WP_REST_Request $req ): \WP_REST_Response {
@@ -1531,7 +1531,7 @@ class Fotonic_REST_API {
 		 */
 		do_action( 'ftnc_after_save_work', $id, array_merge( $body, [ '_prev_memory_cards' => $prev_memory_cards ] ) );
 
-		return new \WP_REST_Response( self::format_work( get_post( $id ) ), 200 );
+		return new \WP_REST_Response( self::format_work( get_post( $id ), true ), 200 );
 	}
 
 	public static function delete_work( \WP_REST_Request $req ): \WP_REST_Response {
@@ -2109,7 +2109,7 @@ class Fotonic_REST_API {
 	 * @param WP_Post $post Work post.
 	 * @return array
 	 */
-	private static function format_work( \WP_Post $post ): array {
+	private static function format_work( \WP_Post $post, bool $include_reminders = false ): array {
 		$customer_id    = (int) get_post_meta( $post->ID, '_ftnc_customer_id', true );
 		$customer_title = '';
 		if ( $customer_id ) {
@@ -2343,6 +2343,13 @@ class Fotonic_REST_API {
 			'memory_cards'    => $memory_cards,
 			'backup_done'     => (bool) get_post_meta( $post->ID, '_ftnc_backup_done', true ),
 			'formatting_done' => (bool) get_post_meta( $post->ID, '_ftnc_formatting_done', true ),
+			// Guarded by $include_reminders: format_work() runs in a loop from
+			// get_works()/get_calendar_works() (up to 100/page); calling this filter
+			// unconditionally would let Pro run a WP_Query per work in those loops.
+			// Only the single-work call sites (get_work, create_work, update_work)
+			// pass true. reminders_base_date is a single get_post_meta, cheap either way.
+			'reminders'           => $include_reminders ? apply_filters( 'ftnc_work_reminders', array(), $post->ID ) : array(),
+			'reminders_base_date' => (string) get_post_meta( $post->ID, '_ftnc_reminders_base_date', true ),
 		];
 	}
 

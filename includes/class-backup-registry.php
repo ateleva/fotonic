@@ -71,6 +71,11 @@ class Fotonic_Backup_Registry {
                     // state exposed by free's own REST formatter, same as _ftnc_gcal_sync
                     // above — not Pro business data, so free declares it. See PROGRESS.md.
                     '_ftnc_gcal_event_id',
+                    // Same rationale: free never writes this (Pro's reminders reconcile
+                    // does, via ftnc_after_save_work) but it is work-scoped state exposed
+                    // by free's own REST formatter (format_work()'s reminders_base_date),
+                    // not Pro business data, so free declares it for backup purposes.
+                    '_ftnc_reminders_base_date',
                 ],
                 'taxonomies' => [
                     // Auto-derived by Fotonic_Meta_Boxes::auto_assign_payment_status() —

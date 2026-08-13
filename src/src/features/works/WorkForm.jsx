@@ -96,12 +96,14 @@ const defaultValues = {
   color: '',
   gcal_sync: false,
   memory_cards: { cards: [], backup_done: false, formatting_done: false },
+  reminders: [],
 }
 
 const OwnerField = window.FotonicProComponents?.OwnerField ?? null
 const CollaboratorsSection = window.FotonicProComponents?.CollaboratorsSection ?? null
 const TaxablePriceField = window.FotonicProComponents?.TaxablePriceField ?? null
 const GCalSyncField = window.FotonicProComponents?.GCalSyncField ?? null
+const RemindersSection = window.FotonicProComponents?.RemindersSection ?? null
 
 export default function WorkForm() {
   const { id } = useParams()
@@ -111,6 +113,7 @@ export default function WorkForm() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [blockReason, setBlockReason] = useState(null)
   const [checkingDelete, setCheckingDelete] = useState(false)
+  const [remindersBlocked, setRemindersBlocked] = useState(false)
 
   const { data: work, isLoading: workLoading } = useWork(id)
   const { data: customersData } = useCustomers({ per_page: 100 })
@@ -149,7 +152,7 @@ export default function WorkForm() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
 
-  const [ownerType, ownerId] = watch(['owner_type', 'owner_id'])
+  const [ownerType, ownerId, eventDate] = watch(['owner_type', 'owner_id', 'event_date'])
 
   useEffect(() => {
     if (work) {
@@ -179,6 +182,7 @@ export default function WorkForm() {
           backup_done: work.backup_done ?? false,
           formatting_done: work.formatting_done ?? false,
         },
+        reminders: work.reminders ?? [],
       })
     }
   }, [work, reset])
@@ -186,6 +190,10 @@ export default function WorkForm() {
   const mutation = isEdit ? updateWork : createWork
 
   async function onSubmit(data) {
+    if (remindersBlocked) {
+      return
+    }
+
     const payload = {
       ...data,
       customer_id: data.customer_id ? parseInt(data.customer_id, 10) : null,
@@ -474,6 +482,26 @@ export default function WorkForm() {
           </div>
         </section>
 
+        {/* Section 11 — Reminders (Pro only) */}
+        {RemindersSection && window.FotonicApp?.features?.kanban && (
+          <section>
+            <SectionHeading>{__('Reminders', 'eleva-crm-for-photographers')}</SectionHeading>
+            <Controller
+              name="reminders"
+              control={control}
+              render={({ field }) => (
+                <RemindersSection
+                  value={field.value}
+                  onChange={field.onChange}
+                  eventDate={eventDate}
+                  baseDate={work?.reminders_base_date ?? ''}
+                  onBlockedChange={setRemindersBlocked}
+                />
+              )}
+            />
+          </section>
+        )}
+
         {mutation.error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
             {mutation.error.message ?? __('An error occurred. Please try again.', 'eleva-crm-for-photographers')}
@@ -481,7 +509,7 @@ export default function WorkForm() {
         )}
 
         <div className="flex items-center gap-3 pt-2">
-          <Button type="submit" disabled={isSubmitting || mutation.isPending}>
+          <Button type="submit" disabled={isSubmitting || mutation.isPending || remindersBlocked}>
             {mutation.isPending
               ? __('Saving...', 'eleva-crm-for-photographers')
               : isEdit

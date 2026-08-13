@@ -2307,3 +2307,7 @@ msgstr ""
 #: src/src/components/Layout.jsx:226
 msgid "Expand sidebar"
 msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:488
+msgid "Reminders"
+msgstr ""
