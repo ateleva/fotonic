@@ -106,6 +106,8 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 = 1.4.0 =
 * New: encrypted CRM backup. Download a single archive of all your CRM data (customers, works, services, memory cards, and every attached file) from the Settings page, protected by your Vault password and authenticator code — nobody, including us, can open it without them.
 * New: ships a standalone, dependency-free command-line decrypt tool with the plugin (`tools/`), so a backup can be restored on any machine with just PHP, no WordPress or plugin install required.
+* Improved: refreshed spacing, borders, and layout across every form and list screen; the sidebar now collapses to icon-only and remembers your choice; tables get a persistent scroll indicator instead of relying on the operating system's hidden scrollbar.
+* Fix: the sidebar's collapse/expand button and the calendar's day-of-week column headers now translate correctly in Italian — they previously always showed in English regardless of site language.
 * Note: with Eleva CRM Pro connected to Google Drive, backups also run automatically on a schedule — see the Pro changelog.
 
 = 1.3.12 =
