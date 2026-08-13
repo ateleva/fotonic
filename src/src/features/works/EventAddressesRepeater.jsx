@@ -20,7 +20,7 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
   return (
     <div className="space-y-3">
       {value.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <div className="ftnc-table-scroll">
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
@@ -55,14 +55,9 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
                     />
                   </td>
                   <td className="px-3 py-2">
-                    <button
-                      type="button"
-                      onClick={() => removeRow(index)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                      aria-label={__('Remove address', 'eleva-crm-for-photographers')}
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove address', 'eleva-crm-for-photographers')}>
+                      <Trash2 size={14} />
+                    </Button>
                   </td>
                 </tr>
               ))}

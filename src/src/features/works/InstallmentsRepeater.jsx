@@ -42,7 +42,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
   return (
     <div className="space-y-3">
       {value.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <div className="ftnc-table-scroll">
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
@@ -61,7 +61,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                     <select
                       value={row.type ?? 'default'}
                       onChange={(e) => updateRow(index, 'type', e.target.value)}
-                      className="w-max rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      className="w-auto rounded-md border border-gray-300 pl-2 pr-7 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
                       {paymentTypes.length > 0
                         ? paymentTypes.map((t) => (
@@ -114,14 +114,9 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                     </button>
                   </td>
                   <td className="px-3 py-2">
-                    <button
-                      type="button"
-                      onClick={() => removeRow(index)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                      aria-label={__('Remove installment', 'eleva-crm-for-photographers')}
-                    >
-                      <Trash2 size={15} />
-                    </button>
+                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove installment', 'eleva-crm-for-photographers')}>
+                      <Trash2 size={14} />
+                    </Button>
                   </td>
                 </tr>
               ))}

@@ -32,12 +32,12 @@ function QrCanvas({ uri, size = 180 }) {
 
 function SectionCard({ title, icon: Icon, children }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-      <div className="flex items-center gap-2 px-5 py-4 border-b border-gray-100">
+    <div className="ftnc-panel">
+      <div className="ftnc-panel__head">
         <Icon size={16} className="text-indigo-500 shrink-0" />
-        <h2 className="text-sm font-semibold text-gray-800">{title}</h2>
+        <h2 className="text-sm font-bold text-gray-800">{title}</h2>
       </div>
-      <div className="px-5 py-4">{children}</div>
+      <div className="ftnc-panel__body">{children}</div>
     </div>
   )
 }
@@ -109,7 +109,7 @@ function IdleWarningBanner() {
   if (!idleWarning) return null
 
   return (
-    <div className="flex items-center justify-between rounded-md border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm text-amber-800">
+    <div className="flex items-center justify-between rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
       <div className="flex items-center gap-2">
         <AlertTriangle size={15} className="text-amber-500 shrink-0" />
         <span>{__("You've been idle for 13 minutes. The vault will lock in 2 minutes.", 'eleva-crm-for-photographers')}</span>
@@ -178,7 +178,7 @@ function ChangePasswordForm() {
       <p className="text-xs text-gray-500">
         {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
       </p>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="ftnc-grid-2">
         <FieldRow label={__('Current Password', 'eleva-crm-for-photographers')} required>
           <input type="password" value={form.current_password} onChange={handleChange('current_password')} autoComplete="current-password" className={inputCls} />
         </FieldRow>
@@ -237,7 +237,7 @@ function ResetTotpForm() {
 
   return (
     <div className="space-y-3 pt-1">
-      <p className="text-xs text-gray-500">{__('Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity.', 'eleva-crm-for-photographers')}</p>
+      <p className="ftnc-prose text-xs text-gray-500">{__('Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity.', 'eleva-crm-for-photographers')}</p>
       {qrUri ? (
         <div className="space-y-3">
           <p className="text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
@@ -260,7 +260,7 @@ function ResetTotpForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="ftnc-grid-2">
             <FieldRow label={__('Vault Password', 'eleva-crm-for-photographers')} required>
               <input type="password" value={form.password} onChange={f('password')} autoComplete="current-password" className={inputCls} />
             </FieldRow>
@@ -319,7 +319,7 @@ function RegenerateRecoveryCode() {
   return (
     <>
       <div className="pt-1 space-y-2">
-        <p className="text-xs text-gray-500">
+        <p className="ftnc-prose text-xs text-gray-500">
           {__('Generate a new TOTP recovery code. The previous code will be invalidated immediately.', 'eleva-crm-for-photographers')}
         </p>
         <button
@@ -337,7 +337,7 @@ function RegenerateRecoveryCode() {
         onClose={() => setModalOpen(false)}
         title={__('Regenerate Recovery Code', 'eleva-crm-for-photographers')}
       >
-        <div className="space-y-4">
+        <div className="ftnc-fields">
           {!recoveryCode && (
             <>
               <p className="text-sm text-gray-600">
@@ -430,7 +430,7 @@ function RecoveryPhraseSection({ hasPhrase }) {
   return (
     <>
       <div className="pt-1 space-y-2">
-        <p className="text-xs text-gray-500">
+        <p className="ftnc-prose text-xs text-gray-500">
           {hasPhrase
             ? __('Regenerate a new recovery phrase. The previous phrase will stop working immediately.', 'eleva-crm-for-photographers')
             : __('Set up a recovery phrase so you can reset your password if you ever forget it.', 'eleva-crm-for-photographers')}
@@ -454,7 +454,7 @@ function RecoveryPhraseSection({ hasPhrase }) {
           ? __('Regenerate Recovery Phrase', 'eleva-crm-for-photographers')
           : __('Set Up Recovery Phrase', 'eleva-crm-for-photographers')}
       >
-        <div className="space-y-4">
+        <div className="ftnc-fields">
           {!newPhrase && (
             <>
               <p className="text-sm text-gray-600">
@@ -476,7 +476,7 @@ function RecoveryPhraseSection({ hasPhrase }) {
             </>
           )}
           {newPhrase && (
-            <div className="space-y-4">
+            <div className="ftnc-fields">
               <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
                 <p className="text-xs text-gray-500 mb-2">{__('Your Recovery Phrase', 'eleva-crm-for-photographers')}</p>
                 <p className="text-sm font-mono font-semibold text-amber-900 break-all tracking-widest text-center">
@@ -546,7 +546,7 @@ function ResetVaultAction() {
   return (
     <>
       <div className="pt-1 space-y-2">
-        <p className="text-xs text-gray-500">
+        <p className="ftnc-prose text-xs text-gray-500">
           {__('Permanently wipe the vault configuration. All encrypted data will become inaccessible.', 'eleva-crm-for-photographers')}
         </p>
         <button
@@ -564,7 +564,7 @@ function ResetVaultAction() {
         onClose={handleClose}
         title={__('Reset Vault', 'eleva-crm-for-photographers')}
       >
-        <div className="space-y-4">
+        <div className="ftnc-fields">
           <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3">
             <p className="text-sm font-medium text-red-800">
               {__('This action is irreversible.', 'eleva-crm-for-photographers')}
@@ -643,99 +643,105 @@ export default function SettingsPage() {
       </div>
     )}
 
-    <div className="p-6 space-y-6">
+    {/* PageHeader carries its own `mb-6`, so it stays OUTSIDE `.ftnc-stack`:
+        inside, its margin would add to the stack's 40px section gap and the
+        header→first-card distance would grow instead of tightening. Same
+        structure WorkForm and CustomerForm already use. */}
+    <div className="p-6 ftnc-pane">
       <PageHeader title={__('Settings', 'eleva-crm-for-photographers')} />
 
-      {LicenseSettingsSection && (
-        <SectionCard title={__('Eleva Pro License', 'eleva-crm-for-photographers')} icon={Key}>
-          <LicenseSettingsSection />
-        </SectionCard>
-      )}
+      <div className="ftnc-stack">
+        {LicenseSettingsSection && (
+          <SectionCard title={__('Eleva Pro License', 'eleva-crm-for-photographers')} icon={Key}>
+            <LicenseSettingsSection />
+          </SectionCard>
+        )}
 
-      <SectionCard title={__('Vault', 'eleva-crm-for-photographers')} icon={Shield}>
-        <div className="space-y-4">
-          <VaultStatusRow status={vaultStatus} />
+        <SectionCard title={__('Vault', 'eleva-crm-for-photographers')} icon={Shield}>
+          <div className="ftnc-fields">
+            <VaultStatusRow status={vaultStatus} />
 
-          {vaultStatus && !vaultStatus.setup && (
-            <div className="pt-1 space-y-3">
-              <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
-                <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe', 'eleva-crm-for-photographers')}</p>
-                <p className="text-sm text-blue-800">
-                  {__('The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.', 'eleva-crm-for-photographers')}
+            {vaultStatus && !vaultStatus.setup && (
+              <div className="pt-1 space-y-3">
+                <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
+                  <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe', 'eleva-crm-for-photographers')}</p>
+                  <p className="ftnc-prose text-sm text-blue-800">
+                    {__('The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.', 'eleva-crm-for-photographers')}
+                  </p>
+                  <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                    <li>{__('Pick a strong master password (at least 10 characters) and store it somewhere safe.', 'eleva-crm-for-photographers')}</li>
+                    <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.', 'eleva-crm-for-photographers')}</li>
+                    <li>{__('Save the recovery phrase and recovery code offline — these are your fallback if you lose access.', 'eleva-crm-for-photographers')}</li>
+                    <li>{__('Lock the Vault when you finish working to keep client details protected.', 'eleva-crm-for-photographers')}</li>
+                  </ul>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setShowSetup(true)}
+                  className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <Shield size={14} />
+                  {__('Set Up Vault', 'eleva-crm-for-photographers')}
+                </button>
+              </div>
+            )}
+
+            {vaultStatus?.setup && (
+              <div className="space-y-2">
+                <p className="ftnc-prose text-sm text-gray-500">
+                  {__('All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.', 'eleva-crm-for-photographers')}
                 </p>
-                <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
-                  <li>{__('Pick a strong master password (at least 10 characters) and store it somewhere safe.', 'eleva-crm-for-photographers')}</li>
-                  <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.', 'eleva-crm-for-photographers')}</li>
-                  <li>{__('Save the recovery phrase and recovery code offline — these are your fallback if you lose access.', 'eleva-crm-for-photographers')}</li>
-                  <li>{__('Lock the Vault when you finish working to keep client details protected.', 'eleva-crm-for-photographers')}</li>
-                </ul>
+                <p className="text-xs text-gray-400">
+                  {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
+                </p>
+                <div className="space-y-2 pt-1">
+                  <Accordion label={__('Change Vault Password', 'eleva-crm-for-photographers')}>
+                    <ChangePasswordForm />
+                  </Accordion>
+                  <Accordion label={__('Reset Authenticator App', 'eleva-crm-for-photographers')}>
+                    <ResetTotpForm />
+                  </Accordion>
+                  <Accordion label={__('TOTP Recovery Code', 'eleva-crm-for-photographers')}>
+                    <RegenerateRecoveryCode />
+                  </Accordion>
+                  <Accordion label={__('Recovery Phrase', 'eleva-crm-for-photographers')}>
+                    <RecoveryPhraseSection hasPhrase={vaultStatus?.has_recovery_phrase === true} />
+                  </Accordion>
+                  <Accordion label={__('Reset Vault', 'eleva-crm-for-photographers')}>
+                    <ResetVaultAction />
+                  </Accordion>
+                </div>
               </div>
-              <button
-                type="button"
-                onClick={() => setShowSetup(true)}
-                className="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <Shield size={14} />
-                {__('Set Up Vault', 'eleva-crm-for-photographers')}
-              </button>
-            </div>
-          )}
-
-          {vaultStatus?.setup && (
-            <div className="space-y-2">
-              <p className="text-sm text-gray-500">
-                {__('All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.', 'eleva-crm-for-photographers')}
-              </p>
-              <p className="text-xs text-gray-400">
-                {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
-              </p>
-              <div className="space-y-2 pt-1">
-                <Accordion label={__('Change Vault Password', 'eleva-crm-for-photographers')}>
-                  <ChangePasswordForm />
-                </Accordion>
-                <Accordion label={__('Reset Authenticator App', 'eleva-crm-for-photographers')}>
-                  <ResetTotpForm />
-                </Accordion>
-                <Accordion label={__('TOTP Recovery Code', 'eleva-crm-for-photographers')}>
-                  <RegenerateRecoveryCode />
-                </Accordion>
-                <Accordion label={__('Recovery Phrase', 'eleva-crm-for-photographers')}>
-                  <RecoveryPhraseSection hasPhrase={vaultStatus?.has_recovery_phrase === true} />
-                </Accordion>
-                <Accordion label={__('Reset Vault', 'eleva-crm-for-photographers')}>
-                  <ResetVaultAction />
-                </Accordion>
-              </div>
-            </div>
-          )}
-        </div>
-      </SectionCard>
-
-      {/* Placed directly below Vault, and above Pro's Drive panel slot (Phase 10):
-          the free manual download reads as the baseline, Drive as the upgrade. */}
-      <SectionCard title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
-        <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />
-      </SectionCard>
-
-      {ProBackupSettingsSection && window.FotonicApp?.features?.backup && (
-        <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
-          <ProBackupSettingsSection />
+            )}
+          </div>
         </SectionCard>
-      )}
 
-      {window.FotonicApp?.isPro && !window.FotonicApp?.features?.backup && (
-        <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
-          <p className="text-sm text-gray-400">
-            {__('Automatic backups to Google Drive require an active Eleva Pro license.', 'eleva-crm-for-photographers')}
-          </p>
+        {/* Placed directly below Vault, and above Pro's Drive panel slot (Phase 10):
+            the free manual download reads as the baseline, Drive as the upgrade. */}
+        <SectionCard title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
+          <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />
         </SectionCard>
-      )}
 
-      {GCalSettings && (
-        <SectionCard title={__('Google Calendar', 'eleva-crm-for-photographers')} icon={Key}>
-          <GCalSettings />
-        </SectionCard>
-      )}
+        {ProBackupSettingsSection && window.FotonicApp?.features?.backup && (
+          <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
+            <ProBackupSettingsSection />
+          </SectionCard>
+        )}
+
+        {window.FotonicApp?.isPro && !window.FotonicApp?.features?.backup && (
+          <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
+            <p className="ftnc-prose text-sm text-gray-400">
+              {__('Automatic backups to Google Drive require an active Eleva Pro license.', 'eleva-crm-for-photographers')}
+            </p>
+          </SectionCard>
+        )}
+
+        {GCalSettings && (
+          <SectionCard title={__('Google Calendar', 'eleva-crm-for-photographers')} icon={Key}>
+            <GCalSettings />
+          </SectionCard>
+        )}
+      </div>
     </div>
     </>
   )

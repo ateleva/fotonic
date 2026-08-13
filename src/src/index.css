@@ -2,16 +2,84 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Two custom-property prefixes coexist on purpose: `--fotonic-*` are the pre-existing
+   theme colors (kept for backwards compatibility), `--ftnc-*` are the design tokens that
+   match the `.ftnc-*` class namespace. Do not rename either. */
 #fotonic-app-root {
   --fotonic-primary: var(--wp-admin-theme-color, #2563eb);
   --fotonic-danger: #dc2626;
+
+  /* Spacing scale: 4px ramp */
+  --ftnc-space-1: 4px;
+  --ftnc-space-2: 8px;
+  --ftnc-space-3: 12px;
+  --ftnc-space-4: 16px;
+  --ftnc-space-5: 20px;
+  --ftnc-space-6: 24px;
+  --ftnc-space-8: 32px;
+  --ftnc-space-10: 40px;
+
+  /* Rhythm: 1:2.5 hierarchy ratio */
+  --ftnc-field-gap: 16px;
+  --ftnc-section-gap: 40px;
+
+  /* Surface */
+  --ftnc-border: #e5e7eb;
+  --ftnc-surface: #fff;
+  --ftnc-radius: 8px;
 }
 
-/* Reset WP admin button styles that bleed through (preflight: false) */
+/* Replaces the two preflight lines lost to corePlugins.preflight:false.
+   Specificity is deliberately (0,0,0). Do NOT raise it, do NOT add !important:
+   either would paint a 3px border on every element in the app. */
+:where(#fotonic-app-root, #fotonic-app-root *) {
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+:where(#fotonic-app-root *)::before,
+:where(#fotonic-app-root *)::after {
+  border-width: 0;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+
+/* Typography margin reset — the other half of preflight we lost. UA stylesheets give
+   headings and paragraphs a default margin (e.g. h2 ~0.83em, p ~1em, both top+bottom).
+   Every heading/paragraph in this app is styled the Tailwind way (spacing added via an
+   explicit utility or an .ftnc-* class), so that default margin is pure double-counted
+   dead space stacked on top of our own, deliberately-tuned rhythm — this is what made
+   SectionCard's title and every <p> in .ftnc-panel__body sit far from their neighbors
+   even after the Phase 1 rhythm pass.
+   Unlike the border reset, a fully zero-specificity :where(...):where(...) version of
+   this rule LOSES here: WP admin's own bundled CSS (common.css, loaded via
+   load-styles.php) ships `h2, h3 { margin: 1em 0 }` at real (0,0,1) specificity, which
+   beats a true (0,0,0) rule outright regardless of source order. The root anchor stays
+   `:where(#fotonic-app-root)` (0 specificity, keeps this from leaking outside our tree
+   or from ever outranking a Tailwind utility), but the element list uses `:is(...)`,
+   which carries the specificity of its single most-specific argument — one type
+   selector, (0,0,1). That ties WP's rule, and our stylesheet loads after WP's admin
+   bundle, so it wins on source order — while still losing cleanly to any real utility
+   class (0,1,0)+, exactly as intended. */
+:where(#fotonic-app-root) :is(h1, h2, h3, h4, h5, h6, p, blockquote, dl, dd, hr, figure, pre) {
+  margin: 0;
+}
+
+/* Reset WP admin button styles that bleed through (preflight: false).
+   `background-color` belongs in this same reset: WP admin's own bare `button` selector
+   (not just `.button`) paints a light grey background, and until now nothing here
+   neutralized it. Every intentionally-colored button already sets its own bg-* utility
+   (Button.jsx's variants, etc.) at higher specificity, so this only affects buttons that
+   were deliberately built to look like plain text/icon links — those were rendering with
+   an unwanted grey chip instead of the transparent look they were written for. */
 #fotonic-app-root button {
   -webkit-appearance: none;
   appearance: none;
-  border: none;
+  border-width: 0;      /* was `border: none`, which forced border-style:none
+                           and defeated every `border` utility on a <button> */
+  border-style: solid;
+  border-color: #e5e7eb;
+  background-color: transparent;
   box-shadow: none;
   cursor: pointer;
 }
@@ -87,3 +155,398 @@
 #fotonic-app-root .ftnc-pdf-page canvas {
   display: block;
 }
+
+/* ===========================================================================
+   Reserved slots for the later phases of the UI refactor.
+   Everything `.ftnc-*` must stay in this file AFTER `@tailwind utilities;`
+   and must NEVER be wrapped in `@layer components`, which sorts it before the
+   utilities and breaks the ability of `#fotonic-app-root .ftnc-*` (1,1,0) to
+   win over an equally-specific utility on source order.
+   See DESIGN.md for the specificity contract.
+   =========================================================================== */
+
+/* --- Phase 1: section rhythm (.ftnc-stack, .ftnc-section-heading, .ftnc-fields, .ftnc-panel) --- */
+
+/* Vertical rhythm between sections — drop-in for `space-y-8` / `space-y-6`.
+   Same mechanism and same `:not([hidden])` sibling filter Tailwind's own `space-y-*`
+   uses, so children keep their layout model untouched.
+   Deliberately NOT `display: flex; gap:` — that turns every direct child into a flex
+   item, and the Pro components rendered into free's sections carry their own
+   `flex flex-col gap-1` wrappers whose sizing would change. A margin on the child is
+   purely additive: it sets one property and assumes nothing about what the child is. */
+.ftnc-stack > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ftnc-section-gap);
+}
+
+/* Field-to-field rhythm — drop-in for `space-y-4`, same mechanism as `.ftnc-stack`. */
+.ftnc-fields > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ftnc-field-gap);
+}
+
+/* Section heading: the rule, plus the gap that separates it from the section body.
+   `padding-bottom` binds the title to its rule, `margin-bottom` is the heading→content
+   16px. The gap is a margin on the heading, never on the content below it, so a Pro
+   slot used as the section body gets the rhythm with no class of its own.
+   `display: flex` lays out the title/description column against the optional action. */
+.ftnc-section-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ftnc-space-3);
+  padding-bottom: var(--ftnc-space-2);
+  margin-bottom: var(--ftnc-field-gap);
+  border-bottom: 1px solid var(--ftnc-border);
+}
+
+/* Settings card. Every value here is identical to the utility string it replaces
+   (`bg-white border border-gray-200 rounded-lg overflow-hidden`), so it stays at
+   (0,1,0): a call site needing a different surface can still win with a utility. */
+.ftnc-panel {
+  background-color: var(--ftnc-surface);
+  border: 1px solid var(--ftnc-border);
+  border-radius: var(--ftnc-radius);
+  overflow: hidden;
+}
+
+/* (1,1,0) — these two beat the `px-5 py-4` they replace. Unlike every other class in
+   this block their values genuinely differ from the utilities (`py-4` is 16px top AND
+   bottom), so a call site that forgot to delete `px-5 py-4` would silently keep the old
+   padding and the whole redesign would fail to land with no error and no warning.
+   Head 12px/20px + body 16px/20px/20px = 28px title→content, bisected by the divider.
+   The divider is `--ftnc-border` (#e5e7eb), not the `border-gray-100` (#f3f4f6) it
+   replaces: at ~1.04:1 against white that line was invisible, and this design asks the
+   divider to do the separating that the removed whitespace used to do. */
+#fotonic-app-root .ftnc-panel__head {
+  display: flex;
+  align-items: center;
+  gap: var(--ftnc-space-2);
+  padding: var(--ftnc-space-3) var(--ftnc-space-5);
+  border-bottom: 1px solid var(--ftnc-border);
+}
+#fotonic-app-root .ftnc-panel__body {
+  padding: var(--ftnc-space-4) var(--ftnc-space-5) var(--ftnc-space-5);
+}
+
+/* Readability cap for long descriptive paragraphs (~75 rendered characters at the
+   14px body size). Goes on the paragraph itself, never on a container that also holds
+   controls or a table. No utility sets `max-width` on these elements today, so (0,1,0):
+   an explicit `max-w-*` still wins where a paragraph must run wider. */
+.ftnc-prose {
+  max-width: 68ch;
+}
+
+/* --- Phase 2: collapsible sidebar (.ftnc-sidebar, .ftnc-navlink, reduced-motion kill switch) --- */
+
+/* Every rule in this block that touches an element also carrying Tailwind utilities sits at
+   (1,1,0), not (0,1,0). That is a deliberate departure from the "(0,1,0) unless the values
+   differ" default used in phase 1, and the reason is `transition`:
+   `#fotonic-app-root .transition-colors` compiles to (1,1,0) and sets the
+   `transition-property` LONGHAND (color, background-color, border-color, ...). A (0,1,0)
+   `.ftnc-navlink { transition: grid-template-columns ... }` loses that longhand outright and
+   the entire collapse animation silently does nothing — no error, no warning, the sidebar
+   just snaps. The utilities are deleted from the call sites per the ownership rule anyway;
+   this tier is the belt to that suspenders, because re-adding `transition-colors` to a nav
+   link is the single most natural future edit anyone could make here.
+
+   Nothing in this block sets `transform`, `filter`, `will-change`, `contain` or
+   `container-type` on <aside>, the shell div or <main> — see DESIGN.md section 6. The width
+   animation deliberately animates `width`, which creates no containing block, rather than a
+   transform, which would create one and break all 11 Pro `position: fixed; inset: 0`
+   overlays rendered through free's <Outlet/>. */
+
+/* Owns `width`, replacing the `w-[20%] min-w-[200px] max-w-[260px]` utility trio that used
+   to sit on <aside>. `shrink-0`, the background, the border and the overflow pair stay as
+   utilities — different properties, no contest. `overflow-x: hidden` in particular must
+   stay: it is what clips the nav labels cleanly while the grid track animates to 0fr. */
+#fotonic-app-root .ftnc-sidebar {
+  width: clamp(200px, 20%, 260px);
+  transition: width 200ms cubic-bezier(.2, 0, 0, 1);
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] {
+  width: 64px;
+}
+
+/* The collapse animation, in one property.
+   `grid-template-columns` interpolates only between lists with the same number and type of
+   tracks, which is exactly why the collapsed rule keeps `minmax(0, <n>fr)` on both sides and
+   moves only 1fr -> 0fr. Two alternatives were rejected: a `relative` -> `absolute` switch
+   is not animatable at all, and `max-width` lets the label re-wrap mid-transition. */
+#fotonic-app-root .ftnc-navlink {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ftnc-space-3);
+  transition: grid-template-columns 200ms cubic-bezier(.2, 0, 0, 1),
+              gap 200ms cubic-bezier(.2, 0, 0, 1),
+              color 150ms cubic-bezier(.4, 0, .2, 1),
+              background-color 150ms cubic-bezier(.4, 0, .2, 1);
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-navlink {
+  grid-template-columns: 16px minmax(0, 0fr);
+  gap: 0;
+  justify-content: center;
+}
+
+/* The label stays in the DOM, clipped — never `display: none` and never
+   `visibility: hidden`. Both of those drop it from the accessibility tree, and this text is
+   the link's accessible name; the hover tooltip is `aria-hidden` precisely so it does not
+   become a second, competing source for it. `opacity: 0` leaves the a11y tree intact. */
+#fotonic-app-root .ftnc-navlink > span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: opacity 120ms linear;
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-navlink > span {
+  opacity: 0;
+}
+
+/* Header. One row in BOTH states, same height in both states — the whole point being that
+   collapsing must never shift the nav items below it. A 64px rail cannot fit a 32px logo and
+   a 28px button side by side in normal flow, so the toggle does not try to: on collapse it
+   is pulled out of flow with `position: absolute`, anchored to this header (hence
+   `position: relative` here), and overlaps the corner of the logo instead of claiming a row
+   of its own. `.ftnc-sidebar__brand` is then the header's only flex participant when
+   collapsed, exactly as when expanded, so the row's height is driven by the same 32px logo
+   in both states and never changes. An earlier version used `flex-wrap: wrap` plus a
+   flex-basis flip to push the toggle onto a second row — that was rejected precisely because
+   it is what caused the shift the user reported. */
+#fotonic-app-root .ftnc-sidebar__head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ftnc-space-2) var(--ftnc-space-4);
+  transition: padding 200ms cubic-bezier(.2, 0, 0, 1);
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__head {
+  padding: var(--ftnc-space-2) 6px;
+}
+
+/* Same grid trick as `.ftnc-navlink`, so the plugin name collapses on exactly the same
+   curve as the nav labels instead of on a second, subtly different one. */
+#fotonic-app-root .ftnc-sidebar__brand {
+  flex: 1 1 0;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--ftnc-space-2);
+  transition: grid-template-columns 200ms cubic-bezier(.2, 0, 0, 1),
+              gap 200ms cubic-bezier(.2, 0, 0, 1);
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__brand {
+  grid-template-columns: 32px minmax(0, 0fr);
+  gap: 0;
+  justify-content: center;
+}
+#fotonic-app-root .ftnc-sidebar__brand > span {
+  transition: opacity 120ms linear;
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__brand > span {
+  opacity: 0;
+}
+
+#fotonic-app-root .ftnc-sidebar__toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  color: #6b7280;
+  transition: color 150ms cubic-bezier(.4, 0, .2, 1),
+              background-color 150ms cubic-bezier(.4, 0, .2, 1);
+}
+#fotonic-app-root .ftnc-sidebar__toggle:hover {
+  background-color: color-mix(in srgb, var(--fotonic-nav, #1d2327) 12%, white);
+  color: var(--fotonic-nav, #1d2327);
+}
+
+/* Collapsed: this button is not shown at all. `.ftnc-sidebar-toggle-handle` below is a
+   separate element, rendered only when collapsed, that takes over — see the comment on it
+   for why a single button cannot serve both states. */
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__toggle {
+  display: none;
+}
+
+/* The collapsed-rail toggle. A sibling of <aside> in the shell (see Layout.jsx), not a
+   descendant, specifically so it can render half outside <aside>'s box without touching
+   <aside>'s own `overflow-x: hidden` — that property is also what clips the nav labels
+   cleanly during the collapse animation, so loosening it was rejected; `overflow-y: auto`
+   sits on the same element, and per the cascade, a `visible` value on one axis when the
+   other is not `visible` computes to `auto` instead, so it would not even have produced a
+   true un-clipped overflow. `left: 68px` is a deliberate 4px past `.ftnc-sidebar
+   [data-collapsed="true"]`'s own 64px width above — not the rail edge itself, so keep the
+   two in sync by hand if either changes. `transform: translate(-50%,-50%)` centers the
+   handle on that point, half inside the rail and half in the gap beside it. */
+#fotonic-app-root .ftnc-sidebar-toggle-handle {
+  position: absolute;
+  left: 68px;
+  top: 24px;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background-color: var(--ftnc-surface);
+  border-width: 1px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, .15);
+  color: #6b7280;
+  transition: color 150ms cubic-bezier(.4, 0, .2, 1),
+              background-color 150ms cubic-bezier(.4, 0, .2, 1);
+}
+#fotonic-app-root .ftnc-sidebar-toggle-handle:hover {
+  background-color: color-mix(in srgb, var(--fotonic-nav, #1d2327) 12%, white);
+  color: var(--fotonic-nav, #1d2327);
+}
+
+/* The "Pro" group label and the version footer. The label centres on the rail; the version
+   strings have no rail-width form worth keeping (two chips of ~70px each in 40px of content
+   box), and unlike a nav label they have no tooltip to recover them from, so they go. */
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__group-label {
+  text-align: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+/* `.ftnc-sidebar__meta` sits in a flex-col footer whose sibling <nav> has `flex-1`.
+   `display: none` would remove it from layout entirely, shrinking the footer — nav's
+   `flex-1` then grows to fill the freed space, dragging Settings/Lock Vault down with it
+   even though neither is touched directly. `visibility: hidden` keeps its box, and the
+   footer's total height, exactly as expanded, so nav never grows and nothing below it
+   moves. The explicit `height` pins that box regardless of the version strings wrapping
+   to two lines in a 64px rail — without it the (invisible) box could still grow taller
+   than its expanded value and cause the same shift by a different route. */
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__meta {
+  visibility: hidden;
+  box-sizing: border-box; /* this file's global reset does not include preflight's
+    box-sizing:border-box, so a plain `height` here would set content height only and
+    silently grow past its expanded value by the padding — border-box makes the number
+    below the true, total, measured height (23px) with nothing left to get wrong. */
+  height: 23px;
+  overflow: hidden;
+}
+
+/* Hover/focus label for the collapsed rail.
+   MUST be `position: fixed`, not `absolute`: <aside> computes to `overflow-x: hidden`, which
+   is a clipping value, so any absolutely-positioned flyout inside it is painted clipped at
+   the rail's right edge. Verified in the browser rather than assumed — an absolute probe
+   40px past `aside.right` failed `elementFromPoint`, a fixed one at the same coordinates
+   passed. `fixed` escapes because no ancestor establishes a containing block for it: the
+   shell is `position: sticky` (which creates a stacking context but never a containing block
+   for fixed), and nothing in the chain up to <html> sets transform/filter/perspective/
+   will-change/contain — also verified, not assumed.
+   One node for the whole sidebar, coordinates from getBoundingClientRect(), `aria-hidden`
+   because the real label is still in the DOM inside the clipped span. */
+#fotonic-app-root .ftnc-sidebar-tip {
+  position: fixed;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 6px;
+  background-color: var(--fotonic-nav, #1d2327);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, .18);
+}
+
+/* The one sanctioned `!important` in the entire CSS contract (DESIGN.md section 3).
+   It is here because this has to beat `transition-*` utilities that cannot all be
+   enumerated, including any added later, and a stylesheet `!important` also beats a
+   non-important inline `style={{ transition: ... }}`. Do not copy this pattern anywhere
+   else — everywhere else, a need for `!important` is a specificity-tier mistake. */
+@media (prefers-reduced-motion: reduce) {
+  #fotonic-app-root .ftnc-sidebar,
+  #fotonic-app-root .ftnc-navlink,
+  #fotonic-app-root .ftnc-navlink > span,
+  #fotonic-app-root .ftnc-sidebar__head,
+  #fotonic-app-root .ftnc-sidebar__brand,
+  #fotonic-app-root .ftnc-sidebar__brand > span,
+  #fotonic-app-root .ftnc-sidebar__toggle,
+  #fotonic-app-root .ftnc-sidebar-toggle-handle {
+    transition: none !important;
+  }
+}
+
+/* --- Phase 3: responsive (.ftnc-pane, .ftnc-grid-2/-3/-4, @container rules, .ftnc-table-scroll) ---
+   `.ftnc-prose` was defined in the phase 1 block above — phase 3 applies it, it does not
+   redefine it. */
+
+/* Container queries fire off this element's own width, not the viewport — the only
+   thing that stays correct as the sidebar collapses/expands and the WP admin menu
+   folds. Never on `<main>` or any ancestor of a Pro `fixed inset-0` overlay: it makes
+   this element a containing block for `position: fixed` descendants. See DESIGN.md. */
+#fotonic-app-root .ftnc-pane {
+  container-type: inline-size;
+  container-name: ftnc-pane;
+}
+
+/* Tier 3: each owns grid-template-columns + gap exclusively. Adopting one means the
+   `grid grid-cols-N gap-N` utility string it replaces is deleted, not left alongside. */
+#fotonic-app-root .ftnc-grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ftnc-field-gap); }
+#fotonic-app-root .ftnc-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ftnc-field-gap); }
+#fotonic-app-root .ftnc-grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ftnc-space-4); }
+
+@container ftnc-pane (max-width: 560px) {
+  #fotonic-app-root .ftnc-grid-2,
+  #fotonic-app-root .ftnc-grid-3,
+  #fotonic-app-root .ftnc-grid-4 { grid-template-columns: 1fr; }
+
+  /* WorkForm's Title field and its nested `.ftnc-grid-3` both sit in a `col-span-2`
+     wrapper (the Tailwind utility, left in place — `.ftnc-grid-2` only owns
+     grid-template-columns/gap, not `grid-column` on its children). At 1 column that
+     utility still asks for a 2-track span, which forces a phantom empty second
+     column instead of a clean single column. Reset it wherever a *-grid collapsed. */
+  #fotonic-app-root .ftnc-grid-2 > *,
+  #fotonic-app-root .ftnc-grid-3 > *,
+  #fotonic-app-root .ftnc-grid-4 > * { grid-column: auto; }
+}
+@container ftnc-pane (min-width: 560px) and (max-width: 860px) {
+  #fotonic-app-root .ftnc-grid-3,
+  #fotonic-app-root .ftnc-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Table scroll affordance. `bg-white` used to sit on the <table> itself, which would
+   have painted over the edge-shadow gradients below — the background moves to this
+   wrapper and the table is forced transparent instead (last rule). `scrollbar-width`/
+   `scrollbar-color` + the ::-webkit-scrollbar block force a persistent classic
+   scrollbar so the overflow is visible on macOS, where overlay scrollbars are
+   invisible until actively scrolled and the affordance was reading as "columns are
+   just gone" rather than "scroll me". */
+#fotonic-app-root .ftnc-table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--ftnc-border);
+  border-radius: var(--ftnc-radius);
+  background-color: var(--ftnc-surface);
+  background-image:
+    linear-gradient(to right, #fff 40%, rgba(255, 255, 255, 0)),
+    linear-gradient(to left, #fff 40%, rgba(255, 255, 255, 0)),
+    radial-gradient(farthest-side at 0 50%, rgba(15, 23, 42, .15), rgba(15, 23, 42, 0)),
+    radial-gradient(farthest-side at 100% 50%, rgba(15, 23, 42, .15), rgba(15, 23, 42, 0));
+  background-position: left center, right center, left center, right center;
+  background-repeat: no-repeat;
+  background-size: 32px 100%, 32px 100%, 12px 100%, 12px 100%;
+  background-attachment: local, local, scroll, scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  overscroll-behavior-x: contain;
+}
+#fotonic-app-root .ftnc-table-scroll::-webkit-scrollbar { height: 10px; }
+#fotonic-app-root .ftnc-table-scroll::-webkit-scrollbar-track { background: transparent; }
+#fotonic-app-root .ftnc-table-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background-clip: padding-box;
+}
+#fotonic-app-root .ftnc-table-scroll > table { background: transparent; }

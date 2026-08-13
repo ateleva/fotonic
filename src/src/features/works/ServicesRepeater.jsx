@@ -38,7 +38,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
   return (
     <div className="space-y-3">
       {value.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <div className="ftnc-table-scroll">
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>

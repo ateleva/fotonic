@@ -86,7 +86,7 @@ export default function MemoryCardForm() {
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={handleSubmit(onSubmit)} className="ftnc-fields">
         <FormField
           label={__('Card Name', 'eleva-crm-for-photographers')}
           htmlFor="title"

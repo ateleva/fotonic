@@ -11,6 +11,7 @@ import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import PeopleRepeater from './PeopleRepeater'
+import SectionHeading from '../../components/SectionHeading'
 import { __ } from '../../utils/i18n'
 
 const fmtEur = (v) =>
@@ -57,7 +58,7 @@ function CustomerWorksSection({ customerId }) {
       {isLoading ? (
         <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}><Spinner /></div>
       ) : (
-        <div style={{ border: '1px solid #e5e7eb', borderRadius: 8, overflow: 'hidden', fontSize: '0.875rem' }}>
+        <div className="ftnc-table-scroll" style={{ fontSize: '0.875rem' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
@@ -212,31 +213,36 @@ export default function CustomerForm() {
 
   return (
     <>
-    <div className="p-6">
+    <div className="p-6 ftnc-pane">
       <PageHeader
         title={isEdit ? __('Edit Customer', 'eleva-crm-for-photographers') : __('New Customer', 'eleva-crm-for-photographers')}
         backTo="/customers"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          label={__('Title', 'eleva-crm-for-photographers')}
-          htmlFor="title"
-          required
-          error={errors.title?.message}
-        >
-          <input
-            id="title"
-            type="text"
-            placeholder={__('e.g. Elisa & Edoardo', 'eleva-crm-for-photographers')}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-            {...register('title', { required: __('Title is required', 'eleva-crm-for-photographers') })}
-          />
-        </FormField>
+      <form onSubmit={handleSubmit(onSubmit)} className="ftnc-stack">
+        {/* No SectionHeading here: a heading over a single field is ceremony, not
+            hierarchy — the same rule that leaves ServiceForm and MemoryCardForm
+            headingless. "People" below is a real group and keeps its heading. */}
+        <section>
+          <FormField
+            label={__('Title', 'eleva-crm-for-photographers')}
+            htmlFor="title"
+            required
+            error={errors.title?.message}
+          >
+            <input
+              id="title"
+              type="text"
+              placeholder={__('e.g. Elisa & Edoardo', 'eleva-crm-for-photographers')}
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+              {...register('title', { required: __('Title is required', 'eleva-crm-for-photographers') })}
+            />
+          </FormField>
+        </section>
 
-        <div>
-          <p className="text-sm font-medium text-gray-700 mb-3">{__('People', 'eleva-crm-for-photographers')}</p>
+        <section>
+          <SectionHeading>{__('People', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
             name="people"
             control={control}
@@ -244,7 +250,7 @@ export default function CustomerForm() {
               <PeopleRepeater value={field.value} onChange={field.onChange} />
             )}
           />
-        </div>
+        </section>
 
         {mutationError && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">

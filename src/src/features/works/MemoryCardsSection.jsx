@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Trash2, PlusCircle } from 'lucide-react'
 import { useMemoryCards } from '../../api/memory-cards'
+import Button from '../../components/Button'
 import { __ } from '../../utils/i18n'
 
 const STATUS_STYLES = {
@@ -82,7 +83,7 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="ftnc-fields">
       {cards.length > 0 && (
         <div className="space-y-2">
           {cards.map((row, idx) => {
@@ -117,27 +118,19 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
                   placeholder={__('Notes…', 'eleva-crm-for-photographers')}
                   className="flex-1 min-w-0 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                <button
-                  type="button"
-                  onClick={() => removeRow(idx)}
-                  className="flex-none p-2 text-gray-400 hover:text-red-500 transition-colors"
-                  title={__('Remove', 'eleva-crm-for-photographers')}
-                >
-                  <Trash2 size={16} />
-                </button>
+                <Button type="button" variant="danger" size="sm" onClick={() => removeRow(idx)} aria-label={__('Remove', 'eleva-crm-for-photographers')}>
+                  <Trash2 size={14} />
+                </Button>
               </div>
             )
           })}
         </div>
       )}
 
-      <button
-        type="button"
-        onClick={addRow}
-        className="text-sm text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
-      >
-        + {__('Add Card', 'eleva-crm-for-photographers')}
-      </button>
+      <Button type="button" variant="secondary" size="sm" onClick={addRow}>
+        <PlusCircle size={14} />
+        {__('Add Card', 'eleva-crm-for-photographers')}
+      </Button>
 
       {cards.length > 0 && (
         <div className="flex flex-wrap gap-4 pt-2 border-t border-gray-100">

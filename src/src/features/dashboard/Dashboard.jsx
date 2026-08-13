@@ -96,11 +96,11 @@ export default function Dashboard() {
   const totalPT = paymentTypes.reduce((s, t) => s + t.subtotal, 0)
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-6 space-y-8 ftnc-pane">
       <h1 className="text-xl font-semibold text-gray-900">{__('Dashboard', 'eleva-crm-for-photographers')}</h1>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="ftnc-grid-4">
 
         {/* Works */}
         <StatCard

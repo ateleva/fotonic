@@ -145,9 +145,9 @@ ${names}`)
   }
 
   return (
-    <div className="space-y-4">
+    <div className="ftnc-fields">
       {value.length > 0 ? (
-        <div className="overflow-x-auto rounded-lg border border-gray-200">
+        <div className="ftnc-table-scroll">
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
             <thead className="bg-gray-50">
               <tr>
@@ -186,7 +186,7 @@ ${names}`)
                             <button
                               type="button"
                               onClick={() => setPreviewFile(file)}
-                              className="text-fotonic-primary hover:underline inline-flex items-center gap-1"
+                              className="font-bold text-gray-800 hover:underline inline-flex items-center gap-1"
                             >
                               {name}
                               <Eye size={12} className="opacity-60" />
@@ -195,13 +195,13 @@ ${names}`)
                             <button
                               type="button"
                               onClick={() => window.open(file.url, '_blank', 'noopener,noreferrer')}
-                              className="text-fotonic-primary hover:underline inline-flex items-center gap-1"
+                              className="font-bold text-gray-800 hover:underline inline-flex items-center gap-1"
                             >
                               {name}
                               <ExternalLink size={12} className="opacity-60" />
                             </button>
                           ) : (
-                            <span>{name}</span>
+                            <span className="font-bold text-gray-800">{name}</span>
                           )}
                           <button
                             type="button"
@@ -220,24 +220,20 @@ ${names}`)
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-2">
                         {!isLink && (
-                          <button
+                          <Button
                             type="button"
+                            variant="primary"
+                            size="sm"
                             onClick={() => handleDownload(file)}
                             disabled={downloadingId === file.id}
-                            className="text-indigo-600 hover:text-indigo-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             aria-label={__('Download file', 'eleva-crm-for-photographers')}
                           >
-                            <Download size={15} />
-                          </button>
+                            <Download size={14} />
+                          </Button>
                         )}
-                        <button
-                          type="button"
-                          onClick={() => removeFileAt(index)}
-                          className="text-gray-400 hover:text-red-500 transition-colors"
-                          aria-label={__('Remove file', 'eleva-crm-for-photographers')}
-                        >
-                          <Trash2 size={15} />
-                        </button>
+                        <Button type="button" variant="danger" size="sm" onClick={() => removeFileAt(index)} aria-label={__('Remove file', 'eleva-crm-for-photographers')}>
+                          <Trash2 size={14} />
+                        </Button>
                       </div>
                     </td>
                   </tr>
@@ -280,7 +276,7 @@ ${names}`)
             </div>
           )}
         </div>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-xs text-gray-400 mt-1 ftnc-prose">
           {/* translators: %s is a file size, e.g. "50 MB". */}
           {sprintf(__('Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max %s per uploaded file.', 'eleva-crm-for-photographers'), formatBytes(MAX_BYTES))}
         </p>
@@ -290,7 +286,7 @@ ${names}`)
         {/* Plain div, not <form>: this is portaled by Radix Dialog, but React bubbles
             events along the component tree (not the DOM tree) — a nested <form>'s submit
             would still reach WorkForm's outer <form onSubmit> and save/redirect the whole work. */}
-        <div className="space-y-3">
+        <div className="ftnc-fields">
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">{__('URL', 'eleva-crm-for-photographers')}</label>
             <input

@@ -42,11 +42,11 @@ export default function PeopleRepeater({ value = [], onChange }) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="ftnc-fields">
       {people.map((person, index) => (
         <div
           key={index}
-          className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-3"
+          className="border border-gray-200 rounded-lg p-4 bg-gray-50 ftnc-fields"
         >
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-700">
@@ -76,7 +76,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="ftnc-grid-2">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
                 {__('First Name', 'eleva-crm-for-photographers')}

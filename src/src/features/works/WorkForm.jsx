@@ -11,6 +11,7 @@ import Button from '../../components/Button'
 import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
+import SectionHeading from '../../components/SectionHeading'
 import ServicesRepeater from './ServicesRepeater'
 import InstallmentsRepeater from './InstallmentsRepeater'
 import FilesSection from './FilesSection'
@@ -34,52 +35,44 @@ const COLOR_PALETTE = [
   { label: 'Graphite',  hex: '#616161' },
 ]
 
+/* The explanatory sentence that used to open this component now lives on the
+   section's `SectionHeading` `description` prop — it describes the section, not
+   the swatch row, and belongs above the rule with the title. */
 function ColorPicker({ value, onChange }) {
   return (
-    <div>
-      <p className="text-sm text-gray-500 mb-3">{__('Choose the event card color in the calendar view.', 'eleva-crm-for-photographers')}</p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
-        {COLOR_PALETTE.map(({ label, hex }) => {
-          const isSelected = value === hex
-          const isDefault  = hex === ''
-          return (
-            <button
-              key={label}
-              type="button"
-              title={label}
-              onClick={() => onChange(hex)}
-              style={{
-                width: 30,
-                height: 30,
-                borderRadius: '50%',
-                background: isDefault ? '#e5e7eb' : hex,
-                border: isSelected ? '3px solid #1d2327' : isDefault ? '2px dashed #9ca3af' : '2px solid transparent',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 14,
-                color: isDefault ? '#374151' : '#fff',
-                fontWeight: 700,
-                transition: 'transform 0.1s',
-                flexShrink: 0,
-              }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.15)' }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}
-            >
-              {isSelected ? '✓' : ''}
-            </button>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-function SectionHeading({ children }) {
-  return (
-    <div className="border-b border-gray-200 pb-2 mb-4">
-      <h2 className="text-base font-semibold text-gray-800">{children}</h2>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+      {COLOR_PALETTE.map(({ label, hex }) => {
+        const isSelected = value === hex
+        const isDefault  = hex === ''
+        return (
+          <button
+            key={label}
+            type="button"
+            title={label}
+            onClick={() => onChange(hex)}
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: '50%',
+              background: isDefault ? '#e5e7eb' : hex,
+              border: isSelected ? '3px solid #1d2327' : isDefault ? '2px dashed #9ca3af' : '2px solid transparent',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 14,
+              color: isDefault ? '#374151' : '#fff',
+              fontWeight: 700,
+              transition: 'transform 0.1s',
+              flexShrink: 0,
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.15)' }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}
+          >
+            {isSelected ? '✓' : ''}
+          </button>
+        )
+      })}
     </div>
   )
 }
@@ -247,18 +240,18 @@ export default function WorkForm() {
 
   return (
     <>
-    <div className="p-6">
+    <div className="p-6 ftnc-pane">
       <PageHeader
         title={isEdit ? __('Edit Work', 'eleva-crm-for-photographers') : __('New Work', 'eleva-crm-for-photographers')}
         backTo="/works"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={handleSubmit(onSubmit)} className="ftnc-stack">
         {/* Section 1 — Event */}
         <section>
           <SectionHeading>{__('Event Details', 'eleva-crm-for-photographers')}</SectionHeading>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="ftnc-grid-2">
             <div className="col-span-2">
               <FormField
                 label={__('Title', 'eleva-crm-for-photographers')}
@@ -275,7 +268,7 @@ export default function WorkForm() {
                 />
               </FormField>
             </div>
-            <div className="col-span-2 grid grid-cols-3 gap-4">
+            <div className="col-span-2 ftnc-grid-3">
               <FormField label={__('Event Date', 'eleva-crm-for-photographers')} htmlFor="event_date">
                 <input
                   id="event_date"
@@ -344,7 +337,11 @@ export default function WorkForm() {
 
         {/* Section 3 — Calendar Color */}
         <section>
-          <SectionHeading>{__('Calendar Color', 'eleva-crm-for-photographers')}</SectionHeading>
+          <SectionHeading
+            description={__('Choose the event card color in the calendar view.', 'eleva-crm-for-photographers')}
+          >
+            {__('Calendar Color', 'eleva-crm-for-photographers')}
+          </SectionHeading>
           <div className="flex flex-col lg:flex-row lg:items-start gap-8">
             <div className="lg:flex-1">
               <Controller
@@ -442,7 +439,7 @@ export default function WorkForm() {
         {/* Section 10 — Payments */}
         <section>
           <SectionHeading>{__('Payments', 'eleva-crm-for-photographers')}</SectionHeading>
-          <div className="space-y-4">
+          <div className="ftnc-fields">
             <div className="flex flex-wrap gap-6">
               <FormField label={__('Total Price (€)', 'eleva-crm-for-photographers')} htmlFor="total_price">
                 <input
@@ -461,7 +458,11 @@ export default function WorkForm() {
             </div>
 
             <div>
-              <p className="text-sm font-medium text-gray-700 mb-3">{__('Installments', 'eleva-crm-for-photographers')}</p>
+              {/* Sub-heading inside the Payments section, so an <h3> under the section's
+                  <h2>, never a second SectionHeading (that would emit a sibling <h2>).
+                  Type treatment is unchanged; `mb-3` is deliberately tighter than the
+                  16px `.ftnc-section-heading` gap so the level reads as subordinate. */}
+              <h3 className="text-sm font-medium text-gray-700 mb-3">{__('Installments', 'eleva-crm-for-photographers')}</h3>
               <Controller
                 name="installments"
                 control={control}
