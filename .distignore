@@ -3,6 +3,7 @@
 /.distignore
 /.github
 /.claude
+/.i18n
 /.wordpress-org
 /CLAUDE.md
 /README.md

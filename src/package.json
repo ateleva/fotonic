@@ -8,7 +8,8 @@
     "build": "vite build && printf '<?php // Silence is golden.' > ../dist/index.php && rm -f ../dist/index.html",
     "watch": "vite build --watch",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "i18n:check": "python3 ../.i18n/scripts/i18n_doctor.py .. eleva-crm-for-photographers it_IT"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

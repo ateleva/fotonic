@@ -2271,3 +2271,39 @@ msgid ""
 "Images and PDF can be previewed after upload · DOC/DOCX and links open in a "
 "new tab · max %s per uploaded file."
 msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:43
+msgid "Mon"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:44
+msgid "Tue"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:45
+msgid "Wed"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:46
+msgid "Thu"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:47
+msgid "Fri"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:48
+msgid "Sat"
+msgstr ""
+
+#: src/src/features/calendar/CalendarView.jsx:49
+msgid "Sun"
+msgstr ""
+
+#: src/src/components/Layout.jsx:158
+msgid "Collapse sidebar"
+msgstr ""
+
+#: src/src/components/Layout.jsx:226
+msgid "Expand sidebar"
+msgstr ""

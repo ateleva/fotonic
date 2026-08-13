@@ -38,6 +38,19 @@ function paymentLabel(status) {
 
 const DAYS_KEYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 
+function dayLabel(key) {
+  switch (key) {
+    case 'Mon': return __('Mon', 'eleva-crm-for-photographers')
+    case 'Tue': return __('Tue', 'eleva-crm-for-photographers')
+    case 'Wed': return __('Wed', 'eleva-crm-for-photographers')
+    case 'Thu': return __('Thu', 'eleva-crm-for-photographers')
+    case 'Fri': return __('Fri', 'eleva-crm-for-photographers')
+    case 'Sat': return __('Sat', 'eleva-crm-for-photographers')
+    case 'Sun': return __('Sun', 'eleva-crm-for-photographers')
+    default:    return key
+  }
+}
+
 const wpLocale = (window.FotonicApp?.locale ?? 'en-US').replace('_', '-')
 
 function padTwo(n) { return String(n).padStart(2, '0') }
@@ -327,7 +340,7 @@ export function CalendarView() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', background: '#f9fafb' }}>
           {DAYS_KEYS.map(d => (
             <div key={d} style={{ padding: '8px 0', textAlign: 'center', fontSize: 12, fontWeight: 700, color: '#6b7280', borderBottom: '1px solid #e5e7eb' }}>
-              {__(d)}
+              {dayLabel(d)}
             </div>
           ))}
         </div>

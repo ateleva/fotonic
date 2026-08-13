@@ -236,7 +236,7 @@ function StepScanQR({ qrUri, onNext }) {
       )}
 
       <Button variant="primary" className="w-full" onClick={onNext}>
-        {__("I've scanned the code — Next")}
+        {__("I've scanned the code — Next", 'eleva-crm-for-photographers')}
       </Button>
     </div>
   )

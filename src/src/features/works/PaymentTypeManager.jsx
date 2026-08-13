@@ -108,7 +108,9 @@ export default function PaymentTypeManager() {
                         {editError && <span className="text-red-600 text-xs">{editError}</span>}
                       </form>
                     ) : (
-                      <span className="text-sm font-medium text-gray-800">{__(t.label)}</span>
+                      // t.label is admin-editable data (fotonic_payment_types option), already
+                      // final text by the time it reaches here — not a __()-translatable string.
+                      <span className="text-sm font-medium text-gray-800">{t.label}</span>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 ml-3 shrink-0">

@@ -2201,3 +2201,30 @@ msgstr "Non disponibile su questo server: l'estensione Sodium non è presente."
 
 msgid "You do not have permission to run this."
 msgstr "Non hai i permessi per eseguire questa operazione."
+
+msgid "Collapse sidebar"
+msgstr "Comprimi barra laterale"
+
+msgid "Expand sidebar"
+msgstr "Espandi barra laterale"
+
+msgid "Mon"
+msgstr "Lun"
+
+msgid "Tue"
+msgstr "Mar"
+
+msgid "Wed"
+msgstr "Mer"
+
+msgid "Thu"
+msgstr "Gio"
+
+msgid "Fri"
+msgstr "Ven"
+
+msgid "Sat"
+msgstr "Sab"
+
+msgid "Sun"
+msgstr "Dom"

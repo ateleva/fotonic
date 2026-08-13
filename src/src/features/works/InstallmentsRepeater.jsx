@@ -65,7 +65,9 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                     >
                       {paymentTypes.length > 0
                         ? paymentTypes.map((t) => (
-                            <option key={t.id} value={t.slug}>{__(t.label)}</option>
+                            // t.label is admin-editable data (fotonic_payment_types option), already
+                            // final text by the time it reaches here — not a __()-translatable string.
+                            <option key={t.id} value={t.slug}>{t.label}</option>
                           ))
                         : <option value={row.type ?? 'default'}>{row.type ?? 'default'}</option>
                       }

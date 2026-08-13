@@ -1,4 +1,4 @@
-export function __(text) {
+export function __(text, _domain) {
   if (typeof window !== 'undefined' && window.wp && window.wp.i18n) {
     return window.wp.i18n.__(text, 'eleva-crm-for-photographers')
   }
