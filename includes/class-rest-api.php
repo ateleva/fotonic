@@ -2433,91 +2433,75 @@ class Fotonic_REST_API {
 		$last_year    = $this_year - 1;
 		$next_year    = $this_year + 1;
 
-		$years = [
-			'last_year' => $last_year,
-			'this_year' => $this_year,
-			'next_year' => $next_year,
+		$year_keys = [
+			$last_year => 'last_year',
+			$this_year => 'this_year',
+			$next_year => 'next_year',
 		];
 
 		$works_count   = [ 'last_year' => 0, 'this_year' => 0, 'next_year' => 0 ];
 		$revenue       = [ 'last_year' => 0.0, 'this_year' => 0.0, 'next_year' => 0.0 ];
 		$payments_recv = [ 'last_year' => 0.0, 'this_year' => 0.0 ];
+		$pt_map        = [];
+		$pt_total      = 0.0;
 
-		foreach ( $years as $key => $year ) {
-			$from = sprintf( '%04d-01-01', $year );
-			$to   = sprintf( '%04d-12-31', $year );
-
-			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
-			$query = new \WP_Query( [
-				'post_type'      => 'ftnc_work',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-				'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
-					[
-						'key'     => '_ftnc_event_date',
-						'value'   => [ $from, $to ],
-						'compare' => 'BETWEEN',
-						'type'    => 'DATE',
-					],
-				],
-			] );
-
-			$works_count[ $key ] = $query->post_count;
-
-			foreach ( $query->posts as $post_id ) {
-				$raw          = get_post_meta( (int) $post_id, '_ftnc_installments', true );
-				$installments = is_string( $raw ) ? json_decode( $raw, true ) : [];
-				if ( ! is_array( $installments ) ) {
-					$installments = [];
-				}
-				foreach ( $installments as $inst ) {
-					if ( ! is_array( $inst ) ) continue;
-					$amount = (float) ( $inst['amount'] ?? 0 );
-					$revenue[ $key ] += $amount;
-					if ( isset( $key ) && ( 'last_year' === $key || 'this_year' === $key ) ) {
-						$status = (string) ( $inst['status'] ?? 'unpaid' );
-						if ( 'unpaid' === $status ) {
-							$payments_recv[ $key ] += $amount;
-						}
-					}
-				}
-			}
-		}
-
-		// Payment types breakdown — this year only
-		$pt_map     = [];
-		$pt_total   = 0.0;
-		$from_ty    = sprintf( '%04d-01-01', $this_year );
-		$to_ty      = sprintf( '%04d-12-31', $this_year );
+		// No meta_query: an installment can carry its own payment date, separate
+		// from its work's _ftnc_event_date (see the date field in
+		// InstallmentsRepeater.jsx). Fotonic Pro's /analytics endpoint scopes
+		// revenue by that per-installment date, falling back to the work's
+		// event_date only when the installment has none — so every work has to
+		// be inspected here too, not just those whose event_date falls in the
+		// tracked years, or a payment dated outside its work's event year would
+		// be counted here but dropped there (or vice-versa).
 		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
-		$ty_query   = new \WP_Query( [
+		$query = new \WP_Query( [
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
-			'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
-				[
-					'key'     => '_ftnc_event_date',
-					'value'   => [ $from_ty, $to_ty ],
-					'compare' => 'BETWEEN',
-					'type'    => 'DATE',
-				],
-			],
 		] );
-		foreach ( $ty_query->posts as $post_id ) {
+
+		foreach ( $query->posts as $post_id ) {
+			$event_date = (string) get_post_meta( (int) $post_id, '_ftnc_event_date', true );
+			$event_year = ( strlen( $event_date ) >= 4 ) ? (int) substr( $event_date, 0, 4 ) : 0;
+			if ( isset( $year_keys[ $event_year ] ) ) {
+				$works_count[ $year_keys[ $event_year ] ]++;
+			}
+
 			$raw          = get_post_meta( (int) $post_id, '_ftnc_installments', true );
 			$installments = is_string( $raw ) ? json_decode( $raw, true ) : [];
-			if ( ! is_array( $installments ) ) continue;
+			if ( ! is_array( $installments ) ) {
+				continue;
+			}
+
 			foreach ( $installments as $inst ) {
 				if ( ! is_array( $inst ) ) continue;
-				$amount   = (float) ( $inst['amount'] ?? 0 );
-				$type_key = sanitize_key( (string) ( $inst['type'] ?? 'default' ) );
-				if ( ! isset( $pt_map[ $type_key ] ) ) {
-					$pt_map[ $type_key ] = 0.0;
+
+				$amount = (float) ( $inst['amount'] ?? 0 );
+				$i_date = ( ! empty( $inst['date'] ) ) ? (string) $inst['date'] : $event_date;
+				$i_year = ( strlen( $i_date ) >= 4 ) ? (int) substr( $i_date, 0, 4 ) : 0;
+				if ( ! isset( $year_keys[ $i_year ] ) ) {
+					continue;
 				}
-				$pt_map[ $type_key ] += $amount;
-				$pt_total             += $amount;
+				$key = $year_keys[ $i_year ];
+
+				$revenue[ $key ] += $amount;
+
+				if ( 'last_year' === $key || 'this_year' === $key ) {
+					$status = (string) ( $inst['status'] ?? 'unpaid' );
+					if ( 'unpaid' === $status ) {
+						$payments_recv[ $key ] += $amount;
+					}
+				}
+
+				if ( 'this_year' === $key ) {
+					$type_key = sanitize_key( (string) ( $inst['type'] ?? 'default' ) );
+					if ( ! isset( $pt_map[ $type_key ] ) ) {
+						$pt_map[ $type_key ] = 0.0;
+					}
+					$pt_map[ $type_key ] += $amount;
+					$pt_total             += $amount;
+				}
 			}
 		}
 
