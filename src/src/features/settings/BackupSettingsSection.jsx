@@ -76,7 +76,7 @@ export default function BackupSettingsSection({ onSetupVault }) {
   if (!status.vault_setup) {
     return (
       <div className="space-y-3">
-        <p className="ftnc-prose text-sm text-gray-500">
+        <p className="text-sm text-gray-500">
           {__('Encrypted backups reuse your Vault password and authenticator, so the Vault must be set up first.', 'eleva-crm-for-photographers')}
         </p>
         <button
@@ -96,7 +96,7 @@ export default function BackupSettingsSection({ onSetupVault }) {
     return (
       <div className="rounded-md bg-amber-50 border border-amber-200 p-4 flex items-start gap-2">
         <AlertTriangle size={15} className="text-amber-500 shrink-0 mt-0.5" />
-        <p className="ftnc-prose text-sm text-amber-800">
+        <p className="text-sm text-amber-800">
           {missingBoth
             ? __('Encrypted backups need the PHP Sodium and Zip extensions, and this server has neither. Ask your host to enable them.', 'eleva-crm-for-photographers')
             : !status.sodium_available
@@ -111,7 +111,7 @@ export default function BackupSettingsSection({ onSetupVault }) {
   // (sealed-box, provisioned on unlock) does not exist yet.
   if (!status.keys_ready) {
     return (
-      <p className="ftnc-prose text-sm text-gray-500">
+      <p className="text-sm text-gray-500">
         {__('Backup keys have not been generated yet. Unlock the Vault once to enable encrypted backups.', 'eleva-crm-for-photographers')}
       </p>
     )
@@ -120,12 +120,12 @@ export default function BackupSettingsSection({ onSetupVault }) {
   return (
     <div className="ftnc-fields">
       {window.FotonicApp?.isLocalWp && (
-        <p className="ftnc-prose text-xs text-gray-500 flex items-start gap-1.5">
+        <p className="text-xs text-gray-500 flex items-start gap-1.5">
           <Info size={12} className="shrink-0 mt-0.5" />
           {__('This site runs on Local by Flywheel and exists only on this computer. Local\'s own Cloud Backups are manual.', 'eleva-crm-for-photographers')}
         </p>
       )}
-      <p className="ftnc-prose text-sm text-gray-500">
+      <p className="text-sm text-gray-500">
         {__('Download a single encrypted archive of all your CRM data: customers, works, services, memory cards, and every attached file.', 'eleva-crm-for-photographers')}
       </p>
 
@@ -169,20 +169,20 @@ export default function BackupSettingsSection({ onSetupVault }) {
       )}
 
       {status.drift_count > 0 && (
-        <p className="ftnc-prose text-xs text-amber-600 flex items-start gap-1.5">
+        <p className="text-xs text-amber-600 flex items-start gap-1.5">
           <AlertTriangle size={12} className="shrink-0 mt-0.5" />
           {__('This backup may be missing recently added fields. Contact support if a restored backup ever looks incomplete.', 'eleva-crm-for-photographers')}
         </p>
       )}
 
       <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
-        <p className="ftnc-prose text-xs text-blue-900">
+        <p className="text-xs text-blue-900">
           {__('This archive can only be opened with your vault password and authenticator code. Nobody else can read it.', 'eleva-crm-for-photographers')}
         </p>
-        <p className="ftnc-prose text-xs text-blue-900">
+        <p className="text-xs text-blue-900">
           {__('If you lose your vault password and your recovery code and your recovery phrase, this archive can never be opened.', 'eleva-crm-for-photographers')}
         </p>
-        <p className="ftnc-prose text-xs text-blue-900">
+        <p className="text-xs text-blue-900">
           {__('This backs up your CRM data, not your whole WordPress site.', 'eleva-crm-for-photographers')}
         </p>
       </div>

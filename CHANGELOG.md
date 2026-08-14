@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.1] — 2026-08-14
+
+### Fixed
+
+- Google Calendar: removing an event from the Calendar view no longer appears to succeed when the request actually failed — the failure is now logged and the popup stays open instead of closing as if nothing went wrong.
+- Settings page: the Vault and Backup sections' description text no longer renders capped to a narrow reading-width column, leaving a large empty gap beside it; text now fills the panel the same way every other section already did.
+
+### Added
+
+- "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+, which supplies the button).
+
 ## [1.3.10] — 2026-07-13
 
 ### Added

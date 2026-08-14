@@ -6,6 +6,8 @@ import { __ } from '../../utils/i18n'
 import { formatTime } from '../../utils/date'
 import Button from '../../components/Button'
 
+const OpenGoogleCalendarButton = window.FotonicProComponents?.OpenGoogleCalendarButton ?? null
+
 const KANBAN_COLORS = {
   todo:        { bg: '#6b7280' },
   in_progress: { bg: '#2563eb' },
@@ -124,8 +126,10 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
   async function handleUnlink() {
     try {
       await unlinkMut.mutateAsync()
-    } catch {}
-    onClose()
+      onClose()
+    } catch (err) {
+      console.error('Failed to remove Google Calendar event', err)
+    }
   }
 
   return (
@@ -306,6 +310,7 @@ export function CalendarView() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
         <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#111827' }}>{__('Calendar', 'eleva-crm-for-photographers')}</h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {OpenGoogleCalendarButton && gcalEnabled && <OpenGoogleCalendarButton />}
           {gcalEnabled && (
             <Button
               variant="primary"

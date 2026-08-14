@@ -83,6 +83,12 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.4.1
+
+- Fix: Google Calendar — removing an event from the Calendar view no longer appears to succeed when the request actually failed
+- Fix: Settings page — the Vault and Backup sections' description text no longer renders in a narrow column with empty space beside it; text now fills the panel like every other section
+- **New**: "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+)
+
 ### 1.4.0
 
 - **New**: encrypted CRM backup — download a single archive of all your CRM data (customers, works, services, memory cards, and every attached file) from Settings, protected by your Vault password and authenticator code

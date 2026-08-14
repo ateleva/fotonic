@@ -237,7 +237,7 @@ function ResetTotpForm() {
 
   return (
     <div className="space-y-3 pt-1">
-      <p className="ftnc-prose text-xs text-gray-500">{__('Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity.', 'eleva-crm-for-photographers')}</p>
+      <p className="text-xs text-gray-500">{__('Use this if you lost access to your authenticator app. You will need your current vault password and OTP to confirm your identity.', 'eleva-crm-for-photographers')}</p>
       {qrUri ? (
         <div className="space-y-3">
           <p className="text-xs font-medium text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">
@@ -319,7 +319,7 @@ function RegenerateRecoveryCode() {
   return (
     <>
       <div className="pt-1 space-y-2">
-        <p className="ftnc-prose text-xs text-gray-500">
+        <p className="text-xs text-gray-500">
           {__('Generate a new TOTP recovery code. The previous code will be invalidated immediately.', 'eleva-crm-for-photographers')}
         </p>
         <button
@@ -430,7 +430,7 @@ function RecoveryPhraseSection({ hasPhrase }) {
   return (
     <>
       <div className="pt-1 space-y-2">
-        <p className="ftnc-prose text-xs text-gray-500">
+        <p className="text-xs text-gray-500">
           {hasPhrase
             ? __('Regenerate a new recovery phrase. The previous phrase will stop working immediately.', 'eleva-crm-for-photographers')
             : __('Set up a recovery phrase so you can reset your password if you ever forget it.', 'eleva-crm-for-photographers')}
@@ -546,7 +546,7 @@ function ResetVaultAction() {
   return (
     <>
       <div className="pt-1 space-y-2">
-        <p className="ftnc-prose text-xs text-gray-500">
+        <p className="text-xs text-gray-500">
           {__('Permanently wipe the vault configuration. All encrypted data will become inaccessible.', 'eleva-crm-for-photographers')}
         </p>
         <button
@@ -688,7 +688,7 @@ export default function SettingsPage() {
 
             {vaultStatus?.setup && (
               <div className="space-y-2">
-                <p className="ftnc-prose text-sm text-gray-500">
+                <p className="text-sm text-gray-500">
                   {__('All client personal details are protected. Unlock the Vault with your password and a one-time code from your authenticator app to view or edit contact information.', 'eleva-crm-for-photographers')}
                 </p>
                 <p className="text-xs text-gray-400">
@@ -730,7 +730,7 @@ export default function SettingsPage() {
 
         {window.FotonicApp?.isPro && !window.FotonicApp?.features?.backup && (
           <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
-            <p className="ftnc-prose text-sm text-gray-400">
+            <p className="text-sm text-gray-400">
               {__('Automatic backups to Google Drive require an active Eleva Pro license.', 'eleva-crm-for-photographers')}
             </p>
           </SectionCard>
