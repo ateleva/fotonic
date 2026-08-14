@@ -2,14 +2,16 @@
 
 ## [1.4.1] — 2026-08-14
 
-### Fixed
-
-- Google Calendar: removing an event from the Calendar view no longer appears to succeed when the request actually failed — the failure is now logged and the popup stays open instead of closing as if nothing went wrong.
-- Settings page: the Vault and Backup sections' description text no longer renders capped to a narrow reading-width column, leaving a large empty gap beside it; text now fills the panel the same way every other section already did.
-
 ### Added
 
+- Work edit screen gains a Reminders section (Pro slot): set a date offset from the event date and it materializes as a Kanban task, with optional Google Calendar sync. Adds the `WorkForm.jsx` section, `format_work()` read-back (`reminders` + `reminders_base_date`, single-work context only), and the backup registry entry Pro needs to inject the repeater.
 - "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+, which supplies the button).
+
+### Fixed
+
+- Dashboard: `get_dashboard_stats()` now scopes each payment installment by its own date instead of its parent work's event date — matching Fotonic Pro's `/analytics` endpoint. A payment dated in a different year than its work's event was previously double-counted in one report and missing from the other.
+- Google Calendar: removing an event from the Calendar view no longer appears to succeed when the request actually failed — the failure is now logged and the popup stays open instead of closing as if nothing went wrong.
+- Settings page: the Vault and Backup sections' description text no longer renders capped to a narrow reading-width column, leaving a large empty gap beside it; text now fills the panel the same way every other section already did.
 
 ## [1.3.10] — 2026-07-13
 

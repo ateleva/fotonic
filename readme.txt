@@ -104,9 +104,11 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 == Changelog ==
 
 = 1.4.1 =
+* New: Work edit screen gains a Reminders section (requires Eleva CRM Pro) — set a date offset from the event date and it materializes as a Kanban task, with optional Google Calendar sync.
+* New: "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+).
+* Fix: Dashboard revenue now scopes each payment installment by its own date instead of its work's event date — a payment dated in a different year than its work no longer gets double-counted in one year and missed in the other.
 * Fix: Google Calendar — removing an event from the Calendar view no longer appears to succeed when the request actually failed.
 * Fix: Settings page — the Vault and Backup sections' description text no longer renders in a narrow column with empty space beside it; text now fills the panel like every other section.
-* New: "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+).
 
 = 1.4.0 =
 * New: encrypted CRM backup. Download a single archive of all your CRM data (customers, works, services, memory cards, and every attached file) from the Settings page, protected by your Vault password and authenticator code — nobody, including us, can open it without them.
@@ -237,7 +239,7 @@ The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io
 == Upgrade Notice ==
 
 = 1.4.1 =
-Fix: Google Calendar event removal and Settings page spacing. New: "Open Google Calendar" button on the Calendar page. Safe in-place update — no data or breaking changes.
+New: Work Reminders section (with Eleva CRM Pro) and an "Open Google Calendar" button. Fixes dashboard revenue scoping, Google Calendar event removal, and Settings page spacing. Safe in-place update — no data or breaking changes.
 
 = 1.4.0 =
 New: download a single encrypted backup of all your CRM data from Settings, protected by your Vault password and authenticator code. Safe in-place update — no data or breaking changes. Update Eleva CRM Pro to 1.4.0+ for automatic scheduled backups to Google Drive.

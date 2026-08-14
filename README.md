@@ -85,9 +85,11 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ### 1.4.1
 
+- **New**: Work edit screen gains a Reminders section (requires Eleva CRM Pro) — set a date offset from the event date and it materializes as a Kanban task, with optional Google Calendar sync
+- **New**: "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+)
+- Fix: Dashboard revenue now scopes each payment installment by its own date instead of its work's event date
 - Fix: Google Calendar — removing an event from the Calendar view no longer appears to succeed when the request actually failed
 - Fix: Settings page — the Vault and Backup sections' description text no longer renders in a narrow column with empty space beside it; text now fills the panel like every other section
-- **New**: "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+)
 
 ### 1.4.0
 
