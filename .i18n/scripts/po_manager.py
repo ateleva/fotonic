@@ -93,7 +93,7 @@ def parse_po_blocks(content):
             msgid_val = m.group(1)
             # Handle multi-line: msgid "" followed by consecutive quoted
             # continuation lines. MUST stop at the first non-quoted line
-            # (msgid_plural / msgstr) — a naive re.findall over the whole
+            # (msgid_plural / msgstr) - a naive re.findall over the whole
             # remainder of the block also matches msgstr's OWN continuation
             # lines (since those are quoted too) and silently concatenates
             # the translation text onto the msgid. That bug produced 18
@@ -214,7 +214,7 @@ def cmd_update(po_path, translations_path):
     new_entries = [e for e in entries if e.get('msgid') and e['msgid'] not in existing_ids]
 
     if not new_entries:
-        print('PO up to date — no new entries.', file=sys.stderr)
+        print('PO up to date - no new entries.', file=sys.stderr)
         return
 
     with open(po_path, 'a', encoding='utf-8') as f:

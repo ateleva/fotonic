@@ -1,0 +1,3 @@
+en,it,pos,description
+required plugin,plugin richiesto,noun,"PTE ruling: not in the base locale glossary. Invariato loanword ""plugin"" keeps the adjective richiesto (not necessario) when naming a required WordPress plugin dependency."
+required plugins,plugin richiesti,noun,"Plural of the above; ""plugin"" stays invariant, richiesti agrees in number."

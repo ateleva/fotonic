@@ -57,7 +57,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                       onChange={(e) => updateRow(index, 'service_id', e.target.value)}
                       className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                      <option value="">{__('— Select service —', 'eleva-crm-for-photographers')}</option>
+                      <option value="">{__('Select service', 'eleva-crm-for-photographers')}</option>
                       {services.map((svc) => (
                         <option key={svc.id} value={svc.id}>
                           {svc.title}

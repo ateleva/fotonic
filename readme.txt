@@ -1,36 +1,42 @@
 === Eleva CRM for Photographers ===
 Contributors: eleva
-Tags: photography, crm, workflow, photographers, event-photography
+Tags: photography-crm, client-management, booking, invoicing, photographers
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 1.4.1
 Requires PHP: 7.4
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-CRM and workflow manager for professional event photographers.
+The CRM for wedding and event photographers: clients, bookings, payments, and an encrypted vault, all inside your own WordPress admin.
 
 == Description ==
 
-Eleva is a standalone WordPress plugin that provides a modern React-powered CRM dashboard for professional event photographers, without any monthly subscription fees.
+Eleva is the CRM built for wedding and event photographers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
+
+You already have enough to think about on shoot day. Eleva handles the rest: who is getting married and when, what they owe and what they have paid, which memory card belongs to which shoot, and where every contract and file lives. The client details that matter most, names, contacts, home addresses, are protected by a dedicated encryption vault, so a leaked database never hands anyone a usable list of your clients.
 
 = Features =
 
-* Customer Management: store couples and individuals with multiple contacts per client. Full backend search across all custom fields. Each customer page shows a linked Works table with totals (total price, paid, unpaid).
-* Service Catalog: define your services and base prices. Override price and notes per project.
-* Works / Projects: the central hub linking customers, services, attached files, and payment installments. Total Price and payment installments tracked per project.
-* Payment Tracking: track deposits and balances. Automatic paid/partial/unpaid status assigned from installments.
-* File Vault: attach contracts and files to any project. Protected storage with .htaccess and REST-gated downloads.
-* Vault Security: AES-256 encryption protected by a master password and TOTP two-factor authentication. All personally identifiable data is encrypted at rest. Even direct database access reveals only ciphertext.
-* Dashboard: summary cards showing annual revenue, upcoming events, and unpaid balances. Next five upcoming works.
-* Quick Notes: a dedicated WYSIWYG notes field on each Work, positioned above the main notes editor, for short reminders visible at a glance.
-* Calendar Color: choose an event card color (12-color palette) on each Work.
-* Monthly Calendar: a full monthly calendar view showing all scheduled works as colored pills. Click any entry to see a detail popup with date, customer, payment status, and a link to the work.
-* Memory Cards: keep an inventory of your SD/CF cards and always know which are safe to reuse. Each card has a status — Ready, In Use, Backed Up, or Damaged — that advances automatically as you attach a card to a shoot and tick off backup and formatting. A card in use cannot be deleted by mistake.
+* Customers: keep every couple or client together, with more than one contact per booking, so a bride's email and a groom's email can both live on the same record. Full search across names, emails, phones, and addresses. Every customer page shows their full booking history with running totals.
+* Services: build a catalog of the packages and add-ons you offer, then override the price or notes for any specific booking without touching the catalog.
+* Works (your bookings): the hub for every job. Customer, services, event date and time, every location, every file, and every payment, on one page.
+* Payments: track deposits and balances with a running list of installments. Paid, Partial, or Unpaid status is worked out for you automatically from what has actually been paid.
+* Custom payment types: go beyond a simple deposit and balance and define your own installment types to match how you actually bill.
+* Files: attach contracts, invoices, and reference files to any booking, or drop in a link to a Google Drive or Dropbox folder instead. Images and PDFs preview right in the browser, with zoom and full-document search.
+* Dashboard: your year at a glance. Revenue booked, payments still to receive, and the next five shoots coming up.
+* Monthly calendar: every booking as a colored pill on a real calendar. Click through to see the customer, date, and payment status.
+* Calendar colors: tag each booking with one of twelve colors, so a glance at the calendar tells you which is which.
+* Memory Cards: an inventory of your SD and CF cards, so you always know which ones are safe to format. Status moves itself: Ready, In Use, Backed Up, or Damaged, as you attach a card to a shoot and check off the backup.
+* Quick Notes: a short rich-text field on every booking for the one-line reminder you need at a glance, kept separate from your full notes.
+* Vault: a dedicated encryption layer, protected by its own password and a TOTP authenticator app, that keeps client names, contact details, and addresses unreadable in the database, even to someone with direct database access.
+* Encrypted backup: download one encrypted archive of your entire CRM (customers, bookings, services, and files) whenever you want, protected by your Vault credentials and opened by no one but you.
 
-= No third-party dependencies =
+= No dependencies, nothing leaves your server =
 
-No ACF required. No WooCommerce required. Fully standalone. Uses only native WordPress APIs.
+Eleva doesn't require ACF, WooCommerce, or any other plugin, and makes zero outbound requests of its own: nothing is ever sent to us or to anyone else. Every byte of your data stays in your own WordPress database, on your own server.
+
+Eleva CRM Pro is a separate, optional add-on. If you choose to connect it to Google Calendar or Google Drive, those are its own connections, made only when you turn them on, never by the free plugin.
 
 == Installation ==
 
@@ -43,9 +49,17 @@ No ACF required. No WooCommerce required. Fully standalone. Uses only native Wor
 
 == Frequently Asked Questions ==
 
+= Who is Eleva for? =
+
+Wedding and event photographers who want a CRM built around how a shoot actually works: one client, one date, a handful of payments, and a stack of files, not a generic sales pipeline.
+
+= Do I need a subscription? =
+
+No. Eleva is free, with no monthly fee and no feature paywall inside the app. An optional paid add-on, Eleva CRM Pro, exists for studios that want a team (collaborators), a Kanban board, analytics, and automatic scheduled backups to Google Drive, but nothing in the free plugin nags you to upgrade.
+
 = Does this require ACF (Advanced Custom Fields)? =
 
-No. Eleva uses only native WordPress meta boxes and registers all custom post types natively. No third-party field plugins are required or used.
+No. Eleva uses only native WordPress meta boxes and registers all custom post types itself. No third-party field plugin is required or used.
 
 = Does this work without WooCommerce? =
 
@@ -53,226 +67,237 @@ Yes. Eleva is completely standalone and has no dependency on WooCommerce or any 
 
 = What is the Vault? =
 
-The Vault is a built-in security layer. All personally identifiable information (customer names, emails, phone numbers, addresses, notes) is encrypted with AES-256 before being stored in the database. You set a Vault master password that is independent of your WordPress login, and you pair it with a TOTP authenticator app. Without your Vault master password, the database contains only unreadable ciphertext. The decryption key is never stored in the database; it lives only in a temporary, HTTP-Only, SameSite=Strict session cookie encrypted with AES-256-GCM (authenticated encryption — tampered cookies are rejected, not silently decrypted).
+The Vault is a dedicated encryption layer for the personal details tied to your clients and bookings: names, email addresses, phone numbers, home addresses, nationality, tax ID, Instagram handles, and each booking's event address. Every one of those is encrypted with AES-256 before it is written to the database.
+
+You set a Vault master password, independent of your WordPress login, and pair it with a TOTP authenticator app (Google Authenticator, Authy, or similar); unlocking always needs both. The password itself is never stored: it is stretched through PBKDF2 with 600,000 iterations, and the resulting key lives only in a temporary, authenticated session cookie (AES-256-GCM), never in the database. The Vault locks itself again after 15 minutes of inactivity, and on every WordPress login or logout, so a shared computer is never left open.
+
+Booking details like the event date, price, and your own notes sit outside the Vault. Only the personal contact details listed above are encrypted.
+
+= What if I forget my Vault password? =
+
+Eleva gives you two separate fallbacks, both set up ahead of time from the Settings page. If you still know your password but lost your authenticator app, the one-time recovery code gets you back in. If you forgot your password itself, only the recovery phrase can reset it without losing your encrypted data. Set up both, since they cover different problems. Losing your password, your authenticator, and both recovery credentials together means the data cannot be recovered by anyone, including us. That is what makes the encryption real.
 
 = Does the plugin work on shared hosting? =
 
-Yes. It requires PHP 7.4 or higher and WordPress 6.0 or higher, both of which are standard on modern shared hosting environments.
+Yes. It needs PHP 7.4 or higher and WordPress 6.0 or higher, both standard on modern shared hosting.
 
 = Where is my data stored? =
 
-All data is stored exclusively in your own WordPress database (wp_posts and wp_postmeta tables). The plugin makes no external HTTP requests and no data is ever sent to external servers. You own and control your data entirely.
+Entirely in your own WordPress database. Eleva makes no external HTTP requests and sends no data to any external server, ours or anyone else's. You own and control your data completely.
 
-= Does the plugin send data anywhere? =
+= Will Eleva slow down my site? =
 
-This plugin makes zero external HTTP requests. Your data never leaves your server.
+No. Eleva only loads on its own admin screen inside WP Admin; it adds nothing to your public-facing site, so visitor-facing performance is unaffected.
+
+= Can I get my data out if I stop using Eleva? =
+
+Yes, any time, from the Settings page: download a complete encrypted backup of every customer, booking, service, and file. It is your data in a portable archive, not locked to the plugin.
 
 = Does Eleva back up my data? =
 
-Yes. From the Settings page you can download a single encrypted archive containing all your CRM data: customers, works, services, memory cards, and every attached file. This download is entirely local — the archive is built on your own server and saved to your own computer, and this free plugin never sends it anywhere.
+Yes. From Settings, download a single encrypted archive of your entire CRM: customers, bookings, services, memory cards, and every attached file. Nothing leaves your server: the archive is built locally and saved to your own computer.
 
-The archive is encrypted with your Vault password and authenticator code before it ever leaves the database. Nobody, including us, can open it without them. If you lose your Vault password, your recovery code, and your recovery phrase, the archive can never be opened — there is no back door.
+That archive is encrypted with your Vault password and authenticator code before it is ever written. Nobody, including us, can open it without them, and there is no back door: lose your password, recovery code, and recovery phrase together, and the archive is unrecoverable.
 
-This backs up your CRM data, not your whole WordPress site. Themes, other plugins, and unrelated posts are not included.
+This backs up your CRM data, not your whole WordPress site. Themes, other plugins, and unrelated content are not included.
 
-Automatic, scheduled backups that push this same encrypted archive to your own Google Drive require **Eleva CRM Pro**. The free plugin only ever performs a manual, on-demand download.
+Automatic, scheduled backups that push this same archive to your own Google Drive are an **Eleva CRM Pro** feature. The free plugin's backup is always manual: on demand, whenever you choose to download one.
+
+== Eleva CRM Pro ==
+
+Eleva CRM Pro is a separate, optional paid add-on for photographers running a small team or wanting deeper reporting. It adds:
+
+* Collaborators: assign second shooters and team members to a booking, and track what each one is owed.
+* Kanban board: move bookings through your own workflow stages.
+* Analytics: revenue, cost, and owned-vs-commissioned reporting, with period comparison.
+* Products & Suppliers: manage physical products and the suppliers behind them.
+* Google Calendar sync: your bookings and reminders pushed automatically to your Google Calendar.
+* Automatic backups: the same encrypted archive as the free plugin, pushed to your own Google Drive on a schedule, with retention.
+
+Pro is entirely optional. Nothing in the free plugin is locked or hidden behind an upgrade prompt.
 
 == Privacy Policy ==
 
-Eleva CRM for Photographers collects no personal data of any kind, makes no external HTTP requests, and transmits nothing to external servers. All data is stored in your own WordPress database.
+Eleva CRM for Photographers collects no personal data of its own, makes no external HTTP requests, and sends nothing to any external server. Every piece of data lives exclusively in your own WordPress database.
 
-== Development ==
+== Credits ==
 
-This plugin's admin interface is a compiled React application. The full, non-compiled human-readable source is included with the plugin under the `src/` directory and is also publicly maintained at https://github.com/ateleva/fotonic. Build instructions for developers are in `src/README.md`.
-
-The in-browser PDF preview feature is built on pdf.js (https://mozilla.github.io/pdf.js/) by Mozilla, licensed under the Apache License 2.0. It is bundled from the public `pdfjs-dist` package (declared in `src/package.json`) and compiled in via the same build pipeline as the rest of the admin interface — it is never loaded from a CDN.
+The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github.io/pdf.js/), licensed under the Apache License 2.0.
 
 == Screenshots ==
 
-1. Dashboard showing annual revenue, payments to receive, payment type breakdown, and upcoming works list
-2. Customer list with search — name, main contact, email, and phone at a glance
-3. Service catalog with base prices — add, edit, and reuse services across projects
-4. Works list with payment status filter (All / Paid / Partial / Unpaid) and total price column
-5. Works list filtered to "Partial" status, with custom Payment Types manager expanded
-6. Work edit form — event details with date, time, and multiple location addresses
-7. Work edit form — customer selector, calendar color picker, and services with per-work price override
-8. Work edit form — payment section with installments, paid/unpaid status per installment, and running totals
-9. Monthly calendar view showing scheduled works as colored event pills
-10. Settings page — Vault section showing change-password and reset-authenticator-app panels
-11. Vault unlock screen — master password and TOTP authenticator code required to access encrypted client data
+1. Dashboard with the sidebar collapsed to icon-only, so every panel gets the full width
+2. Dashboard: annual revenue, payments still to receive, payment type breakdown, and the next five upcoming works
+3. Customer list with search: name, main contact, email, and phone at a glance
+4. Service catalog with base prices: add, edit, and reuse services across bookings
+5. Works list with a payment status filter (All, Paid, Partial, Unpaid), a total price column, and the custom Payment Types manager open below it
+6. Work edit form: event date and time, customer selector, calendar color, and services with a per-booking price override
+7. Work edit form: attached files and the Memory Cards checklist, so you always know which card holds which shoot
+8. Work edit form: payment section with installments, paid or unpaid status per installment, and running totals
+9. Memory Cards: every card's status (Ready, In Use, Backed Up, Damaged) and which Work it is currently assigned to
+10. Monthly calendar view with every scheduled booking shown as a colored pill
+11. Vault unlock screen: master password and authenticator code required before any client data is shown
+12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
 
+= 1.4.2 =
+* Fix: cleaned up wording on several vault, recovery, and file-selection screens for clarity and consistency.
+* i18n: Italian (it_IT) translation completed for a couple of messages that had never been translated, including the session idle-timeout warning and an alternate recovery option on the "forgot my authenticator" screen.
+
 = 1.4.1 =
-* New: Work edit screen gains a Reminders section (requires Eleva CRM Pro) — set a date offset from the event date and it materializes as a Kanban task, with optional Google Calendar sync.
+* New: Work edit screen gains a Reminders section (requires Eleva CRM Pro): set a date offset from the event date and it turns into a Kanban task, with optional Google Calendar sync.
 * New: "Open Google Calendar" button on the Calendar page, shown once a Google Account is connected (requires Eleva CRM Pro 1.4.1+).
-* Fix: Dashboard revenue now scopes each payment installment by its own date instead of its work's event date — a payment dated in a different year than its work no longer gets double-counted in one year and missed in the other.
-* Fix: Google Calendar — removing an event from the Calendar view no longer appears to succeed when the request actually failed.
-* Fix: Settings page — the Vault and Backup sections' description text no longer renders in a narrow column with empty space beside it; text now fills the panel like every other section.
+* Fix: Dashboard revenue now scopes each payment installment by its own date instead of its work's event date. A payment dated in a different year than its work no longer gets double-counted in one year and missed in the other.
+* Fix: Google Calendar. Removing an event from the Calendar view no longer appears to succeed when the request actually failed.
+* Fix: Settings page. The Vault and Backup sections' description text no longer renders in a narrow column with empty space beside it; text now fills the panel like every other section.
 
 = 1.4.0 =
-* New: encrypted CRM backup. Download a single archive of all your CRM data (customers, works, services, memory cards, and every attached file) from the Settings page, protected by your Vault password and authenticator code — nobody, including us, can open it without them.
-* New: ships a standalone, dependency-free command-line decrypt tool with the plugin (`tools/`), so a backup can be restored on any machine with just PHP, no WordPress or plugin install required.
+* New: encrypted CRM backup. Download a single archive of all your CRM data (customers, works, services, memory cards, and every attached file) from the Settings page, protected by your Vault password and authenticator code. Nobody, including us, can open it without them.
+* New: a standalone, dependency-free command-line decrypt tool ships with the plugin, so a backup can be restored on any machine with just PHP: no WordPress or plugin install required.
 * Improved: refreshed spacing, borders, and layout across every form and list screen; the sidebar now collapses to icon-only and remembers your choice; tables get a persistent scroll indicator instead of relying on the operating system's hidden scrollbar.
-* Fix: the sidebar's collapse/expand button and the calendar's day-of-week column headers now translate correctly in Italian — they previously always showed in English regardless of site language.
-* Note: with Eleva CRM Pro connected to Google Drive, backups also run automatically on a schedule — see the Pro changelog.
+* Fix: the sidebar's collapse/expand button and the calendar's day-of-week column headers now translate correctly in Italian. They previously always showed in English regardless of site language.
+* Note: with Eleva CRM Pro connected to Google Drive, backups also run automatically on a schedule. See the Pro changelog.
 
 = 1.3.12 =
-* Fix: Italian (it_IT) translation now covers the Customers, Services, and Works list screens, the Dashboard, and the Calendar view — these previously displayed in English regardless of the site or user language setting, even though the rest of the plugin was translated.
+* Fix: Italian (it_IT) translation now covers the Customers, Services, and Works list screens, the Dashboard, and the Calendar view. These previously displayed in English regardless of the site or user language setting, even though the rest of the plugin was translated.
 
 = 1.3.11 =
 * New: the Files section on a Work now accepts external links (Google Drive, Dropbox, etc.) alongside uploaded files, with an optional custom display label.
-* New: images and PDFs in the Files section now open in a full-size in-browser preview instead of only downloading — the PDF viewer includes zoom, page navigation, and full-document search.
+* New: images and PDFs in the Files section now open in a full-size in-browser preview instead of only downloading. The PDF viewer includes zoom, page navigation, and full-document search.
 
 = 1.3.10 =
-* New: Customers, Services, Works and Memory Cards lists now show a clickable title that opens the record's edit page directly, in your WordPress admin theme color with an underline — matching the existing Edit button shortcut.
+* New: Customers, Services, Works and Memory Cards lists now show a clickable title that opens the record's edit page directly, styled in your WordPress admin theme color with an underline, matching the existing Edit button shortcut.
 * Fix: Dashboard's "Recent Works" title links now use your WordPress admin theme color with a permanent underline, instead of a hardcoded blue that only underlined on hover.
 * Fix: file downloads on a Work's Files section now use an authenticated request instead of a plain link, so downloads work correctly when the vault is involved.
-* Fix: the Notes field on a Work no longer appears to reset after external re-renders (the data was always saved correctly; only the on-screen display was affected).
+* Fix: the Notes field on a Work no longer appears to reset after external re-renders. The data was always saved correctly; only the on-screen display was affected.
 
 = 1.3.9 =
 * Fix: vault now re-locks on every WordPress login/logout (no longer stays unlocked across sessions).
 * Fix: the Lock Vault button now locks immediately without a page refresh.
 
 = 1.3.8 =
-* New — Memory Cards: keep an inventory of your SD/CF cards so you always know which ones are safe to reuse. Each card has a status — Ready, In Use, Backed Up, or Damaged — that advances automatically as you attach the card to a shoot and tick off backup and formatting. Manage your full card list from the new sidebar entry, or assign cards to a shoot right inside the Work editor. A card that is currently in use cannot be deleted by mistake.
-* Vault: added a recovery phrase so you can regain access if you forget your vault password (separate from the existing one-time recovery code used for a lost authenticator). After updating, unlock your vault and you will be offered to set one up — this is optional and re-encrypts nothing.
-* Vault: the unlock and setup screens now save credentials in your browser's password manager under a dedicated "crm-vault" username, so the vault password is never confused with — or overwritten on top of — your WordPress login.
-* Vault: authenticator codes are now accepted within a ±60 second window, fixing spurious "invalid code" errors after the server or device clock drifts (e.g. after the machine sleeps).
+* New: Memory Cards. Keep an inventory of your SD/CF cards so you always know which ones are safe to reuse. Each card has a status: Ready, In Use, Backed Up, or Damaged, that advances automatically as you attach the card to a shoot and tick off backup and formatting. Manage your full card list from the new sidebar entry, or assign cards to a shoot right inside the Work editor. A card that is currently in use cannot be deleted by mistake.
+* Vault: added a recovery phrase so you can regain access if you forget your vault password, separate from the existing one-time recovery code used for a lost authenticator. After updating, unlock your vault and you will be offered to set one up. This is optional and re-encrypts nothing.
+* Vault: the unlock and setup screens now save credentials in your browser's password manager under a dedicated "crm-vault" username, so the vault password is never confused with, or overwritten on top of, your WordPress login.
+* Vault: authenticator codes are now accepted within a ±60 second window, fixing spurious "invalid code" errors after the server or device clock drifts (for example, after the machine sleeps).
 * Vault: the vault now auto-locks after 15 minutes of inactivity and silently re-opens on page refresh while it is unlocked.
 * Fix: the sidebar title now follows your site language instead of always appearing in English, and the sidebar lock button and version footer are tidier and easier to use.
 * i18n: Italian (it_IT) translation updated to 100%, including all the new Memory Cards and vault recovery-phrase wording.
-* Updating from 1.3.x is seamless: your vault, password, authenticator and encrypted data are unchanged. Just update and unlock as usual — there is no data migration and no required action.
+* Updating from 1.3.x is seamless: your vault, password, authenticator and encrypted data are unchanged. Just update and unlock as usual: there is no data migration and no required action.
 
 = 1.3.7 =
-* i18n: Italian (it_IT) translation completed to 100% — added the vault recovery-code and payment-type strings that were previously untranslated, and corrected leftover pre-rebrand strings.
-* i18n: added a load_plugin_textdomain() fallback so bundled translations also load on WordPress 6.0–6.6.
-
-= 1.3.6 =
-* WP.org compliance: the full React/Vite source is now bundled in the plugin under `src/` (the compiled `dist/` bundle is retained for runtime). The same source also remains publicly maintained at the GitHub repository. This satisfies both human-readable-source options in guideline 4.
-* Docs: expanded the Development section with build-tool instructions (Node.js 22, npm, Vite) and added a build guide at `src/README.md`.
+* i18n: Italian (it_IT) translation completed to 100%. Added the vault recovery-code and payment-type strings that were previously untranslated, and corrected leftover pre-rebrand strings.
+* i18n: bundled translations now also load correctly on WordPress 6.0 to 6.6.
 
 = 1.3.5 =
-* WP.org compliance: plugin renamed to "Eleva CRM for Photographers"; slug changed to eleva-crm-for-photographers.
-* WP.org compliance: removed all Pro-gated code blocks (Work Owner, Collaborators, Taxable Price) from the free plugin. No locked features remain.
-* WP.org compliance: converted inline script/style tags in meta boxes to wp_add_inline_script / wp_add_inline_style.
-* Security: added REST nonce verification to vault file download permission callback.
-* Source: added Development section to readme.txt linking public GitHub source repository.
-* Admin menu position changed to auto (null) to avoid conflicting with core items.
+* Renamed to "Eleva CRM for Photographers".
+* No locked or upsell-only features remain in the free plugin.
+* Security: added nonce verification to the vault file download permission check.
 
 = 1.3.4 =
-* Security: vault file download (GET /vault-download/{id}) ownership check now decodes the JSON file-list server-side and compares integers exactly. Previous LIKE-pattern matching covered only IDs in the first or last position of the array and missed mid-array entries; the new check is exact regardless of position.
-* Security: PBKDF2 iteration count for the vault key derivation raised from 100,000 to 600,000, aligning with OWASP 2023 guidance. Existing vaults remain unlockable; the new iteration count is applied to all derive_key() calls.
-* Security: customer search SQL filter (posts_search + posts_join) is now scoped to the _ftnc_people meta key only. Previously the JOIN spanned all postmeta rows for matched posts, an unnecessary surface that could grow as new meta keys were added.
-* WP.org compliance: removed the aggressive remove_all_actions() call on admin_notices hooks on the Fotonic SPA page. Admin notices still fire (so security/update warnings are not suppressed) and are only hidden visually inside the SPA viewport via scoped CSS.
-* Reliability: activator OpenSSL-missing path now passes the correct plugin slug to deactivate_plugins() so the main plugin is disabled cleanly when the extension is unavailable.
-* Performance: menu icon SVG is read from disk once per request and cached in a static property instead of being read on every add_menu() call.
-* i18n: added translators comments to sprintf/_n strings carrying %s/%d placeholders so translators have correct context.
+* Security: the vault file download ownership check now compares file IDs exactly, closing a gap where the previous check could match the wrong file in rare cases.
+* Security: the password-derived encryption key now uses 600,000 rounds of iteration (up from 100,000), matching current OWASP guidance. Existing vaults keep working exactly as before.
+* Security: the customer search filter is now scoped precisely to customer contact fields.
+* Fix: admin notices, including security and update warnings, are no longer suppressed on the Eleva screen.
+* Reliability: if a required encryption extension is missing on activation, the plugin now deactivates itself cleanly instead of leaving things in a broken state.
+* i18n: translator notes added to strings containing placeholders, improving translation accuracy.
 
 = 1.3.3 =
-* Customer Works recap: the Customer edit page now shows a table of all linked works with title, date, services, total price, and payment status. Footer row shows work count, total price, paid total, and unpaid total.
-* REST GET /works now accepts a customer_id query parameter to filter works by customer.
+* Customer Works recap: the Customer edit page now shows a table of all linked works with title, date, services, total price, and payment status, plus totals for the whole list.
+* Works list can now be filtered to a single customer.
 * i18n: Italian translations added for all new strings.
 
 = 1.3.2 =
 * Calendar view is now included: the monthly calendar showing all scheduled works is available to all users.
-* Calendar locale fix: month names and event dates now display in the WordPress site language instead of the server/OS locale.
-* Vault description: Settings page now shows an explanation of the Vault feature — detailed when not yet configured, a short reminder when active.
+* Calendar locale fix: month names and event dates now display in the WordPress site language instead of the server's own locale.
+* Vault description: Settings page now shows an explanation of the Vault feature, detailed when not yet configured, a short reminder once active.
 * UI: logo mark used as the WP Admin menu icon.
-* UI: Settings sidebar nav item right-side clipping fixed.
-* UI: Payment status filter dropdown in the Works list now sizes to full option text width.
-* Layout: WP admin footer hidden on the plugin page; SPA viewport height correctly fills the available space.
+* UI: Settings sidebar navigation clipping fixed.
+* UI: Payment status filter dropdown in the Works list now sizes to the full option text.
+* Layout: the plugin screen now fills the available height correctly.
 
 = 1.3.1 =
-* Security: vault session cookie upgraded from AES-256-CBC (unauthenticated) to AES-256-GCM. The GCM authentication tag means any tampered cookie is rejected outright rather than silently decrypted to garbage. Cookie format: base64(nonce[12] + auth-tag[16] + ciphertext[32]).
-* Security: deterministic encryption for searchable fields (email, phone) fixed. IV is now derived per-value via HMAC-SHA256(key, value), so different field values produce different IVs. Previously all deterministic ciphertexts shared the same IV, creating a ciphertext relationship leak.
-* Security: browser-side AES-GCM deterministic encryption (webcrypto.js) IV derivation fixed. IV now hashes key bytes concatenated with value bytes; previously only the key was hashed, producing the same IV for every value in a session.
-* Security: deterministic ciphertext format changed from bare base64 to v1d:base64(IV||CT), making the format unambiguous and correctly round-trippable through decrypt(). Email and phone fields that were previously stored with the broken format would silently return empty — now they decrypt correctly.
-* Security: vault REST permission callback now explicitly calls wp_verify_nonce() in addition to current_user_can(), closing a theoretical CSRF window on the REST API.
-* Security: vault file download endpoint (GET /vault-download/{id}) fixed to use exact JSON-token matching. The previous LIKE %id% pattern allowed attachment ID 1 to match work file arrays containing IDs 10 or 11.
-* Security: vault unlock, failed unlock, lock, and password-change events now write audit entries to the WordPress error log (user ID, remote IP, event name). Requires WP_DEBUG_LOG to be enabled.
-* Security: re-encryption of email/phone fields during vault password change now uses deterministic decryption instead of standard decryption, ensuring those fields are correctly re-encrypted after a password change.
-* Security: price_override and installment amounts are clamped to max(0.0, value), preventing negative price injection via the REST API.
-* Security: vault password minimum length (12 characters) enforced server-side on both setup and change-password endpoints.
-* CI: workflow-level permissions: {} deny-all added to deploy.yml; the build job overrides with contents: read only, reducing GITHUB_TOKEN blast radius.
-* Maintenance: added uninstall.php for complete data cleanup (CPT posts, postmeta, taxonomy terms, options, transients, vault upload directory) on plugin deletion — required for WordPress.org approval.
-* Distribution: excluded developer-only files (CLAUDE.md, README.md, CHANGELOG.md, SUBMISSION-GUIDE.md) from plugin ZIP via .distignore.
+* Security: vault session cookie upgraded to authenticated AES-256-GCM encryption. Any tampered cookie is now rejected outright rather than silently decrypted to garbage.
+* Security: fixed an issue where searchable encrypted fields (email, phone) could share encryption patterns across different values; each value now encrypts uniquely.
+* Security: fixed the same issue in the browser-side encryption path.
+* Security: fixed a data format issue that could cause some previously-stored email and phone values to fail decryption; they now decrypt correctly.
+* Security: added an additional server-side check to vault-protected requests, closing a theoretical cross-site request forgery window.
+* Security: fixed the vault file download check so a file ID could not accidentally match a different file's download link.
+* Security: vault unlock, failed unlock, lock, and password-change events are now logged (when WP_DEBUG_LOG is enabled) for your own auditing.
+* Security: fixed re-encryption of email and phone fields during a vault password change so they always decrypt correctly afterward.
+* Security: prices and installment amounts can no longer be saved as negative numbers.
+* Security: the vault password now requires a minimum of 12 characters.
+* Maintenance: uninstalling the plugin now fully removes all of its data (posts, custom fields, taxonomy terms, options, and the vault upload folder).
 
 = 1.3.0 =
-* Security: vault setup endpoint now returns 409 if the vault is already configured, preventing a privileged user from accidentally overwriting all encrypted PII.
-* Security: vault cookie server-secret fallback replaced with a randomly generated 64-character key stored as a WordPress option, eliminating a guessable fallback based on site URL.
-* Security: meta box save guard upgraded from edit_post to manage_options capability, matching the REST API authorization model.
-* Compatibility: wp_enqueue_script updated to use array-style args (WordPress 6.3+); removes the deprecation notice from WP_DEBUG logs.
-* Compatibility: Tested up to WordPress 7.0.
-* CI: build artifact verification step added to the deploy workflow; the release is aborted if the compiled JS or CSS files are missing.
-* i18n: translation strings refreshed.
+* Security: the vault setup process no longer allows accidentally overwriting an already-configured vault.
+* Security: removed a guessable fallback in the vault's cookie encryption secret.
+* Security: tightened who can save Customer, Service, and Work records to match the same permission level as the REST API.
+* Compatibility: resolved a deprecation notice that appeared in some debug logs on newer WordPress versions.
+* Compatibility: tested up to WordPress 7.0.
 
 = 1.2.2 =
-* WP admin theme color integration: sidebar nav active state and CTA buttons now read actual computed colors from the WP admin DOM at runtime, adapting to all built-in and custom admin color schemes.
-* Custom payment types: new CRUD REST API (GET/POST /payment-types, PUT/DELETE /payment-types/:id) lets administrators define installment types beyond the built-in Default/Coupon. UI manager in the Works list.
-* Installment type selector: dropdown driven by custom payment types instead of a hardcoded toggle.
-* Payment status badge labels (Paid / Partial / Unpaid) are now translatable via WordPress i18n.
-* Secondary button border fix: added border-style: solid to prevent WP admin CSS bleed-through from hiding the border after the appearance reset.
-* Accessibility: removed focus:outline-none from Button component; keyboard users now see a proper focus ring on all interactive elements.
-* Sidebar nav: all nav items (free and Pro) use the themed active state class; Pro items no longer show hardcoded indigo on active.
+* WP admin theme color integration: sidebar and buttons now adapt automatically to your chosen WordPress admin color scheme.
+* Custom payment types: define your own installment types beyond the built-in Default and Coupon, with a manager right in the Works list.
+* Payment status badges (Paid / Partial / Unpaid) are now translatable.
+* Accessibility: interactive elements now show a visible focus outline for keyboard users.
 
 = 1.2.1 =
-* Consistent button design system: all buttons use three semantic variants — primary (WP admin theme color), secondary (white + gray border), danger (red). No more shadows, gradients, or mixed inline styles.
-* WP admin theme color integration: primary buttons pick up --wp-admin-theme-color CSS variable automatically.
-* Full-width forms: removed max-w-* constraints from WorkForm, CustomerForm, ServiceForm, and SettingsPage.
+* Consistent button design across the whole plugin: primary, secondary, and danger styles, all matching your WordPress admin color.
+* Forms now use the full available width on Work, Customer, Service, and Settings screens.
 
 = 1.2.0 =
-* Added REST endpoint GET /collaborator-options.
-* Work REST API now saves collaborators[] and full owner type/id fields.
-* Fixed: sticky layout shell with dynamic viewport height; sidebar and main content scroll independently.
+* Layout: sidebar and main content now scroll independently, adapting to your screen height.
 
 = 1.1.0 =
-* Added Quick Notes WYSIWYG field to Work edit screen, placed above the main notes editor.
-* Added Calendar Color picker (12-color palette) to Work edit screen.
-* Added `quick_notes` and `color` fields to the Works REST API.
-* Full i18n/l10n support: all React UI strings wrapped in gettext functions; Italian (it_IT) translation covers 100% of PHP and JavaScript strings.
-* Regenerated POT template; added JSON translation file for React components (`wp_set_script_translations`).
+* Added Quick Notes: a short rich-text field on the Work edit screen for at-a-glance reminders.
+* Added Calendar Color: tag each Work with one of twelve colors.
+* Full Italian (it_IT) translation, covering the entire plugin interface.
 
 = 1.0.0 =
 * Initial public release.
 
 == Upgrade Notice ==
 
+= 1.4.2 =
+Cleans up wording on several screens and completes the Italian translation for a couple of previously English-only messages. Safe in-place update: no data or breaking changes.
+
 = 1.4.1 =
-New: Work Reminders section (with Eleva CRM Pro) and an "Open Google Calendar" button. Fixes dashboard revenue scoping, Google Calendar event removal, and Settings page spacing. Safe in-place update — no data or breaking changes.
+New: Work Reminders section (with Eleva CRM Pro) and an "Open Google Calendar" button. Fixes dashboard revenue scoping, Google Calendar event removal, and Settings page spacing. Safe in-place update: no data or breaking changes.
 
 = 1.4.0 =
-New: download a single encrypted backup of all your CRM data from Settings, protected by your Vault password and authenticator code. Safe in-place update — no data or breaking changes. Update Eleva CRM Pro to 1.4.0+ for automatic scheduled backups to Google Drive.
+New: download a single encrypted backup of all your CRM data from Settings, protected by your Vault password and authenticator code. Safe in-place update: no data or breaking changes. Update Eleva CRM Pro to 1.4.0+ for automatic scheduled backups to Google Drive.
 
 = 1.3.12 =
-Fix: Italian translation now covers list screens, Dashboard, and Calendar. Safe in-place update — no data or breaking changes.
+Fix: Italian translation now covers list screens, Dashboard, and Calendar. Safe in-place update: no data or breaking changes.
 
 = 1.3.11 =
-New: Files section now supports external links and a full-size in-browser preview for images and PDFs. Safe in-place update — no data or breaking changes.
+New: Files section now supports external links and a full-size in-browser preview for images and PDFs. Safe in-place update: no data or breaking changes.
 
 = 1.3.10 =
-New: clickable title links on Customers/Services/Works/Memory Cards lists and the Dashboard. Fix: Work file downloads and the Notes field. Safe in-place update — no data or breaking changes.
+New: clickable title links on Customers/Services/Works/Memory Cards lists and the Dashboard. Fix: Work file downloads and the Notes field. Safe in-place update: no data or breaking changes.
 
 = 1.3.9 =
-Security: the vault now re-locks on every WordPress login/logout, so it no longer stays unlocked across sessions, and the Lock Vault button locks immediately. Safe in-place update — your vault password, authenticator and encrypted client data are unchanged. After updating, unlock the vault as usual.
+Security: the vault now re-locks on every WordPress login/logout, so it no longer stays unlocked across sessions, and the Lock Vault button locks immediately. Safe in-place update: your vault password, authenticator and encrypted client data are unchanged. After updating, unlock the vault as usual.
 
 = 1.3.8 =
-New: Memory Cards inventory to track your SD/CF cards. Safe in-place update — your vault password, authenticator and encrypted client data stay exactly as they are. After updating, unlock the vault as usual; you will be offered an optional recovery phrase. No data migration, no data loss, no required action. Note: the vault now auto-locks after 15 minutes of inactivity.
+New: Memory Cards inventory to track your SD/CF cards. Safe in-place update: your vault password, authenticator and encrypted client data stay exactly as they are. After updating, unlock the vault as usual; you will be offered an optional recovery phrase. No data migration, no data loss, no required action. Note: the vault now auto-locks after 15 minutes of inactivity.
 
 = 1.3.7 =
 Completes the Italian translation (vault recovery + payment types) and improves translation loading on older WordPress versions. No data or breaking changes.
 
 = 1.3.4 =
-Security: vault download ownership check rewritten; PBKDF2 raised to 600k iterations. WP.org compliance: replaced admin-notice hook suppression with CSS-only hiding. See changelog for full details.
+Security: vault download ownership check rewritten; PBKDF2 raised to 600k iterations. See changelog for full details.
 
 = 1.3.3 =
-Adds customer works recap table and customer_id filter on the works REST endpoint. No breaking changes to existing data.
+Adds a customer works recap table and a way to filter works by customer. No breaking changes to existing data.
 
 = 1.3.1 =
-Security: vault cookie upgraded to AES-256-GCM; REST nonce enforcement tightened; IDOR in file downloads fixed. Added uninstall.php for complete data cleanup on plugin deletion.
+Security: vault cookie upgraded to AES-256-GCM; nonce enforcement tightened; a file-download ID matching issue fixed. Added complete data cleanup on plugin deletion.
 
 = 1.3.0 =
-Security hardening: vault setup guard, server-secret hardening, and meta box capability fix. Recommended for all installations. No breaking changes to existing data.
+Security hardening: vault setup guard, server-secret hardening, and permission fix. Recommended for all installations. No breaking changes to existing data.
 
 = 1.2.2 =
 Adds custom payment types and WP admin theme color support. No breaking changes to existing data.
@@ -281,7 +306,7 @@ Adds custom payment types and WP admin theme color support. No breaking changes 
 Consistent button styles. No breaking changes.
 
 = 1.2.0 =
-Adds collaborators repeater and owner dropdown to Work edit form. No breaking changes to existing data.
+Layout fix: sidebar and main content scroll independently. No breaking changes to existing data.
 
 = 1.1.0 =
 Adds Quick Notes and Calendar Color fields to Works. No breaking changes to existing data.

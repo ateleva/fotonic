@@ -96,7 +96,7 @@ function RecoveryPhraseBanner() {
           {!phrase && (
             <>
               <p className="text-sm text-gray-600">
-                {__('A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline — it will only be shown once.', 'eleva-crm-for-photographers')}
+                {__('A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline. It will only be shown once.', 'eleva-crm-for-photographers')}
               </p>
               {error && (
                 <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>

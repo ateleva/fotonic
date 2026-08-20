@@ -30,7 +30,7 @@ export default function VaultLock() {
     if (result?.error) {
       setError('root', {
         type: 'manual',
-        message: result.message || __('Incorrect password or code — please try again.', 'eleva-crm-for-photographers'),
+        message: result.message || __('Incorrect password or code. Please try again.', 'eleva-crm-for-photographers'),
       })
       return
     }

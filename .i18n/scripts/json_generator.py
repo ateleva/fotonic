@@ -34,7 +34,7 @@ If no src found, falls back to md5(handle), then to no-hash filename with a warn
 
 Regression guard: if an output file already exists, refuses to overwrite it with a
 sidecar that has 30%+ fewer keys than the existing one (this is exactly the bug that
-silently regressed 263 translations back to English in Aug 2026 — a JS-filter pass
+silently regressed 263 translations back to English in Aug 2026 - a JS-filter pass
 against an under-extracted POT dropped the sidecar from 325 keys to 103). Pass --force
 to override once you've confirmed the drop is expected (e.g. a deliberate string removal).
 """
@@ -118,7 +118,7 @@ def extract_js_path_from_expr(expr):
     # A string literal that looks like a JS file path
     js_path_re = re.compile(r"""['"]([a-zA-Z0-9_/\-\.]+\.(?:js|jsx|mjs|cjs))['"]""")
 
-    # plugins_url('path/file.js', ...) — first arg is the relative path
+    # plugins_url('path/file.js', ...) - first arg is the relative path
     pu_m = re.search(r"""plugins_url\s*\(\s*['"]([^'"]+\.(?:js|jsx|mjs|cjs))['"]""", expr, re.IGNORECASE)
     if pu_m:
         return pu_m.group(1).lstrip('/')
@@ -126,7 +126,7 @@ def extract_js_path_from_expr(expr):
     # Any other expression: look for the last .js string literal (usually the path suffix)
     literals = js_path_re.findall(expr)
     if literals:
-        # Pick the last match — in concatenations like URL_CONST . 'build/app.js'
+        # Pick the last match - in concatenations like URL_CONST . 'build/app.js'
         # the path is always the rightmost literal
         return literals[-1].lstrip('/')
 
@@ -148,7 +148,7 @@ def find_script_src_path(plugin_path, handle):
     3. Property/method: try to find assignment in the same file
     """
     h_escaped = re.escape(handle)
-    # Capture the second argument (src) of wp_enqueue/register_script — up to the next comma
+    # Capture the second argument (src) of wp_enqueue/register_script - up to the next comma
     # Allow multi-line since sometimes formatted with newlines
     enqueue_pat = re.compile(
         r"""wp_(?:enqueue|register)_script\s*\(\s*['"]""" + h_escaped +
@@ -166,7 +166,7 @@ def find_script_src_path(plugin_path, handle):
             if path:
                 return path
 
-            # Case 2: bare PHP variable $var_name — trace to its assignment in same file
+            # Case 2: bare PHP variable $var_name - trace to its assignment in same file
             var_m = re.match(r'^\$(\w+)$', src_expr)
             if var_m:
                 var_name = re.escape(var_m.group(1))
@@ -176,7 +176,7 @@ def find_script_src_path(plugin_path, handle):
                     if path:
                         return path
 
-            # Case 3: property access $this->prop or self::CONST — look for assignment nearby
+            # Case 3: property access $this->prop or self::CONST - look for assignment nearby
             prop_m = re.match(r'^\$?(?:this|self)\s*(?:->|::)\s*(\w+)', src_expr)
             if prop_m:
                 prop = re.escape(prop_m.group(1))
@@ -219,7 +219,7 @@ def parse_po_translations(po_path):
         if raw_msgid == '':
             # Multi-line msgid: gather only the consecutive quoted lines
             # immediately following (stop at msgid_plural/msgstr so we don't
-            # swallow later fields — msgid is never the last field in a block).
+            # swallow later fields - msgid is never the last field in a block).
             rest = block[msgid_m.end():]
             cont = []
             for line in rest.split('\n')[1:]:
@@ -252,7 +252,7 @@ def parse_po_translations(po_path):
                 msgstr = decode_po_str(msgstr_m.group(1))
                 # Multi-line msgstr continuation
                 rest = block[msgstr_m.end():]
-                cont = re.findall(r'^"([^"]*)"', rest, re.MULTILINE)
+                cont = re.findall(r'^"((?:[^"\\]|\\.)*)"\s*$', rest, re.MULTILINE)
                 if cont:
                     msgstr = msgstr + ''.join(decode_po_str(c) for c in cont)
                 if msgstr:
@@ -327,7 +327,7 @@ def write_sidecar(out_path, data, force, label):
                 f'  {label}: existing sidecar has {old_count} keys, new one would have '
                 f'{new_count} ({drop:.0%} drop).\n'
                 f'  This is the exact failure mode that silently regressed 263 Pro '
-                f'translations to English (Aug 2026) — a JS-filter pass against an '
+                f'translations to English (Aug 2026) - a JS-filter pass against an '
                 f'under-extracted POT. Verify the extractor is finding all __() calls '
                 f'(are any still 1-arg?) before overriding.\n'
                 f'  Pass --force once you have confirmed this drop is intentional.',
@@ -381,7 +381,7 @@ def main():
 
     # If no JS strings at all, skip JSON generation entirely
     if js_msgids is not None and len(js_msgids) == 0:
-        print('No JS strings found — skipping JSON sidecar generation.', file=sys.stderr)
+        print('No JS strings found - skipping JSON sidecar generation.', file=sys.stderr)
         print(json.dumps([]))
         return
 
@@ -420,14 +420,14 @@ def main():
             write_sidecar(out_path, data, force, f'handle={handle}')
             output_paths.append(out_path)
     else:
-        # No wp_set_script_translations found — plugin may be PHP-only
+        # No wp_set_script_translations found - plugin may be PHP-only
         if js_msgids is None:
             # No extracted JSON provided; assume all strings might be JS
             print('WARNING: No wp_set_script_translations() found.', file=sys.stderr)
             print('  Skipping JSON sidecar. If this plugin loads JS translations, add', file=sys.stderr)
             print('  wp_set_script_translations() in your PHP and re-run.', file=sys.stderr)
         else:
-            print('No wp_set_script_translations() calls found — no JSON sidecar written.', file=sys.stderr)
+            print('No wp_set_script_translations() calls found - no JSON sidecar written.', file=sys.stderr)
             print('  This is expected for PHP-only plugins.', file=sys.stderr)
 
     # Print output paths as JSON for skill to report back

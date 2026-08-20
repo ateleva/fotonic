@@ -107,7 +107,7 @@ function FlowLostAuthenticator({ onBack }) {
         </div>
 
         <Button variant="primary" className="w-full" onClick={onBack}>
-          {__('Done — go to unlock screen', 'eleva-crm-for-photographers')}
+          {__('Go to unlock screen', 'eleva-crm-for-photographers')}
         </Button>
       </div>
     )

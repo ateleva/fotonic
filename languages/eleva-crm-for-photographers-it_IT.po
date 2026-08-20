@@ -3,10 +3,10 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: eleva-crm-for-photographers 1.3.8\n"
+"Project-Id-Version: eleva-crm-for-photographers 1.4.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/eleva-crm-for-photographers\n"
-"POT-Creation-Date: 2026-06-14 10:52+0000\n"
-"PO-Revision-Date: 2026-07-01 00:00+0000\n"
+"POT-Creation-Date: 2026-08-20 09:08+0000\n"
+"PO-Revision-Date: 2026-08-19 00:00+0000\n"
 "Last-Translator: Alessandro Bonacina <bonacina.ale@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "Language: it_IT\n"
@@ -35,7 +35,7 @@ msgstr ""
 
 #: includes/class-rest-api.php:344
 msgid "Password is required."
-msgstr "La password è richiesta."
+msgstr "La password è necessaria."
 
 #: includes/class-rest-api.php:351
 msgid "Vault password must be at least 12 characters."
@@ -51,7 +51,7 @@ msgstr "Troppi tentativi falliti. Riprova tra 15 minuti."
 
 #: includes/class-rest-api.php:403
 msgid "Password and OTP are required."
-msgstr "Password e OTP sono richiesti."
+msgstr "Password e OTP sono necessari."
 
 #: includes/class-rest-api.php:413
 msgid "Invalid password or OTP code."
@@ -71,7 +71,7 @@ msgstr "Accesso negato."
 
 #: includes/class-rest-api.php:565
 msgid "All fields are required."
-msgstr "Tutti i campi sono richiesti."
+msgstr "Tutti i campi sono necessari."
 
 #: includes/class-rest-api.php:572
 msgid "New vault password must be at least 12 characters."
@@ -91,7 +91,7 @@ msgstr "Errore di cifratura."
 
 #: includes/class-rest-api.php:751
 msgid "Recovery code and new password are required."
-msgstr "Il codice di recupero e la nuova password sono richiesti."
+msgstr "Il codice di recupero e la nuova password sono necessari."
 
 #: includes/class-rest-api.php:775
 msgid "Invalid recovery code."
@@ -99,7 +99,7 @@ msgstr "Codice di recupero non valido."
 
 #: includes/class-rest-api.php:809
 msgid "Password and recovery code are required."
-msgstr "La password e il codice di recupero sono richiesti."
+msgstr "La password e il codice di recupero sono necessari."
 
 #: includes/class-rest-api.php:826
 msgid "Invalid password or recovery code."
@@ -123,7 +123,7 @@ msgstr "Cliente non trovato."
 
 #: includes/class-rest-api.php:1060
 msgid "Title is required."
-msgstr "Il titolo è richiesto."
+msgstr "Il titolo è necessario."
 
 #: includes/class-rest-api.php:1155
 msgid "Service not found."
@@ -143,7 +143,7 @@ msgstr "Sconto"
 
 #: includes/class-rest-api.php:2308
 msgid "Label is required."
-msgstr "L'etichetta è richiesta."
+msgstr "L'etichetta è necessaria."
 
 #: includes/class-rest-api.php:2314
 msgid "A payment type with this slug already exists."
@@ -229,7 +229,7 @@ msgstr "Rimuovi"
 
 #: includes/class-meta-boxes.php:219
 msgid "At least one person is required."
-msgstr "È richiesta almeno una persona."
+msgstr "È necessaria almeno una persona."
 
 #: includes/class-meta-boxes.php:319
 msgid "Paid"
@@ -331,10 +331,6 @@ msgstr "2. Cliente"
 msgid "Customer"
 msgstr "Cliente"
 
-#: includes/class-meta-boxes.php:595
-msgid "— Select customer —"
-msgstr "— Seleziona cliente —"
-
 #: includes/class-meta-boxes.php:611
 msgid "3. Calendar Color"
 msgstr "3. Colore calendario"
@@ -401,15 +397,11 @@ msgstr "Servizio"
 
 #: includes/class-meta-boxes.php:659
 msgid "Price Override (€)"
-msgstr "Prezzo personalizzato (€)"
+msgstr "Prezzo sovrascritto (€)"
 
 #: includes/class-meta-boxes.php:660
 msgid "Notes Override"
-msgstr "Note personalizzate"
-
-#: includes/class-meta-boxes.php:668
-msgid "— Add a service —"
-msgstr "— Aggiungi un servizio —"
+msgstr "Note sovrascritte"
 
 #: includes/class-meta-boxes.php:677
 msgid "Add"
@@ -621,26 +613,9 @@ msgstr ""
 "Generazione del codice di recupero non riuscita. Assicurati che il Vault sia"
 " sbloccato."
 
-#: src/src/features/settings/SettingsPage.jsx:135
-msgid ""
-"Generate a new recovery code. The previous code will be invalidated "
-"immediately."
-msgstr ""
-"Genera un nuovo codice di recupero. Il codice precedente verrà invalidato "
-"immediatamente."
-
 #: src/src/features/settings/SettingsPage.jsx:143
 msgid "Regenerate Recovery Code"
 msgstr "Rigenera codice di recupero"
-
-#: src/src/features/settings/SettingsPage.jsx:156
-msgid ""
-"A new recovery code will be generated. Your existing recovery code will no "
-"longer work. Store the new code somewhere safe — it will only be shown once."
-msgstr ""
-"Verrà generato un nuovo codice di recupero. Il codice esistente non "
-"funzionerà più. Conserva il nuovo codice in un luogo sicuro — verrà mostrato"
-" una sola volta."
 
 #: src/src/features/settings/SettingsPage.jsx:163
 msgid "Cancel"
@@ -670,15 +645,6 @@ msgstr "Reimposta Vault"
 msgid "This action is irreversible."
 msgstr "Questa azione è irreversibile."
 
-#: src/src/features/settings/SettingsPage.jsx:244
-msgid ""
-"The vault password, TOTP secret, and recovery code will be permanently "
-"deleted. All encrypted client data will become unreadable."
-msgstr ""
-"La password del Vault, il segreto TOTP e il codice di recupero verranno "
-"eliminati definitivamente. Tutti i dati cifrati dei clienti diventeranno "
-"illeggibili."
-
 #: src/src/features/settings/SettingsPage.jsx:251
 msgid "Type RESET to confirm"
 msgstr "Digita RESET per confermare"
@@ -687,34 +653,9 @@ msgstr "Digita RESET per confermare"
 msgid "Recovery failed. Check your password and recovery code."
 msgstr "Recupero non riuscito. Controlla la password e il codice di recupero."
 
-#: src/src/features/vault/VaultRecoveryPanel.jsx:79
-msgid ""
-"Authenticator reset. Scan the QR code to re-add your vault to your "
-"authenticator app."
-msgstr ""
-"Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il"
-" Vault alla tua app di autenticazione."
-
 #: src/src/features/vault/VaultRecoveryPanel.jsx:88
 msgid "Manual entry key:"
 msgstr "Chiave di inserimento manuale:"
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:94
-msgid "After adding it to your app, return to the unlock screen and sign in."
-msgstr ""
-"Dopo averlo aggiunto all'app, torna alla schermata di sblocco e accedi."
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:98
-msgid "Go to unlock"
-msgstr "Vai allo sblocco"
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:107
-msgid ""
-"Enter your vault password and recovery code to generate a new authenticator "
-"entry."
-msgstr ""
-"Inserisci la password del Vault e il codice di recupero per generare una "
-"nuova voce nell'app di autenticazione."
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:110
 msgid "Vault Password"
@@ -732,22 +673,6 @@ msgstr "Reimposta autenticatore"
 msgid "Passwords do not match."
 msgstr "Le password non coincidono."
 
-#: src/src/features/vault/VaultRecoveryPanel.jsx:168
-msgid "Password must be at least 8 characters."
-msgstr "La password deve contenere almeno 8 caratteri."
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:180
-msgid "Recovery failed. Check your recovery code and try again."
-msgstr "Recupero non riuscito. Controlla il codice di recupero e riprova."
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:189
-msgid ""
-"Enter your recovery code and choose a new vault password. The vault will be "
-"unlocked automatically."
-msgstr ""
-"Inserisci il codice di recupero e scegli una nuova password del Vault. Il "
-"Vault verrà sbloccato automaticamente."
-
 #: src/src/features/vault/VaultRecoveryPanel.jsx:204
 msgid "New Password"
 msgstr "Nuova password"
@@ -755,10 +680,6 @@ msgstr "Nuova password"
 #: src/src/features/vault/VaultRecoveryPanel.jsx:215
 msgid "Confirm New Password"
 msgstr "Conferma nuova password"
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:231
-msgid "Reset Password & Unlock"
-msgstr "Reimposta password e sblocca"
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:258
 msgid "Back"
@@ -779,15 +700,6 @@ msgstr "Di cosa hai bisogno?"
 #: src/src/features/vault/VaultRecoveryPanel.jsx:284
 msgid "Lost authenticator (I know my password)"
 msgstr "Autenticatore smarrito (conosco la password)"
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:300
-msgid "Lost password (I have my recovery code)"
-msgstr "Password dimenticata (ho il codice di recupero)"
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:303
-msgid "I forgot my vault password but I saved the recovery code."
-msgstr ""
-"Ho dimenticato la password del Vault ma ho salvato il codice di recupero."
 
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:32
 msgid ""
@@ -843,14 +755,6 @@ msgstr "Configura"
 #: src/src/features/vault/RecoveryCodeBanner.jsx:81
 msgid "Dismiss"
 msgstr "Ignora"
-
-#: src/src/features/vault/RecoveryCodeBanner.jsx:98
-msgid ""
-"Generate a one-time recovery code. Store it somewhere safe — it will only be"
-" shown once."
-msgstr ""
-"Genera un codice di recupero monouso. Conservalo in un luogo sicuro — verrà "
-"mostrato una sola volta."
 
 #: src/src/features/vault/RecoveryCodeBanner.jsx:109
 msgid "Generate Recovery Code"
@@ -918,20 +822,6 @@ msgstr "In uso"
 #: src/src/features/memory-cards/MemoryCardList.jsx
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 #: src/src/features/works/MemoryCardsSection.jsx
-msgid "Needs Backup"
-msgstr "Backup necessario"
-
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
-#: src/src/features/memory-cards/MemoryCardList.jsx
-#: src/src/features/memory-cards/MemoryCardForm.jsx
-#: src/src/features/works/MemoryCardsSection.jsx
-msgid "Needs Formatting"
-msgstr "Da formattare"
-
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
-#: src/src/features/memory-cards/MemoryCardList.jsx
-#: src/src/features/memory-cards/MemoryCardForm.jsx
-#: src/src/features/works/MemoryCardsSection.jsx
 msgid "Damaged"
 msgstr "Danneggiata"
 
@@ -941,7 +831,7 @@ msgstr "Scheda non trovata."
 
 #: includes/class-memory-card-rest-api.php
 msgid "Card title is required."
-msgstr "Il nome della scheda è richiesto."
+msgstr "Il nome della scheda è necessario."
 
 #: includes/class-memory-card-rest-api.php
 msgid "Card is currently in use and cannot be deleted."
@@ -975,7 +865,7 @@ msgstr "es. SD-A 128GB SanDisk"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Card name is required"
-msgstr "Il nome della scheda è richiesto"
+msgstr "Il nome della scheda è necessario"
 
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 msgid "Update Card"
@@ -1004,9 +894,6 @@ msgstr "Backup completato"
 #: src/src/features/works/MemoryCardsSection.jsx
 msgid "Formatting Done"
 msgstr "Formattazione completata"
-
-msgid "+ Add Collaborator"
-msgstr "+ Aggiungi collaboratore"
 
 msgid "Actions"
 msgstr "Azioni"
@@ -1050,8 +937,7 @@ msgstr "Statistiche"
 msgid ""
 "Are you sure you want to delete this item? This action cannot be undone."
 msgstr ""
-"Sei sicuro di voler eliminare questo elemento? Questa azione è "
-"irreversibile."
+"Vuoi davvero eliminare questo elemento? Questa azione è irreversibile."
 
 msgid "Authenticator Code"
 msgstr "Codice autenticatore"
@@ -1088,10 +974,7 @@ msgid "Close"
 msgstr "Chiudi"
 
 msgid "Code is required"
-msgstr "Il codice è richiesto"
-
-msgid "Collaborator"
-msgstr "Collaboratore"
+msgstr "Il codice è necessario"
 
 msgid "Collaborators"
 msgstr "Collaboratori"
@@ -1127,7 +1010,7 @@ msgid "Current OTP Code"
 msgstr "Codice OTP attuale"
 
 msgid "Dashboard"
-msgstr "Dashboard"
+msgstr "Bacheca"
 
 msgid "Delete"
 msgstr "Elimina"
@@ -1147,12 +1030,6 @@ msgstr "Vuoi eliminare questo servizio? Questa azione è irreversibile."
 
 msgid "Delete this work? This action cannot be undone."
 msgstr "Vuoi eliminare questo lavoro? Questa azione è irreversibile."
-
-msgid "Do not close this tab."
-msgstr "Non chiudere questa scheda."
-
-msgid "Done — Unlock Vault"
-msgstr "Fatto — Sblocca Vault"
 
 msgid ""
 "Download any free authenticator app on your phone (Google Authenticator, "
@@ -1192,9 +1069,6 @@ msgstr ""
 "Inserisci la password del Vault e il codice autenticatore per accedere ai "
 "tuoi dati."
 
-msgid "Enter your vault password to begin."
-msgstr "Inserisci la password del Vault per iniziare."
-
 msgid "Error adding type."
 msgstr "Errore nell'aggiunta del tipo."
 
@@ -1215,9 +1089,6 @@ msgstr "Nome file"
 
 msgid "Files"
 msgstr "File"
-
-msgid "Finalising…"
-msgstr "Finalizzazione in corso…"
 
 msgid "Finish Setup"
 msgstr "Completa configurazione"
@@ -1243,27 +1114,8 @@ msgstr "Google Calendar"
 msgid "I have saved this phrase offline in a secure location."
 msgstr "Ho salvato questa frase offline in un luogo sicuro."
 
-msgid "I've scanned the code — Next"
-msgstr "Ho scansionato il codice — Avanti"
-
-msgid "Images, PDF, DOC, DOCX · max 10 MB each"
-msgstr "Immagini, PDF, DOC, DOCX · max 10 MB ciascuno"
-
 msgid "In Progress"
 msgstr "In corso"
-
-msgid "Incorrect password — please try again."
-msgstr "Password errata — riprova."
-
-msgid "Invalid code or password mismatch — check your authenticator app"
-msgstr ""
-"Codice non valido o password errata — controlla l'app di autenticazione"
-
-msgid "Invalid code — check your authenticator app"
-msgstr "Codice non valido — controlla l'app di autenticazione"
-
-msgid "Invalid password or code"
-msgstr "Password o codice non validi"
 
 msgid "Kanban"
 msgstr "Kanban"
@@ -1295,9 +1147,6 @@ msgstr "Hai perso la password o l'autenticatore?"
 msgid "Main Contact"
 msgstr "Contatto principale"
 
-msgid "Me"
-msgstr "Io"
-
 msgid "Minimum 10 characters"
 msgstr "Minimo 10 caratteri"
 
@@ -1305,10 +1154,7 @@ msgid "Name"
 msgstr "Nome"
 
 msgid "Name is required."
-msgstr "Il nome è richiesto."
-
-msgid "New Recovery Phrase"
-msgstr "Nuova frase di recupero"
+msgstr "Il nome è necessario."
 
 msgid ""
 "New authenticator code generated. Scan the QR code with your app, then "
@@ -1328,11 +1174,6 @@ msgstr "Nuovo metodo di pagamento…"
 
 msgid "Next"
 msgstr "Avanti"
-
-msgid "No collaborators available. Add one in the Collaborators section."
-msgstr ""
-"Nessun collaboratore disponibile. Aggiungine uno nella sezione "
-"Collaboratori."
 
 msgid "No customers found. Add your first customer."
 msgstr "Nessun cliente trovato. Aggiungi il tuo primo cliente."
@@ -1372,10 +1213,10 @@ msgstr ""
 "scansiona il codice QR qui sotto."
 
 msgid "Optional notes about this service..."
-msgstr "Note opzionali su questo servizio..."
+msgstr "Note facoltative su questo servizio..."
 
 msgid "Optional notes..."
-msgstr "Note opzionali..."
+msgstr "Note facoltative..."
 
 msgid "Or enter this key manually:"
 msgstr "Oppure inserisci questa chiave manualmente:"
@@ -1384,13 +1225,13 @@ msgid "Password"
 msgstr "Password"
 
 msgid "Password and OTP code are required."
-msgstr "La password e il codice OTP sono richiesti."
+msgstr "La password e il codice OTP sono necessari."
 
 msgid "Password changed successfully."
 msgstr "Password modificata con successo."
 
 msgid "Password is required"
-msgstr "La password è richiesta"
+msgstr "La password è necessaria"
 
 msgid "Passwords do not match"
 msgstr "Le password non coincidono"
@@ -1477,13 +1318,6 @@ msgstr "Salva il tuo codice di recupero"
 msgid "Save Your Recovery Phrase"
 msgstr "Salva la tua frase di recupero"
 
-msgid ""
-"Save the recovery phrase and recovery code offline — these are your fallback"
-" if you lose access."
-msgstr ""
-"Salva la frase di recupero e il codice di recupero offline — sono il tuo "
-"piano B se perdi l'accesso."
-
 msgid "Save this credential in your password manager"
 msgstr "Salva queste credenziali nel tuo gestore di password"
 
@@ -1517,12 +1351,6 @@ msgstr "Configurazione Vault in corso…"
 msgid "Settings"
 msgstr "Impostazioni"
 
-msgid "Start Upgrade"
-msgstr "Avvia aggiornamento"
-
-msgid "Starting…"
-msgstr "Avvio in corso…"
-
 msgid "Step"
 msgstr "Passo"
 
@@ -1553,32 +1381,16 @@ msgstr ""
 "Il Vault protegge i dati personali che memorizzi per ogni cliente: nomi, "
 "numeri di telefono, indirizzi email e indirizzi di casa. Una volta attivo, "
 "tutto ciò è protetto in modo che nessun altro possa leggerlo, anche se "
-"accede direttamente al tuo sito o al database."
-
-msgid "These files exceed the 10 MB limit and were skipped:"
-msgstr "Questi file superano il limite di 10 MB e sono stati ignorati:"
-
-msgid ""
-"This phrase lets you recover access if you forget your password. Store it "
-"somewhere safe offline — it will never be shown again."
-msgstr ""
-"Questa frase ti permette di recuperare l'accesso se dimentichi la password. "
-"Conservala in un luogo sicuro offline — non verrà più mostrata."
+"accede direttamente al tuo sito web o al database."
 
 msgid "Title is required"
-msgstr "Il titolo è richiesto"
+msgstr "Il titolo è necessario"
 
 msgid "To Do"
 msgstr "Da fare"
 
-msgid "To Pay"
-msgstr "Da pagare"
-
 msgid "Total"
 msgstr "Totale"
-
-msgid "Try Again"
-msgstr "Riprova"
 
 msgid "Try again"
 msgstr "Riprova"
@@ -1601,18 +1413,6 @@ msgstr "Aggiorna servizio"
 msgid "Update Work"
 msgstr "Aggiorna lavoro"
 
-msgid "Upgrade Complete"
-msgstr "Aggiornamento completato"
-
-msgid "Upgrade Failed"
-msgstr "Aggiornamento non riuscito"
-
-msgid "Upgrading Vault…"
-msgstr "Aggiornamento Vault in corso…"
-
-msgid "Upload File"
-msgstr "Carica file"
-
 msgid ""
 "Use this if you lost access to your authenticator app. You will need your "
 "current vault password and OTP to confirm your identity."
@@ -1629,7 +1429,7 @@ msgid ""
 "password with your WordPress login."
 msgstr ""
 "Usare un nome utente separato impedisce al browser di confondere la password"
-" del Vault con le credenziali WordPress."
+" del Vault con i dati di accesso a WordPress."
 
 msgid "Vault"
 msgstr "Vault"
@@ -1637,44 +1437,20 @@ msgstr "Vault"
 msgid "Vault Locked"
 msgstr "Vault bloccato"
 
-msgid "Vault Security Upgrade"
-msgstr "Aggiornamento sicurezza Vault"
-
 msgid "Vault Setup"
 msgstr "Configurazione Vault"
 
 msgid "Vault configured"
 msgstr "Vault configurato"
 
-msgid "Vault password"
-msgstr "Password Vault"
-
-msgid "Vault password is required to complete the migration."
-msgstr "La password del Vault è necessaria per completare la migrazione."
-
 msgid "Verify & Unlock"
 msgstr "Verifica e sblocca"
-
-msgid ""
-"Your vault needs a one-time upgrade to a stronger encryption scheme. This "
-"will re-encrypt your client data with a new key and takes a few seconds."
-msgstr ""
-"Il tuo Vault necessita di un aggiornamento una tantum a uno schema di "
-"crittografia più robusto. I dati dei clienti verranno ri-crittografati con "
-"una nuova chiave: richiede pochi secondi."
-
-msgid ""
-"Your vault now uses stronger encryption. Save your new recovery phrase — the"
-" old one no longer works."
-msgstr ""
-"Il tuo Vault ora utilizza una crittografia più robusta. Salva la nuova frase"
-" di recupero — quella precedente non è più valida."
 
 msgid "e.g. Deposit"
 msgstr "es. Acconto"
 
 msgid "e.g. Elisa & Edoardo"
-msgstr "es. Elisa & Edoardo"
+msgstr "es. Elisa e Edoardo"
 
 msgid "e.g. Matrimonio Rossi"
 msgstr "es. Matrimonio Rossi"
@@ -1706,9 +1482,6 @@ msgstr "lavoro"
 msgid "works"
 msgstr "lavori"
 
-msgid "— Select service —"
-msgstr "— Seleziona servizio —"
-
 msgid "← Back"
 msgstr "← Indietro"
 
@@ -1721,45 +1494,6 @@ msgstr "Tutti gli stati schede"
 msgid "Backed Up"
 msgstr "Backup effettuato"
 
-msgid "All DEK wrapping fields are required."
-msgstr "Tutti i campi di cifratura DEK sono richiesti."
-
-msgid "OTP is required."
-msgstr "L'OTP è richiesto."
-
-msgid "salt_dek_pw and wrap_dek_pw are required."
-msgstr "salt_dek_pw e wrap_dek_pw sono richiesti."
-
-msgid "recovery_code is required."
-msgstr "Il recovery_code è richiesto."
-
-msgid "All migration fields are required."
-msgstr "Tutti i campi di migrazione sono richiesti."
-
-msgid "No v2 vault data found."
-msgstr "Nessun dato Vault v2 trovato."
-
-msgid "Invalid vault password."
-msgstr "Password Vault non valida."
-
-msgid "No TOTP secret found to migrate."
-msgstr "Nessun segreto TOTP trovato per la migrazione."
-
-msgid "Could not decrypt TOTP secret."
-msgstr "Impossibile decrittare il segreto TOTP."
-
-msgid "Migration failed."
-msgstr "Migrazione non riuscita."
-
-msgid "Too many failed attempts. Try again later."
-msgstr "Troppi tentativi falliti. Riprova più tardi."
-
-msgid "Invalid OTP code."
-msgstr "Codice OTP non valido."
-
-msgid "No recovery code has been set up."
-msgstr "Nessun codice di recupero configurato."
-
 msgid "Stay unlocked"
 msgstr "Rimani sbloccato"
 
@@ -1770,30 +1504,8 @@ msgstr ""
 "Genera un nuovo codice di recupero TOTP. Il codice precedente verrà "
 "invalidato immediatamente."
 
-msgid "Failed to regenerate phrase. Ensure the vault is unlocked."
-msgstr ""
-"Impossibile rigenerare la frase. Assicurati che il Vault sia sbloccato."
-
-msgid "Unlock the vault to regenerate the recovery phrase."
-msgstr "Sblocca il Vault per rigenerare la frase di recupero."
-
-msgid ""
-"Generate a new recovery phrase. The previous phrase will stop working "
-"immediately."
-msgstr ""
-"Genera una nuova frase di recupero. La frase precedente cesserà di "
-"funzionare immediatamente."
-
 msgid "Regenerate Recovery Phrase"
 msgstr "Rigenera frase di recupero"
-
-msgid ""
-"A new recovery phrase will be generated. Your old phrase will no longer "
-"work. Store the new phrase somewhere safe offline — it will only be shown "
-"once."
-msgstr ""
-"Verrà generata una nuova frase di recupero. La vecchia frase non funzionerà "
-"più. Conservala in un luogo sicuro offline — verrà mostrata una sola volta."
 
 msgid ""
 "The vault password, TOTP secret, and recovery credentials will be "
@@ -1812,38 +1524,8 @@ msgstr "Tutti"
 msgid "In Work"
 msgstr "Nel lavoro"
 
-msgid "Incorrect vault password."
-msgstr "Password Vault errata."
-
-msgid "Recovery failed. Check your recovery code."
-msgstr "Recupero non riuscito. Controlla il codice di recupero."
-
-msgid ""
-"Your vault is now open. After adding the new entry to your app, use the new "
-"code next time you unlock."
-msgstr ""
-"Il tuo Vault è ora aperto. Dopo aver aggiunto la nuova voce nella tua app, "
-"usa il nuovo codice la prossima volta che sblocchi."
-
-msgid ""
-"Enter your vault password and the one-time recovery code to generate a new "
-"authenticator entry. Your password is used locally — it is never sent to the"
-" server."
-msgstr ""
-"Inserisci la password del Vault e il codice di recupero monouso per generare"
-" una nuova voce nell'autenticatore. La password viene usata localmente — non"
-" viene mai inviata al server."
-
 msgid "Recover Access"
 msgstr "Recupera accesso"
-
-msgid "Recovery phrase is incorrect or does not match this vault."
-msgstr "La frase di recupero non è corretta o non corrisponde a questo Vault."
-
-msgid "Recovery failed. Check your recovery phrase and code, then try again."
-msgstr ""
-"Recupero non riuscito. Controlla la frase di recupero e il codice, poi "
-"riprova."
 
 msgid ""
 "Password updated successfully. Please unlock the vault with your new "
@@ -1854,25 +1536,8 @@ msgstr ""
 msgid "Go to unlock screen"
 msgstr "Vai alla schermata di sblocco"
 
-msgid ""
-"Enter your recovery phrase, a new password, and a live authenticator code to"
-" reset your vault password."
-msgstr ""
-"Inserisci la frase di recupero, una nuova password e un codice autenticatore"
-" attivo per reimpostare la password del Vault."
-
-msgid "Authenticator Code (live OTP)"
-msgstr "Codice autenticatore (OTP attivo)"
-
 msgid "Lost password (I have my recovery phrase)"
 msgstr "Password dimenticata (ho la frase di recupero)"
-
-msgid ""
-"I forgot my vault password but I saved the recovery phrase and still have my"
-" authenticator."
-msgstr ""
-"Ho dimenticato la password del Vault ma ho salvato la frase di recupero e ho"
-" ancora l'autenticatore."
 
 msgid "Vault must be unlocked to enroll a recovery phrase."
 msgstr "Il Vault deve essere sbloccato per registrare una frase di recupero."
@@ -1881,7 +1546,7 @@ msgid "Failed to enroll recovery phrase."
 msgstr "Registrazione della frase di recupero non riuscita."
 
 msgid "Recovery phrase and new password are required."
-msgstr "La frase di recupero e la nuova password sono richieste."
+msgstr "La frase di recupero e la nuova password sono necessarie."
 
 msgid "Invalid recovery phrase."
 msgstr "Frase di recupero non valida."
@@ -1910,14 +1575,6 @@ msgstr ""
 msgid "Set Up Recovery Phrase"
 msgstr "Imposta frase di recupero"
 
-msgid ""
-"A recovery phrase lets you reset your vault password if you ever forget it. "
-"Store it somewhere safe offline — it will only be shown once."
-msgstr ""
-"Una frase di recupero ti permette di reimpostare la password del Vault se "
-"dovessi dimenticarla. Conservala in un luogo sicuro offline — verrà mostrata"
-" una sola volta."
-
 msgid "Your Recovery Phrase"
 msgstr "La tua frase di recupero"
 
@@ -1927,9 +1584,6 @@ msgid ""
 msgstr ""
 "Autenticatore reimpostato. Scansiona il codice QR per aggiungere di nuovo il"
 " Vault alla tua app di autenticazione, quindi sblocca normalmente."
-
-msgid "Done — go to unlock screen"
-msgstr "Fatto — vai alla schermata di sblocco"
 
 msgid ""
 "Enter your vault password and the one-time recovery code to generate a new "
@@ -1986,19 +1640,11 @@ msgstr "Carica dalla libreria media"
 msgid "Add Link"
 msgstr "Aggiungi link"
 
-msgid ""
-"Images and PDF can be previewed after upload · DOC/DOCX and links open in a "
-"new tab · max 10 MB per uploaded file."
-msgstr ""
-"Immagini e PDF possono essere visualizzati in anteprima dopo il caricamento "
-"· DOC/DOCX e i link si aprono in una nuova scheda · max 10 MB per file "
-"caricato."
-
 msgid "URL"
 msgstr "URL"
 
 msgid "Label (optional)"
-msgstr "Etichetta (opzionale)"
+msgstr "Etichetta (facoltativo)"
 
 msgid "e.g. Contract"
 msgstr "es. Contratto"
@@ -2029,9 +1675,6 @@ msgstr "Numero di pagina"
 
 msgid "Current Password"
 msgstr "Password attuale"
-
-msgid "Incorrect password or code — please try again."
-msgstr "Password o codice errati — riprova."
 
 msgid "Work Owner"
 msgstr "Titolare del Lavoro"
@@ -2077,7 +1720,7 @@ msgid "Backups"
 msgstr "Backup"
 
 msgid "Building archive…"
-msgstr "Creazione dell'archivio…"
+msgstr "Creazione dell'archivio in corso…"
 
 msgid "Could not load backup status."
 msgstr "Impossibile caricare lo stato del backup."
@@ -2231,3 +1874,48 @@ msgstr "Dom"
 
 msgid "Reminders"
 msgstr "Promemoria"
+
+msgid "Select customer"
+msgstr "Seleziona cliente"
+
+msgid "Add a service"
+msgstr "Aggiungi un servizio"
+
+msgid "Select service"
+msgstr "Seleziona servizio"
+
+msgid "You've been idle for 13 minutes. The vault will lock in 2 minutes."
+msgstr "Inattività rilevata da 13 minuti: il Vault si bloccherà tra 2 minuti."
+
+msgid "A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe. It will only be shown once."
+msgstr "Verrà generato un nuovo codice di recupero. Il codice esistente non funzionerà più. Conserva il nuovo codice in un luogo sicuro. Verrà mostrato una sola volta."
+
+msgid "I've saved it"
+msgstr "L'ho salvato"
+
+msgid "A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline. It will only be shown once."
+msgstr "Verrà generata una nuova frase di recupero. La vecchia frase non funzionerà più. Conserva la nuova frase in un luogo sicuro offline. Verrà mostrata una sola volta."
+
+msgid "A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline. It will only be shown once."
+msgstr "Una frase di recupero ti permette di reimpostare la password del Vault se dovessi dimenticarla. Conservala in un luogo sicuro offline. Verrà mostrata una sola volta."
+
+msgid "Save the recovery phrase and recovery code offline. They are your fallback if you lose access."
+msgstr "Salva la frase di recupero e il codice di recupero offline. Sono il tuo piano di riserva se perdi l'accesso."
+
+msgid "I can't generate a one-time code but I remember my vault password and have my recovery code."
+msgstr "Non riesco a generare un codice monouso, ma ricordo la password del Vault e ho il mio codice di recupero."
+
+msgid "I've scanned the code"
+msgstr "Ho scansionato il codice"
+
+msgid "Invalid code or password mismatch. Check your authenticator app."
+msgstr "Codice non valido o password errata. Controlla l'app di autenticazione."
+
+msgid "This phrase lets you recover access if you forget your password. Store it somewhere safe offline. It will never be shown again."
+msgstr "Questa frase ti permette di recuperare l'accesso se dimentichi la password. Conservala in un luogo sicuro offline. Non verrà più mostrata."
+
+msgid "Incorrect password or code. Please try again."
+msgstr "Password o codice errati. Riprova."
+
+msgid "Generate a one-time recovery code. Store it somewhere safe. It will only be shown once."
+msgstr "Genera un codice di recupero monouso. Conservalo in un luogo sicuro. Verrà mostrato una sola volta."

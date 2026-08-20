@@ -3,9 +3,9 @@
 # This file is distributed under the same license as the eleva-crm-for-photographers package.
 msgid ""
 msgstr ""
-"Project-Id-Version: eleva-crm-for-photographers\n"
+"Project-Id-Version: eleva-crm-for-photographers 1.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-14 10:52+0000\n"
+"POT-Creation-Date: 2026-08-20 09:08+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -327,10 +327,6 @@ msgstr ""
 msgid "Customer"
 msgstr ""
 
-#: includes/class-meta-boxes.php:595
-msgid "— Select customer —"
-msgstr ""
-
 #: includes/class-meta-boxes.php:611
 msgid "3. Calendar Color"
 msgstr ""
@@ -401,10 +397,6 @@ msgstr ""
 
 #: includes/class-meta-boxes.php:660
 msgid "Notes Override"
-msgstr ""
-
-#: includes/class-meta-boxes.php:668
-msgid "— Add a service —"
 msgstr ""
 
 #: includes/class-meta-boxes.php:677
@@ -615,20 +607,8 @@ msgstr ""
 msgid "Failed to generate recovery code. Ensure the vault is unlocked."
 msgstr ""
 
-#: src/src/features/settings/SettingsPage.jsx:135
-msgid ""
-"Generate a new recovery code. The previous code will be invalidated "
-"immediately."
-msgstr ""
-
 #: src/src/features/settings/SettingsPage.jsx:143
 msgid "Regenerate Recovery Code"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:156
-msgid ""
-"A new recovery code will be generated. Your existing recovery code will no "
-"longer work. Store the new code somewhere safe — it will only be shown once."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:163
@@ -657,12 +637,6 @@ msgstr ""
 msgid "This action is irreversible."
 msgstr ""
 
-#: src/src/features/settings/SettingsPage.jsx:244
-msgid ""
-"The vault password, TOTP secret, and recovery code will be permanently "
-"deleted. All encrypted client data will become unreadable."
-msgstr ""
-
 #: src/src/features/settings/SettingsPage.jsx:251
 msgid "Type RESET to confirm"
 msgstr ""
@@ -671,28 +645,8 @@ msgstr ""
 msgid "Recovery failed. Check your password and recovery code."
 msgstr ""
 
-#: src/src/features/vault/VaultRecoveryPanel.jsx:79
-msgid ""
-"Authenticator reset. Scan the QR code to re-add your vault to your "
-"authenticator app."
-msgstr ""
-
 #: src/src/features/vault/VaultRecoveryPanel.jsx:88
 msgid "Manual entry key:"
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:94
-msgid "After adding it to your app, return to the unlock screen and sign in."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:98
-msgid "Go to unlock"
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:107
-msgid ""
-"Enter your vault password and recovery code to generate a new authenticator "
-"entry."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:110
@@ -711,30 +665,12 @@ msgstr ""
 msgid "Passwords do not match."
 msgstr ""
 
-#: src/src/features/vault/VaultRecoveryPanel.jsx:168
-msgid "Password must be at least 8 characters."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:180
-msgid "Recovery failed. Check your recovery code and try again."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:189
-msgid ""
-"Enter your recovery code and choose a new vault password. The vault will be "
-"unlocked automatically."
-msgstr ""
-
 #: src/src/features/vault/VaultRecoveryPanel.jsx:204
 msgid "New Password"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:215
 msgid "Confirm New Password"
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:231
-msgid "Reset Password & Unlock"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:258
@@ -755,14 +691,6 @@ msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:284
 msgid "Lost authenticator (I know my password)"
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:300
-msgid "Lost password (I have my recovery code)"
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:303
-msgid "I forgot my vault password but I saved the recovery code."
 msgstr ""
 
 #: src/src/features/vault/RecoveryCodeDisplay.jsx:32
@@ -811,12 +739,6 @@ msgstr ""
 
 #: src/src/features/vault/RecoveryCodeBanner.jsx:81
 msgid "Dismiss"
-msgstr ""
-
-#: src/src/features/vault/RecoveryCodeBanner.jsx:98
-msgid ""
-"Generate a one-time recovery code. Store it somewhere safe — it will only be"
-" shown once."
 msgstr ""
 
 #: src/src/features/vault/RecoveryCodeBanner.jsx:109
@@ -885,20 +807,6 @@ msgstr ""
 #: src/src/features/memory-cards/MemoryCardList.jsx
 #: src/src/features/memory-cards/MemoryCardForm.jsx
 #: src/src/features/works/MemoryCardsSection.jsx
-msgid "Needs Backup"
-msgstr ""
-
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
-#: src/src/features/memory-cards/MemoryCardList.jsx
-#: src/src/features/memory-cards/MemoryCardForm.jsx
-#: src/src/features/works/MemoryCardsSection.jsx
-msgid "Needs Formatting"
-msgstr ""
-
-#: includes/class-memory-card-cpt.php includes/class-memory-card-rest-api.php
-#: src/src/features/memory-cards/MemoryCardList.jsx
-#: src/src/features/memory-cards/MemoryCardForm.jsx
-#: src/src/features/works/MemoryCardsSection.jsx
 msgid "Damaged"
 msgstr ""
 
@@ -916,11 +824,6 @@ msgstr ""
 
 #: src/src/features/memory-cards/MemoryCardList.jsx
 msgid "Card Name"
-msgstr ""
-
-#: src/src/features/memory-cards/MemoryCardList.jsx
-#: src/src/features/memory-cards/MemoryCardForm.jsx
-msgid "Status"
 msgstr ""
 
 #: src/src/features/memory-cards/MemoryCardList.jsx
@@ -960,10 +863,6 @@ msgstr ""
 msgid "Delete this card? This action cannot be undone."
 msgstr ""
 
-#: src/src/features/works/WorkForm.jsx src/src/components/Layout.jsx
-msgid "Memory Cards"
-msgstr ""
-
 #: src/src/features/works/MemoryCardsSection.jsx
 msgid "Select a card…"
 msgstr ""
@@ -988,58 +887,6 @@ msgstr ""
 msgid "Backed Up"
 msgstr ""
 
-#: includes/class-rest-api.php:434
-msgid "All DEK wrapping fields are required."
-msgstr ""
-
-#: includes/class-rest-api.php:500
-msgid "OTP is required."
-msgstr ""
-
-#: includes/class-rest-api.php:695
-msgid "salt_dek_pw and wrap_dek_pw are required."
-msgstr ""
-
-#: includes/class-rest-api.php:740
-msgid "recovery_code is required."
-msgstr ""
-
-#: includes/class-rest-api.php:768
-msgid "All migration fields are required."
-msgstr ""
-
-#: includes/class-rest-api.php:780
-msgid "No v2 vault data found."
-msgstr ""
-
-#: includes/class-rest-api.php:788
-msgid "Invalid vault password."
-msgstr ""
-
-#: includes/class-rest-api.php:797
-msgid "No TOTP secret found to migrate."
-msgstr ""
-
-#: includes/class-rest-api.php:804
-msgid "Could not decrypt TOTP secret."
-msgstr ""
-
-#: includes/class-rest-api.php:814
-msgid "Migration failed."
-msgstr ""
-
-#: includes/class-vault.php:663
-msgid "Too many failed attempts. Try again later."
-msgstr ""
-
-#: includes/class-vault.php:671
-msgid "Invalid OTP code."
-msgstr ""
-
-#: includes/class-vault.php:767
-msgid "No recovery code has been set up."
-msgstr ""
-
 #: src/src/features/settings/SettingsPage.jsx:116
 msgid "Stay unlocked"
 msgstr ""
@@ -1050,29 +897,8 @@ msgid ""
 "immediately."
 msgstr ""
 
-#: src/src/features/settings/SettingsPage.jsx:254
-msgid "Failed to regenerate phrase. Ensure the vault is unlocked."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:278
-msgid "Unlock the vault to regenerate the recovery phrase."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:288
-msgid ""
-"Generate a new recovery phrase. The previous phrase will stop working "
-"immediately."
-msgstr ""
-
 #: src/src/features/settings/SettingsPage.jsx:296
 msgid "Regenerate Recovery Phrase"
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:309
-msgid ""
-"A new recovery phrase will be generated. Your old phrase will no longer "
-"work. Store the new phrase somewhere safe offline — it will only be shown "
-"once."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:342
@@ -1121,41 +947,12 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/src/features/vault/VaultRecoveryPanel.jsx:88
-msgid "Incorrect vault password."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:105
-msgid "Recovery failed. Check your recovery code."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:131
-msgid ""
-"Your vault is now open. After adding the new entry to your app, use the new "
-"code next time you unlock."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:144
-msgid ""
-"Enter your vault password and the one-time recovery code to generate a new "
-"authenticator entry. Your password is used locally — it is never sent to the"
-" server."
-msgstr ""
-
 #: src/src/features/vault/VaultRecoveryPanel.jsx:175
 msgid "Recover Access"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:206
 msgid "New password must be at least 10 characters."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:224
-msgid "Recovery phrase is incorrect or does not match this vault."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:247
-msgid "Recovery failed. Check your recovery phrase and code, then try again."
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:258
@@ -1168,28 +965,12 @@ msgstr ""
 msgid "Go to unlock screen"
 msgstr ""
 
-#: src/src/features/vault/VaultRecoveryPanel.jsx:271
-msgid ""
-"Enter your recovery phrase, a new password, and a live authenticator code to"
-" reset your vault password."
-msgstr ""
-
 #: src/src/features/vault/VaultRecoveryPanel.jsx:274
 msgid "Recovery Phrase"
 msgstr ""
 
-#: src/src/features/vault/VaultRecoveryPanel.jsx:308
-msgid "Authenticator Code (live OTP)"
-msgstr ""
-
 #: src/src/features/vault/VaultRecoveryPanel.jsx:396
 msgid "Lost password (I have my recovery phrase)"
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:399
-msgid ""
-"I forgot my vault password but I saved the recovery phrase and still have my"
-" authenticator."
 msgstr ""
 
 #: includes/class-rest-api.php:911
@@ -1232,12 +1013,6 @@ msgstr ""
 msgid "Set Up Recovery Phrase"
 msgstr ""
 
-#: src/src/features/settings/SettingsPage.jsx:462
-msgid ""
-"A recovery phrase lets you reset your vault password if you ever forget it. "
-"Store it somewhere safe offline — it will only be shown once."
-msgstr ""
-
 #: src/src/features/settings/SettingsPage.jsx:480
 msgid "Your Recovery Phrase"
 msgstr ""
@@ -1246,10 +1021,6 @@ msgstr ""
 msgid ""
 "Authenticator reset. Scan the QR code to re-add your vault to your "
 "authenticator app, then unlock normally."
-msgstr ""
-
-#: src/src/features/vault/VaultRecoveryPanel.jsx:110
-msgid "Done — go to unlock screen"
 msgstr ""
 
 #: src/src/features/vault/VaultRecoveryPanel.jsx:119
@@ -1292,10 +1063,6 @@ msgstr ""
 msgid "Unable to download file."
 msgstr ""
 
-#: src/src/features/works/FilesSection.jsx:105
-msgid "These files exceed the 10 MB limit and were skipped:"
-msgstr ""
-
 #: src/src/features/works/FilesSection.jsx:146
 msgid "Filename"
 msgstr ""
@@ -1330,12 +1097,6 @@ msgstr ""
 
 #: src/src/features/works/FilesSection.jsx:270
 msgid "Add Link"
-msgstr ""
-
-#: src/src/features/works/FilesSection.jsx:276
-msgid ""
-"Images and PDF can be previewed after upload · DOC/DOCX and links open in a "
-"new tab · max 10 MB per uploaded file."
 msgstr ""
 
 #: src/src/features/works/FilesSection.jsx:286
@@ -1565,12 +1326,6 @@ msgid ""
 "Download any free authenticator app on your phone (Google Authenticator, "
 "Authy, or similar) and scan a QR code to add a second check each time you "
 "open the Vault."
-msgstr ""
-
-#: src/src/features/settings/SettingsPage.jsx:668
-msgid ""
-"Save the recovery phrase and recovery code offline — these are your fallback"
-" if you lose access."
 msgstr ""
 
 #: src/src/features/settings/SettingsPage.jsx:669
@@ -1827,10 +1582,6 @@ msgstr ""
 msgid "Price (€)"
 msgstr ""
 
-#: src/src/features/works/ServicesRepeater.jsx:60
-msgid "— Select service —"
-msgstr ""
-
 #: src/src/features/works/ServicesRepeater.jsx:85
 msgid "Optional notes..."
 msgstr ""
@@ -1969,10 +1720,6 @@ msgid ""
 " QR code below."
 msgstr ""
 
-#: src/src/features/vault/VaultSetup.jsx:264
-msgid "Invalid code or password mismatch — check your authenticator app"
-msgstr ""
-
 #: src/src/features/vault/VaultSetup.jsx:274
 msgid "Confirm Authenticator Code"
 msgstr ""
@@ -2002,12 +1749,6 @@ msgstr ""
 msgid "Save Your Recovery Phrase"
 msgstr ""
 
-#: src/src/features/vault/VaultSetup.jsx:331
-msgid ""
-"This phrase lets you recover access if you forget your password. Store it "
-"somewhere safe offline — it will never be shown again."
-msgstr ""
-
 #: src/src/features/vault/VaultSetup.jsx:375
 msgid "Save Your Recovery Code"
 msgstr ""
@@ -2030,10 +1771,6 @@ msgstr ""
 
 #: src/src/features/vault/VaultGate.jsx:202
 msgid "Could not reach the vault. Please reload the page."
-msgstr ""
-
-#: src/src/features/vault/VaultLock.jsx:33
-msgid "Incorrect password or code — please try again."
 msgstr ""
 
 #: src/src/features/vault/VaultLock.jsx:60
@@ -2310,4 +2047,64 @@ msgstr ""
 
 #: src/src/features/works/WorkForm.jsx:488
 msgid "Reminders"
+msgstr ""
+
+#: includes/class-meta-boxes.php:605
+msgid "Select customer"
+msgstr ""
+
+#: includes/class-meta-boxes.php:678
+msgid "Add a service"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:115
+msgid "You've been idle for 13 minutes. The vault will lock in 2 minutes."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:344
+msgid "A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe. It will only be shown once."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:363
+msgid "I've saved it"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:462
+msgid "A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline. It will only be shown once."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:463
+msgid "A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline. It will only be shown once."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:674
+msgid "Save the recovery phrase and recovery code offline. They are your fallback if you lose access."
+msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:60
+msgid "Select service"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:317
+msgid "I can't generate a one-time code but I remember my vault password and have my recovery code."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:239
+msgid "I've scanned the code"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:264
+msgid "Invalid code or password mismatch. Check your authenticator app."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:331
+msgid "This phrase lets you recover access if you forget your password. Store it somewhere safe offline. It will never be shown again."
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:33
+msgid "Incorrect password or code. Please try again."
+msgstr ""
+
+#: src/src/features/vault/RecoveryCodeBanner.jsx:98
+msgid "Generate a one-time recovery code. Store it somewhere safe. It will only be shown once."
 msgstr ""

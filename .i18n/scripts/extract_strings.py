@@ -3,7 +3,7 @@
 extract_strings.py - Extract translatable strings from a WordPress plugin or theme.
 
 Usage: python3 extract_strings.py <path> <textdomain> [--skip-dirs dir1,dir2]
-Output: JSON array to stdout — [{msgid, file, line, type, plural?, context?}, ...]
+Output: JSON array to stdout - [{msgid, file, line, type, plural?, context?}, ...]
 
 Handles PHP: __() _e() esc_html__() esc_attr__() esc_html_e() esc_attr_e()
              _x() _ex() esc_html_x() esc_attr_x()
@@ -17,7 +17,7 @@ import json
 
 # Dirs that are never WP plugin/theme source code
 # 'dist' excluded: translatable strings must come from SOURCE only, never
-# compiled/minified output — build tools rename identifiers (a local __()
+# compiled/minified output - build tools rename identifiers (a local __()
 # wrapper becomes some minifier-assigned short name), which produces both
 # false negatives (real calls no longer match the __(/_e( pattern) and false
 # positives (an unrelated minified function that happens to be named _e/__
@@ -72,7 +72,7 @@ def q_str():
 
 
 def make_q(n):
-    return rf"""(?P<q{n}>['"])(?P<s{n}>(?:[^'"\\]|\\.)*)(?P=q{n})"""
+    return rf"""(?P<q{n}>['"])(?P<s{n}>(?:(?!(?P=q{n}))[^\\]|\\.)*)(?P=q{n})"""
 
 
 def extract_php(filepath, textdomain, line_offsets, content):
@@ -251,7 +251,7 @@ def detect_unextractable_js(filepath, line_offsets, content):
     """
     Find JS/JSX __() / _e() calls with fewer than 2 args (no textdomain literal).
     These are INVISIBLE to extract_js() above and silently drop out of POT/PO/JSON
-    with no error anywhere in the pipeline — this exact pattern caused 517 Pro
+    with no error anywhere in the pipeline - this exact pattern caused 517 Pro
     strings (296 unique) to go untranslatable in Aug 2026, because a local i18n
     wrapper hardcoded the domain so `__('text')` felt natural to write but the
     extractor requires the literal 2-arg form. Reported loudly instead of skipped
@@ -327,7 +327,7 @@ def main():
                 seen_types[key] = {ftype}
                 all_strings.append(entry)
             else:
-                # String already seen — accumulate its type so PHP+JS strings get both
+                # String already seen - accumulate its type so PHP+JS strings get both
                 seen_types[key].add(ftype)
 
     # Write accumulated types back; 'types' is a sorted list e.g. ['js','php'] or ['js']

@@ -341,7 +341,7 @@ function RegenerateRecoveryCode() {
           {!recoveryCode && (
             <>
               <p className="text-sm text-gray-600">
-                {__('A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe — it will only be shown once.', 'eleva-crm-for-photographers')}
+                {__('A new recovery code will be generated. Your existing recovery code will no longer work. Store the new code somewhere safe. It will only be shown once.', 'eleva-crm-for-photographers')}
               </p>
               {error && (
                 <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
@@ -360,7 +360,7 @@ function RegenerateRecoveryCode() {
             <RecoveryCodeDisplay
               code={recoveryCode}
               onConfirm={handleSaved}
-              confirmLabel={__("I've saved it — Done", 'eleva-crm-for-photographers')}
+              confirmLabel={__("I've saved it", 'eleva-crm-for-photographers')}
             />
           )}
         </div>
@@ -459,8 +459,8 @@ function RecoveryPhraseSection({ hasPhrase }) {
             <>
               <p className="text-sm text-gray-600">
                 {hasPhrase
-                  ? __('A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline — it will only be shown once.', 'eleva-crm-for-photographers')
-                  : __('A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline — it will only be shown once.', 'eleva-crm-for-photographers')}
+                  ? __('A new recovery phrase will be generated. Your old phrase will no longer work. Store the new phrase somewhere safe offline. It will only be shown once.', 'eleva-crm-for-photographers')
+                  : __('A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline. It will only be shown once.', 'eleva-crm-for-photographers')}
               </p>
               {error && (
                 <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
@@ -671,7 +671,7 @@ export default function SettingsPage() {
                   <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
                     <li>{__('Pick a strong master password (at least 10 characters) and store it somewhere safe.', 'eleva-crm-for-photographers')}</li>
                     <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.', 'eleva-crm-for-photographers')}</li>
-                    <li>{__('Save the recovery phrase and recovery code offline — these are your fallback if you lose access.', 'eleva-crm-for-photographers')}</li>
+                    <li>{__('Save the recovery phrase and recovery code offline. They are your fallback if you lose access.', 'eleva-crm-for-photographers')}</li>
                     <li>{__('Lock the Vault when you finish working to keep client details protected.', 'eleva-crm-for-photographers')}</li>
                   </ul>
                 </div>

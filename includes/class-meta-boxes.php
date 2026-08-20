@@ -602,7 +602,7 @@ class Fotonic_Meta_Boxes {
 					<th><label for="ftnc_customer_id"><?php esc_html_e( 'Customer', 'eleva-crm-for-photographers' ); ?></label></th>
 					<td>
 						<select id="ftnc_customer_id" name="ftnc_customer_id" class="regular-text">
-							<option value=""><?php esc_html_e( '— Select customer —', 'eleva-crm-for-photographers' ); ?></option>
+							<option value=""><?php esc_html_e( 'Select customer', 'eleva-crm-for-photographers' ); ?></option>
 							<?php if ( $customers_query->have_posts() ) : ?>
 								<?php foreach ( $customers_query->posts as $cust ) : ?>
 									<option value="<?php echo esc_attr( $cust->ID ); ?>"<?php selected( $customer_id, $cust->ID ); ?>>
@@ -675,7 +675,7 @@ class Fotonic_Meta_Boxes {
 			</table>
 			<p style="margin-top:8px;">
 				<select id="ftnc-service-picker" class="regular-text">
-					<option value=""><?php esc_html_e( '— Add a service —', 'eleva-crm-for-photographers' ); ?></option>
+					<option value=""><?php esc_html_e( 'Add a service', 'eleva-crm-for-photographers' ); ?></option>
 					<?php if ( $services_query->have_posts() ) : ?>
 						<?php foreach ( $services_query->posts as $svc ) : ?>
 							<option value="<?php echo esc_attr( $svc->ID ); ?>">

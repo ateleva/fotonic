@@ -331,7 +331,7 @@ export default function WorkForm() {
                   onChange={(e) => field.onChange(e.target.value)}
                   onBlur={field.onBlur}
                 >
-                  <option value="">{__('— Select customer —', 'eleva-crm-for-photographers')}</option>
+                  <option value="">{__('Select customer', 'eleva-crm-for-photographers')}</option>
                   {customers.map((c) => (
                     <option key={c.id} value={String(c.id)}>
                       {c.title}

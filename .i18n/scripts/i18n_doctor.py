@@ -15,7 +15,7 @@ silently drop a string with no error anywhere:
        and a JS-filter regen against an under-extracted source silently
        drops any string the extractor missed)
     -> the EXACT filename WP core resolves for the enqueued script handle
-       (handle-based name checked first, md5-hashed name as fallback —
+       (handle-based name checked first, md5-hashed name as fallback -
        shipping the wrong one means the sidecar that exists is never loaded)
 
 This is exactly the audit that would have caught the Aug 2026 regression:
@@ -151,20 +151,20 @@ def main():
     sidecar_path, handle = resolve_sidecar_path(plugin_path, textdomain, locale, lang_dir, handle_override)
     sidecar_keys = set()
     if sidecar_path is None:
-        problems.append(('NO_HANDLE', '(n/a)', 'no wp_set_script_translations() call found for this textdomain — pass --handle if the enqueue uses a non-literal src'))
+        problems.append(('NO_HANDLE', '(n/a)', 'no wp_set_script_translations() call found for this textdomain - pass --handle if the enqueue uses a non-literal src'))
     elif os.path.exists(sidecar_path):
         data = json.load(open(sidecar_path, encoding='utf-8'))
         sidecar_keys = set(data.get('locale_data', {}).get('messages', {}).keys())
     else:
-        problems.append(('NO_SIDECAR', sidecar_path, 'expected sidecar file does not exist — run the pipeline'))
+        problems.append(('NO_SIDECAR', sidecar_path, 'expected sidecar file does not exist - run the pipeline'))
 
     for m in sorted(js_msgids):
         if po_map.get(m) and m not in sidecar_keys:
-            problems.append(('NOT_IN_SIDECAR', m, 'translated in .po but missing from the compiled sidecar the browser actually loads — regenerate it'))
+            problems.append(('NOT_IN_SIDECAR', m, 'translated in .po but missing from the compiled sidecar the browser actually loads - regenerate it'))
 
     # Report
     if not problems:
-        print(f'OK — {len(js_msgids)} JS strings, all translated and present in the sidecar WP will load.')
+        print(f'OK - {len(js_msgids)} JS strings, all translated and present in the sidecar WP will load.')
         if sidecar_path:
             print(f'Sidecar: {sidecar_path} ({len(sidecar_keys)} keys, handle={handle})')
         return 0
@@ -173,7 +173,7 @@ def main():
     for kind, msgid, reason in problems:
         by_kind.setdefault(kind, []).append((msgid, reason))
 
-    print(f'\n{len(problems)} problem(s) — these will render in English on a {locale} site:\n', file=sys.stderr)
+    print(f'\n{len(problems)} problem(s) - these will render in English on a {locale} site:\n', file=sys.stderr)
     for kind, items in by_kind.items():
         print(f'--- {kind} ({len(items)}) ---', file=sys.stderr)
         for msgid, reason in items[:25]:

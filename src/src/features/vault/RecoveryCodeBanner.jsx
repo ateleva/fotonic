@@ -95,7 +95,7 @@ export default function RecoveryCodeBanner() {
           {!recoveryCode && (
             <>
               <p className="text-sm text-gray-600">
-                {__('Generate a one-time recovery code. Store it somewhere safe — it will only be shown once.', 'eleva-crm-for-photographers')}
+                {__('Generate a one-time recovery code. Store it somewhere safe. It will only be shown once.', 'eleva-crm-for-photographers')}
               </p>
               {error && (
                 <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
@@ -115,7 +115,7 @@ export default function RecoveryCodeBanner() {
             <RecoveryCodeDisplay
               code={recoveryCode}
               onConfirm={handleCodeSaved}
-              confirmLabel={__("I've saved it — Done", 'eleva-crm-for-photographers')}
+              confirmLabel={__("I've saved it", 'eleva-crm-for-photographers')}
             />
           )}
         </div>

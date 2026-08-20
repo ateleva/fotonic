@@ -236,7 +236,7 @@ function StepScanQR({ qrUri, onNext }) {
       )}
 
       <Button variant="primary" className="w-full" onClick={onNext}>
-        {__("I've scanned the code — Next", 'eleva-crm-for-photographers')}
+        {__("I've scanned the code", 'eleva-crm-for-photographers')}
       </Button>
     </div>
   )
@@ -261,7 +261,7 @@ function StepOTP({ password, onSuccess }) {
     if (result?.error) {
       setError('otp', {
         type: 'manual',
-        message: result.message || __('Invalid code or password mismatch — check your authenticator app', 'eleva-crm-for-photographers'),
+        message: result.message || __('Invalid code or password mismatch. Check your authenticator app.', 'eleva-crm-for-photographers'),
       })
       return
     }
@@ -328,7 +328,7 @@ function StepRecoveryPhrase({ recoveryPhrase, onNext }) {
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Phrase', 'eleva-crm-for-photographers')}</h2>
       <p className="text-sm text-gray-500">
-        {__('This phrase lets you recover access if you forget your password. Store it somewhere safe offline — it will never be shown again.', 'eleva-crm-for-photographers')}
+        {__('This phrase lets you recover access if you forget your password. Store it somewhere safe offline. It will never be shown again.', 'eleva-crm-for-photographers')}
       </p>
 
       <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
