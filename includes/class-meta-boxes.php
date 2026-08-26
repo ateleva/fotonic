@@ -707,7 +707,10 @@ class Fotonic_Meta_Boxes {
 			<table class="form-table">
 				<tr>
 					<th><label for="ftnc_total_price"><?php esc_html_e( 'Total Price (€)', 'eleva-crm-for-photographers' ); ?></label></th>
-					<td><input type="number" id="ftnc_total_price" name="ftnc_total_price" value="<?php echo esc_attr( $total_price ); ?>" step="0.01" min="0" class="regular-text"></td>
+					<td>
+						<input type="number" id="ftnc_total_price" name="ftnc_total_price" value="<?php echo esc_attr( $total_price ); ?>" step="0.01" min="0" class="regular-text" readonly>
+						<p class="description"><?php esc_html_e( 'Computed automatically from the services rows above.', 'eleva-crm-for-photographers' ); ?></p>
+					</td>
 				</tr>
 			</table>
 			<p><strong><?php esc_html_e( 'Installments', 'eleva-crm-for-photographers' ); ?></strong></p>
@@ -1000,10 +1003,7 @@ class Fotonic_Meta_Boxes {
 		}
 
 		// Section 6 — Payments.
-		if ( isset( $_POST['ftnc_total_price'] ) ) {
-			$price = (float) wp_unslash( $_POST['ftnc_total_price'] );
-			update_post_meta( $post_id, '_ftnc_total_price', $price >= 0 ? $price : 0 );
-		}
+		Fotonic_REST_API::recompute_total_price( $post_id );
 
 		if ( isset( $_POST['ftnc_installments_json'] ) ) {
 			$raw = wp_unslash( $_POST['ftnc_installments_json'] );

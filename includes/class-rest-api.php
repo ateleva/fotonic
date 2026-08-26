@@ -1817,6 +1817,32 @@ class Fotonic_REST_API {
 	}
 
 	/**
+	 * Recompute and persist a work's total price.
+	 *
+	 * Total price is derived, never typed: the sum of the work's service row
+	 * prices, plus whatever a Pro feature adds on top (supplier fees) through
+	 * the ftnc_work_total_price_adjustment filter.
+	 *
+	 * @param int $post_id Work post ID.
+	 * @return float The persisted total.
+	 */
+	public static function recompute_total_price( int $post_id ): float {
+		$rows     = json_decode( (string) get_post_meta( $post_id, '_ftnc_work_services', true ), true );
+		$subtotal = 0.0;
+		if ( is_array( $rows ) ) {
+			foreach ( $rows as $row ) {
+				if ( is_array( $row ) && isset( $row['price_override'] ) ) {
+					$subtotal += (float) $row['price_override'];
+				}
+			}
+		}
+		$adjustment = (float) apply_filters( 'ftnc_work_total_price_adjustment', 0.0, $post_id );
+		$total      = round( max( 0.0, $subtotal + $adjustment ), 2 );
+		update_post_meta( $post_id, '_ftnc_total_price', $total );
+		return $total;
+	}
+
+	/**
 	 * Save work meta from API body.
 	 * Encrypts PII fields (event_address) when the vault is unlocked.
 	 *
@@ -1942,10 +1968,7 @@ class Fotonic_REST_API {
 		}
 
 		// Payments.
-		if ( isset( $body['total_price'] ) ) {
-			$price = (float) $body['total_price'];
-			update_post_meta( $post_id, '_ftnc_total_price', $price >= 0 ? $price : 0 );
-		}
+		self::recompute_total_price( $post_id );
 
 		if ( isset( $body['installments'] )&& is_array( $body['installments'] ) ) {
 			$clean = [];
