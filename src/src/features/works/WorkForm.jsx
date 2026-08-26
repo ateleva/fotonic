@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { useWork, useCreateWork, useUpdateWork, useDeleteWork } from '../../api/works'
@@ -154,7 +154,13 @@ export default function WorkForm() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
 
-  const [ownerType, ownerId, eventDate] = watch(['owner_type', 'owner_id', 'event_date'])
+  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers] = watch([
+    'owner_type',
+    'owner_id',
+    'event_date',
+    'services',
+    'suppliers',
+  ])
 
   useEffect(() => {
     if (work) {
@@ -190,6 +196,26 @@ export default function WorkForm() {
     }
   }, [work, reset])
 
+  const computedTotal = useMemo(() => {
+    const subtotal = (watchedServices ?? []).reduce(
+      (sum, row) => sum + (parseFloat(row?.price_override) || 0),
+      0
+    )
+    const addedFees = (watchedSuppliers ?? []).reduce((sum, row) => {
+      if ((row?.applied ?? 'added') !== 'added') {
+        return sum
+      }
+      const value = parseFloat(row?.fee_value) || 0
+      const amount = row?.fee_type === 'percentage' ? (subtotal * value) / 100 : value
+      return sum + amount
+    }, 0)
+    return Math.round((subtotal + addedFees) * 100) / 100
+  }, [watchedServices, watchedSuppliers])
+
+  useEffect(() => {
+    setValue('total_price', computedTotal)
+  }, [computedTotal, setValue])
+
   const mutation = isEdit ? updateWork : createWork
 
   async function onSubmit(data) {
@@ -216,7 +242,6 @@ export default function WorkForm() {
         override: !!s.override,
         applied: s.applied,
       })),
-      total_price: data.total_price !== '' ? parseFloat(data.total_price) : null,
       total_price_taxable: data.total_price_taxable !== '' && data.total_price_taxable != null ? parseFloat(data.total_price_taxable) : null,
       installments: data.installments.map((inst) => ({
         ...inst,
@@ -476,13 +501,15 @@ export default function WorkForm() {
               <FormField label={__('Total Price (€)', 'eleva-crm-for-photographers')} htmlFor="total_price">
                 <input
                   id="total_price"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0.00"
-                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
-                  {...register('total_price')}
+                  type="text"
+                  readOnly
+                  tabIndex={-1}
+                  value={new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(computedTotal)}
+                  className="rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600 w-48 cursor-not-allowed"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  {__('Computed from the services rows and supplier fees.', 'eleva-crm-for-photographers')}
+                </p>
               </FormField>
               {TaxablePriceField && window.FotonicApp?.features?.taxable_price && (
                 <TaxablePriceField register={register} error={errors.total_price_taxable?.message} />
