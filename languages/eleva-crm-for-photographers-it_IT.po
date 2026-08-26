@@ -1919,3 +1919,9 @@ msgstr "Password o codice errati. Riprova."
 
 msgid "Generate a one-time recovery code. Store it somewhere safe. It will only be shown once."
 msgstr "Genera un codice di recupero monouso. Conservalo in un luogo sicuro. Verrà mostrato una sola volta."
+
+msgid "Computed from the services rows and supplier fees."
+msgstr "Calcolato dalle righe dei servizi e dalle provvigioni dei fornitori."
+
+msgid "Computed automatically from the services rows above."
+msgstr "Calcolato automaticamente dalle righe dei servizi qui sopra."

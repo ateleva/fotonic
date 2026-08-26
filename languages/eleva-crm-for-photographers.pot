@@ -2108,3 +2108,11 @@ msgstr ""
 #: src/src/features/vault/RecoveryCodeBanner.jsx:98
 msgid "Generate a one-time recovery code. Store it somewhere safe. It will only be shown once."
 msgstr ""
+
+#: includes/class-meta-boxes.php:712
+msgid "Computed automatically from the services rows above."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:511
+msgid "Computed from the services rows and supplier fees."
+msgstr ""
