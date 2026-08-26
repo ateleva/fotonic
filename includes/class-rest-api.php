@@ -2289,6 +2289,20 @@ class Fotonic_REST_API {
 			}
 		}
 
+		// Suppliers (Pro-owned data; free only decodes and passes it through untouched).
+		$raw_suppliers = get_post_meta( $post->ID, '_ftnc_work_suppliers', true );
+		$suppliers     = [];
+		if ( ! empty( $raw_suppliers ) ) {
+			$dec = json_decode( $raw_suppliers, true );
+			if ( is_array( $dec ) ) {
+				foreach ( $dec as $s ) {
+					if ( is_array( $s ) ) {
+						$suppliers[] = $s;
+					}
+				}
+			}
+		}
+
 		// Memory cards.
 		$raw_mc       = get_post_meta( $post->ID, '_ftnc_memory_cards', true );
 		$memory_cards = [];
@@ -2330,6 +2344,7 @@ class Fotonic_REST_API {
 			'owner_id'        => $owner_id,
 			'owner_label'     => $owner_label,
 			'collaborators'   => $collaborators,
+			'suppliers'       => $suppliers,
 			'services'        => $services,
 			'files'           => $files,
 			'total_price'         => (float) get_post_meta( $post->ID, '_ftnc_total_price', true ),

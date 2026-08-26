@@ -87,6 +87,7 @@ const defaultValues = {
   owner_type: 'admin',
   owner_id: null,
   collaborators: [],
+  suppliers: [],
   services: [],
   files: [],
   notes: '',
@@ -104,6 +105,7 @@ const CollaboratorsSection = window.FotonicProComponents?.CollaboratorsSection ?
 const TaxablePriceField = window.FotonicProComponents?.TaxablePriceField ?? null
 const GCalSyncField = window.FotonicProComponents?.GCalSyncField ?? null
 const RemindersSection = window.FotonicProComponents?.RemindersSection ?? null
+const SuppliersSection = window.FotonicProComponents?.SuppliersSection ?? null
 
 export default function WorkForm() {
   const { id } = useParams()
@@ -169,6 +171,7 @@ export default function WorkForm() {
           ...c,
           services: (c.services ?? []).map((s) => (typeof s === 'object' ? s.id : s)),
         })),
+        suppliers: work.suppliers ?? [],
         services: work.services ?? [],
         files: work.files ?? [],
         notes: work.notes ?? '',
@@ -205,6 +208,13 @@ export default function WorkForm() {
         services: Array.isArray(c.services) ? c.services.map(Number) : [],
         price: c.price !== '' ? parseFloat(c.price) : 0,
         status: c.status,
+      })),
+      suppliers: (data.suppliers ?? []).map((s) => ({
+        id: parseInt(s.id, 10),
+        fee_type: s.fee_type,
+        fee_value: s.fee_value !== '' ? parseFloat(s.fee_value) : 0,
+        override: !!s.override,
+        applied: s.applied,
       })),
       total_price: data.total_price !== '' ? parseFloat(data.total_price) : null,
       total_price_taxable: data.total_price_taxable !== '' && data.total_price_taxable != null ? parseFloat(data.total_price_taxable) : null,
@@ -392,7 +402,21 @@ export default function WorkForm() {
           </section>
         )}
 
-        {/* Section 6 — Services */}
+        {/* Section 6 — Suppliers (Pro only) */}
+        {SuppliersSection && window.FotonicApp?.features?.suppliers && (
+          <section>
+            <SectionHeading>{__('Suppliers', 'eleva-crm-for-photographers')}</SectionHeading>
+            <Controller
+              name="suppliers"
+              control={control}
+              render={({ field }) => (
+                <SuppliersSection value={field.value} onChange={field.onChange} />
+              )}
+            />
+          </section>
+        )}
+
+        {/* Section 7 — Services */}
         <section>
           <SectionHeading>{__('Services Included', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -408,7 +432,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 7 — Files */}
+        {/* Section 8 — Files */}
         <section>
           <SectionHeading>{__('Files', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -420,7 +444,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 8 — Memory Cards */}
+        {/* Section 9 — Memory Cards */}
         <section>
           <SectionHeading>{__('Memory Cards', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -432,7 +456,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 9 — Notes */}
+        {/* Section 10 — Notes */}
         <section>
           <SectionHeading>{__('Notes', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -444,7 +468,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 10 — Payments */}
+        {/* Section 11 — Payments */}
         <section>
           <SectionHeading>{__('Payments', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="ftnc-fields">
@@ -482,7 +506,7 @@ export default function WorkForm() {
           </div>
         </section>
 
-        {/* Section 11 — Reminders (Pro only) */}
+        {/* Section 12 — Reminders (Pro only) */}
         {RemindersSection && window.FotonicApp?.features?.kanban && (
           <section>
             <SectionHeading>{__('Reminders', 'eleva-crm-for-photographers')}</SectionHeading>
