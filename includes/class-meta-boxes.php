@@ -449,7 +449,7 @@ class Fotonic_Meta_Boxes {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Render "Work Details" meta box for ftnc_work — 6 fieldset sections.
+	 * Render "Work Details" meta box for ftnc_work: 6 fieldset sections.
 	 */
 	public static function render_work_meta_box( WP_Post $post ): void {
 		wp_nonce_field( 'ftnc_save_meta', 'ftnc_meta_nonce' );
@@ -484,7 +484,7 @@ class Fotonic_Meta_Boxes {
 			}
 		}
 
-		// This legacy screen only ever managed bare attachment IDs — flatten today's
+		// This legacy screen only ever managed bare attachment IDs: flatten today's
 		// richer { type, id|url, label } shape back to ints for it; link entries (added
 		// via the REST/React UI) are invisible here but preserved on save, see save_work().
 		$work_files = [];
@@ -872,7 +872,7 @@ class Fotonic_Meta_Boxes {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Save work meta — all 6 sections.
+	 * Save work meta: all 6 sections.
 	 *
 	 * @param int     $post_id Post ID.
 	 * @param WP_Post $post    Post object.
@@ -886,7 +886,7 @@ class Fotonic_Meta_Boxes {
 		$vault_key = Fotonic_Vault::get_session_key();
 		$encrypt   = $vault_key !== null;
 
-		// Section 1 — Event Details.
+		// Section 1: Event Details.
 		if ( isset( $_POST['ftnc_event_date'] ) ) {
 			$date = sanitize_text_field( wp_unslash( $_POST['ftnc_event_date'] ) );
 			// Validate Y-m-d format.
@@ -939,7 +939,7 @@ class Fotonic_Meta_Boxes {
 			update_post_meta( $post_id, '_ftnc_event_addresses', wp_json_encode( $clean_addresses ) );
 		}
 
-		// Section 2 — Customer.
+		// Section 2: Customer.
 		if ( isset( $_POST['ftnc_customer_id'] ) ) {
 			$cid = (int) $_POST['ftnc_customer_id'];
 			if ( $cid > 0 && get_post_type( $cid ) === 'ftnc_customer' ) {
@@ -949,7 +949,7 @@ class Fotonic_Meta_Boxes {
 			}
 		}
 
-		// Section 4 — Work Services JSON.
+		// Section 4: Work Services JSON.
 		if ( isset( $_POST['ftnc_work_services_json'] ) ) {
 			$raw = wp_unslash( $_POST['ftnc_work_services_json'] );
 			$dec = json_decode( $raw, true );
@@ -970,7 +970,7 @@ class Fotonic_Meta_Boxes {
 			update_post_meta( $post_id, '_ftnc_work_services', wp_json_encode( $clean ) );
 		}
 
-		// Section 5 — Files JSON. This legacy screen's JS only manages attachment IDs;
+		// Section 5: Files JSON. This legacy screen's JS only manages attachment IDs;
 		// merge those back with any existing link entries (added via the REST/React UI)
 		// so a classic-editor save can't silently destroy them.
 		if ( isset( $_POST['ftnc_work_files_json'] ) ) {
@@ -1002,7 +1002,7 @@ class Fotonic_Meta_Boxes {
 			update_post_meta( $post_id, '_ftnc_work_files', wp_json_encode( array_values( array_merge( $attachments, $links ) ) ) );
 		}
 
-		// Section 6 — Payments.
+		// Section 6: Payments.
 		Fotonic_REST_API::recompute_total_price( $post_id );
 
 		if ( isset( $_POST['ftnc_installments_json'] ) ) {
@@ -1032,7 +1032,7 @@ class Fotonic_Meta_Boxes {
 			update_post_meta( $post_id, '_ftnc_installments', wp_json_encode( $clean ) );
 		}
 
-		// Section 7 — Calendar Color.
+		// Section 7: Calendar Color.
 		if ( isset( $_POST['ftnc_color'] ) ) {
 			$color = sanitize_hex_color( wp_unslash( $_POST['ftnc_color'] ) );
 			if ( $color ) {

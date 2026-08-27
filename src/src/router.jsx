@@ -1,3 +1,8 @@
+/* eslint-disable react-refresh/only-export-components -- this file is a router
+   config module, not a components module; createRouter() returns a router
+   object, and Fallback/Lazy are internal helpers, never exported. Splitting
+   them into a separate file only to satisfy Fast Refresh isn't worth the risk
+   on the app's single most load-bearing file for a DX-only concern. */
 import { lazy, Suspense } from 'react'
 import { createHashRouter, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'

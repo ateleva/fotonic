@@ -4,10 +4,10 @@ const EDITOR_ID = 'ftnc_work_notes_mce'
 
 export default function WpEditor({ value = '', onChange }) {
   const onChangeRef = useRef(onChange)
-  onChangeRef.current = onChange
+  useEffect(() => { onChangeRef.current = onChange })
 
   const valueRef = useRef(value)
-  valueRef.current = value
+  useEffect(() => { valueRef.current = value })
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.tinymce) return
@@ -34,7 +34,7 @@ export default function WpEditor({ value = '', onChange }) {
       const editor = window.tinymce?.get(EDITOR_ID)
       if (editor) editor.remove()
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     const editor = window.tinymce?.get(EDITOR_ID)

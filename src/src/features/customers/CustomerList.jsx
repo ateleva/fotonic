@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Pencil, UserPlus } from 'lucide-react'
 import { useCustomers } from '../../api/customers'

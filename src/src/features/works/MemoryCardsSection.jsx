@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo } from 'react'
 import { Trash2, PlusCircle } from 'lucide-react'
 import { useMemoryCards } from '../../api/memory-cards'
 import Button from '../../components/Button'
@@ -34,9 +34,7 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
   const { data: inUseData }    = useMemoryCards({ status: 'in_use' })
   const { data: backedUpData } = useMemoryCards({ status: 'backed_up' })
 
-  const [allCards, setAllCards] = useState([])
-
-  useEffect(() => {
+  const allCards = useMemo(() => {
     const merge = (d) => (Array.isArray(d) ? d : d?.data ?? [])
     const combined = [
       ...merge(freeData),
@@ -44,12 +42,11 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
       ...merge(backedUpData),
     ]
     const seen = new Set()
-    const deduped = combined.filter((c) => {
+    return combined.filter((c) => {
       if (seen.has(c.id)) return false
       seen.add(c.id)
       return true
     })
-    setAllCards(deduped)
   }, [freeData, inUseData, backedUpData])
 
   function optionsForRow(currentCardId) {

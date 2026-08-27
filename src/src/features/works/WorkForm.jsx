@@ -296,7 +296,7 @@ export default function WorkForm() {
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="ftnc-stack">
-        {/* Section 1 — Event */}
+        {/* Section 1: Event */}
         <section>
           <SectionHeading>{__('Event Details', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="ftnc-grid-2">
@@ -356,7 +356,7 @@ export default function WorkForm() {
           </div>
         </section>
 
-        {/* Section 2 — Customer */}
+        {/* Section 2: Customer */}
         <section>
           <SectionHeading>{__('Customer', 'eleva-crm-for-photographers')}</SectionHeading>
           <FormField label={__('Customer', 'eleva-crm-for-photographers')} htmlFor="customer_id">
@@ -383,7 +383,7 @@ export default function WorkForm() {
           </FormField>
         </section>
 
-        {/* Section 3 — Calendar Color */}
+        {/* Section 3: Calendar Color */}
         <section>
           <SectionHeading
             description={__('Choose the event card color in the calendar view.', 'eleva-crm-for-photographers')}
@@ -410,7 +410,7 @@ export default function WorkForm() {
           </div>
         </section>
 
-        {/* Section 4 — Work Owner (Pro only) */}
+        {/* Section 4: Work Owner (Pro only) */}
         {OwnerField && window.FotonicApp?.features?.collaborators && (
           <section>
             <SectionHeading>{__('Work Owner', 'eleva-crm-for-photographers')}</SectionHeading>
@@ -418,7 +418,7 @@ export default function WorkForm() {
           </section>
         )}
 
-        {/* Section 5 — Collaborators (Pro only) */}
+        {/* Section 5: Collaborators (Pro only) */}
         {CollaboratorsSection && window.FotonicApp?.features?.collaborators && (
           <section>
             <SectionHeading>{__('Collaborators', 'eleva-crm-for-photographers')}</SectionHeading>
@@ -432,7 +432,7 @@ export default function WorkForm() {
           </section>
         )}
 
-        {/* Section 6 — Suppliers (Pro only) */}
+        {/* Section 6: Suppliers (Pro only) */}
         {SuppliersSection && window.FotonicApp?.features?.suppliers && (
           <section>
             <SectionHeading>{__('Suppliers', 'eleva-crm-for-photographers')}</SectionHeading>
@@ -446,7 +446,7 @@ export default function WorkForm() {
           </section>
         )}
 
-        {/* Section 7 — Services */}
+        {/* Section 7: Services */}
         <section>
           <SectionHeading>{__('Services Included', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -462,7 +462,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 8 — Files */}
+        {/* Section 8: Files */}
         <section>
           <SectionHeading>{__('Files', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -474,7 +474,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 9 — Memory Cards */}
+        {/* Section 9: Memory Cards */}
         <section>
           <SectionHeading>{__('Memory Cards', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -486,7 +486,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 10 — Notes */}
+        {/* Section 10: Notes */}
         <section>
           <SectionHeading>{__('Notes', 'eleva-crm-for-photographers')}</SectionHeading>
           <Controller
@@ -498,7 +498,7 @@ export default function WorkForm() {
           />
         </section>
 
-        {/* Section 11 — Payments */}
+        {/* Section 11: Payments */}
         <section>
           <SectionHeading>{__('Payments', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="ftnc-fields">
@@ -538,7 +538,7 @@ export default function WorkForm() {
           </div>
         </section>
 
-        {/* Section 12 — Reminders (Pro only) */}
+        {/* Section 12: Reminders (Pro only) */}
         {RemindersSection && window.FotonicApp?.features?.kanban && (
           <section>
             <SectionHeading>{__('Reminders', 'eleva-crm-for-photographers')}</SectionHeading>
