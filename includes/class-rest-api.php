@@ -267,16 +267,25 @@ class Fotonic_REST_API {
 
 		// ------------------------------------------------------------------
 		// Calendar — GET /calendar?from=YYYY-MM-DD&to=YYYY-MM-DD
+		//
+		// Pro registers the identical route (its version also merges in
+		// ftnc_task entries, which this plugin has no concept of), and WP's
+		// REST dispatcher uses whichever handler registered first. Only
+		// register this standalone version when Pro is absent, so a Pro
+		// site always gets the superset behaviour instead of the two
+		// silently racing for the same URL.
 		// ------------------------------------------------------------------
-		register_rest_route( self::NAMESPACE, '/calendar', [
-			'methods'             => \WP_REST_Server::READABLE,
-			'callback'            => [ __CLASS__, 'get_calendar_works' ],
-			'permission_callback' => [ __CLASS__, 'admin_permission' ],
-			'args'                => [
-				'from' => [ 'type' => 'string', 'required' => true ],
-				'to'   => [ 'type' => 'string', 'required' => true ],
-			],
-		] );
+		if ( ! defined( 'FOTO_PRO_VERSION' ) ) {
+			register_rest_route( self::NAMESPACE, '/calendar', [
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => [ __CLASS__, 'get_calendar_works' ],
+				'permission_callback' => [ __CLASS__, 'admin_permission' ],
+				'args'                => [
+					'from' => [ 'type' => 'string', 'required' => true ],
+					'to'   => [ 'type' => 'string', 'required' => true ],
+				],
+			] );
+		}
 
 		// ------------------------------------------------------------------
 		// Payment Types
@@ -1705,7 +1714,8 @@ class Fotonic_REST_API {
 		$events = [];
 		foreach ( $query->posts as $post ) {
 			$customer_id    = (int) get_post_meta( $post->ID, '_ftnc_customer_id', true );
-			$customer_title = $customer_id > 0 ? get_the_title( $customer_id ) : null;
+			$customer_post  = $customer_id > 0 ? get_post( $customer_id ) : null;
+			$customer_title = $customer_post ? $customer_post->post_title : null;
 			$ps_terms       = wp_get_object_terms( $post->ID, 'ftnc_work_payment_status', [ 'fields' => 'slugs' ] );
 			$payment_status = ( ! is_wp_error( $ps_terms ) && ! empty( $ps_terms ) ) ? $ps_terms[0] : 'unpaid';
 			$events[]       = [
