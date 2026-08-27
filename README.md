@@ -83,6 +83,14 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.5.0
+
+- **New**: Total Price is now calculated automatically from the work's service rows (plus any supplier referral fees, with Eleva CRM Pro) instead of being typed by hand, so it can never drift out of sync with what the services actually cost
+- **New**: Work edit screen gains a Suppliers section (requires Eleva CRM Pro) for tracking referral fees owed to wedding planners, venues, and other suppliers who refer a job
+- Fix: a work saved before this change, with a total price but no service rows, keeps its existing total instead of it being reset to zero. The work form shows a notice explaining that adding a service row lets the total be calculated automatically again
+- Fix: the Calendar view could show a customer name with a wrongly HTML-encoded ampersand, and Kanban task reminders never appeared on the Calendar at all. Both were caused by this plugin and Eleva CRM Pro registering the same calendar endpoint; this plugin now steps aside when Pro is active
+- i18n: new interface strings for this release are fully translated into Italian (it_IT)
+
 ### 1.4.1
 
 - **New**: Work edit screen gains a Reminders section (requires Eleva CRM Pro) — set a date offset from the event date and it materializes as a Kanban task, with optional Google Calendar sync

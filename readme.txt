@@ -4,7 +4,7 @@ Tags: photography-crm, client-management, booking, invoicing, photographers
 Requires at least: 6.0
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -143,7 +143,10 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 = 1.5.0 =
 * New: Total Price is now calculated automatically from the work's service rows (plus any supplier referral fees, with Eleva CRM Pro) instead of being typed by hand, so it can never drift out of sync with what the services actually cost.
+* New: Work edit screen gains a Suppliers section (requires Eleva CRM Pro) for tracking referral fees owed to wedding planners, venues, and other suppliers who refer a job.
 * Fix: a work saved before this change, with a total price but no service rows, keeps its existing total instead of it being reset to zero. The work form shows a notice on any such work explaining that adding a service row lets the total be calculated automatically again.
+* Fix: the Calendar view could show a customer name with a wrongly HTML-encoded ampersand, and Kanban task reminders never appeared on the Calendar at all. Both were caused by this plugin and Eleva CRM Pro registering the same calendar endpoint; this plugin now steps aside when Pro is active.
+* i18n: new interface strings for this release are fully translated into Italian (it_IT).
 
 = 1.4.2 =
 * Fix: cleaned up wording on several vault, recovery, and file-selection screens for clarity and consistency.
@@ -263,6 +266,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+Total Price is now calculated automatically from the services you enter, and can no longer be typed by hand. A work saved before this update with a total but no service rows keeps its existing total; the work form tells you to add a service row so it can be calculated automatically. Update Eleva CRM Pro to 1.5.0+ for supplier referral fees.
 
 = 1.4.2 =
 Cleans up wording on several screens and completes the Italian translation for a couple of previously English-only messages. Safe in-place update: no data or breaking changes.
