@@ -206,7 +206,12 @@ export default function WorkForm() {
         return sum
       }
       const value = parseFloat(row?.fee_value) || 0
-      const amount = row?.fee_type === 'percentage' ? (subtotal * value) / 100 : value
+      let amount = 0
+      if (row?.fee_type === 'percentage') {
+        amount = (subtotal * value) / 100
+      } else if (row?.fee_type === 'fixed') {
+        amount = value
+      }
       return sum + amount
     }, 0)
     return Math.round((subtotal + addedFees) * 100) / 100
