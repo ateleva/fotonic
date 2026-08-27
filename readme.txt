@@ -141,6 +141,10 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Changelog ==
 
+= 1.5.0 =
+* New: Total Price is now calculated automatically from the work's service rows (plus any supplier referral fees, with Eleva CRM Pro) instead of being typed by hand, so it can never drift out of sync with what the services actually cost.
+* Fix: a work saved before this change, with a total price but no service rows, keeps its existing total instead of it being reset to zero. The work form shows a notice on any such work explaining that adding a service row lets the total be calculated automatically again.
+
 = 1.4.2 =
 * Fix: cleaned up wording on several vault, recovery, and file-selection screens for clarity and consistency.
 * i18n: Italian (it_IT) translation completed for a couple of messages that had never been translated, including the session idle-timeout warning and an alternate recovery option on the "forgot my authenticator" screen.

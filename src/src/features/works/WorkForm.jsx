@@ -92,6 +92,7 @@ const defaultValues = {
   files: [],
   notes: '',
   total_price: '',
+  legacy_total: false,
   total_price_taxable: '',
   installments: [],
   color: '',
@@ -154,12 +155,13 @@ export default function WorkForm() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
 
-  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers] = watch([
+  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal] = watch([
     'owner_type',
     'owner_id',
     'event_date',
     'services',
     'suppliers',
+    'legacy_total',
   ])
 
   useEffect(() => {
@@ -182,6 +184,7 @@ export default function WorkForm() {
         files: work.files ?? [],
         notes: work.notes ?? '',
         total_price: work.total_price ?? '',
+        legacy_total: work.legacy_total ?? false,
         total_price_taxable: work.total_price_taxable ?? '',
         installments: work.installments ?? [],
         color: work.color ?? '',
@@ -502,6 +505,14 @@ export default function WorkForm() {
         <section>
           <SectionHeading>{__('Payments', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="ftnc-fields">
+            {legacyTotal && (watchedServices ?? []).length === 0 && (
+              <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mb-3">
+                {__(
+                  "This work's total was set before automatic calculation was introduced in version 1.5.0. Add at least one service row above so it can be calculated automatically.",
+                  'eleva-crm-for-photographers'
+                )}
+              </p>
+            )}
             <div className="flex flex-wrap gap-6">
               <FormField label={__('Total Price (€)', 'eleva-crm-for-photographers')} htmlFor="total_price">
                 <input

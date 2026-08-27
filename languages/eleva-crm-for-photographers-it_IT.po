@@ -1925,3 +1925,6 @@ msgstr "Calcolato dalle righe dei servizi e dalle provvigioni dei fornitori."
 
 msgid "Computed automatically from the services rows above."
 msgstr "Calcolato automaticamente dalle righe dei servizi qui sopra."
+
+msgid "This work's total was set before automatic calculation was introduced in version 1.5.0. Add at least one service row above so it can be calculated automatically."
+msgstr "Il totale di questo lavoro è stato impostato prima dell'introduzione del calcolo automatico nella versione 1.5.0. Aggiungi almeno una riga servizio qui sopra per calcolarlo automaticamente."

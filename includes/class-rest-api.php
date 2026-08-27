@@ -1848,6 +1848,19 @@ class Fotonic_REST_API {
 		}
 		$adjustment = (float) apply_filters( 'ftnc_work_total_price_adjustment', 0.0, $post_id );
 		$total      = round( max( 0.0, $subtotal + $adjustment ), 2 );
+
+		if ( $total <= 0.0 ) {
+			// Legacy pre-1.5.0 works can have a hand-typed total with no
+			// service rows. The field is read-only now, so overwriting a
+			// stored positive total with a computed 0 would be unrecoverable.
+			// Keep the stored value untouched in that case. A genuine zero
+			// (no services, nothing ever stored) still falls through below.
+			$stored = (float) get_post_meta( $post_id, '_ftnc_total_price', true );
+			if ( $stored > 0.0 ) {
+				return $stored;
+			}
+		}
+
 		update_post_meta( $post_id, '_ftnc_total_price', $total );
 		return $total;
 	}
@@ -2381,6 +2394,11 @@ class Fotonic_REST_API {
 			'services'        => $services,
 			'files'           => $files,
 			'total_price'         => (float) get_post_meta( $post->ID, '_ftnc_total_price', true ),
+			// Screen-only: true when this work has no service rows but still
+			// carries a positive total_price frozen from before the 1.5.0
+			// automatic-calculation guard. Mirrors recompute_total_price()'s
+			// own condition so the two never drift apart.
+			'legacy_total'        => empty( $services ) && (float) get_post_meta( $post->ID, '_ftnc_total_price', true ) > 0.0,
 			'total_price_taxable' => self::format_taxable_price( $post->ID ),
 			'gcal_sync'           => (bool) get_post_meta( $post->ID, '_ftnc_gcal_sync', true ),
 			'installments'        => $installments,

@@ -2116,3 +2116,7 @@ msgstr ""
 #: src/src/features/works/WorkForm.jsx:511
 msgid "Computed from the services rows and supplier fees."
 msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:510
+msgid "This work's total was set before automatic calculation was introduced in version 1.5.0. Add at least one service row above so it can be calculated automatically."
+msgstr ""
