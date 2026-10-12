@@ -70,17 +70,6 @@ class Fotonic_Admin_Page {
             return;
         }
 
-        // Inline CSS: hide any residual notices and kill the page-level scrollbar on the SPA page.
-        wp_add_inline_style( 'fotonic-app-css', '
-            .notice, .notice-error, .notice-warning, .notice-info, .notice-success,
-            .update-nag, .updated, .error, .wp-browser-update,
-            #wpbody-content > .updated, #wpbody-content > .error { display: none !important; }
-            body.toplevel_page_fotonic, body.toplevel_page_fotonic #wpbody-content,
-            body.toplevel_page_fotonic #wpwrap { overflow: hidden !important; }
-            body.toplevel_page_fotonic #wpwrap #wpfooter { display: none !important; }
-            #wpbody-content { padding-bottom: 0 !important; }
-        ' );
-
         add_filter( 'script_loader_tag', [ __CLASS__, 'add_module_type' ], 10, 2 );
 
         wp_enqueue_editor();
@@ -100,6 +89,18 @@ class Fotonic_Admin_Page {
             [],
             FOTONIC_VERSION
         );
+
+        // Inline CSS: hide any residual notices and kill the page-level scrollbar on the SPA page.
+        // Must run after wp_enqueue_style(): core silently drops inline styles for an unregistered handle.
+        wp_add_inline_style( 'fotonic-app-css', '
+            .notice, .notice-error, .notice-warning, .notice-info, .notice-success,
+            .update-nag, .updated, .error, .wp-browser-update,
+            #wpbody-content > .updated, #wpbody-content > .error { display: none !important; }
+            body.toplevel_page_fotonic, body.toplevel_page_fotonic #wpbody-content,
+            body.toplevel_page_fotonic #wpwrap { overflow: hidden !important; }
+            body.toplevel_page_fotonic #wpwrap #wpfooter { display: none !important; }
+            #wpbody-content { padding-bottom: 0 !important; }
+        ' );
 
         // Read WP admin theme colors from DOM before React renders.
         // getComputedStyle works for all built-in and custom color schemes.
