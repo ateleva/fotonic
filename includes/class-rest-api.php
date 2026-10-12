@@ -1144,6 +1144,144 @@ class Fotonic_REST_API {
 		}
 	}
 
+	/** Person PII fields: random-IV encrypted vs deterministic (SQL-searchable). */
+	const PEOPLE_RANDOM_FIELDS        = [ 'first_name', 'last_name', 'nationality', 'instagram_username', 'address', 'tin' ];
+	const PEOPLE_DETERMINISTIC_FIELDS = [ 'email', 'phone' ];
+
+	/**
+	 * Sanitize a people list and encrypt its PII with $key. Exactly one is_main
+	 * person comes out (the first flagged one, or the first row). A null key
+	 * (Vault never set up) stores sanitized plaintext, as customers always have.
+	 * Public so Pro quotes reuse the exact customer scheme.
+	 *
+	 * @param array       $people Raw person rows.
+	 * @param string|null $key    32-byte Vault key, or null.
+	 * @return array
+	 */
+	public static function encrypt_people( array $people, ?string $key ): array {
+		$sanitized = [];
+		$has_main  = false;
+
+		foreach ( $people as $person ) {
+			if ( ! is_array( $person ) ) {
+				continue;
+			}
+
+			$is_main  = ! empty( $person['is_main'] ) && ! $has_main;
+			$has_main = $has_main || $is_main;
+
+			$row = [
+				'first_name'         => sanitize_text_field( $person['first_name'] ?? '' ),
+				'last_name'          => sanitize_text_field( $person['last_name'] ?? '' ),
+				'email'              => sanitize_email( $person['email'] ?? '' ),
+				'phone'              => sanitize_text_field( $person['phone'] ?? '' ),
+				'nationality'        => sanitize_text_field( $person['nationality'] ?? '' ),
+				'instagram_username' => sanitize_text_field( $person['instagram_username'] ?? '' ),
+				'address'            => sanitize_text_field( $person['address'] ?? '' ),
+				'tin'                => sanitize_text_field( $person['tin'] ?? '' ),
+			];
+
+			if ( null !== $key ) {
+				// Skip empty strings: encrypting '' yields a short blob that bypasses looks_encrypted().
+				foreach ( self::PEOPLE_RANDOM_FIELDS as $field ) {
+					if ( '' !== $row[ $field ] ) {
+						$row[ $field ] = Fotonic_Crypto::encrypt( $row[ $field ], $key );
+					}
+				}
+				foreach ( self::PEOPLE_DETERMINISTIC_FIELDS as $field ) {
+					if ( '' !== $row[ $field ] ) {
+						$row[ $field ] = Fotonic_Crypto::deterministic_encrypt( $row[ $field ], $key );
+					}
+				}
+			}
+
+			$row['is_main'] = (bool) $is_main;
+			$sanitized[]    = $row;
+		}
+
+		if ( ! empty( $sanitized ) && ! $has_main ) {
+			$sanitized[0]['is_main'] = true;
+		}
+
+		return $sanitized;
+	}
+
+	/**
+	 * Decrypt a stored people list. With a null key (Vault locked) every field
+	 * that looks encrypted becomes null, never ciphertext.
+	 *
+	 * @param array       $people Stored person rows.
+	 * @param string|null $key    32-byte Vault key, or null.
+	 * @return array
+	 */
+	public static function decrypt_people( array $people, ?string $key ): array {
+		$fields = array_merge( self::PEOPLE_RANDOM_FIELDS, self::PEOPLE_DETERMINISTIC_FIELDS );
+		return array_map( function ( $person ) use ( $key, $fields ) {
+			if ( ! is_array( $person ) ) {
+				return $person;
+			}
+			foreach ( $fields as $field ) {
+				$person[ $field ] = self::decrypt_value( (string) ( $person[ $field ] ?? '' ), $key );
+			}
+			return $person;
+		}, $people );
+	}
+
+	/**
+	 * Sanitize event addresses and encrypt each street with $key.
+	 *
+	 * @param array       $addresses Raw [{label, street}] rows.
+	 * @param string|null $key       32-byte Vault key, or null.
+	 * @return array
+	 */
+	public static function encrypt_addresses( array $addresses, ?string $key ): array {
+		$clean = [];
+		foreach ( $addresses as $addr ) {
+			if ( ! is_array( $addr ) ) {
+				continue;
+			}
+			$clean[] = [
+				'label'  => sanitize_text_field( $addr['label'] ?? '' ),
+				'street' => self::encrypt_value( sanitize_text_field( $addr['street'] ?? '' ), $key ),
+			];
+		}
+		return $clean;
+	}
+
+	/**
+	 * Decrypt stored event addresses (street null when locked and encrypted).
+	 *
+	 * @param array       $addresses Stored [{label, street}] rows.
+	 * @param string|null $key       32-byte Vault key, or null.
+	 * @return array
+	 */
+	public static function decrypt_addresses( array $addresses, ?string $key ): array {
+		$out = [];
+		foreach ( $addresses as $addr ) {
+			if ( ! is_array( $addr ) ) {
+				continue;
+			}
+			$out[] = [
+				'label'  => (string) ( $addr['label'] ?? '' ),
+				'street' => self::decrypt_value( (string) ( $addr['street'] ?? '' ), $key ),
+			];
+		}
+		return $out;
+	}
+
+	/** Random-IV encrypt a non-empty value when a key is available. */
+	public static function encrypt_value( string $value, ?string $key ): string {
+		return ( null !== $key && '' !== $value ) ? Fotonic_Crypto::encrypt( $value, $key ) : $value;
+	}
+
+	/** Decrypt any supported ciphertext; with no key, encrypted values become null. */
+	public static function decrypt_value( string $value, ?string $key ): ?string {
+		if ( null === $key ) {
+			return self::looks_encrypted( $value ) ? null : $value;
+		}
+		return self::maybe_decrypt( $value, $key );
+	}
+
 	// ---------------------------------------------------------------------------
 	// Customers — READ
 	// ---------------------------------------------------------------------------
@@ -1614,6 +1752,18 @@ class Fotonic_REST_API {
 			], 200 );
 		}
 
+		/**
+		 * Lets Pro block deleting a customer still referenced by its own data
+		 * (e.g. quotes). Return a non-empty reason string to block, null to allow.
+		 *
+		 * @param string|null $reason      Null when nothing blocks so far.
+		 * @param int         $customer_id Customer post ID.
+		 */
+		$reason = apply_filters( 'ftnc_can_delete_customer', null, $id );
+		if ( is_string( $reason ) && '' !== $reason ) {
+			return new \WP_REST_Response( [ 'can_delete' => false, 'reason' => $reason ], 200 );
+		}
+
 		return new \WP_REST_Response( [ 'can_delete' => true ], 200 );
 	}
 
@@ -1753,61 +1903,7 @@ class Fotonic_REST_API {
 			return;
 		}
 
-		$vault_key = Fotonic_Vault::get_session_key();
-		$encrypt   = $vault_key !== null;
-
-		$sanitized = [];
-		$has_main  = false;
-
-		foreach ( $body['people'] as $person ) {
-			if ( ! is_array( $person ) ) {
-				continue;
-			}
-
-			$is_main  = ! empty( $person['is_main'] ) && ! $has_main;
-			$has_main = $has_main || $is_main;
-
-			$first_name         = sanitize_text_field( $person['first_name'] ?? '' );
-			$last_name          = sanitize_text_field( $person['last_name'] ?? '' );
-			$email              = sanitize_email( $person['email'] ?? '' );
-			$phone              = sanitize_text_field( $person['phone'] ?? '' );
-			$nationality        = sanitize_text_field( $person['nationality'] ?? '' );
-			$instagram_username = sanitize_text_field( $person['instagram_username'] ?? '' );
-			$address            = sanitize_text_field( $person['address'] ?? '' );
-			$tin                = sanitize_text_field( $person['tin'] ?? '' );
-
-			if ( $encrypt ) {
-				// Random-IV encryption for free-text PII. Skip empty strings — encrypting
-				// empty produces a short ciphertext that bypasses looks_encrypted() checks.
-				if ( '' !== $first_name )         { $first_name         = Fotonic_Crypto::encrypt( $first_name,         $vault_key ); }
-				if ( '' !== $last_name )          { $last_name          = Fotonic_Crypto::encrypt( $last_name,          $vault_key ); }
-				if ( '' !== $nationality )        { $nationality        = Fotonic_Crypto::encrypt( $nationality,        $vault_key ); }
-				if ( '' !== $instagram_username ) { $instagram_username = Fotonic_Crypto::encrypt( $instagram_username, $vault_key ); }
-				if ( '' !== $address )            { $address            = Fotonic_Crypto::encrypt( $address,            $vault_key ); }
-				if ( '' !== $tin )                { $tin                = Fotonic_Crypto::encrypt( $tin,                $vault_key ); }
-				// Deterministic encryption for searchable fields.
-				if ( '' !== $email ) { $email = Fotonic_Crypto::deterministic_encrypt( $email, $vault_key ); }
-				if ( '' !== $phone ) { $phone = Fotonic_Crypto::deterministic_encrypt( $phone, $vault_key ); }
-			}
-
-			$sanitized[] = [
-				'first_name'         => $first_name,
-				'last_name'          => $last_name,
-				'email'              => $email,
-				'phone'              => $phone,
-				'nationality'        => $nationality,
-				'instagram_username' => $instagram_username,
-				'address'            => $address,
-				'tin'                => $tin,
-				'is_main'            => (bool) $is_main,
-			];
-		}
-
-		if ( ! empty( $sanitized ) && ! $has_main ) {
-			$sanitized[0]['is_main'] = true;
-		}
-
-		update_post_meta( $post_id, '_ftnc_people', wp_json_encode( $sanitized ) );
+		update_post_meta( $post_id, '_ftnc_people', wp_json_encode( self::encrypt_people( $body['people'], Fotonic_Vault::get_session_key() ) ) );
 	}
 
 	/**
@@ -1874,7 +1970,6 @@ class Fotonic_REST_API {
 	 */
 	private static function save_work_meta( int $post_id, array $body ): void {
 		$vault_key = Fotonic_Vault::get_session_key();
-		$encrypt   = $vault_key !== null;
 
 		// Event details.
 		if ( isset( $body['event_date'] ) ) {
@@ -1905,22 +2000,7 @@ class Fotonic_REST_API {
 		}
 
 		if ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) ) {
-			$clean_addresses = [];
-			foreach ( $body['event_addresses'] as $addr ) {
-				if ( ! is_array( $addr ) ) {
-					continue;
-				}
-				$label  = sanitize_text_field( $addr['label'] ?? '' );
-				$street = sanitize_text_field( $addr['street'] ?? '' );
-				if ( $encrypt && $street !== '' ) {
-					$street = Fotonic_Crypto::encrypt( $street, $vault_key );
-				}
-				$clean_addresses[] = [
-					'label'  => $label,
-					'street' => $street,
-				];
-			}
-			update_post_meta( $post_id, '_ftnc_event_addresses', wp_json_encode( $clean_addresses ) );
+			update_post_meta( $post_id, '_ftnc_event_addresses', wp_json_encode( self::encrypt_addresses( $body['event_addresses'], $vault_key ) ) );
 		}
 
 		// Customer.
@@ -2080,52 +2160,8 @@ class Fotonic_REST_API {
 			}
 		}
 
-		$vault_key = Fotonic_Vault::get_session_key();
-
-		if ( $vault_key !== null ) {
-			// Vault unlocked: decrypt each person's PII fields.
-			$people = array_map( function ( $person ) use ( $vault_key ) {
-				$person['first_name']         = self::maybe_decrypt( $person['first_name']         ?? '', $vault_key );
-				$person['last_name']          = self::maybe_decrypt( $person['last_name']          ?? '', $vault_key );
-				$person['nationality']        = self::maybe_decrypt( $person['nationality']        ?? '', $vault_key );
-				$person['instagram_username'] = self::maybe_decrypt( $person['instagram_username'] ?? '', $vault_key );
-				$person['address']            = self::maybe_decrypt( $person['address']            ?? '', $vault_key );
-				$person['tin']                = self::maybe_decrypt( $person['tin']                ?? '', $vault_key );
-				// Deterministic-encrypted fields use the same decrypt function.
-				$person['email'] = self::maybe_decrypt( $person['email'] ?? '', $vault_key );
-				$person['phone'] = self::maybe_decrypt( $person['phone'] ?? '', $vault_key );
-				return $person;
-			}, $people );
-		} else {
-			// Vault locked: return null for encrypted fields.
-			$people = array_map( function ( $person ) {
-				if ( self::looks_encrypted( $person['first_name'] ?? '' ) ) {
-					$person['first_name'] = null;
-				}
-				if ( self::looks_encrypted( $person['last_name'] ?? '' ) ) {
-					$person['last_name'] = null;
-				}
-				if ( self::looks_encrypted( $person['nationality'] ?? '' ) ) {
-					$person['nationality'] = null;
-				}
-				if ( self::looks_encrypted( $person['instagram_username'] ?? '' ) ) {
-					$person['instagram_username'] = null;
-				}
-				if ( self::looks_encrypted( $person['address'] ?? '' ) ) {
-					$person['address'] = null;
-				}
-				if ( self::looks_encrypted( $person['tin'] ?? '' ) ) {
-					$person['tin'] = null;
-				}
-				if ( self::looks_encrypted( $person['email'] ?? '' ) ) {
-					$person['email'] = null;
-				}
-				if ( self::looks_encrypted( $person['phone'] ?? '' ) ) {
-					$person['phone'] = null;
-				}
-				return $person;
-			}, $people );
-		}
+		// Vault unlocked: decrypt each person's PII fields. Locked: encrypted fields become null.
+		$people = self::decrypt_people( $people, Fotonic_Vault::get_session_key() );
 
 		return [
 			'id'     => $post->ID,
@@ -2263,23 +2299,7 @@ class Fotonic_REST_API {
 		if ( ! empty( $raw_event_addresses ) ) {
 			$dec_addrs = json_decode( $raw_event_addresses, true );
 			if ( is_array( $dec_addrs ) ) {
-				foreach ( $dec_addrs as $addr ) {
-					if ( ! is_array( $addr ) ) {
-						continue;
-					}
-					$street = (string) ( $addr['street'] ?? '' );
-					if ( $vault_key !== null ) {
-						$street = self::maybe_decrypt( $street, $vault_key );
-					} else {
-						if ( self::looks_encrypted( $street ) ) {
-							$street = null;
-						}
-					}
-					$event_addresses[] = [
-						'label'  => (string) ( $addr['label'] ?? '' ),
-						'street' => $street,
-					];
-				}
+				$event_addresses = self::decrypt_addresses( $dec_addrs, $vault_key );
 			}
 		}
 
@@ -2377,7 +2397,7 @@ class Fotonic_REST_API {
 			}
 		}
 
-		return [
+		$data = [
 			'id'              => $post->ID,
 			'title'           => $post->post_title,
 			'event_date'      => (string) get_post_meta( $post->ID, '_ftnc_event_date', true ),
@@ -2417,6 +2437,16 @@ class Fotonic_REST_API {
 			'reminders'           => $include_reminders ? apply_filters( 'ftnc_work_reminders', array(), $post->ID ) : array(),
 			'reminders_base_date' => (string) get_post_meta( $post->ID, '_ftnc_reminders_base_date', true ),
 		];
+
+		/**
+		 * Lets Pro append its own work fields (VAT snapshot, source quote) to every
+		 * work response. Keep callbacks cheap: this runs once per work in list loops.
+		 *
+		 * @param array    $data              Formatted work.
+		 * @param \WP_Post $post              Work post.
+		 * @param bool     $include_reminders True only on single-work responses.
+		 */
+		return apply_filters( 'ftnc_format_work', $data, $post, $include_reminders );
 	}
 
 	/**

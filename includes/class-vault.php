@@ -675,6 +675,15 @@ class Fotonic_Vault {
 		Fotonic_REST_API::reencrypt_customers( $old_key, $mk );
 		Fotonic_REST_API::reencrypt_works( $old_key, $mk );
 
+		/**
+		 * Lets Pro re-encrypt its own Vault-protected data (quote people and
+		 * addresses) with the new Master Key.
+		 *
+		 * @param string $old_key Legacy 32-byte key.
+		 * @param string $new_key New 32-byte Master Key.
+		 */
+		do_action( 'ftnc_vault_reencrypt', $old_key, $mk );
+
 		// Wrap password KEK (reuse existing salt for backwards compat).
 		$kek_pw  = Fotonic_Crypto::derive_key( $password, $old_salt );
 		$wrap_pw = Fotonic_Crypto::wrap( $mk, $kek_pw );
