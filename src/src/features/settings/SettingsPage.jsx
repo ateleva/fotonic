@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Shield, Key, Archive, UploadCloud, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle } from 'lucide-react'
+import { Shield, Key, Archive, UploadCloud, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle, FileText } from 'lucide-react'
 import QRCode from 'qrcode'
 import { __ } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
@@ -618,6 +618,7 @@ function ResetVaultAction() {
 const LicenseSettingsSection = window.FotonicProComponents?.LicenseSettingsSection ?? null
 const GCalSettings           = window.FotonicProComponents?.GCalSettings           ?? null
 const ProBackupSettingsSection = window.FotonicProComponents?.BackupSettingsSection ?? null
+const QuoteSettingsSection = window.FotonicProComponents?.QuoteSettingsSection ?? null
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false)
@@ -733,6 +734,12 @@ export default function SettingsPage() {
             <p className="text-sm text-gray-400">
               {__('Automatic backups to Google Drive require an active Eleva Pro license.', 'eleva-crm-for-photographers')}
             </p>
+          </SectionCard>
+        )}
+
+        {QuoteSettingsSection && window.FotonicApp?.features?.quotes && (
+          <SectionCard title={__('Quotes', 'eleva-crm-for-photographers')} icon={FileText}>
+            <QuoteSettingsSection />
           </SectionCard>
         )}
 

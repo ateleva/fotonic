@@ -14,6 +14,8 @@ import PeopleRepeater from './PeopleRepeater'
 import SectionHeading from '../../components/SectionHeading'
 import { __ } from '../../utils/i18n'
 
+const CustomerQuotesSection = window.FotonicProComponents?.CustomerQuotesSection ?? null
+
 const fmtEur = (v) =>
   new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(v ?? 0)
 
@@ -275,6 +277,9 @@ export default function CustomerForm() {
         </div>
       </form>
       {isEdit && <CustomerWorksSection customerId={Number(id)} />}
+      {isEdit && CustomerQuotesSection && window.FotonicApp?.features?.quotes && (
+        <CustomerQuotesSection customerId={Number(id)} />
+      )}
     </div>
 
     <ConfirmDialog

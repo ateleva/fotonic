@@ -58,6 +58,32 @@ export function createRouter() { return createHashRouter([
       { path: 'calendar',          element: <Lazy component={CalendarView} /> },
       { path: 'settings',          element: <Lazy component={SettingsPage} /> },
       // Pro routes — only active when FotonicPro bundle is loaded
+      ...(window.FotonicApp?.features?.quotes && window.FotonicProComponents?.QuoteList ? [
+        {
+          path: 'quotes',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.QuoteList />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'quotes/new',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.QuoteForm />
+            </Suspense>
+          ),
+        },
+        {
+          path: 'quotes/:id',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.QuoteForm />
+            </Suspense>
+          ),
+        },
+      ] : []),
       ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.KanbanBoard ? [{
         path: 'kanban',
         element: (

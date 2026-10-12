@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, MemoryStick, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, MemoryStick, PanelLeftClose, PanelLeftOpen, FileText } from 'lucide-react'
 import logoPng from '../assets/icon-256x256.png'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
@@ -85,6 +85,7 @@ export default function Layout() {
   ]
 
   const proNavItems = [
+    { to: '/quotes',        label: __('Quotes', 'eleva-crm-for-photographers'),         icon: FileText,     feature: 'quotes' },
     { to: '/kanban',         label: __('Kanban', 'eleva-crm-for-photographers'),         icon: Kanban,       feature: 'kanban' },
     { to: '/analytics',     label: __('Analytics', 'eleva-crm-for-photographers'),      icon: BarChart2,    feature: 'analytics' },
     { to: '/collaborators', label: __('Collaborators', 'eleva-crm-for-photographers'),  icon: UserCheck,    feature: 'collaborators' },

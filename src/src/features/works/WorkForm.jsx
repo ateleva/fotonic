@@ -107,6 +107,8 @@ const TaxablePriceField = window.FotonicProComponents?.TaxablePriceField ?? null
 const GCalSyncField = window.FotonicProComponents?.GCalSyncField ?? null
 const RemindersSection = window.FotonicProComponents?.RemindersSection ?? null
 const SuppliersSection = window.FotonicProComponents?.SuppliersSection ?? null
+const VatSummaryField = window.FotonicProComponents?.VatSummaryField ?? null
+const WorkSourceQuoteLink = window.FotonicProComponents?.WorkSourceQuoteLink ?? null
 
 export default function WorkForm() {
   const { id } = useParams()
@@ -155,13 +157,15 @@ export default function WorkForm() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
 
-  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal] = watch([
+  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal, watchedTaxable, watchedInstallments] = watch([
     'owner_type',
     'owner_id',
     'event_date',
     'services',
     'suppliers',
     'legacy_total',
+    'total_price_taxable',
+    'installments',
   ])
 
   useEffect(() => {
@@ -297,6 +301,10 @@ export default function WorkForm() {
         backTo="/works"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
+
+      {WorkSourceQuoteLink && isEdit && work?.source_quote && (
+        <WorkSourceQuoteLink work={work} />
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="ftnc-stack">
         {/* Section 1: Event */}
@@ -529,6 +537,14 @@ export default function WorkForm() {
               </FormField>
               {TaxablePriceField && window.FotonicApp?.features?.taxable_price && (
                 <TaxablePriceField register={register} error={errors.total_price_taxable?.message} />
+              )}
+              {VatSummaryField && window.FotonicApp?.features?.quotes && (
+                <VatSummaryField
+                  total={computedTotal}
+                  taxable={watchedTaxable}
+                  installments={watchedInstallments ?? []}
+                  work={work ?? null}
+                />
               )}
             </div>
 
