@@ -328,12 +328,17 @@ export default function WorkForm() {
               </FormField>
             </div>
             <div className="col-span-2 ftnc-grid-3">
-              <FormField label={__('Event Date', 'eleva-crm-for-photographers')} htmlFor="event_date">
+              <FormField
+                label={__('Event Date', 'eleva-crm-for-photographers')}
+                htmlFor="event_date"
+                required
+                error={errors.event_date?.message}
+              >
                 <input
                   id="event_date"
                   type="date"
                   className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                  {...register('event_date')}
+                  {...register('event_date', { required: __('Event date is required', 'eleva-crm-for-photographers') })}
                 />
               </FormField>
               <FormField label={__('Event Time From', 'eleva-crm-for-photographers')} htmlFor="event_time_from">
