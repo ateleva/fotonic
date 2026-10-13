@@ -1094,7 +1094,7 @@ class Fotonic_REST_API {
 			unset( $person );
 
 			if ( $changed ) {
-				update_post_meta( $post_id, '_ftnc_people', wp_json_encode( $people ) );
+				update_post_meta( $post_id, '_ftnc_people', wp_slash( wp_json_encode( $people ) ) );
 			}
 		}
 	}
@@ -1139,7 +1139,7 @@ class Fotonic_REST_API {
 			unset( $addr );
 
 			if ( $changed ) {
-				update_post_meta( $post_id, '_ftnc_event_addresses', wp_json_encode( $addresses ) );
+				update_post_meta( $post_id, '_ftnc_event_addresses', wp_slash( wp_json_encode( $addresses ) ) );
 			}
 		}
 	}
@@ -1347,11 +1347,13 @@ class Fotonic_REST_API {
 			);
 		}
 
-		$post_id = wp_insert_post( [
+		// wp_insert_post() and update_post_meta() unslash their input: wp_slash() keeps
+		// backslashes and the \u00e8 escapes of wp_json_encode() intact.
+		$post_id = wp_insert_post( wp_slash( [
 			'post_type'   => 'ftnc_customer',
 			'post_status' => 'publish',
 			'post_title'  => $title,
-		], true );
+		] ), true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_REST_Response(
@@ -1381,7 +1383,7 @@ class Fotonic_REST_API {
 		if ( isset( $body['title'] ) ) {
 			$title = sanitize_text_field( $body['title'] );
 			if ( ! empty( $title ) ) {
-				wp_update_post( [ 'ID' => $id, 'post_title' => $title ] );
+				wp_update_post( wp_slash( [ 'ID' => $id, 'post_title' => $title ] ) );
 			}
 		}
 
@@ -1460,11 +1462,11 @@ class Fotonic_REST_API {
 			);
 		}
 
-		$post_id = wp_insert_post( [
+		$post_id = wp_insert_post( wp_slash( [
 			'post_type'   => 'ftnc_service',
 			'post_status' => 'publish',
 			'post_title'  => $title,
-		], true );
+		] ), true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_REST_Response(
@@ -1494,7 +1496,7 @@ class Fotonic_REST_API {
 		if ( isset( $body['title'] ) ) {
 			$title = sanitize_text_field( $body['title'] );
 			if ( ! empty( $title ) ) {
-				wp_update_post( [ 'ID' => $id, 'post_title' => $title ] );
+				wp_update_post( wp_slash( [ 'ID' => $id, 'post_title' => $title ] ) );
 			}
 		}
 
@@ -1607,12 +1609,12 @@ class Fotonic_REST_API {
 			);
 		}
 
-		$post_id = wp_insert_post( [
+		$post_id = wp_insert_post( wp_slash( [
 			'post_type'    => 'ftnc_work',
 			'post_status'  => 'publish',
 			'post_title'   => $title,
 			'post_content' => isset( $body['notes'] ) ? wp_kses_post( $body['notes'] ) : '',
-		], true );
+		] ), true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_REST_Response(
@@ -1660,7 +1662,7 @@ class Fotonic_REST_API {
 			$update['post_content'] = wp_kses_post( $body['notes'] );
 		}
 		if ( count( $update ) > 1 ) {
-			wp_update_post( $update );
+			wp_update_post( wp_slash( $update ) );
 		}
 
 		// Capture previous card list before save_work_meta overwrites it (for removed-card detection in sync).
@@ -1903,7 +1905,7 @@ class Fotonic_REST_API {
 			return;
 		}
 
-		update_post_meta( $post_id, '_ftnc_people', wp_json_encode( self::encrypt_people( $body['people'], Fotonic_Vault::get_session_key() ) ) );
+		update_post_meta( $post_id, '_ftnc_people', wp_slash( wp_json_encode( self::encrypt_people( $body['people'], Fotonic_Vault::get_session_key() ) ) ) );
 	}
 
 	/**
@@ -1918,7 +1920,7 @@ class Fotonic_REST_API {
 			update_post_meta( $post_id, '_ftnc_base_price', $price >= 0 ? $price : 0 );
 		}
 		if ( isset( $body['notes'] ) ) {
-			update_post_meta( $post_id, '_ftnc_notes', wp_kses_post( $body['notes'] ) );
+			update_post_meta( $post_id, '_ftnc_notes', wp_slash( wp_kses_post( $body['notes'] ) ) );
 		}
 	}
 
@@ -2000,7 +2002,7 @@ class Fotonic_REST_API {
 		}
 
 		if ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) ) {
-			update_post_meta( $post_id, '_ftnc_event_addresses', wp_json_encode( self::encrypt_addresses( $body['event_addresses'], $vault_key ) ) );
+			update_post_meta( $post_id, '_ftnc_event_addresses', wp_slash( wp_json_encode( self::encrypt_addresses( $body['event_addresses'], $vault_key ) ) ) );
 		}
 
 		// Customer.
@@ -2033,7 +2035,7 @@ class Fotonic_REST_API {
 					'notes_override' => sanitize_text_field( $svc['notes_override'] ?? '' ),
 				];
 			}
-			update_post_meta( $post_id, '_ftnc_work_services', wp_json_encode( $clean ) );
+			update_post_meta( $post_id, '_ftnc_work_services', wp_slash( wp_json_encode( $clean ) ) );
 		}
 
 		// Files. Each entry is either an uploaded attachment or an external link,
@@ -2067,7 +2069,7 @@ class Fotonic_REST_API {
 					}
 				}
 			}
-			update_post_meta( $post_id, '_ftnc_work_files', wp_json_encode( array_values( $clean ) ) );
+			update_post_meta( $post_id, '_ftnc_work_files', wp_slash( wp_json_encode( array_values( $clean ) ) ) );
 		}
 
 		// Payments.
@@ -2092,7 +2094,7 @@ class Fotonic_REST_API {
 					'date'   => preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw_date ) ? $raw_date : '',
 				];
 			}
-			update_post_meta( $post_id, '_ftnc_installments', wp_json_encode( $clean ) );
+			update_post_meta( $post_id, '_ftnc_installments', wp_slash( wp_json_encode( $clean ) ) );
 		}
 
 		// Calendar color.
@@ -2107,7 +2109,7 @@ class Fotonic_REST_API {
 
 		// Quick notes.
 		if ( isset( $body['quick_notes'] ) ) {
-			update_post_meta( $post_id, '_ftnc_quick_notes', wp_kses_post( $body['quick_notes'] ) );
+			update_post_meta( $post_id, '_ftnc_quick_notes', wp_slash( wp_kses_post( $body['quick_notes'] ) ) );
 		}
 
 		// Memory cards.
@@ -2126,7 +2128,7 @@ class Fotonic_REST_API {
 					'notes'   => sanitize_text_field( $mc['notes'] ?? '' ),
 				];
 			}
-			update_post_meta( $post_id, '_ftnc_memory_cards', wp_json_encode( $clean_cards ) );
+			update_post_meta( $post_id, '_ftnc_memory_cards', wp_slash( wp_json_encode( $clean_cards ) ) );
 		}
 
 		// Backup / formatting / ready-for-next flags.

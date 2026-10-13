@@ -836,7 +836,8 @@ class Fotonic_Meta_Boxes {
 			$sanitized[0]['is_main'] = true;
 		}
 
-		update_post_meta( $post_id, '_ftnc_people', wp_json_encode( $sanitized ) );
+		// update_post_meta() unslashes: wp_slash() keeps backslashes and JSON unicode escapes intact.
+		update_post_meta( $post_id, '_ftnc_people', wp_slash( wp_json_encode( $sanitized ) ) );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
 
@@ -862,7 +863,7 @@ class Fotonic_Meta_Boxes {
 		}
 
 		if ( isset( $_POST['ftnc_notes'] ) ) {
-			update_post_meta( $post_id, '_ftnc_notes', wp_kses_post( wp_unslash( $_POST['ftnc_notes'] ) ) );
+			update_post_meta( $post_id, '_ftnc_notes', wp_slash( wp_kses_post( wp_unslash( $_POST['ftnc_notes'] ) ) ) );
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}
@@ -936,7 +937,7 @@ class Fotonic_Meta_Boxes {
 					'street' => $street,
 				];
 			}
-			update_post_meta( $post_id, '_ftnc_event_addresses', wp_json_encode( $clean_addresses ) );
+			update_post_meta( $post_id, '_ftnc_event_addresses', wp_slash( wp_json_encode( $clean_addresses ) ) );
 		}
 
 		// Section 2: Customer.
@@ -967,7 +968,7 @@ class Fotonic_Meta_Boxes {
 					'notes_override' => sanitize_text_field( $item['notes_override'] ?? '' ),
 				];
 			}
-			update_post_meta( $post_id, '_ftnc_work_services', wp_json_encode( $clean ) );
+			update_post_meta( $post_id, '_ftnc_work_services', wp_slash( wp_json_encode( $clean ) ) );
 		}
 
 		// Section 5: Files JSON. This legacy screen's JS only manages attachment IDs;
@@ -999,7 +1000,7 @@ class Fotonic_Meta_Boxes {
 				}
 			}
 
-			update_post_meta( $post_id, '_ftnc_work_files', wp_json_encode( array_values( array_merge( $attachments, $links ) ) ) );
+			update_post_meta( $post_id, '_ftnc_work_files', wp_slash( wp_json_encode( array_values( array_merge( $attachments, $links ) ) ) ) );
 		}
 
 		// Section 6: Payments.
@@ -1029,7 +1030,7 @@ class Fotonic_Meta_Boxes {
 					'date'   => preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw_date ) ? $raw_date : '',
 				];
 			}
-			update_post_meta( $post_id, '_ftnc_installments', wp_json_encode( $clean ) );
+			update_post_meta( $post_id, '_ftnc_installments', wp_slash( wp_json_encode( $clean ) ) );
 		}
 
 		// Section 7: Calendar Color.
@@ -1044,7 +1045,7 @@ class Fotonic_Meta_Boxes {
 
 		// Quick Notes (rendered via edit_form_after_title, saved here).
 		if ( isset( $_POST['ftnc_quick_notes'] ) ) {
-			update_post_meta( $post_id, '_ftnc_quick_notes', wp_kses_post( wp_unslash( $_POST['ftnc_quick_notes'] ) ) );
+			update_post_meta( $post_id, '_ftnc_quick_notes', wp_slash( wp_kses_post( wp_unslash( $_POST['ftnc_quick_notes'] ) ) ) );
 		}
 		// phpcs:enable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 	}

@@ -107,11 +107,12 @@ class Fotonic_Memory_Card_REST_API {
 			return new \WP_REST_Response( [ 'message' => __( 'Card title is required.', 'eleva-crm-for-photographers' ) ], 400 );
 		}
 
-		$post_id = wp_insert_post( [
+		// wp_insert_post() unslashes its input: wp_slash() keeps backslashes in the title.
+		$post_id = wp_insert_post( wp_slash( [
 			'post_type'   => 'ftnc_memory_card',
 			'post_title'  => $title,
 			'post_status' => 'publish',
-		], true );
+		] ), true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_REST_Response( [ 'message' => $post_id->get_error_message() ], 500 );
@@ -136,7 +137,7 @@ class Fotonic_Memory_Card_REST_API {
 			if ( empty( $title ) ) {
 				return new \WP_REST_Response( [ 'message' => __( 'Card title is required.', 'eleva-crm-for-photographers' ) ], 400 );
 			}
-			wp_update_post( [ 'ID' => $id, 'post_title' => $title ] );
+			wp_update_post( wp_slash( [ 'ID' => $id, 'post_title' => $title ] ) );
 		}
 
 		if ( isset( $body['status'] ) ) {
