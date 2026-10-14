@@ -218,7 +218,6 @@ class Fotonic_Backup_Registry {
     /**
      * Cheap, WP-CLI-less audit entry point: visiting the plugin admin page with
      * `?ftnc_backup_audit=1` wp_die()s with the drift report. Gated to manage_options.
-     * Phase 6 can surface this properly in the UI.
      *
      * @return void
      */

@@ -723,7 +723,7 @@ export default function SettingsPage() {
           </div>
         </SectionCard>
 
-        {/* Placed directly below Vault, and above Pro's Drive panel slot (Phase 10):
+        {/* Placed directly below Vault, and above Pro's Drive panel slot:
             the free manual download reads as the baseline, Drive as the upgrade. */}
         <SectionCard id="ftnc-sec-backups" title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
           <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />

@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *     AK        = random_bytes(32)
  *     sealed_AK = sodium_crypto_box_seal(AK, pub)
  *
- *   RESTORE (offline tool, any machine — see Phase 5)
+ *   RESTORE (offline tool, any machine; see tools/eleva-backup-decrypt.php)
  *     priv = GCM_unwrap(fotonic_backup_wrap_priv, MK)
  *     AK   = sodium_crypto_box_seal_open(sealed_AK, keypair(priv, pub))
  *

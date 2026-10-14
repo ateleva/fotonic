@@ -50,7 +50,7 @@
    explicit utility or an .ftnc-* class), so that default margin is pure double-counted
    dead space stacked on top of our own, deliberately-tuned rhythm — this is what made
    SectionCard's title and every <p> in .ftnc-panel__body sit far from their neighbors
-   even after the Phase 1 rhythm pass.
+   even after the section rhythm rules further down.
    Unlike the border reset, a fully zero-specificity :where(...):where(...) version of
    this rule LOSES here: WP admin's own bundled CSS (common.css, loaded via
    load-styles.php) ships `h2, h3 { margin: 1em 0 }` at real (0,0,1) specificity, which
@@ -165,7 +165,7 @@
    This source order is the specificity contract for every `.ftnc-*` rule below.
    =========================================================================== */
 
-/* --- Phase 1: section rhythm (.ftnc-stack, .ftnc-section-heading, .ftnc-fields, .ftnc-panel) --- */
+/* --- Section rhythm (.ftnc-stack, .ftnc-section-heading, .ftnc-fields, .ftnc-panel) --- */
 
 /* Vertical rhythm between sections — drop-in for `space-y-8` / `space-y-6`.
    Same mechanism and same `:not([hidden])` sibling filter Tailwind's own `space-y-*`
@@ -235,11 +235,11 @@
   max-width: 68ch;
 }
 
-/* --- Phase 2: collapsible sidebar (.ftnc-sidebar, .ftnc-navlink, reduced-motion kill switch) --- */
+/* --- Collapsible sidebar (.ftnc-sidebar, .ftnc-navlink, reduced-motion kill switch) --- */
 
 /* Every rule in this block that touches an element also carrying Tailwind utilities sits at
    (1,1,0), not (0,1,0). That is a deliberate departure from the "(0,1,0) unless the values
-   differ" default used in phase 1, and the reason is `transition`:
+   differ" default used in the section rhythm block, and the reason is `transition`:
    `#fotonic-app-root .transition-colors` compiles to (1,1,0) and sets the
    `transition-property` LONGHAND (color, background-color, border-color, ...). A (0,1,0)
    `.ftnc-navlink { transition: grid-template-columns ... }` loses that longhand outright and
@@ -479,9 +479,9 @@
   }
 }
 
-/* --- Phase 3: responsive (.ftnc-pane, .ftnc-grid-2/-3/-4, @container rules, .ftnc-table-scroll) ---
-   `.ftnc-prose` was defined in the phase 1 block above — phase 3 applies it, it does not
-   redefine it. */
+/* --- Responsive (.ftnc-pane, .ftnc-grid-2/-3/-4, @container rules, .ftnc-table-scroll) ---
+   `.ftnc-prose` is defined in the section rhythm block above; this block applies it and does
+   not redefine it. */
 
 /* Container queries fire off this element's own width, not the viewport — the only
    thing that stays correct as the sidebar collapses/expands and the WP admin menu

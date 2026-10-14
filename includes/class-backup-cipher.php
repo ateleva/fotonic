@@ -9,9 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * around 2x the chunk size regardless of file size.
  *
  * =============================================================================
- * WIRE FORMAT - "FTNCBK01"   (CONTRACT: Phase 5's standalone decrypt tool
+ * WIRE FORMAT - "FTNCBK01"   (CONTRACT: the standalone decrypt tool
  *                             reimplements this from this docblock alone.
- *                             Changing anything here changes Phase 5 too.)
+ *                             Changing anything here changes that tool too.)
  * =============================================================================
  *
  * All integers are BIG-ENDIAN and unsigned.
@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * in from a different stream under the same key can be reinterpreted; binding
  * final_flag stops a data record being passed off as a terminator.
  *
- * WHY AN 8-BYTE PREFIX (deviation from the phase plan, which specified 4):
+ * WHY AN 8-BYTE PREFIX (not 4):
  * one archive key encrypts MANY streams - data.enc plus every attachment - so
  * prefix collisions across streams under one key are the binding constraint.
  * A shared prefix means two streams reuse the same (key, nonce) pair, and GCM

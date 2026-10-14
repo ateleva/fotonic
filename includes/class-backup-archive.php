@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 /**
  * Builds a single encrypted backup archive from everything Fotonic_Backup_Registry
  * declares. No UI, no REST route, no destination — create() writes a .zip to disk
- * and returns its path. Phase 6 (manual download) and Phase 9 (Pro's scheduler)
+ * and returns its path. The manual download (free) and Pro's scheduler
  * both call create() directly.
  *
  * MUST run correctly with the vault LOCKED: cron fires with no session cookie, so
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * (raw AK only) touch cryptography here, and neither needs the vault.
  *
  * =============================================================================
- * ARCHIVE LAYOUT (CONTRACT: Phase 5's tool and the future v2 importer both read
+ * ARCHIVE LAYOUT (CONTRACT: the standalone decrypt tool and the future v2 importer both read
  * manifest.json and data.enc as documented here.)
  * =============================================================================
  *
@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * Attachment record shape: { id, post_title, mime, attached_file,
  *   metadata (the raw _wp_attachment_metadata array), size (plaintext bytes),
- *   sha256 (of the plaintext file, so Phase 5 can verify restore fidelity by
+ *   sha256 (of the plaintext file, so the standalone decrypt tool can verify restore fidelity by
  *   hashing what it decrypts and comparing — GCM's tag already guarantees
  *   decrypt-or-throw, but this additionally proves the ORIGINAL upload matches
  *   what got archived, end to end) }.
@@ -711,7 +711,7 @@ class Fotonic_Backup_Archive {
     /**
      * Plain tempnam(), not wp_tempnam(): the latter lives in
      * wp-admin/includes/file.php, which is not loaded during a cron request —
-     * and Phase 9's scheduler calls create() from cron. No WP dependency here.
+     * and Pro's scheduler calls create() from cron. No WP dependency here.
      *
      * @param array $temp_files Accumulator, appended to and returned by reference.
      * @return string New unique temp file path.

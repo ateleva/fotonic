@@ -21,7 +21,7 @@
  * It is also the oracle for the archive format: everything below was written
  * from the format documentation alone (includes/class-backup-cipher.php and
  * includes/class-backup-archive.php docblocks), never by calling plugin code.
- * If this tool and the plugin ever disagree, the format spec is wrong.
+ * If this tool and the plugin ever disagree, the documented format is wrong.
  *
  * WHAT IT CANNOT DO
  * -----------------
@@ -69,7 +69,7 @@ umask( 0077 );
 
 define( 'ELEVA_BD_VERSION', '1.0.0' );
 
-// Archive/crypto constants, all fixed by the format spec.
+// Archive/crypto constants, all fixed by the documented format.
 define( 'ELEVA_BD_MAGIC', 'FTNCBK01' );
 define( 'ELEVA_BD_HEADER_LEN', 20 );
 define( 'ELEVA_BD_PREFIX_LEN', 8 );
@@ -853,7 +853,7 @@ function eleva_bd_decrypt_member( ZipArchive $zip, $name, $key, $out, $hash_ctx 
 		}
 
 		// chunk_size (bytes 8-11) is informational only: each record carries its
-		// own length and the spec says readers must not rely on it.
+		// own length and the format says readers must not rely on it.
 		$prefix         = substr( $header, 12, ELEVA_BD_PREFIX_LEN );
 		$counter        = 0;
 		$saw_terminator = false;
@@ -1304,7 +1304,7 @@ function eleva_bd_validate_options( array $options ) {
 
 	// The OTP check is what proves the person holding the archive also holds the
 	// authenticator. Skipping it is only ever acceptable for an integrity/key
-	// chain test that produces no plaintext output.
+	// chain check that produces no plaintext output.
 	if ( isset( $options['no-totp'] ) && ! isset( $options['verify-only'] ) ) {
 		throw new Exception(
 			'--no-totp may only be used together with --verify-only. It exists to test the key chain '

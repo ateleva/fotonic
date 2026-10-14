@@ -23,7 +23,7 @@ class Fotonic_REST_API {
 	public static function register_routes(): void {
 
 		// ------------------------------------------------------------------
-		// Vault (Phase C).
+		// Vault.
 		// ------------------------------------------------------------------
 
 		register_rest_route( self::NAMESPACE, '/vault/setup', [
@@ -105,7 +105,7 @@ class Fotonic_REST_API {
 		] );
 
 		// ------------------------------------------------------------------
-		// Backup (Phase 6): manual encrypted archive, no destination.
+		// Backup: manual encrypted archive, no destination.
 		// ------------------------------------------------------------------
 
 		register_rest_route( self::NAMESPACE, '/backup/status', [
@@ -372,7 +372,7 @@ class Fotonic_REST_API {
 	}
 
 	// ---------------------------------------------------------------------------
-	// Vault endpoints (Phase C)
+	// Vault endpoints
 	// ---------------------------------------------------------------------------
 
 	/**
@@ -596,7 +596,7 @@ class Fotonic_REST_API {
 	}
 
 	// ---------------------------------------------------------------------------
-	// Vault management (Phase G)
+	// Vault management
 	// ---------------------------------------------------------------------------
 
 	/**
@@ -2722,7 +2722,7 @@ class Fotonic_REST_API {
 	}
 
 	// ---------------------------------------------------------------------------
-	// Backup endpoints (Phase 6): manual encrypted archive, no destination.
+	// Backup endpoints: manual encrypted archive, no destination.
 	// ---------------------------------------------------------------------------
 
 	/**
@@ -2924,7 +2924,7 @@ class Fotonic_REST_API {
 	/**
 	 * Keep only the 2 most recent locally-created archives; delete the rest.
 	 * Manual downloads must not be able to fill the disk. Pro's Drive retention
-	 * (Phase 9) is separate and never touches these local files.
+	 * is separate and never touches these local files.
 	 *
 	 * @return void
 	 */
