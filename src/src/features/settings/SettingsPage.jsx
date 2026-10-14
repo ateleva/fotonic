@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Shield, Key, Archive, UploadCloud, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle, FileText } from 'lucide-react'
+import { Shield, Key, Archive, UploadCloud, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle, Building2 } from 'lucide-react'
 import QRCode from 'qrcode'
 import { __ } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
@@ -30,9 +30,11 @@ function QrCanvas({ uri, size = 180 }) {
   return <canvas ref={ref} />
 }
 
-function SectionCard({ title, icon: Icon, children }) {
+function SectionCard({ id, title, icon: Icon, children }) {
+  // `id` is an anchor target for extensions (e.g. a header shortcut that scrolls to a section).
+  // The scroll margin (style attribute) keeps the card clear of the pane edge when scrolled into view.
   return (
-    <div className="ftnc-panel">
+    <div className="ftnc-panel" id={id} style={id ? { scrollMarginTop: '24px' } : undefined}>
       <div className="ftnc-panel__head">
         <Icon size={16} className="text-indigo-500 shrink-0" />
         <h2 className="text-sm font-bold text-gray-800">{title}</h2>
@@ -618,7 +620,8 @@ function ResetVaultAction() {
 const LicenseSettingsSection = window.FotonicProComponents?.LicenseSettingsSection ?? null
 const GCalSettings           = window.FotonicProComponents?.GCalSettings           ?? null
 const ProBackupSettingsSection = window.FotonicProComponents?.BackupSettingsSection ?? null
-const QuoteSettingsSection = window.FotonicProComponents?.QuoteSettingsSection ?? null
+const SettingsHeaderActions = window.FotonicProComponents?.SettingsHeaderActions ?? null
+const CompanySettingsSection = window.FotonicProComponents?.CompanySettingsSection ?? null
 
 export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false)
@@ -649,16 +652,19 @@ export default function SettingsPage() {
         header→first-card distance would grow instead of tightening. Same
         structure WorkForm and CustomerForm already use. */}
     <div className="p-6 ftnc-pane">
-      <PageHeader title={__('Settings', 'eleva-crm-for-photographers')} />
+      <PageHeader
+        title={__('Settings', 'eleva-crm-for-photographers')}
+        action={SettingsHeaderActions ? <SettingsHeaderActions /> : null}
+      />
 
       <div className="ftnc-stack">
         {LicenseSettingsSection && (
-          <SectionCard title={__('Eleva Pro License', 'eleva-crm-for-photographers')} icon={Key}>
+          <SectionCard id="ftnc-sec-license" title={__('Eleva Pro License', 'eleva-crm-for-photographers')} icon={Key}>
             <LicenseSettingsSection />
           </SectionCard>
         )}
 
-        <SectionCard title={__('Vault', 'eleva-crm-for-photographers')} icon={Shield}>
+        <SectionCard id="ftnc-sec-vault" title={__('Vault', 'eleva-crm-for-photographers')} icon={Shield}>
           <div className="ftnc-fields">
             <VaultStatusRow status={vaultStatus} />
 
@@ -719,33 +725,33 @@ export default function SettingsPage() {
 
         {/* Placed directly below Vault, and above Pro's Drive panel slot (Phase 10):
             the free manual download reads as the baseline, Drive as the upgrade. */}
-        <SectionCard title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
+        <SectionCard id="ftnc-sec-backups" title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
           <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />
         </SectionCard>
 
         {ProBackupSettingsSection && window.FotonicApp?.features?.backup && (
-          <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
+          <SectionCard id="ftnc-sec-auto-backups" title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
             <ProBackupSettingsSection />
           </SectionCard>
         )}
 
         {window.FotonicApp?.isPro && !window.FotonicApp?.features?.backup && (
-          <SectionCard title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
+          <SectionCard id="ftnc-sec-auto-backups" title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
             <p className="text-sm text-gray-400">
               {__('Automatic backups to Google Drive require an active Eleva Pro license.', 'eleva-crm-for-photographers')}
             </p>
           </SectionCard>
         )}
 
-        {QuoteSettingsSection && window.FotonicApp?.features?.quotes && (
-          <SectionCard title={__('Quotes', 'eleva-crm-for-photographers')} icon={FileText}>
-            <QuoteSettingsSection />
+        {GCalSettings && (
+          <SectionCard id="ftnc-sec-gcal" title={__('Google Calendar', 'eleva-crm-for-photographers')} icon={Key}>
+            <GCalSettings />
           </SectionCard>
         )}
 
-        {GCalSettings && (
-          <SectionCard title={__('Google Calendar', 'eleva-crm-for-photographers')} icon={Key}>
-            <GCalSettings />
+        {CompanySettingsSection && window.FotonicApp?.features?.quotes && (
+          <SectionCard id="ftnc-sec-company" title={__('Company details', 'eleva-crm-for-photographers')} icon={Building2}>
+            <CompanySettingsSection />
           </SectionCard>
         )}
       </div>

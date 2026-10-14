@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, MemoryStick, PanelLeftClose, PanelLeftOpen, FileText } from 'lucide-react'
 import logoPng from '../assets/icon-256x256.png'
 import { useQueryClient } from '@tanstack/react-query'
@@ -19,11 +19,12 @@ const NAV_LINK_BASE = [
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fotonic-primary focus-visible:ring-offset-1',
 ].join(' ')
 
-const navLinkClass = (inactiveColor) => ({ isActive }) =>
-  `${NAV_LINK_BASE} ${isActive ? 'nav-link-active' : `${inactiveColor} fotonic-nav-inactive`}`
+const navLinkClass = (inactiveColor, forceActive = false) => ({ isActive }) =>
+  `${NAV_LINK_BASE} ${isActive || forceActive ? 'nav-link-active' : `${inactiveColor} fotonic-nav-inactive`}`
 
 export default function Layout() {
   const queryClient = useQueryClient()
+  const { pathname } = useLocation()
   const { isUnlocked, lock } = useVault()
   const shellRef = useRef(null)
   const [collapsed, toggleCollapsed] = useSidebarCollapse()
@@ -85,7 +86,7 @@ export default function Layout() {
   ]
 
   const proNavItems = [
-    { to: '/quotes',        label: __('Quotes', 'eleva-crm-for-photographers'),         icon: FileText,     feature: 'quotes' },
+    { to: '/quotes',        label: __('Quotes', 'eleva-crm-for-photographers'),         icon: FileText,     feature: 'quotes', alsoActive: ['/quote-settings'] },
     { to: '/kanban',         label: __('Kanban', 'eleva-crm-for-photographers'),         icon: Kanban,       feature: 'kanban' },
     { to: '/analytics',     label: __('Analytics', 'eleva-crm-for-photographers'),      icon: BarChart2,    feature: 'analytics' },
     { to: '/collaborators', label: __('Collaborators', 'eleva-crm-for-photographers'),  icon: UserCheck,    feature: 'collaborators' },
@@ -176,8 +177,8 @@ export default function Layout() {
               <div className="ftnc-sidebar__group-label pt-1 pb-0.5 px-3">
                 <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">{__('Pro', 'eleva-crm-for-photographers')}</span>
               </div>
-              {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon }) => (
-                <NavLink key={to} to={to} className={navLinkClass('text-gray-600')} {...tipProps(label)}>
+              {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon, alsoActive }) => (
+                <NavLink key={to} to={to} className={navLinkClass('text-gray-600', alsoActive?.includes(pathname) ?? false)} {...tipProps(label)}>
                   <Icon size={16} />
                   <span>{label}</span>
                 </NavLink>

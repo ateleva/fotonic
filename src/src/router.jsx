@@ -83,6 +83,16 @@ export function createRouter() { return createHashRouter([
             </Suspense>
           ),
         },
+        // Deliberately NOT under `quotes/`: `quotes/:id` would swallow it (same trap the
+        // Calendar route fell into). The sidebar keeps "Quotes" highlighted via `alsoActive`.
+        ...(window.FotonicProComponents?.QuoteSettingsPage ? [{
+          path: 'quote-settings',
+          element: (
+            <Suspense fallback={<Fallback />}>
+              <window.FotonicProComponents.QuoteSettingsPage />
+            </Suspense>
+          ),
+        }] : []),
       ] : []),
       ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.KanbanBoard ? [{
         path: 'kanban',
