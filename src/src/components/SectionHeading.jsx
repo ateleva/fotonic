@@ -1,4 +1,5 @@
-/* `.ftnc-section-heading` owns the rule and the gap below it (DESIGN.md §4).
+/* `.ftnc-section-heading` owns the rule and the gap below it (a `.ftnc-*` class is the sole
+   owner of its properties).
    Never re-add `border-b border-gray-200 pb-2 mb-4` here or at a call site —
    the class and the utilities would be two sources of truth for one property.
    The gap lives on this element's own margin-bottom, so a Pro slot rendered as

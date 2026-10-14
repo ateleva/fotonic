@@ -29,7 +29,7 @@ export default defineConfig([
       'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       // The local __ wrapper (utils/i18n.js) hardcodes the textdomain
       // internally, so calling it with just the string argument runs fine
-      // at runtime — but the wp-code-translate extraction pipeline
+      // at runtime, but the translation string extraction pipeline
       // requires the literal two-argument form (string, textdomain) to
       // find the string at all. A single-argument call is silently
       // invisible to every POT/PO/JSON generated from source. Fotonic Pro

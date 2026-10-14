@@ -1,8 +1,7 @@
 # Backup archive: verification record
 
 What has actually been proven about the encrypted backup format, by running it,
-not by reasoning about it. A future session should read this before re-deriving
-anything.
+not by reasoning about it. Read this before re-deriving anything.
 
 **v1 ships backup only**, restore into WordPress lands in v2, so
 `eleva-backup-decrypt.php` *is* the restore path. Every claim below is about

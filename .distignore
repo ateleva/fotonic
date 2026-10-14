@@ -10,6 +10,20 @@
 /README.md
 /CHANGELOG.md
 /SUBMISSION-GUIDE.md
+/DESIGN.md
+/tools/VERIFICATION.md
+# Any other markdown at the plugin root (readme.txt is the only doc WP.org wants there)
+/*.md
+# Agent, assistant and editor-AI files and folders, wherever they sit in the tree
+CLAUDE.md
+AGENTS.md
+GEMINI.md
+.claude
+.superpowers
+.cursor*
+.windsurf*
+.aider*
+.mcp.json
 # src/ ships as human-readable source (WP.org guideline 4); exclude only deps/build artifacts
 /src/node_modules
 /src/.vite
@@ -31,3 +45,18 @@ Thumbs.db
 *.po~
 phpunit.xml
 phpcs.xml
+# Test files and folders must never ship, wherever they sit (the tests live in /tests only)
+__tests__
+*.test.*
+*.spec.*
+test-*.php
+phpunit*
+.phpunit*
+phpcs*
+.phpcs*
+# Editor, merge and tooling leftovers
+*.orig
+*.rej
+*.tmp
+__pycache__
+*.pyc

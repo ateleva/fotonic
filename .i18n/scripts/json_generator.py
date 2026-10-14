@@ -294,7 +294,6 @@ def build_json(translations, locale, js_msgids=None):
 
     return {
         'translation-revision-date': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S+00:00'),
-        'generator': 'wp-code-translate-skill',
         'domain': 'messages',
         'locale_data': {
             'messages': locale_data,

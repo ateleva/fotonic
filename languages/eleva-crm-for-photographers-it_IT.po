@@ -15,7 +15,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: eleva-crm-for-photographers\n"
-"X-Generator: Claude Code\n"
 
 #: includes/class-admin-page.php:17
 msgid "CRM"

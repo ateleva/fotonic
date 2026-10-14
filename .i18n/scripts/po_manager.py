@@ -69,7 +69,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\\n"
 "Content-Transfer-Encoding: 8bit\\n"
 "Plural-Forms: {plural}\\n"
-"X-Generator: wp-code-translate-skill\\n"
 """
 
 

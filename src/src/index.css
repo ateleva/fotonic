@@ -162,7 +162,7 @@
    and must NEVER be wrapped in `@layer components`, which sorts it before the
    utilities and breaks the ability of `#fotonic-app-root .ftnc-*` (1,1,0) to
    win over an equally-specific utility on source order.
-   See DESIGN.md for the specificity contract.
+   This source order is the specificity contract for every `.ftnc-*` rule below.
    =========================================================================== */
 
 /* --- Phase 1: section rhythm (.ftnc-stack, .ftnc-section-heading, .ftnc-fields, .ftnc-panel) --- */
@@ -249,7 +249,8 @@
    link is the single most natural future edit anyone could make here.
 
    Nothing in this block sets `transform`, `filter`, `will-change`, `contain` or
-   `container-type` on <aside>, the shell div or <main> — see DESIGN.md section 6. The width
+   `container-type` on <aside>, the shell div or <main> (the containing-block ban, restated
+   at `.ftnc-pane` below). The width
    animation deliberately animates `width`, which creates no containing block, rather than a
    transform, which would create one and break all 11 Pro `position: fixed; inset: 0`
    overlays rendered through free's <Outlet/>. */
@@ -460,7 +461,7 @@
   box-shadow: 0 2px 8px rgba(15, 23, 42, .18);
 }
 
-/* The one sanctioned `!important` in the entire CSS contract (DESIGN.md section 3).
+/* The one sanctioned `!important` in the entire `.ftnc-*` rule set.
    It is here because this has to beat `transition-*` utilities that cannot all be
    enumerated, including any added later, and a stylesheet `!important` also beats a
    non-important inline `style={{ transition: ... }}`. Do not copy this pattern anywhere
@@ -485,7 +486,8 @@
 /* Container queries fire off this element's own width, not the viewport — the only
    thing that stays correct as the sidebar collapses/expands and the WP admin menu
    folds. Never on `<main>` or any ancestor of a Pro `fixed inset-0` overlay: it makes
-   this element a containing block for `position: fixed` descendants. See DESIGN.md. */
+   this element a containing block for `position: fixed` descendants (the containing-block
+   ban). */
 #fotonic-app-root .ftnc-pane {
   container-type: inline-size;
   container-name: ftnc-pane;
