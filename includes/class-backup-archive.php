@@ -668,7 +668,7 @@ class Fotonic_Backup_Archive {
      * @return void
      */
     private static function encrypt_file_to_file( string $src, string $dst, string $ak ): void {
-        $in  = fopen( $src, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- local file, streamed for memory safety per the master plan's file-size policy.
+        $in  = fopen( $src, 'rb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- local file, streamed for memory safety with large files.
         $out = fopen( $dst, 'wb' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- temp file, not user-facing.
         if ( false === $in || false === $out ) {
             throw new \RuntimeException( 'Could not open a stream for ' . $src );

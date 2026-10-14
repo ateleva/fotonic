@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * callback allowlists something dangerous by mistake.
  *
  * This class only describes the data. It does not collect, encrypt, or restore
- * anything — see the master plan's Phase 4 (archive builder).
+ * anything; the archive builder (Fotonic_Backup_Archive) does that.
  */
 class Fotonic_Backup_Registry {
 
@@ -69,7 +69,7 @@ class Fotonic_Backup_Registry {
                     // Free never writes this (Pro's Google Calendar sync does via
                     // ftnc_after_save_work / its own sync path) but it is work-scoped
                     // state exposed by free's own REST formatter, same as _ftnc_gcal_sync
-                    // above — not Pro business data, so free declares it. See PROGRESS.md.
+                    // above, not Pro business data, so free declares it.
                     '_ftnc_gcal_event_id',
                     // Same rationale: free never writes this (Pro's reminders reconcile
                     // does, via ftnc_after_save_work) but it is work-scoped state exposed
