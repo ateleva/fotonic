@@ -82,7 +82,7 @@ export default function CustomerList() {
       label: __('Main Contact', 'eleva-crm-for-photographers'),
       render: (row) => {
         const main = (row.people ?? []).find((p) => p.is_main)
-        if (!main) return <span className="text-gray-400">—</span>
+        if (!main) return <span className="text-gray-400">-</span>
         return (
           <span>
             {main.first_name} {main.last_name}
@@ -95,7 +95,7 @@ export default function CustomerList() {
       label: __('Gender', 'eleva-crm-for-photographers'),
       render: (row) => {
         const g = genderSummary(row.people)
-        if (!g) return <span className="text-gray-400">—</span>
+        if (!g) return <span className="text-gray-400">-</span>
         return (
           <span className="text-gray-600 whitespace-nowrap" title={genderTitle(g.parts)}>
             {g.text}
@@ -111,7 +111,7 @@ export default function CustomerList() {
         return main?.email ? (
           <span className="text-gray-600">{main.email}</span>
         ) : (
-          <span className="text-gray-400">—</span>
+          <span className="text-gray-400">-</span>
         )
       },
     },
@@ -123,7 +123,7 @@ export default function CustomerList() {
         return main?.phone ? (
           <span className="text-gray-600">{main.phone}</span>
         ) : (
-          <span className="text-gray-400">—</span>
+          <span className="text-gray-400">-</span>
         )
       },
     },

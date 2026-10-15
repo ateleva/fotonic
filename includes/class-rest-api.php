@@ -2677,7 +2677,12 @@ class Fotonic_REST_API {
 			? Fotonic_Crypto::deterministic_decrypt( $value, $vault_key )
 			: Fotonic_Crypto::decrypt( $value, $vault_key );
 		// Encrypted values are never empty, so '' means the key could not decrypt it.
-		return '' === $decrypted ? null : $decrypted;
+		// AES-CBC has no MAC: about 1 wrong key in 256 passes the padding check and returns
+		// bytes that are not valid text, so those count as unreadable too.
+		if ( '' === $decrypted || ! mb_check_encoding( $decrypted, 'UTF-8' ) ) {
+			return null;
+		}
+		return $decrypted;
 	}
 
 	/**
