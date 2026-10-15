@@ -17,6 +17,41 @@ function useDebounce(value, delay = 300) {
   return debounced
 }
 
+const GENDER_LETTER = { male: 'M', female: 'F' }
+const GENDER_LIST_MAX = 4
+
+// One entry per person in order ("M F"); past GENDER_LIST_MAX people it becomes counts ("5 M, 3 F").
+// People without a choice show as "·" (counts omit them). null when nobody has a gender.
+function genderSummary(people) {
+  const list = (people ?? []).map((p) => (p?.gender === 'male' || p?.gender === 'female' ? p.gender : ''))
+  if (!list.some(Boolean)) return null
+  if (list.length <= GENDER_LIST_MAX) {
+    return {
+      text: list.map((g) => GENDER_LETTER[g] ?? '·').join(' '),
+      parts: list,
+    }
+  }
+  const counts = ['male', 'female']
+    .map((g) => [g, list.filter((x) => x === g).length])
+    .filter(([, n]) => n > 0)
+  return {
+    text: counts.map(([g, n]) => `${n} ${GENDER_LETTER[g]}`).join(', '),
+    parts: list,
+  }
+}
+
+function genderTitle(parts) {
+  return parts
+    .map((g) =>
+      g === 'male'
+        ? __('Male', 'eleva-crm-for-photographers')
+        : g === 'female'
+          ? __('Female', 'eleva-crm-for-photographers')
+          : __('Not specified', 'eleva-crm-for-photographers')
+    )
+    .join(', ')
+}
+
 export default function CustomerList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
@@ -51,6 +86,19 @@ export default function CustomerList() {
         return (
           <span>
             {main.first_name} {main.last_name}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'gender',
+      label: __('Gender', 'eleva-crm-for-photographers'),
+      render: (row) => {
+        const g = genderSummary(row.people)
+        if (!g) return <span className="text-gray-400">—</span>
+        return (
+          <span className="text-gray-600 whitespace-nowrap" title={genderTitle(g.parts)}>
+            {g.text}
           </span>
         )
       },

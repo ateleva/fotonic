@@ -499,6 +499,14 @@
 #fotonic-app-root .ftnc-grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ftnc-field-gap); }
 #fotonic-app-root .ftnc-grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--ftnc-space-4); }
 
+/* People repeater: compact auto-fill grid (about the same density as the Pro quote form), so
+   fields no longer stretch to half the screen. `.ftnc-span-2` is the wide field (Address). */
+#fotonic-app-root .ftnc-grid-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--ftnc-field-gap); }
+#fotonic-app-root .ftnc-grid-people > .ftnc-span-2 { grid-column: span 2; }
+@container ftnc-pane (max-width: 520px) {
+  #fotonic-app-root .ftnc-grid-people > .ftnc-span-2 { grid-column: auto; }
+}
+
 @container ftnc-pane (max-width: 560px) {
   #fotonic-app-root .ftnc-grid-2,
   #fotonic-app-root .ftnc-grid-3,

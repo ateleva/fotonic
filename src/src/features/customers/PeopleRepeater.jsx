@@ -11,6 +11,7 @@ const emptyPerson = () => ({
   instagram_username: '',
   address: '',
   tin: '',
+  gender: '',
   is_main: false,
 })
 
@@ -76,7 +77,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
             </div>
           </div>
 
-          <div className="ftnc-grid-2">
+          <div className="ftnc-grid-people">
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
                 {__('First Name', 'eleva-crm-for-photographers')}
@@ -100,6 +101,32 @@ export default function PeopleRepeater({ value = [], onChange }) {
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder={__('Last name', 'eleva-crm-for-photographers')}
               />
+            </div>
+            <div>
+              <span className="block text-xs font-medium text-gray-600 mb-1">
+                {__('Gender', 'eleva-crm-for-photographers')}
+              </span>
+              <div
+                role="radiogroup"
+                aria-label={__('Gender', 'eleva-crm-for-photographers')}
+                className="flex items-center gap-4 py-1.5 text-sm text-gray-700"
+              >
+                {[
+                  ['male', __('Male', 'eleva-crm-for-photographers')],
+                  ['female', __('Female', 'eleva-crm-for-photographers')],
+                ].map(([val, label]) => (
+                  <label key={val} className="flex items-center gap-1.5 cursor-pointer">
+                    <input
+                      type="radio"
+                      name={`gender_${index}`}
+                      checked={person.gender === val}
+                      onChange={() => update(index, 'gender', val)}
+                      className="text-indigo-600"
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
@@ -149,7 +176,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
                 placeholder="@username"
               />
             </div>
-            <div className="col-span-2">
+            <div className="ftnc-span-2">
               <label className="block text-xs font-medium text-gray-600 mb-1">
                 {__('Address', 'eleva-crm-for-photographers')}
               </label>
