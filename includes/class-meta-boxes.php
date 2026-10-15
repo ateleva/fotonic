@@ -175,6 +175,7 @@ class Fotonic_Meta_Boxes {
 					'instagram_username' => '',
 					'address'           => '',
 					'tin'               => '',
+					'gender'            => '',
 					'is_main'           => true,
 				],
 			];
@@ -806,6 +807,7 @@ class Fotonic_Meta_Boxes {
 			$instagram_username = sanitize_text_field( $person['instagram_username'] ?? '' );
 			$address            = sanitize_text_field( $person['address'] ?? '' );
 			$tin                = sanitize_text_field( $person['tin'] ?? '' );
+			$gender             = Fotonic_REST_API::sanitize_gender( $person['gender'] ?? '' );
 
 			if ( $encrypt ) {
 				if ( '' !== $first_name )         { $first_name         = Fotonic_Crypto::encrypt( $first_name,         $vault_key ); }
@@ -827,6 +829,7 @@ class Fotonic_Meta_Boxes {
 				'instagram_username' => $instagram_username,
 				'address'            => $address,
 				'tin'                => $tin,
+				'gender'             => $gender,
 				'is_main'            => (bool) $is_main,
 			];
 		}

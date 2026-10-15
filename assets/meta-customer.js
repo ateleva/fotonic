@@ -87,7 +87,7 @@
 	var addBtn = document.getElementById( 'ftnc-add-person' );
 	if ( addBtn ) {
 		addBtn.addEventListener( 'click', function() {
-			people.push( { first_name: '', last_name: '', email: '', phone: '', nationality: '', instagram_username: '', address: '', tin: '', is_main: false } );
+			people.push( { first_name: '', last_name: '', email: '', phone: '', nationality: '', instagram_username: '', address: '', tin: '', gender: '', is_main: false } );
 			render();
 			sync();
 		} );

@@ -1149,6 +1149,17 @@ class Fotonic_REST_API {
 	const PEOPLE_DETERMINISTIC_FIELDS = [ 'email', 'phone' ];
 
 	/**
+	 * Person gender: stored in plain text so it stays readable with the Vault locked.
+	 * Anything other than 'male' or 'female' (including a missing value) is ''.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return string 'male', 'female' or ''.
+	 */
+	public static function sanitize_gender( $value ): string {
+		return is_string( $value ) && in_array( $value, [ 'male', 'female' ], true ) ? $value : '';
+	}
+
+	/**
 	 * Sanitize a people list and encrypt its PII with $key. Exactly one is_main
 	 * person comes out (the first flagged one, or the first row). A null key
 	 * (Vault never set up) stores sanitized plaintext, as customers always have.
@@ -1179,6 +1190,7 @@ class Fotonic_REST_API {
 				'instagram_username' => sanitize_text_field( $person['instagram_username'] ?? '' ),
 				'address'            => sanitize_text_field( $person['address'] ?? '' ),
 				'tin'                => sanitize_text_field( $person['tin'] ?? '' ),
+				'gender'             => self::sanitize_gender( $person['gender'] ?? '' ),
 			];
 
 			if ( null !== $key ) {
@@ -1223,6 +1235,7 @@ class Fotonic_REST_API {
 			foreach ( $fields as $field ) {
 				$person[ $field ] = self::decrypt_value( (string) ( $person[ $field ] ?? '' ), $key );
 			}
+			$person['gender'] = self::sanitize_gender( $person['gender'] ?? '' );
 			return $person;
 		}, $people );
 	}

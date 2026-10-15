@@ -37,4 +37,27 @@ t_true( 'Piazza Duomo 1' !== $addr[0]['street'], 'street is encrypted' );
 t_equals( 'Piazza Duomo 1', Fotonic_REST_API::decrypt_addresses( $addr, $key )[0]['street'], 'street round-trips' );
 t_equals( null, Fotonic_REST_API::decrypt_addresses( $addr, null )[0]['street'], 'locked vault: street is null' );
 
+
+// Gender: plain text, 'male'/'female'/'' only, never encrypted, readable with the Vault locked.
+$g_in  = [
+    [ 'first_name' => 'Luca', 'gender' => 'male', 'is_main' => true ],
+    [ 'first_name' => 'Anna', 'gender' => 'female' ],
+    [ 'first_name' => 'Old' ],
+    [ 'first_name' => 'Bad', 'gender' => 'other' ],
+    [ 'first_name' => 'Arr', 'gender' => [ 'male' ] ],
+];
+$g_enc = Fotonic_REST_API::encrypt_people( $g_in, $key );
+t_equals( 'male', $g_enc[0]['gender'], 'gender male stored in plain text with a Vault key' );
+t_equals( 'female', $g_enc[1]['gender'], 'gender female stored in plain text with a Vault key' );
+t_equals( '', $g_enc[2]['gender'], 'missing gender stored as empty' );
+t_equals( '', $g_enc[3]['gender'], 'unknown gender value stored as empty' );
+t_equals( '', $g_enc[4]['gender'], 'non-string gender stored as empty' );
+t_equals( 'female', Fotonic_REST_API::encrypt_people( $g_in, null )[1]['gender'], 'gender kept without a Vault' );
+$g_locked = Fotonic_REST_API::decrypt_people( $g_enc, null );
+t_equals( 'male', $g_locked[0]['gender'], 'locked vault: gender still readable' );
+t_equals( null, $g_locked[0]['first_name'], 'locked vault: name still hidden' );
+$legacy = [ [ 'first_name' => 'x', 'last_name' => '', 'email' => '', 'phone' => '', 'is_main' => true ] ];
+t_equals( '', Fotonic_REST_API::decrypt_people( $legacy, $key )[0]['gender'], 'legacy row without gender reads as empty' );
+t_equals( 'female', Fotonic_REST_API::decrypt_people( $g_enc, $key )[1]['gender'], 'gender round-trips with the key' );
+
 t_done();
