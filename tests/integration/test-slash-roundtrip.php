@@ -240,10 +240,10 @@ $scenario = function ( string $label, ?string $key ) use ( $rest, $meta_json, $T
 };
 
 // ---------------------------------------------------------------------------
-// 1. The site as it is: Vault configured, locked in the CLI (no session key), data stored as plaintext.
+// 1. Vault configured but locked: personal details are refused (423) instead of being stored as
+//    plaintext, so there is no save to round-trip here; see test-pii-protection.php.
 // ---------------------------------------------------------------------------
 unset( $_COOKIE[ Fotonic_Vault::COOKIE_NAME ] );
-$scenario( 'locked', null );
 
 // ---------------------------------------------------------------------------
 // 2. Vault never set up. Simulated in memory only (pre_option filter, no DB write), always removed afterwards.

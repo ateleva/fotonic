@@ -181,6 +181,8 @@ class Fotonic_Meta_Boxes {
 			];
 		}
 
+		// Show the readable values, never the stored ciphertext; unreadable ones stay null and are kept on save.
+		$people      = Fotonic_REST_API::decrypt_people( $people, Fotonic_Vault::get_session_key() );
 		$people_json = wp_json_encode( $people );
 		?>
 		<div id="ftnc-people-wrap">
@@ -471,6 +473,7 @@ class Fotonic_Meta_Boxes {
 				$event_addresses = $dec;
 			}
 		}
+		$event_addresses      = Fotonic_REST_API::decrypt_addresses( $event_addresses, Fotonic_Vault::get_session_key() );
 		$event_addresses_json = wp_json_encode( $event_addresses );
 
 		$raw_services     = get_post_meta( $post->ID, '_ftnc_work_services', true );
@@ -788,60 +791,39 @@ class Fotonic_Meta_Boxes {
 		}
 
 		$vault_key = Fotonic_Vault::get_session_key();
-		$encrypt   = $vault_key !== null;
 
-		$sanitized = [];
-		$has_main  = false;
-		foreach ( $decoded as $person ) {
-			if ( ! is_array( $person ) ) {
-				continue;
-			}
-			$is_main    = ! empty( $person['is_main'] ) && ! $has_main;
-			$has_main   = $has_main || $is_main;
-
-			$first_name         = sanitize_text_field( $person['first_name'] ?? '' );
-			$last_name          = sanitize_text_field( $person['last_name'] ?? '' );
-			$email              = sanitize_email( $person['email'] ?? '' );
-			$phone              = sanitize_text_field( $person['phone'] ?? '' );
-			$nationality        = sanitize_text_field( $person['nationality'] ?? '' );
-			$instagram_username = sanitize_text_field( $person['instagram_username'] ?? '' );
-			$address            = sanitize_text_field( $person['address'] ?? '' );
-			$tin                = sanitize_text_field( $person['tin'] ?? '' );
-			$gender             = Fotonic_REST_API::sanitize_gender( $person['gender'] ?? '' );
-
-			if ( $encrypt ) {
-				if ( '' !== $first_name )         { $first_name         = Fotonic_Crypto::encrypt( $first_name,         $vault_key ); }
-				if ( '' !== $last_name )          { $last_name          = Fotonic_Crypto::encrypt( $last_name,          $vault_key ); }
-				if ( '' !== $nationality )        { $nationality        = Fotonic_Crypto::encrypt( $nationality,        $vault_key ); }
-				if ( '' !== $instagram_username ) { $instagram_username = Fotonic_Crypto::encrypt( $instagram_username, $vault_key ); }
-				if ( '' !== $address )            { $address            = Fotonic_Crypto::encrypt( $address,            $vault_key ); }
-				if ( '' !== $tin )                { $tin                = Fotonic_Crypto::encrypt( $tin,                $vault_key ); }
-				if ( '' !== $email )              { $email              = Fotonic_Crypto::deterministic_encrypt( $email, $vault_key ); }
-				if ( '' !== $phone )              { $phone              = Fotonic_Crypto::deterministic_encrypt( $phone, $vault_key ); }
-			}
-
-			$sanitized[] = [
-				'first_name'         => $first_name,
-				'last_name'          => $last_name,
-				'email'              => $email,
-				'phone'              => $phone,
-				'nationality'        => $nationality,
-				'instagram_username' => $instagram_username,
-				'address'            => $address,
-				'tin'                => $tin,
-				'gender'             => $gender,
-				'is_main'            => (bool) $is_main,
-			];
+		// Vault set up but locked: typed details would be stored in clear, so nothing is saved.
+		if ( null === $vault_key && Fotonic_Vault::is_setup() && self::has_plain_text( $decoded, [ 'first_name', 'last_name', 'email', 'phone', 'nationality', 'instagram_username', 'address', 'tin' ] ) ) {
+			return;
 		}
 
-		// Ensure at least one is_main.
-		if ( ! empty( $sanitized ) && ! $has_main ) {
-			$sanitized[0]['is_main'] = true;
-		}
+		$stored    = json_decode( (string) get_post_meta( $post_id, '_ftnc_people', true ), true );
+		$sanitized = Fotonic_REST_API::encrypt_people( $decoded, $vault_key, is_array( $stored ) ? $stored : null );
 
 		// update_post_meta() unslashes: wp_slash() keeps backslashes and JSON unicode escapes intact.
 		update_post_meta( $post_id, '_ftnc_people', wp_slash( wp_json_encode( $sanitized ) ) );
 		// phpcs:enable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	}
+
+	/**
+	 * Whether any row holds a non-empty string in one of the fields (null and '' do not count).
+	 *
+	 * @param array    $rows   Rows decoded from the posted JSON.
+	 * @param string[] $fields Field names.
+	 * @return bool
+	 */
+	private static function has_plain_text( array $rows, array $fields ): bool {
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			foreach ( $fields as $field ) {
+				if ( isset( $row[ $field ] ) && is_string( $row[ $field ] ) && '' !== trim( $row[ $field ] ) ) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	// ---------------------------------------------------------------------------
@@ -888,7 +870,6 @@ class Fotonic_Meta_Boxes {
 		// phpcs:disable WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce verified by can_save() which calls check_admin_referer(). All inputs sanitized individually below.
 
 		$vault_key = Fotonic_Vault::get_session_key();
-		$encrypt   = $vault_key !== null;
 
 		// Section 1: Event Details.
 		if ( isset( $_POST['ftnc_event_date'] ) ) {
@@ -925,22 +906,16 @@ class Fotonic_Meta_Boxes {
 			if ( ! is_array( $dec ) ) {
 				$dec = [];
 			}
-			$clean_addresses = [];
-			foreach ( $dec as $addr ) {
-				if ( ! is_array( $addr ) ) {
-					continue;
-				}
-				$label  = sanitize_text_field( $addr['label'] ?? '' );
-				$street = sanitize_text_field( $addr['street'] ?? '' );
-				if ( $encrypt && $street !== '' ) {
-					$street = Fotonic_Crypto::encrypt( $street, $vault_key );
-				}
-				$clean_addresses[] = [
-					'label'  => $label,
-					'street' => $street,
-				];
+			if ( null === $vault_key && Fotonic_Vault::is_setup() && self::has_plain_text( $dec, [ 'street' ] ) ) {
+				// Vault locked: typed streets would be stored in clear, so the addresses are left as they are.
+				$clean_addresses = null;
+			} else {
+				$stored_addresses = json_decode( (string) get_post_meta( $post_id, '_ftnc_event_addresses', true ), true );
+				$clean_addresses  = Fotonic_REST_API::encrypt_addresses( $dec, $vault_key, is_array( $stored_addresses ) ? $stored_addresses : null );
 			}
-			update_post_meta( $post_id, '_ftnc_event_addresses', wp_slash( wp_json_encode( $clean_addresses ) ) );
+			if ( null !== $clean_addresses ) {
+				update_post_meta( $post_id, '_ftnc_event_addresses', wp_slash( wp_json_encode( $clean_addresses ) ) );
+			}
 		}
 
 		// Section 2: Customer.

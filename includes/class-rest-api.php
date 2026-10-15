@@ -1165,11 +1165,17 @@ class Fotonic_REST_API {
 	 * (Vault never set up) stores sanitized plaintext, as customers always have.
 	 * Public so Pro quotes reuse the exact customer scheme.
 	 *
+	 * A value that is null or missing is "not known to the client", for instance a field the
+	 * Vault could not decrypt. When the row carries the `ref` of a stored row (see
+	 * decrypt_people()), the stored value is kept exactly as saved instead of being blanked.
+	 * An empty string is a deliberate clear and does clear the field.
+	 *
 	 * @param array       $people Raw person rows.
 	 * @param string|null $key    32-byte Vault key, or null.
+	 * @param array|null  $stored Rows as currently stored (still encrypted), indexed like `ref`.
 	 * @return array
 	 */
-	public static function encrypt_people( array $people, ?string $key ): array {
+	public static function encrypt_people( array $people, ?string $key, ?array $stored = null ): array {
 		$sanitized = [];
 		$has_main  = false;
 
@@ -1180,6 +1186,7 @@ class Fotonic_REST_API {
 
 			$is_main  = ! empty( $person['is_main'] ) && ! $has_main;
 			$has_main = $has_main || $is_main;
+			$old      = self::stored_row( $person, $stored );
 
 			$row = [
 				'first_name'         => sanitize_text_field( $person['first_name'] ?? '' ),
@@ -1193,15 +1200,29 @@ class Fotonic_REST_API {
 				'gender'             => self::sanitize_gender( $person['gender'] ?? '' ),
 			];
 
+			// Fields the client did not send a value for keep what is stored, untouched.
+			$kept = [];
+			if ( null !== $old ) {
+				foreach ( array_merge( self::PEOPLE_RANDOM_FIELDS, self::PEOPLE_DETERMINISTIC_FIELDS ) as $field ) {
+					if ( null === ( $person[ $field ] ?? null ) ) {
+						$row[ $field ] = isset( $old[ $field ] ) && is_string( $old[ $field ] ) ? $old[ $field ] : '';
+						$kept[]        = $field;
+					}
+				}
+				if ( null === ( $person['gender'] ?? null ) ) {
+					$row['gender'] = self::sanitize_gender( $old['gender'] ?? '' );
+				}
+			}
+
 			if ( null !== $key ) {
 				// Skip empty strings: encrypting '' yields a short blob that bypasses looks_encrypted().
 				foreach ( self::PEOPLE_RANDOM_FIELDS as $field ) {
-					if ( '' !== $row[ $field ] ) {
+					if ( '' !== $row[ $field ] && ! in_array( $field, $kept, true ) ) {
 						$row[ $field ] = Fotonic_Crypto::encrypt( $row[ $field ], $key );
 					}
 				}
 				foreach ( self::PEOPLE_DETERMINISTIC_FIELDS as $field ) {
-					if ( '' !== $row[ $field ] ) {
+					if ( '' !== $row[ $field ] && ! in_array( $field, $kept, true ) ) {
 						$row[ $field ] = Fotonic_Crypto::deterministic_encrypt( $row[ $field ], $key );
 					}
 				}
@@ -1220,7 +1241,10 @@ class Fotonic_REST_API {
 
 	/**
 	 * Decrypt a stored people list. With a null key (Vault locked) every field
-	 * that looks encrypted becomes null, never ciphertext.
+	 * that looks encrypted becomes null, never ciphertext; a field that cannot be
+	 * decrypted with the key is null too. Each row gets a `ref` (its index in the
+	 * stored list) that the client sends back so encrypt_people() can keep the
+	 * values it could not read.
 	 *
 	 * @param array       $people Stored person rows.
 	 * @param string|null $key    32-byte Vault key, or null.
@@ -1228,34 +1252,48 @@ class Fotonic_REST_API {
 	 */
 	public static function decrypt_people( array $people, ?string $key ): array {
 		$fields = array_merge( self::PEOPLE_RANDOM_FIELDS, self::PEOPLE_DETERMINISTIC_FIELDS );
-		return array_map( function ( $person ) use ( $key, $fields ) {
+		$out    = [];
+		foreach ( array_values( $people ) as $i => $person ) {
 			if ( ! is_array( $person ) ) {
-				return $person;
+				$out[] = $person;
+				continue;
 			}
 			foreach ( $fields as $field ) {
 				$person[ $field ] = self::decrypt_value( (string) ( $person[ $field ] ?? '' ), $key );
 			}
 			$person['gender'] = self::sanitize_gender( $person['gender'] ?? '' );
-			return $person;
-		}, $people );
+			$person['ref']    = $i;
+			$out[]            = $person;
+		}
+		return $out;
 	}
 
 	/**
 	 * Sanitize event addresses and encrypt each street with $key.
 	 *
+	 * A null or missing street on a row that carries the `ref` of a stored row keeps the
+	 * stored street as saved (see encrypt_people()).
+	 *
 	 * @param array       $addresses Raw [{label, street}] rows.
 	 * @param string|null $key       32-byte Vault key, or null.
+	 * @param array|null  $stored    Rows as currently stored (street still encrypted), indexed like `ref`.
 	 * @return array
 	 */
-	public static function encrypt_addresses( array $addresses, ?string $key ): array {
+	public static function encrypt_addresses( array $addresses, ?string $key, ?array $stored = null ): array {
 		$clean = [];
 		foreach ( $addresses as $addr ) {
 			if ( ! is_array( $addr ) ) {
 				continue;
 			}
+			$old = self::stored_row( $addr, $stored );
+			if ( null !== $old && null === ( $addr['street'] ?? null ) ) {
+				$street = isset( $old['street'] ) && is_string( $old['street'] ) ? $old['street'] : '';
+			} else {
+				$street = self::encrypt_value( sanitize_text_field( $addr['street'] ?? '' ), $key );
+			}
 			$clean[] = [
 				'label'  => sanitize_text_field( $addr['label'] ?? '' ),
-				'street' => self::encrypt_value( sanitize_text_field( $addr['street'] ?? '' ), $key ),
+				'street' => $street,
 			];
 		}
 		return $clean;
@@ -1270,13 +1308,14 @@ class Fotonic_REST_API {
 	 */
 	public static function decrypt_addresses( array $addresses, ?string $key ): array {
 		$out = [];
-		foreach ( $addresses as $addr ) {
+		foreach ( array_values( $addresses ) as $i => $addr ) {
 			if ( ! is_array( $addr ) ) {
 				continue;
 			}
 			$out[] = [
 				'label'  => (string) ( $addr['label'] ?? '' ),
 				'street' => self::decrypt_value( (string) ( $addr['street'] ?? '' ), $key ),
+				'ref'    => $i,
 			];
 		}
 		return $out;
@@ -1287,12 +1326,76 @@ class Fotonic_REST_API {
 		return ( null !== $key && '' !== $value ) ? Fotonic_Crypto::encrypt( $value, $key ) : $value;
 	}
 
-	/** Decrypt any supported ciphertext; with no key, encrypted values become null. */
+	/**
+	 * Decrypt any supported ciphertext. Null when there is no key, and also when the
+	 * key cannot decrypt the value: the caller must never show or save that as an
+	 * empty string, or the stored data would be overwritten with nothing.
+	 */
 	public static function decrypt_value( string $value, ?string $key ): ?string {
 		if ( null === $key ) {
 			return self::looks_encrypted( $value ) ? null : $value;
 		}
 		return self::maybe_decrypt( $value, $key );
+	}
+
+	/**
+	 * The stored row a client row points to through its `ref`, or null.
+	 *
+	 * @param array      $row    Client row.
+	 * @param array|null $stored Rows as currently stored.
+	 * @return array|null
+	 */
+	private static function stored_row( array $row, ?array $stored ): ?array {
+		if ( null === $stored || ! isset( $row['ref'] ) || ! is_numeric( $row['ref'] ) ) {
+			return null;
+		}
+		$stored = array_values( $stored );
+		$ref    = (int) $row['ref'];
+		return isset( $stored[ $ref ] ) && is_array( $stored[ $ref ] ) ? $stored[ $ref ] : null;
+	}
+
+	/**
+	 * Whether a payload would store a readable value that the Vault should encrypt: true
+	 * only for a non-empty string, never for null or ''.
+	 *
+	 * @param array  $rows   People or address rows from the client.
+	 * @param array  $fields Field names to inspect.
+	 * @return bool
+	 */
+	private static function rows_have_plain_text( array $rows, array $fields ): bool {
+		foreach ( $rows as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			foreach ( $fields as $field ) {
+				if ( isset( $row[ $field ] ) && is_string( $row[ $field ] ) && '' !== trim( $row[ $field ] ) ) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 423 response when the Vault is set up but locked and the body would store personal
+	 * data in clear; null when the write may go ahead. Nothing is written before this check.
+	 *
+	 * @param array $body Decoded request body.
+	 * @return \WP_REST_Response|null
+	 */
+	private static function locked_write_response( array $body ): ?\WP_REST_Response {
+		if ( null !== Fotonic_Vault::get_session_key() || ! Fotonic_Vault::is_setup() ) {
+			return null;
+		}
+		$plain = ( isset( $body['people'] ) && is_array( $body['people'] ) && self::rows_have_plain_text( $body['people'], array_merge( self::PEOPLE_RANDOM_FIELDS, self::PEOPLE_DETERMINISTIC_FIELDS ) ) )
+			|| ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) && self::rows_have_plain_text( $body['event_addresses'], [ 'street' ] ) );
+		if ( ! $plain ) {
+			return null;
+		}
+		return new \WP_REST_Response(
+			[ 'code' => 'vault_locked', 'message' => __( 'The Vault is locked. Unlock it to save personal details: your changes are still in the form.', 'eleva-crm-for-photographers' ) ],
+			423
+		);
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1352,6 +1455,11 @@ class Fotonic_REST_API {
 	public static function create_customer( \WP_REST_Request $req ): \WP_REST_Response {
 		$body = $req->get_json_params();
 
+		$locked = self::locked_write_response( (array) $body );
+		if ( $locked ) {
+			return $locked;
+		}
+
 		$title = isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '';
 		if ( empty( $title ) ) {
 			return new \WP_REST_Response(
@@ -1392,6 +1500,11 @@ class Fotonic_REST_API {
 		}
 
 		$body = $req->get_json_params();
+
+		$locked = self::locked_write_response( (array) $body );
+		if ( $locked ) {
+			return $locked;
+		}
 
 		if ( isset( $body['title'] ) ) {
 			$title = sanitize_text_field( $body['title'] );
@@ -1614,6 +1727,11 @@ class Fotonic_REST_API {
 	public static function create_work( \WP_REST_Request $req ): \WP_REST_Response {
 		$body = $req->get_json_params();
 
+		$locked = self::locked_write_response( (array) $body );
+		if ( $locked ) {
+			return $locked;
+		}
+
 		$title = isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '';
 		if ( empty( $title ) ) {
 			return new \WP_REST_Response(
@@ -1663,6 +1781,11 @@ class Fotonic_REST_API {
 		}
 
 		$body = $req->get_json_params();
+
+		$locked = self::locked_write_response( (array) $body );
+		if ( $locked ) {
+			return $locked;
+		}
 
 		$update = [ 'ID' => $id ];
 		if ( isset( $body['title'] ) ) {
@@ -1918,7 +2041,9 @@ class Fotonic_REST_API {
 			return;
 		}
 
-		update_post_meta( $post_id, '_ftnc_people', wp_slash( wp_json_encode( self::encrypt_people( $body['people'], Fotonic_Vault::get_session_key() ) ) ) );
+		$stored = json_decode( (string) get_post_meta( $post_id, '_ftnc_people', true ), true );
+
+		update_post_meta( $post_id, '_ftnc_people', wp_slash( wp_json_encode( self::encrypt_people( $body['people'], Fotonic_Vault::get_session_key(), is_array( $stored ) ? $stored : null ) ) ) );
 	}
 
 	/**
@@ -2015,7 +2140,8 @@ class Fotonic_REST_API {
 		}
 
 		if ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) ) {
-			update_post_meta( $post_id, '_ftnc_event_addresses', wp_slash( wp_json_encode( self::encrypt_addresses( $body['event_addresses'], $vault_key ) ) ) );
+			$stored_addresses = json_decode( (string) get_post_meta( $post_id, '_ftnc_event_addresses', true ), true );
+			update_post_meta( $post_id, '_ftnc_event_addresses', wp_slash( wp_json_encode( self::encrypt_addresses( $body['event_addresses'], $vault_key, is_array( $stored_addresses ) ? $stored_addresses : null ) ) ) );
 		}
 
 		// Customer.
@@ -2485,21 +2611,18 @@ class Fotonic_REST_API {
 	 *
 	 * @param string $value     Possibly-encrypted value.
 	 * @param string $vault_key 32-byte AES key.
-	 * @return string Decrypted value, or original if not encrypted.
+	 * @return string|null Decrypted value, the original if not encrypted, or null when the key cannot decrypt it.
 	 */
-	private static function maybe_decrypt( string $value, string $vault_key ): string {
+	private static function maybe_decrypt( string $value, string $vault_key ): ?string {
 		if ( ! self::looks_encrypted( $value ) ) {
 			return $value;
 		}
 		// v1d: prefix = deterministic CBC (email/phone searchable fields).
-		if ( strncmp( $value, 'v1d:', 4 ) === 0 ) {
-			return Fotonic_Crypto::deterministic_decrypt( $value, $vault_key );
-		}
-		$decrypted = Fotonic_Crypto::decrypt( $value, $vault_key );
-		if ( '' === $decrypted && '' !== $value ) {
-			return '';
-		}
-		return $decrypted;
+		$decrypted = strncmp( $value, 'v1d:', 4 ) === 0
+			? Fotonic_Crypto::deterministic_decrypt( $value, $vault_key )
+			: Fotonic_Crypto::decrypt( $value, $vault_key );
+		// Encrypted values are never empty, so '' means the key could not decrypt it.
+		return '' === $decrypted ? null : $decrypted;
 	}
 
 	/**
