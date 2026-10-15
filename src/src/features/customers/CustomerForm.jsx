@@ -25,6 +25,10 @@ const fmtDate = (d) => {
   return `${day}/${m}/${y}`
 }
 
+// The server sends null for a value it cannot decrypt; saving keeps what is stored for those fields.
+const hasUnreadable = (people) =>
+  (people ?? []).some((p) => Object.entries(p ?? {}).some(([k, v]) => k !== 'ref' && v === null))
+
 function paymentBadge(status) {
   const map = {
     paid:    { label: __('Paid', 'eleva-crm-for-photographers'),    bg: '#dcfce7', color: '#16a34a' },
@@ -257,7 +261,14 @@ export default function CustomerForm() {
             name="people"
             control={control}
             render={({ field }) => (
-              <PeopleRepeater value={field.value} onChange={field.onChange} />
+              <>
+                {hasUnreadable(field.value) && (
+                  <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded px-3 py-2 mb-3">
+                    {__('Some saved details cannot be read with the current Vault key. They are kept as they are and are not overwritten when you save. Type a new value in a field to replace it.', 'eleva-crm-for-photographers')}
+                  </p>
+                )}
+                <PeopleRepeater value={field.value} onChange={field.onChange} />
+              </>
             )}
           />
         </section>

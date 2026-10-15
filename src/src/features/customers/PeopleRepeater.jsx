@@ -84,7 +84,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
               </label>
               <input
                 type="text"
-                value={person.first_name}
+                value={person.first_name ?? ''}
                 onChange={(e) => update(index, 'first_name', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder={__('First name', 'eleva-crm-for-photographers')}
@@ -96,7 +96,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
               </label>
               <input
                 type="text"
-                value={person.last_name}
+                value={person.last_name ?? ''}
                 onChange={(e) => update(index, 'last_name', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder={__('Last name', 'eleva-crm-for-photographers')}
@@ -134,7 +134,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
               </label>
               <input
                 type="email"
-                value={person.email}
+                value={person.email ?? ''}
                 onChange={(e) => update(index, 'email', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="email@example.com"
@@ -146,7 +146,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
               </label>
               <input
                 type="tel"
-                value={person.phone}
+                value={person.phone ?? ''}
                 onChange={(e) => update(index, 'phone', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="+39..."
@@ -158,7 +158,7 @@ export default function PeopleRepeater({ value = [], onChange }) {
               </label>
               <input
                 type="text"
-                value={person.nationality}
+                value={person.nationality ?? ''}
                 onChange={(e) => update(index, 'nationality', e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="IT"

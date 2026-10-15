@@ -17,8 +17,15 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
     onChange(value.map((row, i) => (i === index ? { ...row, [field]: val } : row)))
   }
 
+  const hasUnreadable = value.some((row) => row.street === null)
+
   return (
     <div className="space-y-3">
+      {hasUnreadable && (
+        <p className="text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded px-3 py-2">
+          {__('Some saved addresses cannot be read with the current Vault key. They are kept as they are and are not overwritten when you save. Type a new street to replace one.', 'eleva-crm-for-photographers')}
+        </p>
+      )}
       {value.length > 0 && (
         <div className="ftnc-table-scroll">
           <table className="min-w-full divide-y divide-gray-200 bg-white text-sm">
