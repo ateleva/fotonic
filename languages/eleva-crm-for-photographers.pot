@@ -2119,3 +2119,55 @@ msgstr ""
 #: src/src/features/works/WorkForm.jsx:510
 msgid "This work's total was set before automatic calculation was introduced in version 1.5.0. Add at least one service row above so it can be calculated automatically."
 msgstr ""
+
+#: includes/class-rest-api.php:1380
+msgid "\"%s\" is not a valid email address. Use the form name@example.com."
+msgstr ""
+
+#: includes/class-rest-api.php:1441
+msgid "The Vault is locked. Unlock it to save personal details: your changes are still in the form."
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:219
+msgid "Some email addresses are not valid: fix the fields highlighted in red. Use the form name@example.com."
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:287
+msgid "Some saved details cannot be read with the current Vault key. They are kept as they are and are not overwritten when you save. Type a new value in a field to replace it."
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:107
+msgid "Gender"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:115
+msgid "Male"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:116
+msgid "Female"
+msgstr ""
+
+#: src/src/features/customers/PeopleRepeater.jsx:152
+msgid "Enter a complete address, like name@example.com."
+msgstr ""
+
+#: src/src/features/customers/CustomerList.jsx:50
+msgid "Not specified"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:753
+msgid "Company details"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:341
+msgid "Event date is required"
+msgstr ""
+
+#: src/src/features/works/EventAddressesRepeater.jsx:26
+msgid "Some saved addresses cannot be read with the current Vault key. They are kept as they are and are not overwritten when you save. Type a new street to replace one."
+msgstr ""
+
+#: src/src/components/Layout.jsx:89
+msgid "Quotes"
+msgstr ""
