@@ -4,7 +4,7 @@ Tags: photography-crm, client-management, booking, invoicing, photographers
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,6 +141,19 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Changelog ==
 
+= 1.6.0 =
+* New: groundwork for Quotes in Eleva CRM Pro 1.6.0: a Quotes entry in the menu and the hooks Pro uses to prepare quotes, turn confirmed ones into works, add VAT to works and generate quote PDFs. Works created from a quote show "Created from quote" and the lead source; customers list the quotes made for them.
+* New: Gender (Male or Female, optional) on every person of a customer, with a Gender column in the Customers list. The Customer form now uses a compact grid.
+* New: email addresses must look like name@example.com. The Customer form highlights wrong fields in red and says what to fix, and the server rejects invalid addresses with a clear error instead of silently emptying them.
+* New: Settings gains a Company details section, filled in by Pro and printed in the header of the quote PDFs.
+* Fix: your personal data is protected from accidental loss. A form that cannot read a saved value (for example after the Vault key changed) no longer shows it as empty and then overwrites it on save; unreadable values are kept as they are and flagged with a notice. A locked Vault refuses to save personal details in plain text and asks you to unlock it, keeping your changes in the form. The classic editor screens no longer encrypt a value twice.
+* Fix: text with accents and backslashes was altered on save in customers, services, works and memory cards (for example "è" stored as "u00e8"). Everything is now saved exactly as typed.
+* Fix: the admin app's inline CSS (notice hiding, no outer scrollbar, hidden footer) was never printed because it was attached to a stylesheet handle that did not exist yet. It is now applied.
+* Fix: a work must have an event date; without one it was saved but never appeared in the Works list.
+* Fix: browsers could keep serving an older build of the app after an update; the asset version now changes with every build.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* i18n: new interface strings for this release are translated into Italian (it_IT).
+
 = 1.5.0 =
 * New: Total Price is now calculated automatically from the work's service rows (plus any supplier referral fees, with Eleva CRM Pro) instead of being typed by hand, so it can never drift out of sync with what the services actually cost.
 * New: Work edit screen gains a Suppliers section (requires Eleva CRM Pro) for tracking referral fees owed to wedding planners, venues, and other suppliers who refer a job.
@@ -266,6 +279,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.0 =
+Adds the groundwork for Quotes, VAT and PDF quotes (needs Eleva CRM Pro 1.6.0), a Gender field for customers, stricter email validation, and protection against accidental loss of saved personal data. Tested with the latest WordPress. Safe in-place update: without Pro 1.6.0 nothing new shows up and everything else works as before.
 
 = 1.5.0 =
 Total Price is now calculated automatically from the services you enter, and can no longer be typed by hand. A work saved before this update with a total but no service rows keeps its existing total; the work form tells you to add a service row so it can be calculated automatically. Update Eleva CRM Pro to 1.5.0+ for supplier referral fees.
