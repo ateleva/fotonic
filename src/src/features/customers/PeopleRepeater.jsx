@@ -138,6 +138,8 @@ export default function PeopleRepeater({ value = [], onChange, invalidEmails = [
                 value={person.email ?? ''}
                 onChange={(e) => update(index, 'email', e.target.value)}
                 aria-invalid={invalidEmails.includes(index) ? true : undefined}
+                // Inline, so the blue focus ring WordPress admin paints on every focused input cannot win.
+                style={invalidEmails.includes(index) ? { borderColor: '#dc2626', boxShadow: '0 0 0 2px #dc2626', outline: '2px solid #dc2626', outlineOffset: 0 } : undefined}
                 className={`w-full rounded-md border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 ${
                   invalidEmails.includes(index)
                     ? 'border-red-600 bg-red-50 ring-2 ring-red-500 focus:ring-red-500'

@@ -75,11 +75,23 @@ class Fotonic_Admin_Page {
         wp_enqueue_editor();
         wp_enqueue_media();
 
+        // The version carries the build's modification time: the entry files keep the same name for the
+        // whole life of a release, and browsers (Safari above all) would keep serving a rebuilt file
+        // from their cache, together with chunk names that no longer exist.
+        $js_ver  = FOTONIC_VERSION;
+        $css_ver = FOTONIC_VERSION;
+        if ( file_exists( FOTONIC_DIR . 'dist/fotonic-app.js' ) ) {
+            $js_ver .= '.' . filemtime( FOTONIC_DIR . 'dist/fotonic-app.js' );
+        }
+        if ( file_exists( FOTONIC_DIR . 'dist/fotonic-app.css' ) ) {
+            $css_ver .= '.' . filemtime( FOTONIC_DIR . 'dist/fotonic-app.css' );
+        }
+
         wp_enqueue_script(
             'fotonic-app-js',
             FOTONIC_URL . 'dist/fotonic-app.js',
             [ 'wp-i18n' ], // wp-i18n provides window.wp.i18n used by @wordpress/i18n
-            FOTONIC_VERSION,
+            $js_ver,
             [ 'in_footer' => true ]
         );
 
@@ -87,7 +99,7 @@ class Fotonic_Admin_Page {
             'fotonic-app-css',
             FOTONIC_URL . 'dist/fotonic-app.css',
             [],
-            FOTONIC_VERSION
+            $css_ver
         );
 
         // Inline CSS: hide any residual notices and kill the page-level scrollbar on the SPA page.
