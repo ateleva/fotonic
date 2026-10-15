@@ -12,7 +12,8 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import PeopleRepeater from './PeopleRepeater'
 import SectionHeading from '../../components/SectionHeading'
-import { __ } from '../../utils/i18n'
+import { __, sprintf } from '../../utils/i18n'
+import { firstInvalidEmail } from '../../utils/email'
 
 const CustomerQuotesSection = window.FotonicProComponents?.CustomerQuotesSection ?? null
 
@@ -127,6 +128,7 @@ export default function CustomerForm() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [blockReason, setBlockReason] = useState(null)
   const [checkingDelete, setCheckingDelete] = useState(false)
+  const [emailError, setEmailError] = useState(null)
 
   const { data: customer, isLoading } = useCustomer(id)
   const createCustomer = useCreateCustomer()
@@ -205,6 +207,14 @@ export default function CustomerForm() {
   const mutationError = mutation.error
 
   async function onSubmit(data) {
+    // An address without "@" or without a final extension would be emptied on save: ask for a valid one.
+    const badEmail = firstInvalidEmail(data.people)
+    if (badEmail !== null) {
+      /* translators: %s: the email address that was typed */
+      setEmailError(sprintf(__('"%s" is not a valid email address. Use the form name@example.com.', 'eleva-crm-for-photographers'), badEmail))
+      return
+    }
+    setEmailError(null)
     try {
       if (isEdit) {
         await updateCustomer.mutateAsync({ id, ...data })
@@ -272,6 +282,12 @@ export default function CustomerForm() {
             )}
           />
         </section>
+
+        {emailError && (
+          <p role="alert" className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+            {emailError}
+          </p>
+        )}
 
         {mutationError && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
