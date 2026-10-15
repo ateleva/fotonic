@@ -13,7 +13,7 @@ import Modal from '../../components/Modal'
 import PeopleRepeater from './PeopleRepeater'
 import SectionHeading from '../../components/SectionHeading'
 import { __, sprintf } from '../../utils/i18n'
-import { firstInvalidEmail } from '../../utils/email'
+import { firstInvalidEmail, invalidEmailIndexes } from '../../utils/email'
 
 const CustomerQuotesSection = window.FotonicProComponents?.CustomerQuotesSection ?? null
 
@@ -129,6 +129,8 @@ export default function CustomerForm() {
   const [blockReason, setBlockReason] = useState(null)
   const [checkingDelete, setCheckingDelete] = useState(false)
   const [emailError, setEmailError] = useState(null)
+  // Red outlines on the email fields appear after a failed save and follow the typing.
+  const [showEmailErrors, setShowEmailErrors] = useState(false)
 
   const { data: customer, isLoading } = useCustomer(id)
   const createCustomer = useCreateCustomer()
@@ -210,11 +212,19 @@ export default function CustomerForm() {
     // An address without "@" or without a final extension would be emptied on save: ask for a valid one.
     const badEmail = firstInvalidEmail(data.people)
     if (badEmail !== null) {
-      /* translators: %s: the email address that was typed */
-      setEmailError(sprintf(__('"%s" is not a valid email address. Use the form name@example.com.', 'eleva-crm-for-photographers'), badEmail))
+      const bad = invalidEmailIndexes(data.people)
+      setShowEmailErrors(true)
+      setEmailError(
+        bad.length > 1
+          ? __('Some email addresses are not valid: fix the fields highlighted in red. Use the form name@example.com.', 'eleva-crm-for-photographers')
+          : /* translators: %s: the email address that was typed */
+            sprintf(__('"%s" is not a valid email address. Use the form name@example.com.', 'eleva-crm-for-photographers'), badEmail)
+      )
+      setTimeout(() => document.getElementById(`person-${bad[0]}-email`)?.focus(), 0)
       return
     }
     setEmailError(null)
+    setShowEmailErrors(false)
     try {
       if (isEdit) {
         await updateCustomer.mutateAsync({ id, ...data })
@@ -277,7 +287,7 @@ export default function CustomerForm() {
                     {__('Some saved details cannot be read with the current Vault key. They are kept as they are and are not overwritten when you save. Type a new value in a field to replace it.', 'eleva-crm-for-photographers')}
                   </p>
                 )}
-                <PeopleRepeater value={field.value} onChange={field.onChange} />
+                <PeopleRepeater value={field.value} onChange={field.onChange} invalidEmails={showEmailErrors ? invalidEmailIndexes(field.value) : []} />
               </>
             )}
           />

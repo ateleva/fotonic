@@ -18,3 +18,12 @@ export function firstInvalidEmail(people) {
   }
   return null
 }
+
+/** Indexes of the people whose filled email is not valid. */
+export function invalidEmailIndexes(people) {
+  const out = []
+  ;(Array.isArray(people) ? people : []).forEach((p, i) => {
+    if (typeof p?.email === 'string' && p.email.trim() !== '' && !isValidEmail(p.email)) out.push(i)
+  })
+  return out
+}

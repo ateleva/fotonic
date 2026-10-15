@@ -15,7 +15,7 @@ const emptyPerson = () => ({
   is_main: false,
 })
 
-export default function PeopleRepeater({ value = [], onChange }) {
+export default function PeopleRepeater({ value = [], onChange, invalidEmails = [] }) {
   const people = value.length > 0 ? value : [{ ...emptyPerson(), is_main: true }]
 
   function update(index, field, val) {
@@ -133,12 +133,23 @@ export default function PeopleRepeater({ value = [], onChange }) {
                 {__('Email', 'eleva-crm-for-photographers')}
               </label>
               <input
+                id={`person-${index}-email`}
                 type="email"
                 value={person.email ?? ''}
                 onChange={(e) => update(index, 'email', e.target.value)}
-                className="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                aria-invalid={invalidEmails.includes(index) ? true : undefined}
+                className={`w-full rounded-md border px-3 py-1.5 text-sm focus:outline-none focus:ring-2 ${
+                  invalidEmails.includes(index)
+                    ? 'border-red-600 bg-red-50 ring-2 ring-red-500 focus:ring-red-500'
+                    : 'border-gray-300 focus:ring-indigo-500'
+                }`}
                 placeholder="email@example.com"
               />
+              {invalidEmails.includes(index) && (
+                <p role="alert" className="mt-1 text-xs font-medium text-red-700">
+                  {__('Enter a complete address, like name@example.com.', 'eleva-crm-for-photographers')}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-600 mb-1">
