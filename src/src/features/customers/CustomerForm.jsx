@@ -254,7 +254,7 @@ export default function CustomerForm() {
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
-      <form onSubmit={handleSubmit(onSubmit)} className="ftnc-stack">
+      <form onSubmit={handleSubmit(onSubmit)} className="ftnc-stack" noValidate>
         {/* No SectionHeading here: a heading over a single field is ceremony, not
             hierarchy — the same rule that leaves ServiceForm and MemoryCardForm
             headingless. "People" below is a real group and keeps its heading. */}
