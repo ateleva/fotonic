@@ -200,4 +200,32 @@ try {
 }
 t_equals( null, Fotonic_Vault::get_session_key(), 'session key removed' );
 
+// ---------------------------------------------------------------------------
+// 6. An email that would be dropped silently is refused instead (Vault never set up here).
+// ---------------------------------------------------------------------------
+add_filter( 'pre_option_' . Fotonic_Vault::OPTION_SETUP, '__return_zero' );
+try {
+    foreach ( [ 'a@b', 'name@domain', 'name.domain.com', '@x.com', 'name@x.c', 'na me@x.com' ] as $bad ) {
+        t_equals( $bad, Fotonic_REST_API::first_invalid_email( [ [ 'email' => $bad ] ] ), "invalid email detected: {$bad}" );
+    }
+    foreach ( [ 'luca@example.com', ' luca@example.com ', 'a.b+c@sub.example.co.uk', '', null ] as $good ) {
+        t_equals( null, Fotonic_REST_API::first_invalid_email( [ [ 'email' => $good ] ] ), 'email accepted: ' . var_export( $good, true ) );
+    }
+    $before = (int) wp_count_posts( 'ftnc_customer' )->publish;
+    $res    = Fotonic_REST_API::create_customer( $rest( 'POST', [], [ 'title' => "BadMail {$run}", 'people' => [ [ 'first_name' => 'A', 'email' => 'a@b' ] ] ] ) );
+    t_equals( 400, $res->get_status(), 'create_customer with an invalid email is 400' );
+    t_equals( 'invalid_email', $res->get_data()['code'] ?? null, 'error code' );
+    t_equals( $before, (int) wp_count_posts( 'ftnc_customer' )->publish, 'no customer created' );
+    $cid2 = t_cleanup( (int) wp_insert_post( wp_slash( [ 'post_type' => 'ftnc_customer', 'post_status' => 'publish', 'post_title' => "Mail {$run}" ] ) ) );
+    update_post_meta( $cid2, '_ftnc_people', wp_slash( wp_json_encode( [ [ 'first_name' => 'A', 'email' => 'a@example.com', 'is_main' => true ] ] ) ) );
+    $res = Fotonic_REST_API::update_customer( $rest( 'PUT', [ 'id' => $cid2 ], [ 'title' => "Mail2 {$run}", 'people' => [ [ 'first_name' => 'A', 'email' => 'broken@domain', 'is_main' => true ] ] ] ) );
+    t_equals( 400, $res->get_status(), 'update_customer with an invalid email is 400' );
+    t_equals( 'a@example.com', $stored_people( $cid2 )[0]['email'], 'the stored email is untouched' );
+    t_equals( "Mail {$run}", get_post_field( 'post_title', $cid2, 'raw' ), 'nothing else was written either' );
+    $res = Fotonic_REST_API::update_customer( $rest( 'PUT', [ 'id' => $cid2 ], [ 'people' => [ [ 'first_name' => 'A', 'email' => 'new@example.com', 'is_main' => true ] ] ] ) );
+    t_equals( 200, $res->get_status(), 'a valid email saves' );
+} finally {
+    remove_filter( 'pre_option_' . Fotonic_Vault::OPTION_SETUP, '__return_zero' );
+}
+
 t_done();

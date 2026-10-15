@@ -1339,6 +1339,51 @@ class Fotonic_REST_API {
 	}
 
 	/**
+	 * First email in a people list that would not survive sanitize_email() (no @, no dot in the
+	 * domain, odd characters). Such a value used to be dropped silently on save; callers refuse
+	 * the save instead. Empty values and null (a field the client could not read) are fine.
+	 *
+	 * @param array $people Raw person rows.
+	 * @return string|null The offending email, or null when every email is valid.
+	 */
+	public static function first_invalid_email( array $people ): ?string {
+		foreach ( $people as $person ) {
+			if ( ! is_array( $person ) || ! isset( $person['email'] ) || ! is_string( $person['email'] ) ) {
+				continue;
+			}
+			$email = trim( $person['email'] );
+			if ( '' !== $email && ( ! is_email( $email ) || sanitize_email( $email ) !== $email || ! preg_match( '/\.[A-Za-z][A-Za-z0-9-]*[A-Za-z0-9]$/', $email ) ) ) {
+				return $email;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 400 response when a customer payload carries an email that is not valid; null otherwise.
+	 *
+	 * @param array $body Decoded request body.
+	 * @return \WP_REST_Response|null
+	 */
+	private static function invalid_email_response( array $body ): ?\WP_REST_Response {
+		if ( ! isset( $body['people'] ) || ! is_array( $body['people'] ) ) {
+			return null;
+		}
+		$bad = self::first_invalid_email( $body['people'] );
+		if ( null === $bad ) {
+			return null;
+		}
+		return new \WP_REST_Response(
+			[
+				'code'    => 'invalid_email',
+				/* translators: %s: the email address that was typed */
+				'message' => sprintf( __( '"%s" is not a valid email address. Use the form name@example.com.', 'eleva-crm-for-photographers' ), $bad ),
+			],
+			400
+		);
+	}
+
+	/**
 	 * The stored row a client row points to through its `ref`, or null.
 	 *
 	 * @param array      $row    Client row.
@@ -1460,6 +1505,11 @@ class Fotonic_REST_API {
 			return $locked;
 		}
 
+		$invalid_email = self::invalid_email_response( (array) $body );
+		if ( $invalid_email ) {
+			return $invalid_email;
+		}
+
 		$title = isset( $body['title'] ) ? sanitize_text_field( $body['title'] ) : '';
 		if ( empty( $title ) ) {
 			return new \WP_REST_Response(
@@ -1504,6 +1554,11 @@ class Fotonic_REST_API {
 		$locked = self::locked_write_response( (array) $body );
 		if ( $locked ) {
 			return $locked;
+		}
+
+		$invalid_email = self::invalid_email_response( (array) $body );
+		if ( $invalid_email ) {
+			return $invalid_email;
 		}
 
 		if ( isset( $body['title'] ) ) {
