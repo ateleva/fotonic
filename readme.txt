@@ -18,7 +18,7 @@ You already have enough to think about on shoot day. Eleva handles the rest: who
 
 = Features =
 
-* Customers: keep every couple or client together, with more than one contact per booking, so a bride's email and a groom's email can both live on the same record. Full search across names, emails, phones, and addresses. Every customer page shows their full booking history with running totals.
+* Customers: keep every couple or client together, with more than one contact per booking, so a bride's email and a groom's email can both live on the same record, each with an optional gender. Full search across names, emails, phones, and addresses. Every customer page shows their full booking history with running totals.
 * Services: build a catalog of the packages and add-ons you offer, then override the price or notes for any specific booking without touching the catalog.
 * Works (your bookings): the hub for every job. Customer, services, event date and time, every location, every file, and every payment, on one page.
 * Payments: track deposits and balances with a running list of installments. Paid, Partial, or Unpaid status is worked out for you automatically from what has actually been paid.
@@ -55,7 +55,7 @@ Wedding and event photographers who want a CRM built around how a shoot actually
 
 = Do I need a subscription? =
 
-No. Eleva is free, with no monthly fee and no feature paywall inside the app. An optional paid add-on, Eleva CRM Pro, exists for studios that want a team (collaborators), a Kanban board, analytics, and automatic scheduled backups to Google Drive, but nothing in the free plugin nags you to upgrade.
+No. Eleva is free, with no monthly fee and no feature paywall inside the app. An optional paid add-on, Eleva CRM Pro, exists for studios that want a team (collaborators), a Kanban board, analytics, quotes with VAT and PDF, and automatic scheduled backups to Google Drive, but nothing in the free plugin nags you to upgrade.
 
 = Does this require ACF (Advanced Custom Fields)? =
 
@@ -105,8 +105,11 @@ Automatic, scheduled backups that push this same archive to your own Google Driv
 
 == Eleva CRM Pro ==
 
-Eleva CRM Pro is a separate, optional paid add-on for photographers running a small team or wanting deeper reporting. It adds:
+Eleva CRM Pro is a separate, optional paid add-on for photographers running a small team, sending quotes to clients or wanting deeper reporting. It adds:
 
+* Quotes: prepare numbered quotes for your clients, turn a confirmed quote into a booking in one click, and send it as a PDF by email or as a message for WhatsApp, Messenger or Instagram.
+* VAT: choose whether prices include VAT, exclude it or are shown without it, with your own rate.
+* Company details: your business name, address and tax details, printed on your quotes.
 * Collaborators: assign second shooters and team members to a booking, and track what each one is owed.
 * Kanban board: move bookings through your own workflow stages.
 * Analytics: revenue, cost, and owned-vs-commissioned reporting, with period comparison.

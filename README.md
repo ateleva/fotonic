@@ -12,7 +12,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 
 ## Features
 
-- **Customer Management** — store couples and individuals with multiple contacts per client; full search across all fields; each customer page shows a linked Works table with totals (count, total price, paid, unpaid)
+- **Customer Management**: store couples and individuals with multiple contacts per client, each with an optional gender; full search across all fields; each customer page shows a linked Works table with totals (count, total price, paid, unpaid)
 - **Service Catalog** — define services and base prices; override price and notes per project
 - **Works / Projects** — the central hub linking customers, services, files, and payment installments; Total Price tracked per project
 - **Payment Tracking** — track deposits and balances; paid/partial/unpaid status assigned automatically
@@ -24,6 +24,22 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
 - **Memory Cards** — keep an inventory of your SD/CF cards with an auto-advancing status (Ready, In Use, Backed Up, Damaged); manage them from the sidebar or assign cards to a shoot inside the Work editor
 - **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password and authenticator code; a standalone command-line decrypt tool ships with the plugin for restoring on any machine
+
+---
+
+## Eleva CRM Pro
+
+Eleva CRM Pro is a separate, optional paid add-on. Nothing in the free plugin is locked or hidden behind an upgrade prompt. It adds:
+
+- **Quotes**: prepare numbered quotes for your clients, turn a confirmed quote into a booking in one click, and send it as a PDF by email or as a message for WhatsApp, Messenger or Instagram
+- **VAT**: choose whether prices include VAT, exclude it or are shown without it, with your own rate
+- **Company details**: your business name, address and tax details, printed on your quotes
+- **Collaborators**: assign second shooters and team members to a booking and track what each one is owed
+- **Kanban board**: move bookings through your own workflow stages
+- **Analytics**: revenue, cost and owned-vs-commissioned reporting, with period comparison
+- **Products & Suppliers**: manage physical products and the suppliers behind them
+- **Google Calendar sync**: bookings and reminders pushed automatically to your Google Calendar
+- **Automatic backups**: the same encrypted archive as the free plugin, pushed to your own Google Drive on a schedule, with retention
 
 ---
 
@@ -82,6 +98,19 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 ---
 
 ## Changelog
+
+### 1.6.0
+
+- **New**: groundwork for Quotes in Eleva CRM Pro 1.6.0: a Quotes entry in the menu and the hooks Pro uses to prepare quotes, turn confirmed ones into works, add VAT to works and generate quote PDFs. Works created from a quote show "Created from quote" and the lead source; customers list the quotes made for them
+- **New**: Gender (Male or Female, optional) on every person of a customer, with a Gender column in the Customers list; the Customer form now uses a compact grid
+- **New**: email addresses must look like `name@example.com`; the Customer form highlights wrong fields in red and the server rejects invalid addresses with a clear error instead of silently emptying them
+- **New**: Settings gains a Company details section, filled in by Pro and printed in the header of the quote PDFs
+- Fix: personal data is protected from accidental loss. A form that cannot read a saved value (for example after the Vault key changed) no longer shows it as empty and then overwrites it on save; a locked Vault refuses to save personal details in plain text and asks you to unlock it; the classic editor screens no longer encrypt a value twice
+- Fix: text with accents and backslashes was altered on save in customers, services, works and memory cards (for example `è` stored as `u00e8`); it is now saved exactly as typed
+- Fix: the admin app's inline CSS (notice hiding, no outer scrollbar, hidden footer) was never printed; it is now applied
+- Fix: a work must have an event date, without one it was saved but never appeared in the Works list
+- Fix: browsers could keep serving an older build of the app after an update; the asset version now changes with every build
+- Compatibility: tested with the latest WordPress (7.1.x). Quotes, VAT and PDF need **Eleva CRM Pro 1.6.0**; updating this plugin alone is safe
 
 ### 1.5.0
 
