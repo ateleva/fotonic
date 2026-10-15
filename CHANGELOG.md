@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.6.0] (unreleased)
+
+### Added
+
+- **Quotes support (with Eleva CRM Pro 1.6.0)**: a Quotes entry in the menu and the hooks Pro needs to prepare quotes, turn confirmed ones into works, add VAT to works and generate quote PDFs. Works created from a quote show "Created from quote" and the lead source next to it; customers list the quotes made for them.
+- **Gender** on every person of a customer (Male or Female, optional, nothing preselected on existing customers) with a Gender column in the Customers list. The Customer form now uses a compact grid with narrower fields.
+- **Valid email addresses only**: an email must look like `name@example.com` (a real extension, no stray dots). The Customer form highlights wrong fields in red and says what to fix; the server rejects invalid addresses with a clear error instead of silently emptying them.
+- Settings: a Company details section that Pro fills in (the details printed in the header of the quote PDFs).
+
+### Fixed
+
+- **Personal data is protected from accidental loss.** A form that cannot read a saved value (for example after the Vault key changed) no longer shows it as empty and then overwrites it on save: unreadable values are kept as they are and flagged with a notice. A locked Vault now refuses to save personal details in plain text and asks you to unlock it, keeping your changes in the form. The classic editor screens no longer encrypt a value twice.
+- **Text with accents and backslashes was altered on save** in customers, services, works and memory cards (for example `è` stored as `u00e8`). Everything written through the app or the classic editor is now saved exactly as typed.
+- The admin app's inline CSS (notice hiding, no outer scrollbar, hidden footer) was never printed because it was attached to a stylesheet handle that did not exist yet. It is now applied.
+- A work must have an event date: without one it was saved but never appeared in the Works list.
+- Browsers could keep serving an older build of the app after an update; the asset version now changes with every build.
+
+### Compatibility
+
+- Tested with the latest WordPress (7.1.x); `Tested up to` is 7.1.
+- Quotes, VAT and PDF need **Eleva CRM Pro 1.6.0**. Updating this plugin alone is safe: without Pro 1.6.0 nothing of the above shows up and everything else works as before.
+
 ## [1.4.1] — 2026-08-14
 
 ### Added
