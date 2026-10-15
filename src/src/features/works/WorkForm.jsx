@@ -302,7 +302,7 @@ export default function WorkForm() {
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
-      {WorkSourceQuoteLink && isEdit && work?.source_quote && (
+      {WorkSourceQuoteLink && isEdit && (work?.source_quote || work?.lead_source) && (
         <WorkSourceQuoteLink work={work} />
       )}
 
