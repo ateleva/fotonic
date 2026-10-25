@@ -10,5 +10,5 @@ export function sprintf(format, ...args) {
     return window.wp.i18n.sprintf(format, ...args)
   }
   let i = 0
-  return format.replace(/%s/g, () => args[i++] ?? '')
+  return format.replace(/%(?:(\d+)\$)?[sd]/g, (_m, pos) => args[pos ? Number(pos) - 1 : i++] ?? '')
 }

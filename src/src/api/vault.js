@@ -1,74 +1,89 @@
 import { apiFetch } from './client'
 
+const post = (path, data) =>
+  apiFetch(path, { method: 'POST', body: JSON.stringify(data ?? {}) })
+
 // ---------------------------------------------------------------------------
 // Vault core
 // ---------------------------------------------------------------------------
 
 export const fetchVaultStatus = () => apiFetch('vault/status')
 
-export const vaultSetup = (data) =>
-  apiFetch('vault/setup', { method: 'POST', body: JSON.stringify(data) })
-
-export const vaultUnlock = (data) =>
-  apiFetch('vault/unlock', { method: 'POST', body: JSON.stringify(data) })
+export const vaultUnlock = (data) => post('vault/unlock', data)
 
 export const vaultLock = () =>
   apiFetch('vault/lock', { method: 'POST' })
 
-export const vaultChangePassword = (data) =>
-  apiFetch('vault/change-password', { method: 'POST', body: JSON.stringify(data) })
+export const vaultChangePassword = (data) => post('vault/change-password', data)
 
-export const vaultResetTotp = (data) =>
-  apiFetch('vault/reset-totp', { method: 'POST', body: JSON.stringify(data) })
+export const vaultResetTotp = (data) => post('vault/reset-totp', data)
 
 // ---------------------------------------------------------------------------
-// Recovery endpoints
+// Two-phase setup
 // ---------------------------------------------------------------------------
 
 /**
- * Lost authenticator (know password + have recovery code): resets TOTP.
- * POST vault/recovery/reset-totp { password, recovery_code }
- * → { qr_uri, totp_secret }
+ * Stage a new vault (nothing is live yet).
+ * POST vault/setup { password } -> { staged: true, qr_uri }
  */
-export const vaultRecoveryResetTotp = (data) =>
-  apiFetch('vault/recovery/reset-totp', { method: 'POST', body: JSON.stringify(data) })
+export const vaultSetup = ({ password }) => post('vault/setup', { password })
 
 /**
- * Lost password (have recovery code — legacy path): resets password.
- * POST vault/recovery/reset-password { recovery_code, new_password }
- * → { reset: true }
+ * Promote the staged vault after a valid OTP.
+ * POST vault/setup/confirm { password, otp } -> { setup: true }
  */
-export const vaultRecoveryResetPassword = (data) =>
-  apiFetch('vault/recovery/reset-password', { method: 'POST', body: JSON.stringify(data) })
+export const vaultSetupConfirm = ({ password, otp }) =>
+  post('vault/setup/confirm', { password, otp })
+
+// ---------------------------------------------------------------------------
+// Recovery kit
+// ---------------------------------------------------------------------------
 
 /**
- * Lost password (have recovery phrase — new path): resets password.
- * POST vault/recovery/reset-password-phrase { recovery_phrase, new_password }
- * → { reset: true }
+ * Generate a new recovery kit (replaces the previous secrets) and email it.
+ * POST vault/recovery-kit -> { recovery_code, recovery_phrase, email_sent, email_hint }
  */
-export const vaultRecoveryResetPasswordPhrase = (data) =>
-  apiFetch('vault/recovery/reset-password-phrase', { method: 'POST', body: JSON.stringify(data) })
+export const vaultIssueKit = () => post('vault/recovery-kit')
 
 /**
- * Regenerate recovery code while vault is unlocked.
- * POST vault/recovery/regenerate {}
- * → { recovery_code }  (shown ONCE)
+ * Set the kit acknowledgment flag. ack=false forces the kit wizard again.
+ * POST vault/recovery-kit/ack { ack } -> { ack }
  */
-export const vaultRecoveryRegenerate = () =>
-  apiFetch('vault/recovery/regenerate', { method: 'POST', body: JSON.stringify({}) })
+export const vaultAckKit = (ack) => post('vault/recovery-kit/ack', { ack })
+
+// ---------------------------------------------------------------------------
+// Recovery from a secret (phrase or code)
+// ---------------------------------------------------------------------------
 
 /**
- * Enroll a recovery phrase (new; requires unlocked vault).
- * POST vault/recovery/enroll-phrase {}
- * → { recovery_phrase }  (shown ONCE)
+ * POST vault/recovery/begin { recovery_secret, new_password } -> { recovered: true }
  */
-export const vaultEnrollPhrase = () =>
-  apiFetch('vault/recovery/enroll-phrase', { method: 'POST', body: JSON.stringify({}) })
+export const vaultRecoveryBegin = ({ recovery_secret, new_password }) =>
+  post('vault/recovery/begin', { recovery_secret, new_password })
 
 /**
- * Destructive: wipe vault config entirely.
- * POST vault/reset {}
- * → { reset: true }
+ * Re-stage a fresh authenticator secret while one is pending.
+ * POST vault/totp/pending -> { qr_uri }
  */
-export const vaultReset = () =>
-  apiFetch('vault/reset', { method: 'POST', body: JSON.stringify({}) })
+export const vaultTotpPending = () => post('vault/totp/pending')
+
+/**
+ * POST vault/totp/confirm { otp } -> { confirmed: true }
+ */
+export const vaultTotpConfirm = ({ otp }) => post('vault/totp/confirm', { otp })
+
+// ---------------------------------------------------------------------------
+// Destructive reset
+// ---------------------------------------------------------------------------
+
+/**
+ * Email an 8-digit reset code.
+ * POST vault/reset/request-code -> { sent, email_hint, counts: { customers, works } }
+ */
+export const vaultResetRequestCode = () => post('vault/reset/request-code')
+
+/**
+ * Destructive: wipe the vault configuration.
+ * POST vault/reset { confirm, code } OR { confirm, password, otp } -> { reset: true }
+ */
+export const vaultReset = (data) => post('vault/reset', data)

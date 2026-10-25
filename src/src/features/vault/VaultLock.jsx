@@ -38,7 +38,9 @@ export default function VaultLock() {
     await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
 
-  const handleRecoveryUnlocked = async () => {
+  const handleRecoveryUnlocked = async (opts) => {
+    // After a destructive reset the vault no longer exists: open the setup wizard.
+    if (opts?.reset) window.location.hash = '#/settings?setup=1'
     await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
 

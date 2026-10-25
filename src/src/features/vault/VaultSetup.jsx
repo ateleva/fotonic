@@ -1,28 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
-import QRCode from 'qrcode'
-import { vaultSetup } from '../../api/vault'
+import { vaultSetup, vaultSetupConfirm } from '../../api/vault'
 import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
-import RecoveryCodeDisplay from './RecoveryCodeDisplay'
-import { __ } from '../../utils/i18n'
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-function QrCanvas({ uri, size = 200 }) {
-  const ref = useRef(null)
-  useEffect(() => {
-    if (ref.current && uri) {
-      QRCode.toCanvas(ref.current, uri, { width: size, margin: 2 })
-    }
-  }, [uri, size])
-  return <canvas ref={ref} />
-}
+import TotpEnroll from './TotpEnroll'
+import { __, sprintf } from '../../utils/i18n'
+import { MIN_VAULT_PASSWORD } from '../../utils/recoveryKit'
 
 // ---------------------------------------------------------------------------
 // Step indicator
@@ -60,7 +46,7 @@ function StepIndicator({ current, total }) {
 }
 
 // ---------------------------------------------------------------------------
-// Step 1: Set password (min 10 chars)
+// Step 1: Set password
 // ---------------------------------------------------------------------------
 
 function StepPassword({ onNext }) {
@@ -107,7 +93,7 @@ function StepPassword({ onNext }) {
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('password', {
             required: __('Password is required', 'eleva-crm-for-photographers'),
-            minLength: { value: 10, message: __('Minimum 10 characters', 'eleva-crm-for-photographers') },
+            minLength: { value: MIN_VAULT_PASSWORD, message: __('Minimum 8 characters', 'eleva-crm-for-photographers') },
           })}
         />
       </FormField>
@@ -163,36 +149,37 @@ function StepPassword({ onNext }) {
 }
 
 // ---------------------------------------------------------------------------
-// Step 2: POST vault/setup {password} → get QR + recovery data from server
+// Step 2: POST vault/setup {password} -> stage the vault, get the QR
 // ---------------------------------------------------------------------------
 
-function StepSetupCall({ password, onNext }) {
-  const [error, setError]   = useState(null)
-  const [called, setCalled] = useState(false)
+function StepStage({ password, onNext }) {
+  const [error, setError]     = useState(null)
+  const [attempt, setAttempt] = useState(0)
+  const startedRef = useRef(-1)
 
-  // Fire once on first render
-  if (!called) {
-    setCalled(true)
+  useEffect(() => {
+    // One request per attempt, even if React re-runs the effect.
+    if (startedRef.current === attempt) return
+    startedRef.current = attempt
     ;(async () => {
       try {
         const data = await vaultSetup({ password })
-        // data: { setup: true, qr_uri, recovery_code, recovery_phrase }
-        onNext({
-          qrUri:          data.qr_uri,
-          recoveryCode:   data.recovery_code ?? null,
-          recoveryPhrase: data.recovery_phrase ?? null,
-        })
+        onNext(data.qr_uri)
       } catch (err) {
-        setError(err.message)
+        setError(err.message || __('Could not start the vault setup. Please try again.', 'eleva-crm-for-photographers'))
       }
     })()
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attempt])
 
   if (error) {
     return (
       <div className="space-y-4">
         <p className="text-sm text-red-600">{error}</p>
-        <Button variant="secondary" onClick={() => window.location.reload()}>
+        <Button
+          variant="secondary"
+          onClick={() => { setError(null); setAttempt((a) => a + 1) }}
+        >
           {__('Try again', 'eleva-crm-for-photographers')}
         </Button>
       </div>
@@ -208,219 +195,40 @@ function StepSetupCall({ password, onNext }) {
 }
 
 // ---------------------------------------------------------------------------
-// Step 3: Scan QR code
-// ---------------------------------------------------------------------------
-
-function StepScanQR({ qrUri, onNext }) {
-  const secretB32 = qrUri?.match(/secret=([A-Z2-7]+)/i)?.[1] ?? ''
-
-  return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Scan QR Code', 'eleva-crm-for-photographers')}</h2>
-      <p className="text-sm text-gray-500">
-        {__('Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below.', 'eleva-crm-for-photographers')}
-      </p>
-
-      {qrUri && (
-        <div className="flex flex-col items-center gap-3">
-          <div className="rounded-md border border-gray-200 p-2">
-            <QrCanvas uri={qrUri} size={200} />
-          </div>
-          <div className="w-full rounded-md bg-gray-50 border border-gray-200 p-3">
-            <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:', 'eleva-crm-for-photographers')}</p>
-            <p className="text-sm font-mono font-semibold text-gray-800 break-all">
-              {secretB32}
-            </p>
-          </div>
-        </div>
-      )}
-
-      <Button variant="primary" className="w-full" onClick={onNext}>
-        {__("I've scanned the code", 'eleva-crm-for-photographers')}
-      </Button>
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Step 4: Confirm OTP (unlocks vault with password)
-// ---------------------------------------------------------------------------
-
-function StepOTP({ password, onSuccess }) {
-  const queryClient = useQueryClient()
-  const { unlock } = useVault()
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    setError,
-  } = useForm()
-
-  const onSubmit = async ({ otp }) => {
-    const result = await unlock(password, otp)
-    if (result?.error) {
-      setError('otp', {
-        type: 'manual',
-        message: result.message || __('Invalid code or password mismatch. Check your authenticator app.', 'eleva-crm-for-photographers'),
-      })
-      return
-    }
-    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
-    onSuccess()
-  }
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Confirm Authenticator Code', 'eleva-crm-for-photographers')}</h2>
-      <p className="text-sm text-gray-500">
-        {__('Enter the 6-digit code shown in your authenticator app to complete setup.', 'eleva-crm-for-photographers')}
-      </p>
-
-      <FormField
-        label={__('One-Time Code', 'eleva-crm-for-photographers')}
-        required
-        htmlFor="otp"
-        error={errors.otp?.message}
-      >
-        <input
-          id="otp"
-          type="text"
-          inputMode="numeric"
-          maxLength={6}
-          autoComplete="one-time-code"
-          placeholder="000000"
-          className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          {...register('otp', {
-            required: __('Code is required', 'eleva-crm-for-photographers'),
-            pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code', 'eleva-crm-for-photographers') },
-          })}
-        />
-      </FormField>
-
-      <Button
-        type="submit"
-        variant="primary"
-        className="w-full"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? <Spinner size="sm" /> : __('Verify & Unlock', 'eleva-crm-for-photographers')}
-      </Button>
-    </form>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Step 5: Save recovery phrase (if server returned one)
-// ---------------------------------------------------------------------------
-
-function StepRecoveryPhrase({ recoveryPhrase, onNext }) {
-  const [saved, setSaved] = useState(false)
-  const [copied, setCopied] = useState(false)
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(recoveryPhrase).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
-  return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Phrase', 'eleva-crm-for-photographers')}</h2>
-      <p className="text-sm text-gray-500">
-        {__('This phrase lets you recover access if you forget your password. Store it somewhere safe offline. It will never be shown again.', 'eleva-crm-for-photographers')}
-      </p>
-
-      <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
-        <p className="text-sm font-mono font-semibold text-amber-900 break-all tracking-widest text-center">
-          {recoveryPhrase}
-        </p>
-      </div>
-
-      <Button variant="secondary" className="w-full" onClick={handleCopy}>
-        {copied ? __('Copied!', 'eleva-crm-for-photographers') : __('Copy to clipboard', 'eleva-crm-for-photographers')}
-      </Button>
-
-      <label className="flex items-start gap-3 cursor-pointer">
-        <input
-          type="checkbox"
-          checked={saved}
-          onChange={(e) => setSaved(e.target.checked)}
-          className="mt-0.5 h-4 w-4 rounded border-gray-300 text-indigo-600"
-        />
-        <span className="text-sm text-gray-700">
-          {__('I have saved this phrase offline in a secure location.', 'eleva-crm-for-photographers')}
-        </span>
-      </label>
-
-      <Button
-        variant="primary"
-        className="w-full"
-        disabled={!saved}
-        onClick={onNext}
-      >
-        {__('Next', 'eleva-crm-for-photographers')}
-      </Button>
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
-// Step 6: Save recovery code (if server returned one)
-// ---------------------------------------------------------------------------
-
-function StepRecoveryCode({ recoveryCode, onDone }) {
-  return (
-    <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{__('Save Your Recovery Code', 'eleva-crm-for-photographers')}</h2>
-      <RecoveryCodeDisplay
-        code={recoveryCode}
-        onConfirm={onDone}
-        confirmLabel={__('Finish Setup', 'eleva-crm-for-photographers')}
-      />
-    </div>
-  )
-}
-
-// ---------------------------------------------------------------------------
 // Main VaultSetup wizard
-// Steps: 1=password, 2=server setup call (spinner), 3=QR scan, 4=OTP confirm,
-//        5=recovery phrase (if returned), 6=recovery code (if returned)
+// Steps: 1=password, 2=stage (spinner), 3=QR + OTP confirm.
+// After the confirm the wizard unmounts on purpose: VaultGate then shows the
+// RecoveryKitWizard (kit_ok is false for a fresh vault).
 // ---------------------------------------------------------------------------
+
+const TOTAL_STEPS = 3
 
 export default function VaultSetup() {
+  const queryClient = useQueryClient()
+  const { markUnlocked } = useVault()
   const [step, setStep]         = useState(1)
   const [password, setPassword] = useState('')
-  const [setupData, setSetupData] = useState(null)  // { qrUri, recoveryCode, recoveryPhrase }
-
-  // Determine total steps dynamically once we have setup data
-  let totalSteps = 4
-  if (setupData?.recoveryPhrase) totalSteps++
-  if (setupData?.recoveryCode)   totalSteps++
-
-  // Step indices (dynamic based on what server returned)
-  const phraseStep = setupData?.recoveryPhrase ? 5 : null
-  const codeStep   = phraseStep
-    ? (setupData?.recoveryCode ? 6 : null)
-    : (setupData?.recoveryCode ? 5 : null)
+  const [qrUri, setQrUri]       = useState(null)
 
   const handlePasswordNext = (pw) => {
     setPassword(pw)
     setStep(2)
   }
 
-  const handleSetupDone = (data) => {
-    setSetupData(data)
+  const handleStaged = (uri) => {
+    setQrUri(uri)
     setStep(3)
   }
 
-  const afterOtp = () => {
-    if (setupData?.recoveryPhrase) {
-      setStep(5)
-    } else if (setupData?.recoveryCode) {
-      setStep(phraseStep ?? codeStep)
+  const handleConfirm = async (otp) => {
+    try {
+      await vaultSetupConfirm({ password, otp })
+    } catch (err) {
+      return { error: err.message || __('Invalid code. Check your authenticator app.', 'eleva-crm-for-photographers') }
     }
-    // else: vault is already unlocked; VaultGate re-renders via query invalidation
+    markUnlocked()
+    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+    return {}
   }
 
   return (
@@ -429,58 +237,24 @@ export default function VaultSetup() {
         <div className="text-center mb-6">
           <span className="text-3xl">&#x1F510;</span>
           <h1 className="mt-2 text-xl font-bold text-gray-900">{__('Vault Setup', 'eleva-crm-for-photographers')}</h1>
-          <p className="text-xs text-gray-400 mt-1">{__('Step', 'eleva-crm-for-photographers')} {step} {__('of', 'eleva-crm-for-photographers')} {totalSteps}</p>
+          <p className="text-xs text-gray-400 mt-1">
+            {sprintf(__('Step %1$d of %2$d', 'eleva-crm-for-photographers'), step, TOTAL_STEPS)}
+          </p>
         </div>
 
-        {step > 1 && step <= totalSteps && (
-          <StepIndicator current={step} total={totalSteps} />
+        {step > 1 && (
+          <StepIndicator current={step} total={TOTAL_STEPS} />
         )}
 
-        {step === 1 && (
-          <StepPassword onNext={handlePasswordNext} />
-        )}
+        {step === 1 && <StepPassword onNext={handlePasswordNext} />}
 
-        {step === 2 && (
-          <StepSetupCall password={password} onNext={handleSetupDone} />
-        )}
+        {step === 2 && <StepStage password={password} onNext={handleStaged} />}
 
-        {step === 3 && setupData && (
-          <StepScanQR
-            qrUri={setupData.qrUri}
-            onNext={() => setStep(4)}
-          />
-        )}
-
-        {step === 4 && (
-          <StepOTP
-            password={password}
-            onSuccess={afterOtp}
-          />
-        )}
-
-        {step === 5 && setupData?.recoveryPhrase && (
-          <StepRecoveryPhrase
-            recoveryPhrase={setupData.recoveryPhrase}
-            onNext={() => {
-              if (setupData.recoveryCode) {
-                setStep(6)
-              }
-              // If no recovery code, VaultGate re-renders via invalidated query
-            }}
-          />
-        )}
-
-        {step === 5 && !setupData?.recoveryPhrase && setupData?.recoveryCode && (
-          <StepRecoveryCode
-            recoveryCode={setupData.recoveryCode}
-            onDone={() => { /* vault is already unlocked; VaultGate renders the app */ }}
-          />
-        )}
-
-        {step === 6 && setupData?.recoveryCode && (
-          <StepRecoveryCode
-            recoveryCode={setupData.recoveryCode}
-            onDone={() => { /* vault is already unlocked; VaultGate renders the app */ }}
+        {step === 3 && (
+          <TotpEnroll
+            qrUri={qrUri}
+            onConfirm={handleConfirm}
+            submitLabel={__('Verify & Unlock', 'eleva-crm-for-photographers')}
           />
         )}
       </div>

@@ -2171,3 +2171,403 @@ msgstr ""
 #: src/src/components/Layout.jsx:89
 msgid "Quotes"
 msgstr ""
+
+#: includes/class-rest-api.php:415
+msgid "Vault password must be at least %d characters."
+msgstr ""
+
+#: includes/class-rest-api.php:456
+msgid "No vault setup is in progress. Start again."
+msgstr ""
+
+#: includes/class-rest-api.php:843
+msgid "Could not create the recovery kit."
+msgstr ""
+
+#: includes/class-rest-api.php:875
+msgid "There is no recovery kit to confirm. Create one first."
+msgstr ""
+
+#: includes/class-rest-api.php:925
+msgid "That recovery phrase or code is not valid."
+msgstr ""
+
+#: includes/class-rest-api.php:989
+msgid "Invalid OTP code."
+msgstr ""
+
+#: includes/class-rest-api.php:1045
+msgid "Type RESET to confirm."
+msgstr ""
+
+#: includes/class-rest-api.php:1054
+msgid "That reset code is not valid or has expired."
+msgstr ""
+
+#: includes/class-rest-api.php:1082
+msgid "A reset code, or your password and OTP, is required."
+msgstr ""
+
+#: includes/class-rest-api.php:1105
+msgid "The Vault is locked. Unlock it first."
+msgstr ""
+
+#: includes/class-rest-api.php:1115
+msgid "Too many attempts. Try again later."
+msgstr ""
+
+#: includes/class-rest-api.php:1125
+msgid "No authenticator setup is waiting for confirmation."
+msgstr ""
+
+#: includes/class-vault-mailer.php:51
+msgid "[%s] Vault recovery kit"
+msgstr ""
+
+#: includes/class-vault-mailer.php:56
+msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
+"\n"
+"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
+"\n"
+"Recovery phrase: %4$s\n"
+"Recovery code: %5$s\n"
+"\n"
+"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
+"\n"
+"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
+"\n"
+"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+msgstr ""
+
+#: includes/class-vault-mailer.php:90
+msgid "[%s] Vault reset code"
+msgstr ""
+
+#: includes/class-vault-mailer.php:95
+msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
+"\n"
+"Reset code: %3$s\n"
+"\n"
+"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
+"\n"
+"If you did not ask for this, ignore this email and check your site's administrators."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:147
+msgid "New password must be at least 8 characters."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:293
+msgid "Could not start a new recovery kit. Ensure the vault is unlocked."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:302
+msgid "Unlock the vault to manage the recovery kit."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:312
+msgid "Generate a new recovery phrase and recovery code. They replace the current ones, which stop working as soon as the new kit is issued. The kit is also emailed to the site administrator address."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:324
+msgid "Generate a new recovery kit"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:332
+msgid "New recovery kit"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:333
+msgid "Your current recovery phrase and recovery code will stop working once the new kit is issued. Continue?"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:334
+msgid "Continue"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:451
+msgid "Pick a strong master password (at least 8 characters) and store it somewhere safe."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:453
+msgid "Right after setup you will get a recovery phrase and a recovery code, also emailed to the site administrator. Keep them safe: they are your fallback if you lose access."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:483
+msgid "Recovery kit"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:69
+msgid "This recovery phrase or code is not valid."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:71
+msgid "Recovery failed. Check your recovery phrase or code and try again."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:80
+msgid "Enter your recovery phrase or recovery code and choose a new password. You will then set up a new authenticator."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:83
+msgid "Recovery phrase or recovery code"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:146
+msgid "Search the inbox of %s for an email titled 'Vault recovery kit'. It holds your phrase and code."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:149
+msgid "I found it"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:152
+msgid "I have nothing: reset the vault"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:203
+msgid "I have my recovery phrase or code"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:206
+msgid "Set a new password and a new authenticator without losing any data."
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:219
+msgid "I lost everything"
+msgstr ""
+
+#: src/src/features/vault/VaultRecoveryPanel.jsx:222
+msgid "I no longer have my password, authenticator, recovery phrase or code."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:96
+msgid "Minimum 8 characters"
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:169
+msgid "Could not start the vault setup. Please try again."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:227
+msgid "Invalid code. Check your authenticator app."
+msgstr ""
+
+#: src/src/features/vault/VaultSetup.jsx:241
+msgid "Step %1$d of %2$d"
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:30
+msgid "Could not prepare the new authenticator. Please try again."
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:47
+msgid "Set up your new authenticator"
+msgstr ""
+
+#: src/src/features/vault/VaultGate.jsx:49
+msgid "Your password was reset. Add the vault to your authenticator app again to finish recovery."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:55
+msgid "Type the last %d characters to confirm you have it"
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:102
+msgid "Could not generate the recovery kit. Please try again."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:115
+msgid "Could not save your confirmation. Please try again."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:133
+msgid "Without a recovery kit, forgetting your vault password or losing your authenticator app means your protected data cannot be recovered."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:137
+msgid "We will generate a recovery phrase and a recovery code, show them here, and email them to the site administrator address. Either one lets you set a new password and a new authenticator without losing data. Any recovery secret you saw before stops working."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:147
+msgid "Generate and email my recovery kit"
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:154
+msgid "Your recovery phrase"
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:155
+msgid "Store it somewhere safe outside this site, such as a password manager or a printed copy."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:167
+msgid "This is a second, shorter secret that does the same job. Keep it next to the phrase."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:178
+msgid "Keep a copy outside this site"
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:184
+msgid "Sent to %s"
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:191
+msgid "Email could not be sent. Copy the kit now and keep it outside this site."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:197
+msgid "If you use an SMTP plugin that logs emails (WP Mail SMTP, FluentSMTP, WP Mail Logging), the kit is stored in your database. Turn logging off or delete that log entry."
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:202
+msgid "Copy all"
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:213
+msgid "I saved the phrase and the code somewhere safe outside this site"
+msgstr ""
+
+#: src/src/features/vault/RecoveryKitWizard.jsx:222
+msgid "Finish"
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:74
+msgid "Could not send the reset code. Please try again."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:168
+msgid "Use an email code instead"
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:184
+msgid "We will email a reset code to %s."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:185
+msgid "We will email a reset code to the site administrator address."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:188
+msgid "The email could not be sent. Check that your site can send email, then try again."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:192
+msgid "Email me a reset code"
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:202
+msgid "Customers: %1$d, works: %2$d. Their encrypted personal data becomes unreadable forever."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:210
+msgid "Code sent to %s. It expires in 15 minutes."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:215
+msgid "Reset code"
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:252
+msgid "Use password and authenticator code instead"
+msgstr ""
+
+#: src/src/features/vault/TotpEnroll.jsx:50
+msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below, then enter the 6-digit code it shows."
+msgstr ""
+
+#: src/src/features/vault/TotpEnroll.jsx:87
+msgid "Verify code"
+msgstr ""
+
+#: src/src/utils/recoveryKit.js:23
+msgid "Eleva CRM vault recovery kit"
+msgstr ""
+
+#: src/src/utils/recoveryKit.js:26
+msgid "Recovery phrase:"
+msgstr ""
+
+#: src/src/utils/recoveryKit.js:27
+msgid "Recovery code:"
+msgstr ""
+
+#: src/src/utils/recoveryKit.js:29
+msgid "Either one opens the vault and lets you set a new password and a new authenticator, without losing any data. Anyone who has them can open the vault."
+msgstr ""
+
+#: includes/class-vault-mailer.php:56
+msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
+"\n"
+"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
+"\n"
+"Recovery phrase: %4$s\n"
+"Recovery code: %5$s\n"
+"\n"
+"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
+"\n"
+"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
+"\n"
+"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+msgstr ""
+
+#: includes/class-vault-mailer.php:95
+msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
+"\n"
+"Reset code: %3$s\n"
+"\n"
+"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
+"\n"
+"If you did not ask for this, ignore this email and check your site's administrators."
+msgstr ""
+
+#: includes/class-vault-mailer.php:56
+msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
+"\n"
+"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
+"\n"
+"Recovery phrase: %4$s\n"
+"Recovery code: %5$s\n"
+"\n"
+"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
+"\n"
+"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
+"\n"
+"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+msgstr ""
+
+#: includes/class-vault-mailer.php:95
+msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
+"\n"
+"Reset code: %3$s\n"
+"\n"
+"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
+"\n"
+"If you did not ask for this, ignore this email and check your site's administrators."
+msgstr ""
+
+#: includes/class-vault-mailer.php:56
+msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
+"\n"
+"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
+"\n"
+"Recovery phrase: %4$s\n"
+"Recovery code: %5$s\n"
+"\n"
+"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
+"\n"
+"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
+"\n"
+"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+msgstr ""
+
+#: includes/class-vault-mailer.php:95
+msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
+"\n"
+"Reset code: %3$s\n"
+"\n"
+"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
+"\n"
+"If you did not ask for this, ignore this email and check your site's administrators."
+msgstr ""

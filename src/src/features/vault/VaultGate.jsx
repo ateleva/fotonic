@@ -1,147 +1,76 @@
-import { useEffect, useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useEffect, useRef, useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
 import { useVault } from '../../context/VaultContext'
-import { fetchVaultStatus, vaultEnrollPhrase } from '../../api/vault'
+import { fetchVaultStatus, vaultTotpPending, vaultTotpConfirm } from '../../api/vault'
 import Spinner from '../../components/Spinner'
 import Button from '../../components/Button'
-import Modal from '../../components/Modal'
 import VaultLock from './VaultLock'
-import RecoveryCodeBanner from './RecoveryCodeBanner'
+import RecoveryKitWizard from './RecoveryKitWizard'
+import TotpEnroll from './TotpEnroll'
 import { __ } from '../../utils/i18n'
-import { ShieldCheck, X } from 'lucide-react'
 
 // ---------------------------------------------------------------------------
-// RecoveryPhraseBanner — shown when has_recovery_phrase === false
+// PendingTotpScreen - shown after a recovery until the new authenticator is
+// confirmed. The pending secret is (re)staged once on mount.
 // ---------------------------------------------------------------------------
 
-function RecoveryPhraseBanner() {
-  const [dismissed, setDismissed]   = useState(false)
-  const [modalOpen, setModalOpen]   = useState(false)
-  const [loading, setLoading]       = useState(false)
-  const [error, setError]           = useState(null)
-  const [phrase, setPhrase]         = useState(null)
-  const [phraseSaved, setPhraseSaved] = useState(false)
-  const [copied, setCopied]         = useState(false)
+function PendingTotpScreen() {
+  const queryClient = useQueryClient()
+  const [qrUri, setQrUri] = useState(null)
+  const [error, setError] = useState(null)
+  const [attempt, setAttempt] = useState(0)
+  const startedRef = useRef(-1)
 
-  if (dismissed) return null
+  useEffect(() => {
+    if (startedRef.current === attempt) return
+    startedRef.current = attempt
+    vaultTotpPending()
+      .then((data) => setQrUri(data.qr_uri))
+      .catch((err) => setError(err.message || __('Could not prepare the new authenticator. Please try again.', 'eleva-crm-for-photographers')))
+  }, [attempt])
 
-  async function handleEnroll() {
-    setError(null)
-    setLoading(true)
+  async function handleConfirm(otp) {
     try {
-      const data = await vaultEnrollPhrase()
-      setPhrase(data.recovery_phrase)
+      await vaultTotpConfirm({ otp })
     } catch (err) {
-      setError(err.message || __('Could not generate recovery phrase. Make sure the vault is unlocked.', 'eleva-crm-for-photographers'))
-    } finally {
-      setLoading(false)
+      return { error: err.message || __('Invalid code. Check your authenticator app.', 'eleva-crm-for-photographers') }
     }
-  }
-
-  function handleCopy() {
-    navigator.clipboard.writeText(phrase).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
-  function handleOpen() {
-    setPhrase(null)
-    setError(null)
-    setPhraseSaved(false)
-    setModalOpen(true)
-  }
-
-  function handleDone() {
-    setModalOpen(false)
-    setDismissed(true)
+    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+    return {}
   }
 
   return (
-    <>
-      {/* Banner */}
-      <div className="flex items-start gap-3 rounded-md border border-blue-200 bg-blue-50 px-4 py-3 mb-4">
-        <ShieldCheck size={18} className="text-blue-500 shrink-0 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-blue-900">
-            {__('Set up your recovery phrase', 'eleva-crm-for-photographers')}
-          </p>
-          <p className="text-xs text-blue-700 mt-0.5">
-            {__('Add a recovery phrase so you can regain access if you ever forget your vault password. It takes only a few seconds.', 'eleva-crm-for-photographers')}
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-md w-full max-w-md p-8">
+        <div className="text-center mb-6">
+          <h1 className="text-xl font-bold text-gray-900">{__('Set up your new authenticator', 'eleva-crm-for-photographers')}</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            {__('Your password was reset. Add the vault to your authenticator app again to finish recovery.', 'eleva-crm-for-photographers')}
           </p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <Button variant="secondary" size="sm" onClick={handleOpen}>
-            {__('Set up', 'eleva-crm-for-photographers')}
-          </Button>
-          <button
-            type="button"
-            onClick={() => setDismissed(true)}
-            className="text-blue-400 hover:text-blue-600 transition-colors"
-            aria-label={__('Dismiss', 'eleva-crm-for-photographers')}
-          >
-            <X size={16} />
-          </button>
-        </div>
+
+        {error && (
+          <div className="space-y-4">
+            <p className="text-sm text-red-600">{error}</p>
+            <Button
+              variant="secondary"
+              onClick={() => { setError(null); setAttempt((a) => a + 1) }}
+            >
+              {__('Try again', 'eleva-crm-for-photographers')}
+            </Button>
+          </div>
+        )}
+
+        {!error && !qrUri && (
+          <div className="flex justify-center py-8"><Spinner size="lg" /></div>
+        )}
+
+        {!error && qrUri && (
+          <TotpEnroll qrUri={qrUri} onConfirm={handleConfirm} />
+        )}
       </div>
-
-      {/* Modal */}
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={__('Recovery Phrase', 'eleva-crm-for-photographers')}
-      >
-        <div className="space-y-4">
-          {!phrase && (
-            <>
-              <p className="text-sm text-gray-600">
-                {__('A recovery phrase lets you reset your vault password if you ever forget it. Store it somewhere safe offline. It will only be shown once.', 'eleva-crm-for-photographers')}
-              </p>
-              {error && (
-                <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
-              )}
-              <Button
-                variant="primary"
-                className="w-full"
-                onClick={handleEnroll}
-                disabled={loading}
-              >
-                {loading ? <Spinner size="sm" /> : __('Generate Recovery Phrase', 'eleva-crm-for-photographers')}
-              </Button>
-            </>
-          )}
-
-          {phrase && (
-            <div className="space-y-4">
-              <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
-                <p className="text-xs text-gray-500 mb-2">{__('Your Recovery Phrase', 'eleva-crm-for-photographers')}</p>
-                <p className="text-sm font-mono font-semibold text-amber-900 break-all tracking-widest text-center">
-                  {phrase}
-                </p>
-              </div>
-              <Button variant="secondary" className="w-full" onClick={handleCopy}>
-                {copied ? __('Copied!', 'eleva-crm-for-photographers') : __('Copy to clipboard', 'eleva-crm-for-photographers')}
-              </Button>
-              <label className="flex items-start gap-3 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={phraseSaved}
-                  onChange={(e) => setPhraseSaved(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 rounded border-gray-300 text-indigo-600"
-                />
-                <span className="text-sm text-gray-700">
-                  {__('I have saved this phrase offline in a secure location.', 'eleva-crm-for-photographers')}
-                </span>
-              </label>
-              <Button variant="primary" className="w-full" disabled={!phraseSaved} onClick={handleDone}>
-                {__('Done', 'eleva-crm-for-photographers')}
-              </Button>
-            </div>
-          )}
-        </div>
-      </Modal>
-    </>
+    </div>
   )
 }
 
@@ -195,7 +124,9 @@ export default function VaultGate({ router }) {
     )
   }
 
-  if (isError) {
+  // A failed background refetch keeps the previous data: only block when there is none,
+  // otherwise an open wizard would be torn down and its in-state secrets lost.
+  if (isError && !data) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <p className="text-sm text-red-600">
@@ -224,21 +155,13 @@ export default function VaultGate({ router }) {
     return <VaultLock />
   }
 
-  // Vault unlocked — context is the single source of truth (silentReopen /
+  // Vault unlocked - context is the single source of truth (silentReopen /
   // markUnlocked / unlock all set isUnlocked from the server status).
-  const isVaultOpen = isUnlocked
-  const needsRecoveryPhrase = isVaultOpen && data?.has_recovery_phrase === false
-  const needsRecoveryCode   = isVaultOpen && data?.has_recovery_code === false
+  // Every branch returns a stable element type so a focus refetch never
+  // resets wizard state.
+  if (isUnlocked && data?.totp_pending) return <PendingTotpScreen />
 
-  return (
-    <>
-      {(needsRecoveryPhrase || needsRecoveryCode) && (
-        <div className="px-6 pt-4">
-          {needsRecoveryPhrase && <RecoveryPhraseBanner />}
-          {needsRecoveryCode   && <RecoveryCodeBanner />}
-        </div>
-      )}
-      <RouterProvider router={router} />
-    </>
-  )
+  if (isUnlocked && data?.kit_ok === false) return <RecoveryKitWizard />
+
+  return <RouterProvider router={router} />
 }

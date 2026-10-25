@@ -31,11 +31,37 @@ function t_cleanup( int $post_id ): int {
     return $post_id;
 }
 
-/** Snapshot options now; t_done() restores them. */
+/**
+ * Snapshot options now; t_done() restores them. A shutdown hook restores them
+ * too, so a fatal mid-test (red-phase tests fatal by design) cannot leave a
+ * live option overwritten.
+ */
 function t_preserve_options( array $names ): void {
-    foreach ( $names as $name ) {
-        $GLOBALS['ftnc_options'][ $name ] = get_option( $name, null );
+    static $hooked = false;
+    if ( ! $hooked ) {
+        $hooked = true;
+        register_shutdown_function( 't_restore_options' );
     }
+    foreach ( $names as $name ) {
+        if ( ! array_key_exists( $name, $GLOBALS['ftnc_options'] ) ) {
+            $GLOBALS['ftnc_options'][ $name ] = get_option( $name, null );
+        }
+    }
+}
+
+/** Idempotent: empties the snapshot after applying it. */
+function t_restore_options(): void {
+    if ( ! function_exists( 'update_option' ) ) {
+        return;
+    }
+    foreach ( $GLOBALS['ftnc_options'] as $name => $value ) {
+        if ( null === $value ) {
+            delete_option( $name );
+        } else {
+            update_option( $name, $value );
+        }
+    }
+    $GLOBALS['ftnc_options'] = [];
 }
 
 function t_done(): void {
@@ -43,14 +69,8 @@ function t_done(): void {
         foreach ( array_reverse( $GLOBALS['ftnc_cleanup'] ) as $id ) {
             wp_delete_post( $id, true );
         }
-        foreach ( $GLOBALS['ftnc_options'] as $name => $value ) {
-            if ( null === $value ) {
-                delete_option( $name );
-            } else {
-                update_option( $name, $value );
-            }
-        }
     }
+    t_restore_options();
     $failures = $GLOBALS['ftnc_failures'];
     echo $failures ? "\n{$failures} failure(s)\n" : "\nall passed\n";
     exit( $failures ? 1 : 0 );

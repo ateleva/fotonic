@@ -62,33 +62,45 @@ class Fotonic_REST_API {
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery/reset-password', [
+		register_rest_route( self::NAMESPACE, '/vault/setup/confirm', [
 			'methods'             => \WP_REST_Server::CREATABLE,
-			'callback'            => [ __CLASS__, 'vault_recovery_reset_password' ],
+			'callback'            => [ __CLASS__, 'vault_setup_confirm' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery/reset-totp', [
+		register_rest_route( self::NAMESPACE, '/vault/recovery-kit', [
 			'methods'             => \WP_REST_Server::CREATABLE,
-			'callback'            => [ __CLASS__, 'vault_recovery_reset_totp' ],
+			'callback'            => [ __CLASS__, 'vault_recovery_kit' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery/regenerate', [
+		register_rest_route( self::NAMESPACE, '/vault/recovery-kit/ack', [
 			'methods'             => \WP_REST_Server::CREATABLE,
-			'callback'            => [ __CLASS__, 'vault_recovery_regenerate' ],
+			'callback'            => [ __CLASS__, 'vault_recovery_kit_ack' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery/enroll-phrase', [
+		register_rest_route( self::NAMESPACE, '/vault/recovery/begin', [
 			'methods'             => \WP_REST_Server::CREATABLE,
-			'callback'            => [ __CLASS__, 'vault_recovery_enroll_phrase' ],
+			'callback'            => [ __CLASS__, 'vault_recovery_begin' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery/reset-password-phrase', [
+		register_rest_route( self::NAMESPACE, '/vault/totp/pending', [
 			'methods'             => \WP_REST_Server::CREATABLE,
-			'callback'            => [ __CLASS__, 'vault_recovery_reset_password_phrase' ],
+			'callback'            => [ __CLASS__, 'vault_totp_pending' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/totp/confirm', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_totp_confirm' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/reset/request-code', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_reset_request_code' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
@@ -377,8 +389,9 @@ class Fotonic_REST_API {
 
 	/**
 	 * POST /vault/setup
-	 * Body: { password, totp_secret? }
-	 * Returns: { setup, qr_uri, recovery_code, recovery_phrase }
+	 * Body: { password }
+	 * Stages a pending vault (nothing live yet) and returns the QR for the authenticator.
+	 * Returns: { staged, qr_uri }
 	 */
 	public static function vault_setup( \WP_REST_Request $req ): \WP_REST_Response {
 		if ( Fotonic_Vault::is_setup() ) {
@@ -388,49 +401,80 @@ class Fotonic_REST_API {
 			);
 		}
 
-		$body        = $req->get_json_params();
-		$password    = isset( $body['password'] )    ? (string) $body['password']    : '';
-		$totp_secret = isset( $body['totp_secret'] ) ? (string) $body['totp_secret'] : '';
+		$body     = $req->get_json_params();
+		$password = isset( $body['password'] ) ? (string) $body['password'] : '';
 
-		if ( empty( $password ) ) {
+		if ( '' === $password ) {
 			return new \WP_REST_Response(
 				[ 'code' => 'missing_password', 'message' => __( 'Password is required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
-		if ( strlen( $password ) < 12 ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'password_too_short', 'message' => __( 'Vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
+		if ( strlen( $password ) < Fotonic_Vault::MIN_PASSWORD_LENGTH ) {
+			/* translators: %d: minimum number of characters. */
+			return self::password_too_short_response( __( 'Vault password must be at least %d characters.', 'eleva-crm-for-photographers' ) );
 		}
 
-		// If no totp_secret supplied, generate a fresh one.
-		if ( empty( $totp_secret ) ) {
-			$totp_secret = Fotonic_TOTP::generate_secret();
-		}
-
-		$result = Fotonic_Vault::setup( $password, $totp_secret );
-		if ( ! $result['ok'] ) {
+		$totp_secret = Fotonic_TOTP::generate_secret();
+		if ( ! Fotonic_Vault::stage_setup( $password, $totp_secret ) ) {
 			return new \WP_REST_Response(
 				[ 'code' => 'setup_failed', 'message' => __( 'Vault setup failed.', 'eleva-crm-for-photographers' ) ],
 				500
 			);
 		}
 
-		$site_name = get_bloginfo( 'name' ) ?: 'Eleva CRM';
-		$label     = $site_name . ':' . wp_get_current_user()->user_email;
-		$qr_uri    = Fotonic_TOTP::get_uri( $totp_secret, $label, $site_name );
-
-		self::audit_log( 'vault_setup' );
+		self::audit_log( 'vault_setup_staged' );
 
 		return new \WP_REST_Response( [
-			'setup'           => true,
-			'qr_uri'          => $qr_uri,
-			'recovery_code'   => $result['recovery_code'],
-			'recovery_phrase' => $result['recovery_phrase'],
+			'staged' => true,
+			'qr_uri' => self::totp_qr_uri( $totp_secret ),
 		], 200 );
+	}
+
+	/**
+	 * POST /vault/setup/confirm
+	 * Body: { password, otp }
+	 * Promotes the staged vault once the OTP from the authenticator is proven.
+	 * Returns: { setup: true }
+	 */
+	public static function vault_setup_confirm( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return self::rate_limited_response();
+		}
+
+		if ( Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'already_setup', 'message' => __( 'Vault is already configured. Use change-password to update credentials.', 'eleva-crm-for-photographers' ) ],
+				409
+			);
+		}
+
+		if ( ! Fotonic_Vault::has_pending_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'no_pending_setup', 'message' => __( 'No vault setup is in progress. Start again.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		$body     = $req->get_json_params();
+		$password = isset( $body['password'] ) ? (string) $body['password'] : '';
+		$otp      = isset( $body['otp'] )      ? (string) $body['otp']      : '';
+
+		if ( Fotonic_Vault::confirm_setup( $password, $otp ) ) {
+			delete_transient( $fail_key );
+			self::audit_log( 'vault_setup_confirmed' );
+			return new \WP_REST_Response( [ 'setup' => true ], 200 );
+		}
+
+		set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+		self::audit_log( 'vault_setup_confirm_fail' );
+		return new \WP_REST_Response(
+			[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
+			401
+		);
 	}
 
 	/**
@@ -487,15 +531,16 @@ class Fotonic_REST_API {
 
 	/**
 	 * GET /vault/status
-	 * Returns: { setup, unlocked, has_recovery_code, has_recovery_phrase, scheme }
+	 * Returns: { setup, unlocked, scheme, kit_ok, totp_pending, email_hint }
 	 */
 	public static function vault_status( \WP_REST_Request $_req ): \WP_REST_Response {
 		return new \WP_REST_Response( [
-			'setup'               => Fotonic_Vault::is_setup(),
-			'unlocked'            => Fotonic_Vault::is_unlocked(),
-			'has_recovery_code'   => Fotonic_Vault::has_recovery(),
-			'has_recovery_phrase' => Fotonic_Vault::has_recovery_phrase(),
-			'scheme'              => Fotonic_Vault::get_scheme(),
+			'setup'        => Fotonic_Vault::is_setup(),
+			'unlocked'     => Fotonic_Vault::is_unlocked(),
+			'scheme'       => Fotonic_Vault::get_scheme(),
+			'kit_ok'       => Fotonic_Vault::is_recovery_kit_ok(),
+			'totp_pending' => Fotonic_Vault::has_pending_totp(),
+			'email_hint'   => Fotonic_Vault_Mailer::mask_email( Fotonic_Vault_Mailer::recipient() ),
 		], 200 );
 	}
 
@@ -626,11 +671,9 @@ class Fotonic_REST_API {
 			);
 		}
 
-		if ( strlen( $new_password ) < 12 ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
+		if ( strlen( $new_password ) < Fotonic_Vault::MIN_PASSWORD_LENGTH ) {
+			/* translators: %d: minimum number of characters. */
+			return self::password_too_short_response( __( 'Vault password must be at least %d characters.', 'eleva-crm-for-photographers' ) );
 		}
 
 		if ( ! Fotonic_Vault::is_setup() ) {
@@ -782,225 +825,93 @@ class Fotonic_REST_API {
 	}
 
 	// ---------------------------------------------------------------------------
-	// Vault recovery endpoints
+	// Vault recovery kit, recovery and reset endpoints
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * POST /vault/recovery/reset-password
-	 * Body: { recovery_code, new_password }
-	 * Reset the vault password using a recovery code (lost OTP path).
-	 * Rate-limited to 5 attempts / 15 min.
+	 * POST /vault/recovery-kit
+	 * Issues a new recovery phrase + code (replacing the old ones), emails them
+	 * to the administration address and returns them once for on-screen display.
+	 * Returns: { recovery_code, recovery_phrase, email_sent, email_hint }
 	 */
-	public static function vault_recovery_reset_password( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
-			return new \WP_REST_Response(
-				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
-				429
-			);
-		}
-
-		$body          = $req->get_json_params();
-		$recovery_code = isset( $body['recovery_code'] ) ? (string) $body['recovery_code'] : '';
-		$new_password  = isset( $body['new_password'] )  ? (string) $body['new_password']  : '';
-
-		if ( empty( $recovery_code ) || empty( $new_password ) ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'missing_fields', 'message' => __( 'Recovery code and new password are required.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
-		}
-
-		if ( strlen( $new_password ) < 12 ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
-		}
-
-		if ( ! Fotonic_Vault::is_setup() ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
-		}
-
-		$ok = Fotonic_Vault::recover_reset_password( $recovery_code, $new_password );
-		if ( ! $ok ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
-			self::audit_log( 'vault_recovery_password_reset_fail' );
-			return new \WP_REST_Response(
-				[ 'code' => 'invalid_recovery_code', 'message' => __( 'Invalid recovery code.', 'eleva-crm-for-photographers' ) ],
-				401
-			);
-		}
-
-		delete_transient( $fail_key );
-		self::audit_log( 'vault_recovery_password_reset' );
-
-		return new \WP_REST_Response( [ 'reset' => true ], 200 );
-	}
-
-	/**
-	 * POST /vault/recovery/reset-totp
-	 * Body: { password, recovery_code }
-	 * Reset the TOTP secret when the OTP device is lost.
-	 * Both password AND recovery code are required (dual-factor).
-	 * Rate-limited to 5 attempts / 15 min.
-	 */
-	public static function vault_recovery_reset_totp( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
-			return new \WP_REST_Response(
-				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
-				429
-			);
-		}
-
-		$body          = $req->get_json_params();
-		$password      = isset( $body['password'] )      ? (string) $body['password']      : '';
-		$recovery_code = isset( $body['recovery_code'] ) ? (string) $body['recovery_code'] : '';
-
-		if ( empty( $password ) || empty( $recovery_code ) ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'missing_fields', 'message' => __( 'Password and recovery code are required.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
-		}
-
-		if ( ! Fotonic_Vault::is_setup() ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
-		}
-
-		$result = Fotonic_Vault::recover_reset_totp( $password, $recovery_code );
-		if ( false === $result ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
-			self::audit_log( 'vault_recovery_totp_reset_fail' );
-			return new \WP_REST_Response(
-				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or recovery code.', 'eleva-crm-for-photographers' ) ],
-				401
-			);
-		}
-
-		delete_transient( $fail_key );
-		self::audit_log( 'vault_recovery_totp_reset' );
-
-		return new \WP_REST_Response( [
-			'reset'  => true,
-			'qr_uri' => $result['qr_uri'],
-		], 200 );
-	}
-
-	/**
-	 * POST /vault/recovery/regenerate
-	 * Generate a new recovery code (replaces the old one).
-	 * Requires vault to be unlocked (active session cookie).
-	 * Rate-limited to 5 attempts / 15 min.
-	 */
-	public static function vault_recovery_regenerate( \WP_REST_Request $_req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
-			return new \WP_REST_Response(
-				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
-				429
-			);
-		}
-
+	public static function vault_recovery_kit( \WP_REST_Request $_req ): \WP_REST_Response {
 		if ( ! Fotonic_Vault::is_unlocked() ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'vault_locked', 'message' => __( 'Vault must be unlocked to regenerate recovery code.', 'eleva-crm-for-photographers' ) ],
-				403
-			);
+			return self::vault_locked_response();
 		}
 
-		$result = Fotonic_Vault::regenerate_recovery_code();
-
-		if ( false === $result ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
-			self::audit_log( 'vault_recovery_regenerate_fail' );
+		$kit = Fotonic_Vault::issue_recovery_kit();
+		if ( ! is_array( $kit ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'regenerate_failed', 'message' => __( 'Failed to regenerate recovery code.', 'eleva-crm-for-photographers' ) ],
+				[ 'code' => 'kit_failed', 'message' => __( 'Could not create the recovery kit.', 'eleva-crm-for-photographers' ) ],
 				500
 			);
 		}
 
-		delete_transient( $fail_key );
-		self::audit_log( 'vault_recovery_regenerated' );
+		$email_sent = Fotonic_Vault_Mailer::send_recovery_kit( $kit['recovery_code'], $kit['recovery_phrase'] );
+		self::audit_log( 'vault_kit_issued', [ 'email_sent' => $email_sent ] );
 
 		return new \WP_REST_Response( [
-			'regenerated'   => true,
-			'recovery_code' => $result['recovery_code'],
+			'recovery_code'   => $kit['recovery_code'],
+			'recovery_phrase' => $kit['recovery_phrase'],
+			'email_sent'      => $email_sent,
+			'email_hint'      => Fotonic_Vault_Mailer::mask_email( Fotonic_Vault_Mailer::recipient() ),
 		], 200 );
 	}
 
 	/**
-	 * POST /vault/recovery/enroll-phrase
-	 * Enroll (or re-enroll) a recovery phrase.
-	 * Requires vault to be unlocked (active session cookie).
-	 * Returns the recovery phrase ONCE — it is never stored in plaintext.
+	 * POST /vault/recovery-kit/ack
+	 * Body: { ack: bool }
+	 * Records that the user has seen and verified the current kit.
+	 * Returns: { ack }
 	 */
-	public static function vault_recovery_enroll_phrase( \WP_REST_Request $_req ): \WP_REST_Response {
+	public static function vault_recovery_kit_ack( \WP_REST_Request $req ): \WP_REST_Response {
 		if ( ! Fotonic_Vault::is_unlocked() ) {
+			return self::vault_locked_response();
+		}
+
+		$body = $req->get_json_params();
+		$ack  = ! empty( $body['ack'] );
+
+		if ( ! Fotonic_Vault::set_recovery_ack( $ack ) ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'vault_locked', 'message' => __( 'Vault must be unlocked to enroll a recovery phrase.', 'eleva-crm-for-photographers' ) ],
-				403
+				[ 'code' => 'kit_missing', 'message' => __( 'There is no recovery kit to confirm. Create one first.', 'eleva-crm-for-photographers' ) ],
+				409
 			);
 		}
 
-		$result = Fotonic_Vault::enroll_recovery_phrase();
-		if ( false === $result ) {
-			self::audit_log( 'vault_recovery_enroll_phrase_fail' );
-			return new \WP_REST_Response(
-				[ 'code' => 'enroll_failed', 'message' => __( 'Failed to enroll recovery phrase.', 'eleva-crm-for-photographers' ) ],
-				500
-			);
-		}
-
-		self::audit_log( 'vault_recovery_phrase_enrolled' );
-		return new \WP_REST_Response( [
-			'enrolled'        => true,
-			'recovery_phrase' => $result['recovery_phrase'],
-		], 200 );
+		self::audit_log( 'vault_kit_ack', [ 'ack' => $ack ] );
+		return new \WP_REST_Response( [ 'ack' => $ack ], 200 );
 	}
 
 	/**
-	 * POST /vault/recovery/reset-password-phrase
-	 * Body: { recovery_phrase, new_password }
-	 * Reset the vault password using a recovery phrase.
-	 * Rate-limited to 5 attempts / 15 min.
+	 * POST /vault/recovery/begin
+	 * Body: { recovery_secret, new_password }
+	 * Opens the vault from a recovery phrase or code, sets a new password and
+	 * stages a new authenticator secret (confirmed later via /vault/totp/confirm).
+	 * Rate-limited to 5 failures / 15 min.
+	 * Returns: { recovered: true }
 	 */
-	public static function vault_recovery_reset_password_phrase( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+	public static function vault_recovery_begin( \WP_REST_Request $req ): \WP_REST_Response {
+		$fail_key = 'fotonic_vault_recovery_fails_' . get_current_user_id();
 		$attempts = (int) get_transient( $fail_key );
 		if ( $attempts >= 5 ) {
-			return new \WP_REST_Response(
-				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
-				429
-			);
+			return self::rate_limited_response();
 		}
 
 		$body            = $req->get_json_params();
-		$recovery_phrase = isset( $body['recovery_phrase'] ) ? (string) $body['recovery_phrase'] : '';
+		$recovery_secret = isset( $body['recovery_secret'] ) ? (string) $body['recovery_secret'] : '';
 		$new_password    = isset( $body['new_password'] )    ? (string) $body['new_password']    : '';
 
-		if ( empty( $recovery_phrase ) || empty( $new_password ) ) {
+		if ( '' === trim( $recovery_secret ) || '' === $new_password ) {
 			return new \WP_REST_Response(
-				[ 'code' => 'missing_fields', 'message' => __( 'Recovery phrase and new password are required.', 'eleva-crm-for-photographers' ) ],
+				[ 'code' => 'missing_fields', 'message' => __( 'All fields are required.', 'eleva-crm-for-photographers' ) ],
 				400
 			);
 		}
 
-		if ( strlen( $new_password ) < 12 ) {
-			return new \WP_REST_Response(
-				[ 'code' => 'password_too_short', 'message' => __( 'New vault password must be at least 12 characters.', 'eleva-crm-for-photographers' ) ],
-				400
-			);
+		if ( strlen( $new_password ) < Fotonic_Vault::MIN_PASSWORD_LENGTH ) {
+			/* translators: %d: minimum number of characters. */
+			return self::password_too_short_response( __( 'Vault password must be at least %d characters.', 'eleva-crm-for-photographers' ) );
 		}
 
 		if ( ! Fotonic_Vault::is_setup() ) {
@@ -1010,30 +921,183 @@ class Fotonic_REST_API {
 			);
 		}
 
-		$ok = Fotonic_Vault::recover_reset_password_via_phrase( $recovery_phrase, $new_password );
-		if ( ! $ok ) {
+		if ( ! Fotonic_Vault::recover_with_secret( $recovery_secret, $new_password ) ) {
 			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
-			self::audit_log( 'vault_recovery_phrase_reset_fail' );
+			self::audit_log( 'vault_recovery_fail' );
 			return new \WP_REST_Response(
-				[ 'code' => 'invalid_recovery_phrase', 'message' => __( 'Invalid recovery phrase.', 'eleva-crm-for-photographers' ) ],
+				[ 'code' => 'invalid_recovery_secret', 'message' => __( 'That recovery phrase or code is not valid.', 'eleva-crm-for-photographers' ) ],
 				401
 			);
 		}
 
 		delete_transient( $fail_key );
-		self::audit_log( 'vault_recovery_phrase_reset' );
+		self::audit_log( 'vault_recovery_ok' );
+		return new \WP_REST_Response( [ 'recovered' => true ], 200 );
+	}
 
-		return new \WP_REST_Response( [ 'reset' => true ], 200 );
+	/**
+	 * POST /vault/totp/pending
+	 * Returns the QR URI of the authenticator secret a recovery staged. Idempotent:
+	 * a reload, a second tab or an auto-lock must never mint a new secret, or the
+	 * QR the user already scanned stops working.
+	 * Returns: { qr_uri }
+	 */
+	public static function vault_totp_pending( \WP_REST_Request $_req ): \WP_REST_Response {
+		if ( ! Fotonic_Vault::is_unlocked() ) {
+			return self::vault_locked_response();
+		}
+
+		if ( ! Fotonic_Vault::has_pending_totp() ) {
+			return self::no_pending_totp_response();
+		}
+
+		$secret = Fotonic_Vault::get_pending_totp_secret();
+		if ( false === $secret ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'encrypt_error', 'message' => __( 'Encryption error.', 'eleva-crm-for-photographers' ) ],
+				500
+			);
+		}
+
+		return new \WP_REST_Response( [ 'qr_uri' => self::totp_qr_uri( $secret ) ], 200 );
+	}
+
+	/**
+	 * POST /vault/totp/confirm
+	 * Body: { otp }
+	 * Promotes the staged authenticator secret once its first OTP is proven.
+	 * Shares the recovery failure counter (5 / 15 min).
+	 * Returns: { confirmed: true }
+	 */
+	public static function vault_totp_confirm( \WP_REST_Request $req ): \WP_REST_Response {
+		if ( ! Fotonic_Vault::is_unlocked() ) {
+			return self::vault_locked_response();
+		}
+
+		if ( ! Fotonic_Vault::has_pending_totp() ) {
+			return self::no_pending_totp_response();
+		}
+
+		$fail_key = 'fotonic_vault_recovery_fails_' . get_current_user_id();
+		$attempts = (int) get_transient( $fail_key );
+		if ( $attempts >= 5 ) {
+			return self::rate_limited_response();
+		}
+
+		$body = $req->get_json_params();
+		$otp  = isset( $body['otp'] ) ? (string) $body['otp'] : '';
+
+		if ( ! Fotonic_Vault::confirm_pending_totp( $otp ) ) {
+			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_otp', 'message' => __( 'Invalid OTP code.', 'eleva-crm-for-photographers' ) ],
+				401
+			);
+		}
+
+		delete_transient( $fail_key );
+		self::audit_log( 'vault_totp_confirmed' );
+		return new \WP_REST_Response( [ 'confirmed' => true ], 200 );
+	}
+
+	/**
+	 * POST /vault/reset/request-code
+	 * Emails a one-time reset code to the administration address. Works with the
+	 * vault locked. Max 3 requests per hour.
+	 * Returns: { sent, email_hint, counts: { customers, works } }
+	 */
+	public static function vault_reset_request_code( \WP_REST_Request $_req ): \WP_REST_Response {
+		// No vault, nothing to reset: do not mail a code or burn the hourly quota.
+		if ( ! Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
+				409
+			);
+		}
+
+		$code = Fotonic_Vault::request_reset_code();
+		if ( false === $code ) {
+			return self::rate_limited_response();
+		}
+
+		$sent = Fotonic_Vault_Mailer::send_reset_code( $code );
+		self::audit_log( 'vault_reset_code_sent', [ 'email_sent' => $sent ] );
+
+		$customers = wp_count_posts( 'ftnc_customer' );
+		$works     = wp_count_posts( 'ftnc_work' );
+
+		return new \WP_REST_Response( [
+			'sent'       => $sent,
+			'email_hint' => Fotonic_Vault_Mailer::mask_email( Fotonic_Vault_Mailer::recipient() ),
+			'counts'     => [
+				'customers' => isset( $customers->publish ) ? (int) $customers->publish : 0,
+				'works'     => isset( $works->publish ) ? (int) $works->publish : 0,
+			],
+		], 200 );
 	}
 
 	/**
 	 * POST /vault/reset
 	 * Completely delete the vault and all its options.
 	 * WARNING: all PII encrypted under the Master Key becomes unrecoverable.
+	 *
+	 * Body: { confirm: 'RESET', code } OR { confirm: 'RESET', password, otp }.
+	 * The email-code path works locked or unlocked. The password + OTP path is
+	 * only accepted while the vault is unlocked and shares the unlock rate limit.
 	 */
-	public static function vault_reset( \WP_REST_Request $_req ): \WP_REST_Response {
+	public static function vault_reset( \WP_REST_Request $req ): \WP_REST_Response {
+		$body     = $req->get_json_params();
+		$confirm  = isset( $body['confirm'] )  ? (string) $body['confirm']  : '';
+		$code     = isset( $body['code'] )     ? trim( (string) $body['code'] ) : '';
+		$password = isset( $body['password'] ) ? (string) $body['password'] : '';
+		$otp      = isset( $body['otp'] )      ? (string) $body['otp']      : '';
+
+		if ( 'RESET' !== $confirm ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'confirm_required', 'message' => __( 'Type RESET to confirm.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		if ( '' !== $code ) {
+			if ( ! Fotonic_Vault::verify_reset_code( $code ) ) {
+				self::audit_log( 'vault_reset_code_fail' );
+				return new \WP_REST_Response(
+					[ 'code' => 'invalid_code', 'message' => __( 'That reset code is not valid or has expired.', 'eleva-crm-for-photographers' ) ],
+					403
+				);
+			}
+			$method = 'code';
+		} elseif ( '' !== $password && '' !== $otp ) {
+			if ( ! Fotonic_Vault::is_unlocked() ) {
+				return self::vault_locked_response();
+			}
+
+			$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
+			$attempts = (int) get_transient( $fail_key );
+			if ( $attempts >= 5 ) {
+				return self::rate_limited_response();
+			}
+
+			if ( ! Fotonic_Vault::verify_credentials( $password, $otp ) ) {
+				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				self::audit_log( 'vault_reset_credentials_fail' );
+				return new \WP_REST_Response(
+					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
+					401
+				);
+			}
+			delete_transient( $fail_key );
+			$method = 'credentials';
+		} else {
+			return new \WP_REST_Response(
+				[ 'code' => 'missing_fields', 'message' => __( 'A reset code, or your password and OTP, is required.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
 		$ok = Fotonic_Vault::reset_vault();
-		self::audit_log( 'vault_reset' );
+		self::audit_log( 'vault_reset', [ 'method' => $method ] );
 
 		if ( ! $ok ) {
 			return new \WP_REST_Response(
@@ -1043,6 +1107,59 @@ class Fotonic_REST_API {
 		}
 
 		return new \WP_REST_Response( [ 'reset' => true ], 200 );
+	}
+
+	/**
+	 * Shared 423 answer for routes that need the Master Key.
+	 */
+	private static function vault_locked_response(): \WP_REST_Response {
+		return new \WP_REST_Response(
+			[ 'code' => 'vault_locked', 'message' => __( 'The Vault is locked. Unlock it first.', 'eleva-crm-for-photographers' ) ],
+			423
+		);
+	}
+
+	/**
+	 * Shared 429 answer.
+	 */
+	private static function rate_limited_response(): \WP_REST_Response {
+		return new \WP_REST_Response(
+			[ 'code' => 'rate_limited', 'message' => __( 'Too many attempts. Try again later.', 'eleva-crm-for-photographers' ) ],
+			429
+		);
+	}
+
+	/**
+	 * Shared 409 answer when no authenticator secret is waiting for confirmation.
+	 */
+	private static function no_pending_totp_response(): \WP_REST_Response {
+		return new \WP_REST_Response(
+			[ 'code' => 'no_pending_totp', 'message' => __( 'No authenticator setup is waiting for confirmation.', 'eleva-crm-for-photographers' ) ],
+			409
+		);
+	}
+
+	/**
+	 * Shared 400 answer for a vault password below the minimum length.
+	 *
+	 * @param string $format Translated sprintf format with one %d.
+	 */
+	private static function password_too_short_response( string $format ): \WP_REST_Response {
+		return new \WP_REST_Response(
+			[ 'code' => 'password_too_short', 'message' => sprintf( $format, Fotonic_Vault::MIN_PASSWORD_LENGTH ) ],
+			400
+		);
+	}
+
+	/**
+	 * otpauth URI for an authenticator secret, labelled with the site and current user.
+	 *
+	 * @param string $secret Base32 TOTP secret.
+	 */
+	private static function totp_qr_uri( string $secret ): string {
+		$site_name = get_bloginfo( 'name' ) ?: 'Eleva CRM';
+		$label     = $site_name . ':' . wp_get_current_user()->user_email;
+		return Fotonic_TOTP::get_uri( $secret, $label, $site_name );
 	}
 
 	/**

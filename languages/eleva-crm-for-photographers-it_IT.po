@@ -1966,3 +1966,268 @@ msgstr "Alcuni indirizzi salvati non si possono leggere con la chiave attuale de
 
 msgid "Quotes"
 msgstr "Preventivi"
+
+msgid "Vault password must be at least %d characters."
+msgstr "La password del Vault deve contenere almeno %d caratteri."
+
+msgid "No vault setup is in progress. Start again."
+msgstr "Nessuna configurazione del Vault in corso. Ricomincia."
+
+msgid "Could not create the recovery kit."
+msgstr "Impossibile creare il kit di recupero."
+
+msgid "There is no recovery kit to confirm. Create one first."
+msgstr "Non c'è nessun kit di recupero da confermare. Creane prima uno."
+
+msgid "That recovery phrase or code is not valid."
+msgstr "Questa frase o questo codice di recupero non è valido."
+
+msgid "Invalid OTP code."
+msgstr "Codice OTP non valido."
+
+msgid "Type RESET to confirm."
+msgstr "Scrivi RESET per confermare."
+
+msgid "That reset code is not valid or has expired."
+msgstr "Questo codice di reimpostazione non è valido o è scaduto."
+
+msgid "A reset code, or your password and OTP, is required."
+msgstr "Serve un codice di reimpostazione, oppure la tua password e il codice OTP."
+
+msgid "The Vault is locked. Unlock it first."
+msgstr "Il Vault è bloccato. Sbloccalo prima."
+
+msgid "Too many attempts. Try again later."
+msgstr "Troppi tentativi. Riprova più tardi."
+
+msgid "No authenticator setup is waiting for confirmation."
+msgstr "Nessuna configurazione dell'autenticatore è in attesa di conferma."
+
+msgid "[%s] Vault recovery kit"
+msgstr "[%s] Kit di recupero del Vault"
+
+msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
+"\n"
+"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
+"\n"
+"Recovery phrase: %4$s\n"
+"Recovery code: %5$s\n"
+"\n"
+"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
+"\n"
+"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
+"\n"
+"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+msgstr "Questo è il kit di recupero del Vault di Eleva CRM su %1$s (%2$s), creato il %3$s.\n"
+"\n"
+"Conserva questa email. Se dimentichi la password del Vault o perdi la tua app di autenticazione, apri Eleva CRM, clicca su \"Hai perso la password o l'autenticatore?\" nella schermata del Vault e incolla UNO di questi:\n"
+"\n"
+"Frase di recupero: %4$s\n"
+"Codice di recupero: %5$s\n"
+"\n"
+"Uno qualsiasi dei due apre il Vault e ti permette di impostare una nuova password e un nuovo autenticatore, senza perdere alcun dato.\n"
+"\n"
+"Chiunque legga questa email può aprire il Vault. Non inoltrarla. Se pensi che qualcun altro l'abbia vista, apri Eleva CRM > Impostazioni > Vault e genera un nuovo kit di recupero: questo smetterà subito di funzionare.\n"
+"\n"
+"Se non hai configurato o recuperato tu il Vault, l'ha fatto qualcuno con accesso amministratore al sito. Controlla gli amministratori del tuo sito."
+
+msgid "[%s] Vault reset code"
+msgstr "[%s] Codice di reimpostazione del Vault"
+
+msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
+"\n"
+"Reset code: %3$s\n"
+"\n"
+"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
+"\n"
+"If you did not ask for this, ignore this email and check your site's administrators."
+msgstr "Qualcuno ha chiesto di reimpostare il Vault di Eleva CRM su %1$s (%2$s).\n"
+"\n"
+"Codice di reimpostazione: %3$s\n"
+"\n"
+"Il codice scade tra 15 minuti. Reimpostare il Vault rende illeggibili per sempre tutti i dati già cifrati.\n"
+"\n"
+"Se non l'hai richiesto tu, ignora questa email e controlla gli amministratori del tuo sito."
+
+msgid "New password must be at least 8 characters."
+msgstr "La nuova password deve contenere almeno 8 caratteri."
+
+msgid "Could not start a new recovery kit. Ensure the vault is unlocked."
+msgstr "Impossibile avviare un nuovo kit di recupero. Verifica che il Vault sia sbloccato."
+
+msgid "Unlock the vault to manage the recovery kit."
+msgstr "Sblocca il Vault per gestire il kit di recupero."
+
+msgid "Generate a new recovery phrase and recovery code. They replace the current ones, which stop working as soon as the new kit is issued. The kit is also emailed to the site administrator address."
+msgstr "Genera una nuova frase di recupero e un nuovo codice di recupero. Sostituiscono quelli attuali, che smettono di funzionare non appena il nuovo kit viene emesso. Il kit viene inviato anche via email all'indirizzo dell'amministratore del sito."
+
+msgid "Generate a new recovery kit"
+msgstr "Genera un nuovo kit di recupero"
+
+msgid "New recovery kit"
+msgstr "Nuovo kit di recupero"
+
+msgid "Your current recovery phrase and recovery code will stop working once the new kit is issued. Continue?"
+msgstr "La tua frase di recupero e il tuo codice di recupero attuali smetteranno di funzionare quando il nuovo kit verrà emesso. Continuare?"
+
+msgid "Continue"
+msgstr "Continua"
+
+msgid "Pick a strong master password (at least 8 characters) and store it somewhere safe."
+msgstr "Scegli una password principale robusta (almeno 8 caratteri) e conservala in un luogo sicuro."
+
+msgid "Right after setup you will get a recovery phrase and a recovery code, also emailed to the site administrator. Keep them safe: they are your fallback if you lose access."
+msgstr "Subito dopo la configurazione riceverai una frase di recupero e un codice di recupero, inviati anche via email all'amministratore del sito. Conservali con cura: sono la tua via d'uscita se perdi l'accesso."
+
+msgid "Recovery kit"
+msgstr "Kit di recupero"
+
+msgid "This recovery phrase or code is not valid."
+msgstr "Questa frase o questo codice di recupero non è valido."
+
+msgid "Recovery failed. Check your recovery phrase or code and try again."
+msgstr "Recupero non riuscito. Controlla la frase o il codice di recupero e riprova."
+
+msgid "Enter your recovery phrase or recovery code and choose a new password. You will then set up a new authenticator."
+msgstr "Inserisci la tua frase di recupero o il tuo codice di recupero e scegli una nuova password. Poi configurerai un nuovo autenticatore."
+
+msgid "Recovery phrase or recovery code"
+msgstr "Frase di recupero o codice di recupero"
+
+msgid "Search the inbox of %s for an email titled 'Vault recovery kit'. It holds your phrase and code."
+msgstr "Cerca nella casella di posta di %s un'email intitolata 'Kit di recupero del Vault'. Contiene la tua frase e il tuo codice."
+
+msgid "I found it"
+msgstr "L'ho trovata"
+
+msgid "I have nothing: reset the vault"
+msgstr "Non ho niente: reimposta il Vault"
+
+msgid "I have my recovery phrase or code"
+msgstr "Ho la frase o il codice di recupero"
+
+msgid "Set a new password and a new authenticator without losing any data."
+msgstr "Imposta una nuova password e un nuovo autenticatore senza perdere alcun dato."
+
+msgid "I lost everything"
+msgstr "Ho perso tutto"
+
+msgid "I no longer have my password, authenticator, recovery phrase or code."
+msgstr "Non ho più la password, l'autenticatore, la frase o il codice di recupero."
+
+msgid "Minimum 8 characters"
+msgstr "Minimo 8 caratteri"
+
+msgid "Could not start the vault setup. Please try again."
+msgstr "Impossibile avviare la configurazione del Vault. Riprova."
+
+msgid "Invalid code. Check your authenticator app."
+msgstr "Codice non valido. Controlla la tua app di autenticazione."
+
+msgid "Step %1$d of %2$d"
+msgstr "Passaggio %1$d di %2$d"
+
+msgid "Could not prepare the new authenticator. Please try again."
+msgstr "Impossibile preparare il nuovo autenticatore. Riprova."
+
+msgid "Set up your new authenticator"
+msgstr "Configura il nuovo autenticatore"
+
+msgid "Your password was reset. Add the vault to your authenticator app again to finish recovery."
+msgstr "La tua password è stata reimpostata. Aggiungi di nuovo il Vault alla tua app di autenticazione per completare il recupero."
+
+msgid "Type the last %d characters to confirm you have it"
+msgstr "Scrivi gli ultimi %d caratteri per confermare di averla"
+
+msgid "Could not generate the recovery kit. Please try again."
+msgstr "Impossibile generare il kit di recupero. Riprova."
+
+msgid "Could not save your confirmation. Please try again."
+msgstr "Impossibile salvare la tua conferma. Riprova."
+
+msgid "Without a recovery kit, forgetting your vault password or losing your authenticator app means your protected data cannot be recovered."
+msgstr "Senza un kit di recupero, se dimentichi la password del Vault o perdi la tua app di autenticazione i tuoi dati protetti non potranno essere recuperati."
+
+msgid "We will generate a recovery phrase and a recovery code, show them here, and email them to the site administrator address. Either one lets you set a new password and a new authenticator without losing data. Any recovery secret you saw before stops working."
+msgstr "Genereremo una frase di recupero e un codice di recupero, li mostreremo qui e li invieremo via email all'indirizzo dell'amministratore del sito. Uno qualsiasi dei due ti permette di impostare una nuova password e un nuovo autenticatore senza perdere dati. Qualsiasi segreto di recupero visto in precedenza smette di funzionare."
+
+msgid "Generate and email my recovery kit"
+msgstr "Genera e invia via email il mio kit di recupero"
+
+msgid "Your recovery phrase"
+msgstr "La tua frase di recupero"
+
+msgid "Store it somewhere safe outside this site, such as a password manager or a printed copy."
+msgstr "Conservala in un luogo sicuro fuori da questo sito, ad esempio in un gestore di password o su una copia stampata."
+
+msgid "This is a second, shorter secret that does the same job. Keep it next to the phrase."
+msgstr "È un secondo segreto, più corto, che svolge lo stesso compito. Tienilo accanto alla frase."
+
+msgid "Keep a copy outside this site"
+msgstr "Tieni una copia fuori da questo sito"
+
+msgid "Sent to %s"
+msgstr "Inviato a %s"
+
+msgid "Email could not be sent. Copy the kit now and keep it outside this site."
+msgstr "Impossibile inviare l'email. Copia subito il kit e conservalo fuori da questo sito."
+
+msgid "If you use an SMTP plugin that logs emails (WP Mail SMTP, FluentSMTP, WP Mail Logging), the kit is stored in your database. Turn logging off or delete that log entry."
+msgstr "Se usi un plugin SMTP che registra le email (WP Mail SMTP, FluentSMTP, WP Mail Logging), il kit viene salvato nel tuo database. Disattiva la registrazione o elimina quella voce del registro."
+
+msgid "Copy all"
+msgstr "Copia tutto"
+
+msgid "I saved the phrase and the code somewhere safe outside this site"
+msgstr "Ho salvato la frase e il codice in un luogo sicuro fuori da questo sito"
+
+msgid "Finish"
+msgstr "Fine"
+
+msgid "Could not send the reset code. Please try again."
+msgstr "Impossibile inviare il codice di reimpostazione. Riprova."
+
+msgid "Use an email code instead"
+msgstr "Usa invece un codice via email"
+
+msgid "We will email a reset code to %s."
+msgstr "Invieremo un codice di reimpostazione a %s."
+
+msgid "We will email a reset code to the site administrator address."
+msgstr "Invieremo un codice di reimpostazione all'indirizzo dell'amministratore del sito."
+
+msgid "The email could not be sent. Check that your site can send email, then try again."
+msgstr "Impossibile inviare l'email. Verifica che il tuo sito possa inviare email, poi riprova."
+
+msgid "Email me a reset code"
+msgstr "Inviami un codice di reimpostazione via email"
+
+msgid "Customers: %1$d, works: %2$d. Their encrypted personal data becomes unreadable forever."
+msgstr "Clienti: %1$d, lavori: %2$d. I loro dati personali cifrati diventano illeggibili per sempre."
+
+msgid "Code sent to %s. It expires in 15 minutes."
+msgstr "Codice inviato a %s. Scade tra 15 minuti."
+
+msgid "Reset code"
+msgstr "Codice di reimpostazione"
+
+msgid "Use password and authenticator code instead"
+msgstr "Usa invece password e codice dell'autenticatore"
+
+msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below, then enter the 6-digit code it shows."
+msgstr "Apri la tua app di autenticazione (Google Authenticator, Authy, ecc.) e inquadra il codice QR qui sotto, poi inserisci il codice a 6 cifre che mostra."
+
+msgid "Verify code"
+msgstr "Verifica codice"
+
+msgid "Eleva CRM vault recovery kit"
+msgstr "Kit di recupero del Vault di Eleva CRM"
+
+msgid "Recovery phrase:"
+msgstr "Frase di recupero:"
+
+msgid "Recovery code:"
+msgstr "Codice di recupero:"
+
+msgid "Either one opens the vault and lets you set a new password and a new authenticator, without losing any data. Anyone who has them can open the vault."
+msgstr "Uno qualsiasi dei due apre il Vault e ti permette di impostare una nuova password e un nuovo autenticatore, senza perdere alcun dato. Chiunque li abbia può aprire il Vault."

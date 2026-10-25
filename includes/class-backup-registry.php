@@ -123,6 +123,7 @@ class Fotonic_Backup_Registry {
             'fotonic_vault_salt_phrase',
             'fotonic_vault_wrap_phrase',
             'fotonic_vault_wrap_totp',
+            'fotonic_vault_recovery_ack',
             // Legacy v1 TOTP secret. Empty/absent on any vault that has been unlocked
             // since the v2 envelope migration shipped, but a not-yet-migrated v1 vault
             // keeps its actual credential here — omitting it would make that vault's
@@ -146,6 +147,9 @@ class Fotonic_Backup_Registry {
     public static function denied_options(): array {
         return [
             'fotonic_server_secret_fallback',
+            // Staged, unconfirmed secrets: never part of a backup.
+            'fotonic_vault_pending',
+            'fotonic_vault_pending_totp',
             'fotonic_gcal_refresh_token',
             'fotonic_pro_slm_secret',
             'fotonic_pro_license_last_valid',

@@ -4,7 +4,7 @@ Tags: photography-crm, client-management, booking, invoicing, photographers
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -144,6 +144,14 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Changelog ==
 
+= 1.6.1 =
+* New: Vault recovery kit. After setting up the Vault (and on the first unlock after this update) a short wizard shows your recovery phrase and recovery code, asks you to retype the last characters of each to prove you saved them, and emails the kit to the site administrator address. Settings gains "New recovery kit" to replace them at any time.
+* New: "Lost your password or authenticator?" now rebuilds both from your recovery phrase or code: choose a new password and scan a new authenticator QR, without losing any data.
+* New: if you lost everything, a destructive reset is available from the lock screen, gated by a one-time code emailed to the site administrator and by typing RESET. In Settings the reset accepts your password and authenticator code instead.
+* Fix: Vault setup could leave a live Vault with an unverified authenticator, and the recovery phrase and code were never shown. Setup now has two steps: nothing is activated until your first authenticator code is confirmed, and an interrupted setup simply starts over.
+* Fix: the Vault password minimum is now 8 characters everywhere. Before, the form accepted 10 while the server required 12, so 10 or 11 characters failed with a confusing error.
+* Compatibility: tested with the latest WordPress (7.1.x).
+
 = 1.6.0 =
 * New: groundwork for Quotes in Eleva CRM Pro 1.6.0: a Quotes entry in the menu and the hooks Pro uses to prepare quotes, turn confirmed ones into works, add VAT to works and generate quote PDFs. Works created from a quote show "Created from quote" and the lead source; customers list the quotes made for them.
 * New: Gender (Male or Female, optional) on every person of a customer, with a Gender column in the Customers list. The Customer form now uses a compact grid.
@@ -282,6 +290,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.1 =
+Adds a Vault recovery kit (phrase and code, shown, verified and emailed to the site administrator) and a way to rebuild password and authenticator from it without losing data, plus a safer two-step Vault setup. After updating, the first unlock asks you to save a new recovery kit. Safe in-place update, compatible with Eleva CRM Pro.
 
 = 1.6.0 =
 Adds the groundwork for Quotes, VAT and PDF quotes (needs Eleva CRM Pro 1.6.0), a Gender field for customers, stricter email validation, and protection against accidental loss of saved personal data. Tested with the latest WordPress. Safe in-place update: without Pro 1.6.0 nothing new shows up and everything else works as before.

@@ -59,6 +59,18 @@ class Fotonic_Vault {
 	const OPTION_SALT_PHRASE = 'fotonic_vault_salt_phrase';    // PBKDF2 salt for phrase KEK (base64).
 	const OPTION_WRAP_PHRASE = 'fotonic_vault_wrap_phrase';    // AES-GCM( MK, KEK_phrase )  'w1:…'
 
+	// Two-phase setup, recovery kit acknowledgment and recovery TOTP staging.
+	const OPTION_PENDING       = 'fotonic_vault_pending';        // array { salt_pw, wrap_pw, wrap_totp } until the OTP is confirmed.
+	const OPTION_RECOVERY_ACK  = 'fotonic_vault_recovery_ack';   // bool: the user has seen and verified the current recovery kit.
+	const OPTION_PENDING_TOTP  = 'fotonic_vault_pending_totp';   // AES-GCM( new totp_secret, MK )  'w1:…', staged by recovery.
+
+	// Email-gated destructive reset (transient names).
+	const TRANSIENT_RESET_CODE     = 'fotonic_vault_reset_code';      // array { hash, attempts, expires }, 15 minutes.
+	const TRANSIENT_RESET_REQUESTS = 'fotonic_vault_reset_requests';  // int, requests made this hour.
+
+	// Single source for the vault password minimum (client mirrors it in utils/recoveryKit.js).
+	const MIN_PASSWORD_LENGTH = 8;
+
 	// ---------------------------------------------------------------------------
 	// Status helpers
 	// ---------------------------------------------------------------------------
@@ -115,79 +127,168 @@ class Fotonic_Vault {
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * First-time vault setup using envelope encryption.
+	 * Stage a first-time vault setup. Nothing becomes live until confirm_setup()
+	 * proves the user can produce a valid OTP from the authenticator.
 	 *
-	 * Generates a random Master Key, wraps it under the password KEK, a
-	 * fresh recovery code KEK, and a recovery phrase KEK.  Wraps the TOTP
-	 * secret under MK.  Stores everything and issues the session cookie.
-	 * Returns the recovery code and recovery phrase ONCE — neither is stored
-	 * in plaintext.
+	 * Generates a random Master Key, wraps it under the password KEK and wraps
+	 * the TOTP secret under MK, then stores ONLY the pending option. No cookie,
+	 * no OPTION_SETUP, no recovery wraps. Overwrites any previous pending setup.
 	 *
 	 * @param string $password    Plain-text vault password.
 	 * @param string $totp_secret Base32 TOTP secret.
-	 * @return array { ok: bool, recovery_code: string, recovery_phrase: string }
+	 * @return bool True when the pending setup was stored.
 	 */
-	public static function setup( string $password, string $totp_secret ): array {
-		$fail = array( 'ok' => false, 'recovery_code' => '', 'recovery_phrase' => '' );
-
-		if ( empty( $password ) || empty( $totp_secret ) ) {
-			return $fail;
+	public static function stage_setup( string $password, string $totp_secret ): bool {
+		if ( '' === $password || '' === $totp_secret || self::is_setup() ) {
+			return false;
 		}
 
-		// Master Key — the stable key that encrypts all PII.
-		$mk = random_bytes( 32 );
-
-		// Password KEK.
+		$mk       = random_bytes( 32 );
 		$salt_pw  = base64_encode( random_bytes( 32 ) );
 		$kek_pw   = Fotonic_Crypto::derive_key( $password, $salt_pw );
 		$wrap_pw  = Fotonic_Crypto::wrap( $mk, $kek_pw );
-		if ( empty( $wrap_pw ) ) {
-			return $fail;
-		}
-
-		// Recovery code KEK.
-		$recovery_code = Fotonic_Crypto::generate_recovery_code();
-		$salt_rec      = base64_encode( random_bytes( 32 ) );
-		$kek_rec       = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $recovery_code ), $salt_rec );
-		$wrap_rec      = Fotonic_Crypto::wrap( $mk, $kek_rec );
-		if ( empty( $wrap_rec ) ) {
-			return $fail;
-		}
-
-		// Recovery phrase KEK. Normalize (strip dashes/spaces, uppercase) so the
-		// reset path matches regardless of how the user types the phrase back.
-		$phrase      = Fotonic_TOTP::generate_recovery_phrase();
-		$salt_phrase = base64_encode( random_bytes( 32 ) );
-		$kek_phrase  = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $phrase ), $salt_phrase );
-		$wrap_phrase = Fotonic_Crypto::wrap( $mk, $kek_phrase );
-		if ( empty( $wrap_phrase ) ) {
-			return $fail;
-		}
-
-		// Wrap TOTP secret under MK.
 		$wrap_totp = Fotonic_Crypto::wrap( strtoupper( $totp_secret ), $mk );
-		if ( empty( $wrap_totp ) ) {
-			return $fail;
+		if ( empty( $wrap_pw ) || empty( $wrap_totp ) ) {
+			return false;
 		}
 
-		// Persist all envelope options.
-		update_option( self::OPTION_SALT_PW,     $salt_pw,     false );
-		update_option( self::OPTION_WRAP_PW,     $wrap_pw,     false );
-		update_option( self::OPTION_SALT_REC,    $salt_rec,    false );
-		update_option( self::OPTION_WRAP_REC,    $wrap_rec,    false );
-		update_option( self::OPTION_WRAP_TOTP,   $wrap_totp,   false );
-		update_option( self::OPTION_SALT_PHRASE, $salt_phrase, false );
-		update_option( self::OPTION_WRAP_PHRASE, $wrap_phrase, false );
-		update_option( self::OPTION_SCHEME,      2,            false );
-		update_option( self::OPTION_SETUP,       true,         false );
+		update_option(
+			self::OPTION_PENDING,
+			array(
+				'salt_pw'   => $salt_pw,
+				'wrap_pw'   => $wrap_pw,
+				'wrap_totp' => $wrap_totp,
+			),
+			false
+		);
+		return true;
+	}
+
+	/**
+	 * Whether a staged (not yet confirmed) setup exists.
+	 *
+	 * @return bool
+	 */
+	public static function has_pending_setup(): bool {
+		$pending = get_option( self::OPTION_PENDING, array() );
+		return is_array( $pending ) && ! empty( $pending['salt_pw'] ) && ! empty( $pending['wrap_pw'] ) && ! empty( $pending['wrap_totp'] );
+	}
+
+	/**
+	 * Promote the staged setup to a live vault once the OTP is proven.
+	 *
+	 * On failure nothing changes. On success the live options are written, the
+	 * recovery kit is flagged as not yet acknowledged, the backup keypair is
+	 * provisioned and the session cookie is issued.
+	 *
+	 * @param string $password Plain-text vault password.
+	 * @param string $otp      6-digit TOTP code.
+	 * @return bool
+	 */
+	public static function confirm_setup( string $password, string $otp ): bool {
+		if ( self::is_setup() || ! self::has_pending_setup() ) {
+			return false;
+		}
+
+		$pending = get_option( self::OPTION_PENDING, array() );
+
+		$kek_pw = Fotonic_Crypto::derive_key( $password, (string) $pending['salt_pw'] );
+		$mk     = Fotonic_Crypto::unwrap( (string) $pending['wrap_pw'], $kek_pw );
+		if ( false === $mk ) {
+			return false;
+		}
+
+		$totp_secret = Fotonic_Crypto::unwrap( (string) $pending['wrap_totp'], $mk );
+		if ( false === $totp_secret || ! Fotonic_TOTP::verify( $otp, $totp_secret, 2 ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_SALT_PW,      $pending['salt_pw'],   false );
+		update_option( self::OPTION_WRAP_PW,      $pending['wrap_pw'],   false );
+		update_option( self::OPTION_WRAP_TOTP,    $pending['wrap_totp'], false );
+		update_option( self::OPTION_SCHEME,       2,                     false );
+		update_option( self::OPTION_SETUP,        true,                  false );
+		update_option( self::OPTION_RECOVERY_ACK, false,                 false );
+		delete_option( self::OPTION_PENDING );
 
 		// Provision the backup keypair while MK is available (idempotent).
 		Fotonic_Backup_Keys::setup( $mk );
 
-		// Issue session cookie with MK.
 		self::set_session_cookie( $mk );
+		return true;
+	}
 
-		return array( 'ok' => true, 'recovery_code' => $recovery_code, 'recovery_phrase' => $phrase );
+	// ---------------------------------------------------------------------------
+	// Recovery kit (phrase + code)
+	// ---------------------------------------------------------------------------
+
+	/**
+	 * Generate a fresh recovery phrase and recovery code, replacing both wraps.
+	 * Requires the vault to be unlocked. Drops the acknowledgment flag, so a tab
+	 * closed before the user confirmed the kit still blocks at the next unlock.
+	 * Does NOT send mail (the REST layer does).
+	 *
+	 * @return array|false { recovery_code, recovery_phrase } or false when locked / on failure.
+	 */
+	public static function issue_recovery_kit() {
+		$mk = self::get_session_key();
+		if ( null === $mk ) {
+			return false;
+		}
+
+		$code        = Fotonic_Crypto::generate_recovery_code();
+		$salt_rec    = base64_encode( random_bytes( 32 ) );
+		$kek_rec     = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $code ), $salt_rec );
+		$wrap_rec    = Fotonic_Crypto::wrap( $mk, $kek_rec );
+
+		$phrase      = Fotonic_TOTP::generate_recovery_phrase();
+		$salt_phrase = base64_encode( random_bytes( 32 ) );
+		$kek_phrase  = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $phrase ), $salt_phrase );
+		$wrap_phrase = Fotonic_Crypto::wrap( $mk, $kek_phrase );
+
+		if ( empty( $wrap_rec ) || empty( $wrap_phrase ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_SALT_REC,    $salt_rec,    false );
+		update_option( self::OPTION_WRAP_REC,    $wrap_rec,    false );
+		update_option( self::OPTION_SALT_PHRASE, $salt_phrase, false );
+		update_option( self::OPTION_WRAP_PHRASE, $wrap_phrase, false );
+		update_option( self::OPTION_RECOVERY_ACK, false,       false );
+
+		return array(
+			'recovery_code'   => $code,
+			'recovery_phrase' => $phrase,
+		);
+	}
+
+	/**
+	 * Record whether the user has seen and verified the current kit.
+	 *
+	 * @param bool $ack New flag value.
+	 * @return bool False when locked, or when acknowledging while either wrap is missing.
+	 */
+	public static function set_recovery_ack( bool $ack ): bool {
+		if ( null === self::get_session_key() ) {
+			return false;
+		}
+		if ( $ack && ( ! self::has_recovery() || ! self::has_recovery_phrase() ) ) {
+			return false;
+		}
+		update_option( self::OPTION_RECOVERY_ACK, $ack, false );
+		return true;
+	}
+
+	/**
+	 * Whether the current kit is issued AND acknowledged. A missing ack option
+	 * (any install that predates the kit wizard) counts as not acknowledged.
+	 *
+	 * @return bool
+	 */
+	public static function is_recovery_kit_ok(): bool {
+		return (bool) get_option( self::OPTION_RECOVERY_ACK, false )
+			&& self::has_recovery()
+			&& self::has_recovery_phrase();
 	}
 
 	// ---------------------------------------------------------------------------
@@ -313,42 +414,50 @@ class Fotonic_Vault {
 	}
 
 	// ---------------------------------------------------------------------------
-	// Recovery: reset password via recovery code
+	// Recovery: any recovery secret, then new password, then new authenticator
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Reset the vault password using a recovery code (lost TOTP path).
+	 * Begin a recovery from a recovery phrase or a recovery code.
 	 *
-	 * Verifies the recovery code unwraps wrap_rec, then re-wraps MK under a
-	 * new password KEK.  The session cookie is set so the vault is immediately
-	 * unlocked after the reset.
+	 * Tries the phrase wrap, then the code wrap. When one yields MK, MK is
+	 * re-wrapped under the new password, the session cookie is set and a new
+	 * TOTP secret is staged (pending). The live wrap_totp, wrap_rec and
+	 * wrap_phrase are never touched here, so an interrupted recovery can simply
+	 * be repeated with the same secret.
 	 *
-	 * @param string $recovery_code Raw recovery code (with or without dashes).
-	 * @param string $new_pw        New password.
+	 * @param string $secret Recovery phrase or code, any case, dashes/spaces ignored.
+	 * @param string $new_pw New vault password.
 	 * @return bool True on success.
 	 */
-	public static function recover_reset_password( string $recovery_code, string $new_pw ): bool {
-		if ( empty( $recovery_code ) || empty( $new_pw ) ) {
+	public static function recover_with_secret( string $secret, string $new_pw ): bool {
+		$normalized = Fotonic_Crypto::normalize_recovery_code( $secret );
+		if ( '' === $normalized || '' === $new_pw ) {
 			return false;
 		}
 
-		$salt_rec = (string) get_option( self::OPTION_SALT_REC, '' );
-		$wrap_rec = (string) get_option( self::OPTION_WRAP_REC, '' );
-		if ( empty( $salt_rec ) || empty( $wrap_rec ) ) {
-			return false;
+		$mk      = false;
+		$sources = array(
+			array( self::OPTION_SALT_PHRASE, self::OPTION_WRAP_PHRASE ),
+			array( self::OPTION_SALT_REC, self::OPTION_WRAP_REC ),
+		);
+		foreach ( $sources as $source ) {
+			$salt = (string) get_option( $source[0], '' );
+			$wrap = (string) get_option( $source[1], '' );
+			if ( '' === $salt || '' === $wrap ) {
+				continue;
+			}
+			$mk = Fotonic_Crypto::unwrap( $wrap, Fotonic_Crypto::derive_key( $normalized, $salt ) );
+			if ( false !== $mk ) {
+				break;
+			}
 		}
-
-		$normalized = Fotonic_Crypto::normalize_recovery_code( $recovery_code );
-		$kek_rec    = Fotonic_Crypto::derive_key( $normalized, $salt_rec );
-		$mk         = Fotonic_Crypto::unwrap( $wrap_rec, $kek_rec );
 		if ( false === $mk ) {
 			return false;
 		}
 
-		// Re-wrap MK under new password KEK.
 		$new_salt_pw = base64_encode( random_bytes( 32 ) );
-		$new_kek_pw  = Fotonic_Crypto::derive_key( $new_pw, $new_salt_pw );
-		$new_wrap_pw = Fotonic_Crypto::wrap( $mk, $new_kek_pw );
+		$new_wrap_pw = Fotonic_Crypto::wrap( $mk, Fotonic_Crypto::derive_key( $new_pw, $new_salt_pw ) );
 		if ( empty( $new_wrap_pw ) ) {
 			return false;
 		}
@@ -357,172 +466,185 @@ class Fotonic_Vault {
 		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
 
 		self::set_session_cookie( $mk );
+
+		return false !== self::stage_pending_totp();
+	}
+
+	/**
+	 * Stage a fresh TOTP secret, wrapped under MK, replacing any earlier pending
+	 * one. The live wrap_totp stays untouched until confirm_pending_totp().
+	 *
+	 * @return string|false New base32 secret, or false when the vault is locked.
+	 */
+	public static function stage_pending_totp() {
+		$mk = self::get_session_key();
+		if ( null === $mk ) {
+			return false;
+		}
+
+		$secret = Fotonic_TOTP::generate_secret();
+		$wrap   = Fotonic_Crypto::wrap( strtoupper( $secret ), $mk );
+		if ( empty( $wrap ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_PENDING_TOTP, $wrap, false );
+		return $secret;
+	}
+
+	/**
+	 * The staged TOTP secret in clear (base32), so a repeated request shows the
+	 * same QR the user may already have scanned.
+	 *
+	 * @return string|false False when locked or nothing is staged.
+	 */
+	public static function get_pending_totp_secret() {
+		$mk = self::get_session_key();
+		if ( null === $mk ) {
+			return false;
+		}
+		$wrap = (string) get_option( self::OPTION_PENDING_TOTP, '' );
+		if ( '' === $wrap ) {
+			return false;
+		}
+		return Fotonic_Crypto::unwrap( $wrap, $mk );
+	}
+
+	/**
+	 * Whether a staged TOTP secret is waiting for its first OTP.
+	 *
+	 * @return bool
+	 */
+	public static function has_pending_totp(): bool {
+		return ! empty( get_option( self::OPTION_PENDING_TOTP, '' ) );
+	}
+
+	/**
+	 * Promote the staged TOTP secret once an OTP generated from it is proven.
+	 * Drops the kit acknowledgment: recovery always ends with a new kit.
+	 *
+	 * @param string $otp 6-digit code from the new authenticator entry.
+	 * @return bool
+	 */
+	public static function confirm_pending_totp( string $otp ): bool {
+		$mk = self::get_session_key();
+		if ( null === $mk ) {
+			return false;
+		}
+
+		$wrap = (string) get_option( self::OPTION_PENDING_TOTP, '' );
+		if ( '' === $wrap ) {
+			return false;
+		}
+
+		$secret = Fotonic_Crypto::unwrap( $wrap, $mk );
+		if ( false === $secret || ! Fotonic_TOTP::verify( $otp, $secret, 2 ) ) {
+			return false;
+		}
+
+		update_option( self::OPTION_WRAP_TOTP, $wrap, false );
+		delete_option( self::OPTION_PENDING_TOTP );
+		update_option( self::OPTION_RECOVERY_ACK, false, false );
 		return true;
 	}
 
 	// ---------------------------------------------------------------------------
-	// Recovery: reset TOTP via password + recovery code (both required)
+	// Destructive reset gates
 	// ---------------------------------------------------------------------------
 
 	/**
-	 * Reset the TOTP secret when the user still knows the password but has
-	 * lost their authenticator device.  Requires BOTH password AND recovery
-	 * code to prevent one-factor downgrade.
+	 * Create a one-time reset code. Only a keyed hash is stored; the plaintext
+	 * is returned once so the mailer can send it.
 	 *
-	 * @param string $password      Current vault password.
-	 * @param string $recovery_code Raw recovery code.
-	 * @return array|false Array with 'totp_secret' and 'qr_uri' on success, false on failure.
+	 * @return string|false 8-digit code, or false when 3 codes were already requested this hour.
 	 */
-	public static function recover_reset_totp( string $password, string $recovery_code ) {
-		if ( empty( $password ) || empty( $recovery_code ) ) {
+	public static function request_reset_code() {
+		$requests = (int) get_transient( self::TRANSIENT_RESET_REQUESTS );
+		if ( $requests >= 3 ) {
+			return false;
+		}
+		set_transient( self::TRANSIENT_RESET_REQUESTS, $requests + 1, HOUR_IN_SECONDS );
+
+		$code = str_pad( (string) random_int( 0, 99999999 ), 8, '0', STR_PAD_LEFT );
+		set_transient(
+			self::TRANSIENT_RESET_CODE,
+			array(
+				'hash'     => self::hash_reset_code( $code ),
+				'attempts' => 0,
+				'expires'  => time() + 15 * MINUTE_IN_SECONDS,
+			),
+			15 * MINUTE_IN_SECONDS
+		);
+		return $code;
+	}
+
+	/**
+	 * Check a reset code. Single use; five wrong tries burn the code.
+	 *
+	 * @param string $code Code typed by the user.
+	 * @return bool
+	 */
+	public static function verify_reset_code( string $code ): bool {
+		$state = get_transient( self::TRANSIENT_RESET_CODE );
+		if ( ! is_array( $state ) || empty( $state['hash'] ) ) {
 			return false;
 		}
 
-		// Verify password path — get MK.
+		$attempts = isset( $state['attempts'] ) ? (int) $state['attempts'] : 0;
+		if ( $attempts >= 5 ) {
+			delete_transient( self::TRANSIENT_RESET_CODE );
+			return false;
+		}
+
+		if ( hash_equals( (string) $state['hash'], self::hash_reset_code( trim( $code ) ) ) ) {
+			delete_transient( self::TRANSIENT_RESET_CODE );
+			return true;
+		}
+
+		$attempts++;
+		$ttl = isset( $state['expires'] ) ? (int) $state['expires'] - time() : 15 * MINUTE_IN_SECONDS;
+		if ( $attempts >= 5 || $ttl <= 0 ) {
+			delete_transient( self::TRANSIENT_RESET_CODE );
+		} else {
+			$state['attempts'] = $attempts;
+			set_transient( self::TRANSIENT_RESET_CODE, $state, $ttl );
+		}
+		return false;
+	}
+
+	/**
+	 * Verify password + OTP against the live vault without side effects (no cookie).
+	 *
+	 * @param string $password Vault password.
+	 * @param string $otp      6-digit TOTP code.
+	 * @return bool
+	 */
+	public static function verify_credentials( string $password, string $otp ): bool {
+		if ( ! self::is_setup() || '' === $password || '' === $otp ) {
+			return false;
+		}
+
 		$mk = self::get_mk_via_password( $password );
 		if ( false === $mk ) {
 			return false;
 		}
 
-		// Also verify recovery code independently (dual-factor requirement).
-		$salt_rec = (string) get_option( self::OPTION_SALT_REC, '' );
-		$wrap_rec = (string) get_option( self::OPTION_WRAP_REC, '' );
-		if ( empty( $salt_rec ) || empty( $wrap_rec ) ) {
+		$wrap_totp = (string) get_option( self::OPTION_WRAP_TOTP, '' );
+		if ( '' === $wrap_totp ) {
 			return false;
 		}
-		$normalized = Fotonic_Crypto::normalize_recovery_code( $recovery_code );
-		$kek_rec    = Fotonic_Crypto::derive_key( $normalized, $salt_rec );
-		$mk_via_rec = Fotonic_Crypto::unwrap( $wrap_rec, $kek_rec );
-		if ( false === $mk_via_rec ) {
-			return false;
-		}
-
-		// Generate a new TOTP secret and wrap it under MK.
-		$new_totp_secret = Fotonic_TOTP::generate_secret();
-		$new_wrap_totp   = Fotonic_Crypto::wrap( strtoupper( $new_totp_secret ), $mk );
-		if ( empty( $new_wrap_totp ) ) {
-			return false;
-		}
-
-		update_option( self::OPTION_WRAP_TOTP, $new_wrap_totp, false );
-
-		$site_name = get_bloginfo( 'name' ) ?: 'Eleva CRM';
-		$label     = $site_name . ':' . wp_get_current_user()->user_email;
-		$qr_uri    = Fotonic_TOTP::get_uri( $new_totp_secret, $label, $site_name );
-
-		return array(
-			'totp_secret' => $new_totp_secret,
-			'qr_uri'      => $qr_uri,
-		);
+		$totp_secret = Fotonic_Crypto::unwrap( $wrap_totp, $mk );
+		return false !== $totp_secret && Fotonic_TOTP::verify( $otp, $totp_secret, 2 );
 	}
 
-	// ---------------------------------------------------------------------------
-	// Recovery: regenerate recovery code (requires active session)
-	// ---------------------------------------------------------------------------
-
 	/**
-	 * Generate a new recovery code, re-wrapping MK under the new KEK.
-	 * Requires the vault to be unlocked (active session).
+	 * Keyed hash of a reset code.
 	 *
-	 * @return array|false Array with 'recovery_code' on success, false otherwise.
+	 * @param string $code Plain code.
+	 * @return string
 	 */
-	public static function regenerate_recovery_code() {
-		$mk = self::get_session_key();
-		if ( null === $mk ) {
-			return false;
-		}
-
-		$new_code     = Fotonic_Crypto::generate_recovery_code();
-		$new_salt_rec = base64_encode( random_bytes( 32 ) );
-		$normalized   = Fotonic_Crypto::normalize_recovery_code( $new_code );
-		$new_kek_rec  = Fotonic_Crypto::derive_key( $normalized, $new_salt_rec );
-		$new_wrap_rec = Fotonic_Crypto::wrap( $mk, $new_kek_rec );
-		if ( empty( $new_wrap_rec ) ) {
-			return false;
-		}
-
-		update_option( self::OPTION_SALT_REC, $new_salt_rec, false );
-		update_option( self::OPTION_WRAP_REC, $new_wrap_rec, false );
-
-		return array( 'recovery_code' => $new_code );
-	}
-
-	// ---------------------------------------------------------------------------
-	// Recovery: enroll recovery phrase (requires active session)
-	// ---------------------------------------------------------------------------
-
-	/**
-	 * Generate a new recovery phrase, wrapping MK under the phrase KEK.
-	 * Requires the vault to be unlocked (active session cookie).
-	 *
-	 * @return array|false Array with 'recovery_phrase' on success, false otherwise.
-	 */
-	public static function enroll_recovery_phrase() {
-		$mk = self::get_session_key();
-		if ( null === $mk ) {
-			return false;
-		}
-
-		$phrase      = Fotonic_TOTP::generate_recovery_phrase();
-		$salt_phrase = base64_encode( random_bytes( 32 ) );
-		$kek_phrase  = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $phrase ), $salt_phrase );
-		$wrap_phrase = Fotonic_Crypto::wrap( $mk, $kek_phrase );
-		if ( empty( $wrap_phrase ) ) {
-			return false;
-		}
-
-		update_option( self::OPTION_SALT_PHRASE, $salt_phrase, false );
-		update_option( self::OPTION_WRAP_PHRASE, $wrap_phrase, false );
-
-		return array( 'recovery_phrase' => $phrase );
-	}
-
-	// ---------------------------------------------------------------------------
-	// Recovery: reset password via recovery phrase
-	// ---------------------------------------------------------------------------
-
-	/**
-	 * Reset the vault password using a recovery phrase (lost-password path).
-	 *
-	 * Verifies the phrase unwraps wrap_phrase, then re-wraps MK under a new
-	 * password KEK.  The session cookie is set so the vault is immediately
-	 * unlocked after the reset.
-	 *
-	 * @param string $recovery_phrase Raw recovery phrase (with or without dashes).
-	 * @param string $new_pw          New password.
-	 * @return bool True on success.
-	 */
-	public static function recover_reset_password_via_phrase( string $recovery_phrase, string $new_pw ): bool {
-		if ( empty( $recovery_phrase ) || empty( $new_pw ) ) {
-			return false;
-		}
-
-		$salt_phrase = (string) get_option( self::OPTION_SALT_PHRASE, '' );
-		$wrap_phrase = (string) get_option( self::OPTION_WRAP_PHRASE, '' );
-		if ( empty( $salt_phrase ) || empty( $wrap_phrase ) ) {
-			return false;
-		}
-
-		// Normalise (strip dashes/spaces, uppercase) — must match the enrol path.
-		$kek_phrase = Fotonic_Crypto::derive_key( Fotonic_Crypto::normalize_recovery_code( $recovery_phrase ), $salt_phrase );
-		$mk         = Fotonic_Crypto::unwrap( $wrap_phrase, $kek_phrase );
-		if ( false === $mk ) {
-			return false;
-		}
-
-		// Re-wrap MK under new password KEK.
-		$new_salt_pw = base64_encode( random_bytes( 32 ) );
-		$new_kek_pw  = Fotonic_Crypto::derive_key( $new_pw, $new_salt_pw );
-		$new_wrap_pw = Fotonic_Crypto::wrap( $mk, $new_kek_pw );
-		if ( empty( $new_wrap_pw ) ) {
-			return false;
-		}
-
-		update_option( self::OPTION_SALT_PW, $new_salt_pw, false );
-		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
-
-		self::set_session_cookie( $mk );
-		return true;
+	private static function hash_reset_code( string $code ): string {
+		return hash_hmac( 'sha256', $code, wp_salt( 'auth' ) );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -550,6 +672,10 @@ class Fotonic_Vault {
 		// Recovery phrase options (v2 extension).
 		delete_option( self::OPTION_SALT_PHRASE );
 		delete_option( self::OPTION_WRAP_PHRASE );
+		// Two-phase setup, kit acknowledgment and recovery staging.
+		delete_option( self::OPTION_PENDING );
+		delete_option( self::OPTION_RECOVERY_ACK );
+		delete_option( self::OPTION_PENDING_TOTP );
 		// Stale v3 option names — clean up any DB rows left from abandoned v3 path.
 		delete_option( 'fotonic_vault_salt_dek_pw' );
 		delete_option( 'fotonic_vault_wrap_dek_pw' );
@@ -557,6 +683,13 @@ class Fotonic_Vault {
 		delete_option( 'fotonic_vault_wrap_dek_phrase' );
 		delete_option( 'fotonic_vault_totp_enc' );
 		delete_option( 'fotonic_vault_recovery_code_hash' );
+		// Reset-code state dies with the vault it was meant to reset.
+		delete_transient( self::TRANSIENT_RESET_CODE );
+		delete_transient( self::TRANSIENT_RESET_REQUESTS );
+		delete_transient( 'fotonic_vault_recovery_fails_' . get_current_user_id() );
+		// A fresh vault starts with a clean unlock/confirm counter, otherwise a
+		// user who failed unlocks before resetting is refused at setup confirm.
+		delete_transient( 'fotonic_vault_fails_' . get_current_user_id() );
 		// Destroying MK strands the wrapped backup private key — it could never be
 		// unwrapped again. Drop both halves so the next setup() mints a fresh pair.
 		Fotonic_Backup_Keys::delete_all();
