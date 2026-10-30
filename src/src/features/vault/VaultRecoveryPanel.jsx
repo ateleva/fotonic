@@ -20,6 +20,7 @@ import { fetchVaultStatus, vaultRecoveryBegin } from '../../api/vault'
 import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
+import PasswordInput from '../../components/PasswordInput'
 import Spinner from '../../components/Spinner'
 import ResetVaultFlow from './ResetVaultFlow'
 import { __, sprintf } from '../../utils/i18n'
@@ -94,9 +95,8 @@ function HaveSecretForm({ onUnlocked }) {
       </FormField>
 
       <FormField label={__('New Password', 'eleva-crm-for-photographers')} required htmlFor="rec-newpw" error={null}>
-        <input
+        <PasswordInput
           id="rec-newpw"
-          type="password"
           autoComplete="new-password"
           className={inputCls}
           value={form.new_password}
@@ -105,9 +105,8 @@ function HaveSecretForm({ onUnlocked }) {
       </FormField>
 
       <FormField label={__('Confirm New Password', 'eleva-crm-for-photographers')} required htmlFor="rec-confirmpw" error={null}>
-        <input
+        <PasswordInput
           id="rec-confirmpw"
-          type="password"
           autoComplete="new-password"
           className={inputCls}
           value={form.confirm}

@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query'
 import { fetchVaultStatus, vaultResetRequestCode, vaultReset } from '../../api/vault'
 import Button from '../../components/Button'
 import Spinner from '../../components/Spinner'
+import PasswordInput from '../../components/PasswordInput'
 import { __, sprintf } from '../../utils/i18n'
 
 const CONFIRM_WORD = 'RESET'
@@ -111,7 +112,7 @@ export default function ResetVaultFlow({ allowCredentials = false, onDone }) {
             {__('This action is irreversible.', 'eleva-crm-for-photographers')}
           </p>
           <p className="text-sm text-red-700 mt-1">
-            {__('The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable.', 'eleva-crm-for-photographers')}
+            {__('The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable, and so will the quote PDFs already generated.', 'eleva-crm-for-photographers')}
           </p>
         </div>
 
@@ -119,9 +120,8 @@ export default function ResetVaultFlow({ allowCredentials = false, onDone }) {
           <label htmlFor="reset-password" className="block text-xs font-medium text-gray-600">
             {__('Vault Password', 'eleva-crm-for-photographers')}
           </label>
-          <input
+          <PasswordInput
             id="reset-password"
-            type="password"
             autoComplete="current-password"
             className={inputCls}
             value={password}

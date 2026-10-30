@@ -5,6 +5,7 @@ import { Lock } from 'lucide-react'
 import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
+import PasswordInput from '../../components/PasswordInput'
 import Spinner from '../../components/Spinner'
 import VaultRecoveryPanel from './VaultRecoveryPanel'
 import { __ } from '../../utils/i18n'
@@ -83,9 +84,8 @@ export default function VaultLock() {
                 htmlFor="password"
                 error={errors.password?.message}
               >
-                <input
+                <PasswordInput
                   id="password"
-                  type="password"
                   autoComplete="current-password"
                   className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   {...register('password', { required: __('Password is required', 'eleva-crm-for-photographers') })}

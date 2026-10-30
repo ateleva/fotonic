@@ -8,12 +8,12 @@
  * extensions, the archive .zip, and your vault password (or a recovery code /
  * recovery phrase).
  *
- *     php eleva-backup-decrypt.php eleva-backup-2026-08-11-120000-ab12cd34.zip
+ *     php eleva-backup-decrypt.php eleva-backup-2026-08-11-120000-0123456789abcdef0123456789abcdef.zip
  *
  * WHY THIS FILE EXISTS
  * --------------------
- * v1 of the backup feature writes archives; restoring them back INTO WordPress
- * lands in v2. Until then this tool is the restore path: it turns an archive
+ * v1 of the backup feature writes archives; importing them back INTO WordPress
+ * lands in v2 and does not exist yet. Until then this tool is the only way to read one: it turns an archive
  * into a plain data.json plus your original files. It is deliberately a single
  * file with zero dependencies so that it still works years from now, on a
  * borrowed laptop, with the plugin long uninstalled.
@@ -250,8 +250,15 @@ function eleva_bd_run( array $options ) {
 				);
 			}
 
+			// A file the plugin kept under the Vault layer (quote PDFs) is opened with the master key.
+			$opened = eleva_bd_open_vault_layer( $target, $mk );
+			if ( null !== $opened ) {
+				$target   = $opened;
+				$basename = basename( $opened );
+			}
+
 			$done++;
-			eleva_bd_say( '[ok] files/' . $attachment_id . '-' . $basename . '  (' . eleva_bd_human_bytes( filesize( $target ) ) . ', SHA-256 matches the original)' );
+			eleva_bd_say( '[ok] files/' . basename( $target ) . '  (' . eleva_bd_human_bytes( filesize( $target ) ) . ', SHA-256 matches the original' . ( null !== $opened ? ', Vault layer removed' : '' ) . ')' );
 		}
 		eleva_bd_say( '[ok] ' . $done . ' file(s) restored, all byte-identical to the originals.' );
 	}
@@ -812,6 +819,48 @@ function eleva_bd_decrypt_member_to_file( ZipArchive $zip, $name, $key, $target,
 	@chmod( $target, 0600 );
 
 	return $written;
+}
+
+/**
+ * Remove the Vault layer from a file the plugin stored encrypted with the Vault key (quote PDFs).
+ *
+ *   file : "FTNCFIL1" | iv[12] | tag[16] | ciphertext
+ *   key  : HKDF-SHA256(master key, info "ftnc-file-v1", 32 bytes)
+ *   aad  : the 8-byte magic
+ *
+ * The file is replaced by the plain one, without the ".enc" suffix. Files without the magic are
+ * left alone.
+ *
+ * @param string $target Path of the file written from the archive.
+ * @param string $mk     Raw 32-byte master key.
+ * @return string|null New path, or null when the file has no Vault layer.
+ * @throws Exception When the layer cannot be opened with this master key.
+ */
+function eleva_bd_open_vault_layer( $target, $mk ) {
+	$head = '';
+	$h    = fopen( $target, 'rb' );
+	if ( false !== $h ) {
+		$head = (string) fread( $h, 8 );
+		fclose( $h );
+	}
+	if ( 'FTNCFIL1' !== $head ) {
+		return null;
+	}
+	$blob = file_get_contents( $target );
+	if ( false === $blob || strlen( $blob ) < 36 ) {
+		throw new Exception( basename( $target ) . ' has a Vault layer but is too short to be valid.', ELEVA_BD_EXIT_ARCHIVE );
+	}
+	$key   = hash_hkdf( 'sha256', $mk, 32, 'ftnc-file-v1' );
+	$plain = openssl_decrypt( substr( $blob, 36 ), ELEVA_BD_GCM, $key, OPENSSL_RAW_DATA, substr( $blob, 8, 12 ), substr( $blob, 20, 16 ), 'FTNCFIL1' );
+	if ( false === $plain ) {
+		throw new Exception( basename( $target ) . ': the Vault layer could not be opened with this master key (the file is damaged, or it was made under another Vault).', ELEVA_BD_EXIT_ARCHIVE );
+	}
+	$new = '.enc' === substr( $target, -4 ) ? substr( $target, 0, -4 ) : $target . '.dec';
+	eleva_bd_write_file( $new, $plain );
+	if ( $new !== $target ) {
+		@unlink( $target );
+	}
+	return $new;
 }
 
 /**

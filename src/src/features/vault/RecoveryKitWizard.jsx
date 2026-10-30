@@ -6,32 +6,15 @@
  */
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { Copy, Check, AlertTriangle, Mail } from 'lucide-react'
+import { AlertTriangle, Mail } from 'lucide-react'
 import { vaultIssueKit, vaultAckKit } from '../../api/vault'
 import Button from '../../components/Button'
+import CopyButton from '../../components/CopyButton'
 import Spinner from '../../components/Spinner'
 import { __, sprintf } from '../../utils/i18n'
 import { lastGroup, matchesLastGroup, kitText } from '../../utils/recoveryKit'
 
 const STEPS = { INTRO: 'intro', PHRASE: 'phrase', CODE: 'code', EMAIL: 'email' }
-
-function CopyButton({ text, label }) {
-  const [copied, setCopied] = useState(false)
-
-  function handleCopy() {
-    navigator.clipboard.writeText(text).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
-  return (
-    <Button variant="secondary" className="w-full" onClick={handleCopy}>
-      {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
-      {copied ? __('Copied!', 'eleva-crm-for-photographers') : label}
-    </Button>
-  )
-}
 
 function SecretStep({ title, intro, secret, count, typed, onTyped, onNext }) {
   const ok = matchesLastGroup(secret, typed)

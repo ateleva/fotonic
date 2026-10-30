@@ -174,7 +174,7 @@ class Fotonic_Backup_Archive {
 
             self::cleanup_temp_files( $temp_files );
 
-            $final_name = 'eleva-backup-' . gmdate( 'Y-m-d-His' ) . '-' . bin2hex( random_bytes( 4 ) ) . '.zip';
+            $final_name = 'eleva-backup-' . gmdate( 'Y-m-d-His' ) . '-' . bin2hex( random_bytes( 16 ) ) . '.zip'; // 128 bits: on a server that ignores .htaccess (nginx) the name is the only thing keeping the file private.
             $final_path = $backup_dir . '/' . $final_name;
             if ( ! rename( $tmp_path, $final_path ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rename -- local filesystem move within our own backup dir, no user input.
                 throw new \RuntimeException( 'Could not finalize the archive file.' );
@@ -213,8 +213,13 @@ class Fotonic_Backup_Archive {
 
         if ( ! file_exists( $dir ) ) {
             wp_mkdir_p( $dir );
-            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- one-time write to our own controlled path, no user input; WP_Filesystem needs interactive auth unavailable here.
+        }
+        // Checked on every call, not only when the folder is created: a guard file that was deleted comes back.
+        if ( ! file_exists( $dir . '/.htaccess' ) ) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- own controlled path, no user input; WP_Filesystem needs interactive auth unavailable here.
             file_put_contents( $dir . '/.htaccess', "Require all denied\n# Block direct access to Fotonic backup archives\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order deny,allow\n    Deny from all\n</IfModule>" );
+        }
+        if ( ! file_exists( $dir . '/index.php' ) ) {
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- see above.
             file_put_contents( $dir . '/index.php', "<?php\n// Silence is golden.\n" );
         }

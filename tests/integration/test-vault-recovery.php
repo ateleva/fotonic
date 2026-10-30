@@ -5,6 +5,7 @@ ob_start();
 // Tests touch the live local vault options: snapshot them, the harness restores on exit (also on fatal).
 t_preserve_options( [
 	'fotonic_vault_setup',
+	'fotonic_vault_epoch',
 	'fotonic_vault_salt',
 	'fotonic_vault_totp_secret',
 	'fotonic_vault_wrap_pw',
@@ -23,8 +24,7 @@ t_preserve_options( [
 $t_cookie = isset( $_COOKIE ) ? $_COOKIE : array();
 
 function t_clear_vault_transients(): void {
-	delete_transient( 'fotonic_vault_fails_' . get_current_user_id() );
-	delete_transient( 'fotonic_vault_recovery_fails_' . get_current_user_id() );
+	Fotonic_Vault_Attempts::clear_all();
 	delete_transient( 'fotonic_vault_reset_code' );
 	delete_transient( 'fotonic_vault_reset_requests' );
 }

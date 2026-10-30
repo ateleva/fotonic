@@ -13,6 +13,7 @@ import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import QRCode from 'qrcode'
 import Button from '../../components/Button'
+import CopyButton from '../../components/CopyButton'
 import FormField from '../../components/FormField'
 import Spinner from '../../components/Spinner'
 import { __ } from '../../utils/i18n'
@@ -56,8 +57,11 @@ export default function TotpEnroll({ qrUri, onConfirm, submitLabel }) {
             <QrCanvas uri={qrUri} size={200} />
           </div>
           <div className="w-full rounded-md bg-gray-50 border border-gray-200 p-3">
-            <p className="text-xs text-gray-500 mb-1">{__('Manual entry key:', 'eleva-crm-for-photographers')}</p>
-            <p className="text-sm font-mono font-semibold text-gray-800 break-all">{secretB32}</p>
+            <div className="mb-1 flex items-center justify-between">
+              <p className="text-xs text-gray-500">{__('Manual entry key:', 'eleva-crm-for-photographers')}</p>
+              <CopyButton variant="link" text={secretB32} />
+            </div>
+            <p className="text-sm font-mono font-semibold text-gray-800 break-all select-all">{secretB32}</p>
           </div>
         </div>
       )}

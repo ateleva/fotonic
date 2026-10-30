@@ -31,6 +31,8 @@ class Fotonic_Memory_Card_CPT {
 			'supports'     => [ 'title' ],
 			'show_in_rest' => false,
 			'rewrite'      => false,
+			'capabilities' => Fotonic_CPT_Registry::admin_only_caps(),
+			'map_meta_cap' => true,
 		] );
 	}
 
@@ -47,6 +49,7 @@ class Fotonic_Memory_Card_CPT {
 			'show_in_rest' => false,
 			'rewrite'      => false,
 			'hierarchical' => false,
+			'capabilities' => Fotonic_CPT_Registry::admin_only_term_caps(),
 		] );
 	}
 

@@ -3,7 +3,7 @@
  * Plugin Name:       Eleva CRM for Photographers
  * Plugin URI:        https://eleva.alessandrobonacina.com/progetto/eleva-crm-per-fotografi/
  * Description:       CRM and workflow manager for photographers: clients, services, works, payments, encrypted vault for PII, and calendar view.
- * Version:           1.6.1
+ * Version:           1.6.2
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Tested up to:      7.1
@@ -17,7 +17,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FOTONIC_VERSION', '1.6.1' );
+define( 'FOTONIC_VERSION', '1.6.2' );
 define( 'FOTONIC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FOTONIC_URL', plugin_dir_url( __FILE__ ) );
 
@@ -30,6 +30,8 @@ require_once FOTONIC_DIR . 'includes/class-backup-registry.php';
 require_once FOTONIC_DIR . 'includes/class-crypto.php';
 require_once FOTONIC_DIR . 'includes/class-totp.php';
 require_once FOTONIC_DIR . 'includes/class-vault.php';
+require_once FOTONIC_DIR . 'includes/class-vault-attempts.php';
+require_once FOTONIC_DIR . 'includes/class-file-crypt.php';
 require_once FOTONIC_DIR . 'includes/class-vault-mailer.php';
 require_once FOTONIC_DIR . 'includes/class-backup-keys.php';
 require_once FOTONIC_DIR . 'includes/class-backup-cipher.php';
@@ -38,6 +40,7 @@ require_once FOTONIC_DIR . 'includes/class-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-memory-card-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-admin-page.php';
 require_once FOTONIC_DIR . 'includes/class-meta-boxes.php';
+require_once FOTONIC_DIR . 'includes/class-site-health.php';
 
 register_activation_hook( __FILE__, [ 'Fotonic_Activator', 'activate' ] );
 register_deactivation_hook( __FILE__, [ 'Fotonic_Activator', 'deactivate' ] );
@@ -50,6 +53,7 @@ add_action( 'init', [ 'Fotonic_Memory_Card_CPT', 'ensure_card_status_terms' ], 2
 add_action( 'rest_api_init', [ 'Fotonic_REST_API', 'register_routes' ] );
 add_action( 'rest_api_init', [ 'Fotonic_Memory_Card_REST_API', 'register_routes' ] );
 add_action( 'admin_init', [ 'Fotonic_Backup_Registry', 'maybe_run_audit' ] );
+add_filter( 'site_status_tests', [ 'Fotonic_Site_Health', 'register_test' ] );
 add_action( 'admin_menu', [ 'Fotonic_Admin_Page', 'add_menu' ] );
 add_action( 'admin_enqueue_scripts', [ 'Fotonic_Admin_Page', 'enqueue_assets' ] );
 add_action( 'all_admin_notices', [ 'Fotonic_Admin_Page', 'suppress_notices' ], PHP_INT_MAX );

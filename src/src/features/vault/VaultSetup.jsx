@@ -5,6 +5,8 @@ import { vaultSetup, vaultSetupConfirm } from '../../api/vault'
 import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
+import PasswordInput from '../../components/PasswordInput'
+import CopyButton from '../../components/CopyButton'
 import Spinner from '../../components/Spinner'
 import TotpEnroll from './TotpEnroll'
 import { __, sprintf } from '../../utils/i18n'
@@ -86,9 +88,8 @@ function StepPassword({ onNext }) {
         htmlFor="password"
         error={errors.password?.message}
       >
-        <input
+        <PasswordInput
           id="password"
-          type="password"
           autoComplete="new-password"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('password', {
@@ -104,9 +105,8 @@ function StepPassword({ onNext }) {
         htmlFor="confirm"
         error={errors.confirm?.message}
       >
-        <input
+        <PasswordInput
           id="confirm"
-          type="password"
           autoComplete="new-password"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           {...register('confirm', {
@@ -124,15 +124,9 @@ function StepPassword({ onNext }) {
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xs text-gray-500">{__('Username', 'eleva-crm-for-photographers')}</span>
-            <p className="text-sm font-mono font-semibold text-gray-800">crm-vault</p>
+            <p className="text-sm font-mono font-semibold text-gray-800 select-all">crm-vault</p>
           </div>
-          <button
-            type="button"
-            onClick={() => navigator.clipboard.writeText('crm-vault')}
-            className="text-xs text-blue-500 hover:text-blue-700 underline cursor-pointer"
-          >
-            {__('Copy', 'eleva-crm-for-photographers')}
-          </button>
+          <CopyButton variant="link" text="crm-vault" />
         </div>
         <p className="text-xs text-gray-400">
           {__('Using a separate username prevents your browser from confusing the vault password with your WordPress login.', 'eleva-crm-for-photographers')}

@@ -361,7 +361,12 @@ class Fotonic_REST_API {
 			);
 	}
 
-	public static function vault_download_permission( \WP_REST_Request $request ): bool {
+	/**
+	 * @return bool|\WP_Error False (generic 401/403) when the nonce or the capability is missing;
+	 *                        a 423 with an explanation when only the Vault is locked, which is
+	 *                        what a second browser tab hits after the Vault was locked elsewhere.
+	 */
+	public static function vault_download_permission( \WP_REST_Request $request ) {
 		// Verify REST nonce from X-WP-Nonce header or _wpnonce query param.
 		$nonce = $request->get_header( 'x_wp_nonce' );
 		if ( empty( $nonce ) ) {
@@ -370,7 +375,20 @@ class Fotonic_REST_API {
 		if ( empty( $nonce ) || ! wp_verify_nonce( sanitize_text_field( (string) $nonce ), 'wp_rest' ) ) {
 			return false;
 		}
-		return current_user_can( 'manage_options' ) && Fotonic_Vault::is_unlocked();
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return false;
+		}
+		if ( ! Fotonic_Vault::is_unlocked() ) {
+			if ( ! Fotonic_Vault::is_setup() ) {
+				return false; // No Vault at all: nothing to unlock, keep the plain refusal.
+			}
+			return new \WP_Error(
+				'vault_locked',
+				__( 'The Vault is locked, so this file cannot be opened. Unlock the Vault (it may have been locked in another tab or window) and try again.', 'eleva-crm-for-photographers' ),
+				[ 'status' => 423 ]
+			);
+		}
+		return true;
 	}
 
 	/**
@@ -439,9 +457,9 @@ class Fotonic_REST_API {
 	 * Returns: { setup: true }
 	 */
 	public static function vault_setup_confirm( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
+		// One attempt at a time per vault; the lock is released when $attempts goes out of scope.
+		$attempts = Fotonic_Vault_Attempts::acquire( 'credentials' );
+		if ( null === $attempts || $attempts->exhausted() ) {
 			return self::rate_limited_response();
 		}
 
@@ -464,12 +482,12 @@ class Fotonic_REST_API {
 		$otp      = isset( $body['otp'] )      ? (string) $body['otp']      : '';
 
 		if ( Fotonic_Vault::confirm_setup( $password, $otp ) ) {
-			delete_transient( $fail_key );
+			$attempts->clear();
 			self::audit_log( 'vault_setup_confirmed' );
 			return new \WP_REST_Response( [ 'setup' => true ], 200 );
 		}
 
-		set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+		$attempts->failed();
 		self::audit_log( 'vault_setup_confirm_fail' );
 		return new \WP_REST_Response(
 			[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
@@ -483,9 +501,11 @@ class Fotonic_REST_API {
 	 * Returns: { unlocked: true }
 	 */
 	public static function vault_unlock( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
+		$attempts = Fotonic_Vault_Attempts::acquire( 'credentials' );
+		if ( null === $attempts ) {
+			return self::rate_limited_response(); // Another attempt is still being checked.
+		}
+		if ( $attempts->exhausted() ) {
 			return new \WP_REST_Response(
 				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
 				429
@@ -505,7 +525,7 @@ class Fotonic_REST_API {
 
 		$ok = Fotonic_Vault::unlock( $password, $otp );
 		if ( ! $ok ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			$attempts->failed();
 			self::audit_log( 'vault_unlock_fail' );
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
@@ -513,7 +533,7 @@ class Fotonic_REST_API {
 			);
 		}
 
-		delete_transient( $fail_key );
+		$attempts->clear();
 		self::audit_log( 'vault_unlock_ok' );
 
 		return new \WP_REST_Response( [ 'unlocked' => true ], 200 );
@@ -523,9 +543,16 @@ class Fotonic_REST_API {
 	 * POST /vault/lock
 	 * Returns: { locked: true }
 	 */
-	public static function vault_lock( \WP_REST_Request $_req ): \WP_REST_Response {
-		Fotonic_Vault::lock();
-		self::audit_log( 'vault_lock' );
+	public static function vault_lock( \WP_REST_Request $req ): \WP_REST_Response {
+		// The Lock button locks everything (every browser and device). The idle timer of the SPA
+		// asks for scope "device": a tab that sat idle must not lock a second computer in use.
+		$everywhere = 'device' !== sanitize_key( (string) $req->get_param( 'scope' ) );
+		if ( $everywhere ) {
+			Fotonic_Vault::lock_everywhere();
+		} else {
+			Fotonic_Vault::lock();
+		}
+		self::audit_log( $everywhere ? 'vault_lock_everywhere' : 'vault_lock' );
 		return new \WP_REST_Response( [ 'locked' => true ], 200 );
 	}
 
@@ -617,9 +644,22 @@ class Fotonic_REST_API {
 			return new \WP_REST_Response( array( 'code' => 'forbidden', 'message' => __( 'Access denied.', 'eleva-crm-for-photographers' ) ), 403 );
 		}
 
+		// A file kept under the Vault layer (quote PDFs from Pro) is decrypted in memory: the key is the session key.
+		$plain = null;
+		if ( Fotonic_File_Crypt::is_encrypted( $real_file ) ) {
+			$key   = Fotonic_Vault::get_session_key();
+			$plain = null === $key ? false : Fotonic_File_Crypt::decrypt_file( $real_file, $key );
+			if ( false === $plain ) {
+				return new \WP_REST_Response(
+					[ 'code' => 'file_unreadable', 'message' => __( 'This file is encrypted and cannot be opened with the current Vault key.', 'eleva-crm-for-photographers' ) ],
+					422
+				);
+			}
+		}
+
 		// Sanitize headers before output.
 		$mime     = sanitize_mime_type( $post->post_mime_type );
-		$filename = sanitize_file_name( basename( $real_file ) );
+		$filename = sanitize_file_name( Fotonic_File_Crypt::plain_name( basename( $real_file ) ) );
 		// Strip any CRLF that could cause header injection.
 		$filename = str_replace( [ "\r", "\n" ], '', $filename );
 
@@ -632,9 +672,13 @@ class Fotonic_REST_API {
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- MIME and filename sanitized above.
 		header( 'Content-Type: ' . $mime );
 		header( 'Content-Disposition: attachment; filename="' . esc_attr( $filename ) . '"' );
-		header( 'Content-Length: ' . (int) filesize( $real_file ) );
+		header( 'Content-Length: ' . ( null === $plain ? (int) filesize( $real_file ) : strlen( $plain ) ) );
 		header( 'X-Content-Type-Options: nosniff' );
 
+		if ( null !== $plain ) {
+			echo $plain; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- decrypted binary file, not HTML.
+			exit;
+		}
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_readfile
 		readfile( $real_file );
 		exit; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary stream requires exit to prevent WP HTML appended after file content.
@@ -650,9 +694,11 @@ class Fotonic_REST_API {
 	 * Envelope scheme v2: re-wraps MK under new KEK — no PII re-encryption needed.
 	 */
 	public static function vault_change_password( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
+		$attempts = Fotonic_Vault_Attempts::acquire( 'credentials' );
+		if ( null === $attempts ) {
+			return self::rate_limited_response(); // Another attempt is still being checked.
+		}
+		if ( $attempts->exhausted() ) {
 			return new \WP_REST_Response(
 				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
 				429
@@ -686,7 +732,7 @@ class Fotonic_REST_API {
 		$ok = Fotonic_Vault::change_password( $current_password, $otp, $new_password );
 
 		if ( ! $ok ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			$attempts->failed();
 			self::audit_log( 'vault_password_change_fail' );
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
@@ -694,7 +740,7 @@ class Fotonic_REST_API {
 			);
 		}
 
-		delete_transient( $fail_key );
+		$attempts->clear();
 		self::audit_log( 'vault_password_changed' );
 
 		return new \WP_REST_Response( [ 'changed' => true ], 200 );
@@ -708,9 +754,11 @@ class Fotonic_REST_API {
 	 * Returns: { reset: true, qr_uri: string }
 	 */
 	public static function vault_reset_totp( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
+		$attempts = Fotonic_Vault_Attempts::acquire( 'credentials' );
+		if ( null === $attempts ) {
+			return self::rate_limited_response(); // Another attempt is still being checked.
+		}
+		if ( $attempts->exhausted() ) {
 			return new \WP_REST_Response(
 				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
 				429
@@ -760,7 +808,7 @@ class Fotonic_REST_API {
 			$kek_pw = Fotonic_Crypto::derive_key( $password, $salt );
 			$mk     = Fotonic_Crypto::unwrap( $wrap_pw, $kek_pw );
 			if ( false === $mk ) {
-				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				$attempts->failed();
 				return new \WP_REST_Response(
 					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
 					401
@@ -768,7 +816,7 @@ class Fotonic_REST_API {
 			}
 			$current_totp = Fotonic_Crypto::unwrap( $wrap_totp, $mk );
 			if ( false === $current_totp || ! Fotonic_TOTP::verify( $otp, $current_totp ) ) {
-				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				$attempts->failed();
 				return new \WP_REST_Response(
 					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
 					401
@@ -795,7 +843,7 @@ class Fotonic_REST_API {
 			$key         = Fotonic_Crypto::derive_key( $password, $salt );
 			$totp_secret = Fotonic_Crypto::decrypt( $encrypted_totp, $key );
 			if ( empty( $totp_secret ) || ! Fotonic_TOTP::verify( $otp, $totp_secret ) ) {
-				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				$attempts->failed();
 				return new \WP_REST_Response(
 					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
 					401
@@ -812,7 +860,7 @@ class Fotonic_REST_API {
 			update_option( Fotonic_Vault::OPTION_TOTP, $new_encrypted_totp, false );
 		}
 
-		delete_transient( $fail_key );
+		$attempts->clear();
 
 		$site_name = get_bloginfo( 'name' ) ?: 'Eleva CRM';
 		$label     = $site_name . ':' . wp_get_current_user()->user_email;
@@ -892,9 +940,8 @@ class Fotonic_REST_API {
 	 * Returns: { recovered: true }
 	 */
 	public static function vault_recovery_begin( \WP_REST_Request $req ): \WP_REST_Response {
-		$fail_key = 'fotonic_vault_recovery_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
+		$attempts = Fotonic_Vault_Attempts::acquire( 'recovery' );
+		if ( null === $attempts || $attempts->exhausted() ) {
 			return self::rate_limited_response();
 		}
 
@@ -922,7 +969,7 @@ class Fotonic_REST_API {
 		}
 
 		if ( ! Fotonic_Vault::recover_with_secret( $recovery_secret, $new_password ) ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			$attempts->failed();
 			self::audit_log( 'vault_recovery_fail' );
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_recovery_secret', 'message' => __( 'That recovery phrase or code is not valid.', 'eleva-crm-for-photographers' ) ],
@@ -930,7 +977,7 @@ class Fotonic_REST_API {
 			);
 		}
 
-		delete_transient( $fail_key );
+		$attempts->clear();
 		self::audit_log( 'vault_recovery_ok' );
 		return new \WP_REST_Response( [ 'recovered' => true ], 200 );
 	}
@@ -978,9 +1025,8 @@ class Fotonic_REST_API {
 			return self::no_pending_totp_response();
 		}
 
-		$fail_key = 'fotonic_vault_recovery_fails_' . get_current_user_id();
-		$attempts = (int) get_transient( $fail_key );
-		if ( $attempts >= 5 ) {
+		$attempts = Fotonic_Vault_Attempts::acquire( 'recovery' );
+		if ( null === $attempts || $attempts->exhausted() ) {
 			return self::rate_limited_response();
 		}
 
@@ -988,14 +1034,14 @@ class Fotonic_REST_API {
 		$otp  = isset( $body['otp'] ) ? (string) $body['otp'] : '';
 
 		if ( ! Fotonic_Vault::confirm_pending_totp( $otp ) ) {
-			set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+			$attempts->failed();
 			return new \WP_REST_Response(
 				[ 'code' => 'invalid_otp', 'message' => __( 'Invalid OTP code.', 'eleva-crm-for-photographers' ) ],
 				401
 			);
 		}
 
-		delete_transient( $fail_key );
+		$attempts->clear();
 		self::audit_log( 'vault_totp_confirmed' );
 		return new \WP_REST_Response( [ 'confirmed' => true ], 200 );
 	}
@@ -1059,6 +1105,13 @@ class Fotonic_REST_API {
 			);
 		}
 
+		// One attempt at a time per vault: the reset-code counter and the credentials
+		// counter are both read and written under this lock.
+		$attempts = Fotonic_Vault_Attempts::acquire( 'credentials' );
+		if ( null === $attempts ) {
+			return self::rate_limited_response();
+		}
+
 		if ( '' !== $code ) {
 			if ( ! Fotonic_Vault::verify_reset_code( $code ) ) {
 				self::audit_log( 'vault_reset_code_fail' );
@@ -1073,21 +1126,19 @@ class Fotonic_REST_API {
 				return self::vault_locked_response();
 			}
 
-			$fail_key = 'fotonic_vault_fails_' . get_current_user_id();
-			$attempts = (int) get_transient( $fail_key );
-			if ( $attempts >= 5 ) {
+			if ( $attempts->exhausted() ) {
 				return self::rate_limited_response();
 			}
 
 			if ( ! Fotonic_Vault::verify_credentials( $password, $otp ) ) {
-				set_transient( $fail_key, $attempts + 1, 15 * MINUTE_IN_SECONDS );
+				$attempts->failed();
 				self::audit_log( 'vault_reset_credentials_fail' );
 				return new \WP_REST_Response(
 					[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
 					401
 				);
 			}
-			delete_transient( $fail_key );
+			$attempts->clear();
 			$method = 'credentials';
 		} else {
 			return new \WP_REST_Response(
@@ -2571,7 +2622,7 @@ class Fotonic_REST_API {
 						'type'     => 'attachment',
 						'id'       => $attach_id,
 						'url'      => $url,
-						'filename' => basename( get_attached_file( $attach_id ) ),
+						'filename' => Fotonic_File_Crypt::plain_name( basename( get_attached_file( $attach_id ) ) ),
 						'mime'     => $post_attach->post_mime_type,
 						'label'    => $label,
 					];

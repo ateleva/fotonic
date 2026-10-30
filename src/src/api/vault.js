@@ -11,8 +11,9 @@ export const fetchVaultStatus = () => apiFetch('vault/status')
 
 export const vaultUnlock = (data) => post('vault/unlock', data)
 
-export const vaultLock = () =>
-  apiFetch('vault/lock', { method: 'POST' })
+// Lock button: locks every browser and device. scope 'device' (the idle timer) only locks this browser.
+export const vaultLock = (scope) =>
+  post('vault/lock', scope === 'device' ? { scope: 'device' } : {})
 
 export const vaultChangePassword = (data) => post('vault/change-password', data)
 

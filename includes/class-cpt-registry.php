@@ -27,11 +27,13 @@ class Fotonic_CPT_Registry {
         register_post_type( 'ftnc_customer', [
             'labels'       => $labels,
             'public'       => false,
-            'show_ui'      => true,
+            'show_ui'      => false,
             'show_in_menu' => false,
             'supports'     => [ 'title' ],
             'show_in_rest' => false,
             'rewrite'      => false,
+            'capabilities' => self::admin_only_caps(),
+            'map_meta_cap' => true,
         ] );
     }
 
@@ -53,11 +55,13 @@ class Fotonic_CPT_Registry {
         register_post_type( 'ftnc_service', [
             'labels'       => $labels,
             'public'       => false,
-            'show_ui'      => true,
+            'show_ui'      => false,
             'show_in_menu' => false,
             'supports'     => [ 'title' ],
             'show_in_rest' => false,
             'rewrite'      => false,
+            'capabilities' => self::admin_only_caps(),
+            'map_meta_cap' => true,
         ] );
     }
 
@@ -79,12 +83,14 @@ class Fotonic_CPT_Registry {
         register_post_type( 'ftnc_work', [
             'labels'       => $labels,
             'public'       => false,
-            'show_ui'      => true,
+            'show_ui'      => false,
             'show_in_menu' => false,
             'supports'     => [ 'title', 'editor' ],
             'taxonomies'   => [ 'ftnc_work_payment_status' ],
             'show_in_rest' => false,
             'rewrite'      => false,
+            'capabilities' => self::admin_only_caps(),
+            'map_meta_cap' => true,
         ] );
     }
 
@@ -102,13 +108,55 @@ class Fotonic_CPT_Registry {
         register_taxonomy( 'ftnc_work_payment_status', 'ftnc_work', [
             'labels'            => $labels,
             'public'            => false,
-            'show_ui'           => true,
-            'show_in_menu'      => true,
-            'show_admin_column' => true,
+            'show_ui'           => false,
+            'show_in_menu'      => false,
+            'show_admin_column' => false,
             'show_in_rest'      => false,
             'rewrite'           => false,
             'hierarchical'      => false,
+            'capabilities'      => self::admin_only_term_caps(),
         ] );
+    }
+
+    /**
+     * Capabilities for the plugin's own post types. Every primitive capability maps to
+     * manage_options, so only administrators can read or write these records through any
+     * WordPress path (core screens, admin-ajax, XML-RPC). Passed to register_post_type()
+     * together with map_meta_cap, it applies to the post type that receives it only:
+     * user roles and other plugins' post types are not changed.
+     *
+     * @return array<string,string>
+     */
+    public static function admin_only_caps(): array {
+        $cap = 'manage_options';
+        return [
+            'edit_posts'             => $cap,
+            'edit_others_posts'      => $cap,
+            'edit_private_posts'     => $cap,
+            'edit_published_posts'   => $cap,
+            'publish_posts'          => $cap,
+            'read_private_posts'     => $cap,
+            'delete_posts'           => $cap,
+            'delete_others_posts'    => $cap,
+            'delete_private_posts'   => $cap,
+            'delete_published_posts' => $cap,
+            'create_posts'           => $cap,
+        ];
+    }
+
+    /**
+     * Same rule for the plugin's own taxonomies.
+     *
+     * @return array<string,string>
+     */
+    public static function admin_only_term_caps(): array {
+        $cap = 'manage_options';
+        return [
+            'manage_terms' => $cap,
+            'edit_terms'   => $cap,
+            'delete_terms' => $cap,
+            'assign_terms' => $cap,
+        ];
     }
 
     /**

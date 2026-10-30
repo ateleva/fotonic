@@ -23,7 +23,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Calendar Color** — assign an event color (12-color palette) to each Work
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
 - **Memory Cards** — keep an inventory of your SD/CF cards with an auto-advancing status (Ready, In Use, Backed Up, Damaged); manage them from the sidebar or assign cards to a shoot inside the Work editor
-- **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password and authenticator code; a standalone command-line decrypt tool ships with the plugin for restoring on any machine
+- **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password (minimum 8 characters, use a strong one: the archive is only as safe as that password); a standalone command-line decrypt tool ships with the plugin to open the archive on any machine and read your data and files (importing a backup back into the plugin is not available yet)
 
 ---
 
@@ -98,6 +98,20 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 ---
 
 ## Changelog
+
+### 1.6.2
+
+- **Security:** the Vault now locks everywhere. Before, pressing Lock, changing the Vault password or recovering with your phrase or code only cleared the cookie of the browser you were using, so a copy of that cookie, or a second computer left open, kept working until the WordPress login ended. Now each of those actions refuses every earlier session on every browser and device, the 24-hour limit is checked by the server too, and a page left open elsewhere shows the lock screen within 30 seconds. After updating, everyone unlocks the Vault once.
+- **Security:** guessing the Vault password or a recovery code is much harder. Failed attempts are now counted for the whole Vault (5 failures in 15 minutes) and only one check runs at a time. Before, the count was kept per user and many requests sent at once could try more guesses than allowed.
+- **Security:** the plugin's records (customers, services, works, memory cards and payment status) no longer have screens in the classic WordPress admin and can be reached only by administrators. Before, an Editor or Author could open those screens, because they followed WordPress default permissions. Everything is managed in the Eleva CRM app; other plugins and user roles are not touched.
+- **Security:** private files are better protected. Backup file names now carry 32 random characters instead of 8, the protection files of the backups folder are put back if they go missing, and a new Site Health test ("Eleva CRM private files are protected") checks that your web server does not hand out the backups and Vault folders. On nginx servers, which ignore the .htaccess file that protects them on Apache, the test shows the rules to add. Nothing changes on Apache.
+- **Security:** stored files can now carry a Vault encryption layer, which Eleva CRM Pro 1.6.3 uses for quote PDFs because they contain client names and addresses. Such files are decrypted only for you, with the Vault unlocked, and the offline backup tool removes the layer, so a backup gives you readable files. The Reset screen warns that these files become unreadable after a reset.
+- **Fix:** the customer search could also match unrelated content, for example a draft page with a similar title. It now searches customers only.
+- **Fix:** the backup texts said that the authenticator code protects the archive. It does not: the archive is protected by your Vault password alone, so a strong password matters. The Settings page, the readme and the offline tool guide now say so, and that the minimum length is 8 characters.
+- **Fix:** a file that cannot be opened because the Vault was locked in another tab, window or device now explains that and what to do, instead of the generic "You do not have permission".
+- **New:** every password field has a show/hide button, so a mistyped password can be checked, and the copy buttons for the recovery kit, the username and the authenticator key work in every browser.
+- **Change:** the page text and the readme no longer suggest that a backup can be imported back into the plugin: importing is not available yet. The offline tool opens the archive and gives you your data as readable files. The plugin page description and FAQ also explain more clearly what Eleva does.
+- **Compatibility:** tested with the latest WordPress (7.1.x). Update Eleva CRM Pro to 1.6.3 for encrypted quote PDFs.
 
 ### 1.6.0
 

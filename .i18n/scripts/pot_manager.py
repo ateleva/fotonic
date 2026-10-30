@@ -25,9 +25,11 @@ def parse_pot(pot_path):
         val = m.group(1)
         if val:  # skip header (empty msgid)
             msgids.add(val.replace('\\"', '"').replace('\\\\', '\\').replace('\\n', '\n'))
-    # Handle multi-line msgids
-    for m in re.finditer(r'^msgid\s+""\s*\n((?:"(?:[^"\\]|\\.)*"\s*\n)+)', content, re.MULTILINE):
-        parts = re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(0))
+    # Handle multi-line msgids, both `msgid ""` + continuation lines and the gettext form
+    # where the first line already has text (`msgid "first\n"` + continuation lines). Without
+    # the second form such entries never match the extracted string and are re-added on every run.
+    for m in re.finditer(r'^msgid\s+((?:"(?:[^"\\]|\\.)*"[ \t]*\n)+)', content, re.MULTILINE):
+        parts = re.findall(r'"((?:[^"\\]|\\.)*)"', m.group(1))
         full = ''.join(parts)
         if full:
             msgids.add(full.replace('\\"', '"').replace('\\\\', '\\').replace('\\n', '\n'))

@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { fetchVaultStatus, vaultUnlock, vaultLock } from '../api/vault'
 
 // A real default (not null) so any render that happens outside VaultProvider,
@@ -30,6 +31,7 @@ const ACTIVITY_EVENTS = ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scr
 
 export function VaultProvider({ children }) {
   const [isUnlocked, setIsUnlocked] = useState(false)
+  const queryClient = useQueryClient()
   const [idleWarning, setIdleWarning] = useState(false)
 
   // eslint-disable-next-line react-hooks/purity
@@ -55,7 +57,7 @@ export function VaultProvider({ children }) {
     timerRef.current = setInterval(() => {
       const elapsed = Date.now() - lastActivityRef.current
       if (elapsed >= IDLE_LOCK_MS) {
-        lockRef.current?.()
+        lockRef.current?.('device')
       } else if (elapsed >= IDLE_WARN_MS) {
         setIdleWarning(true)
       }
@@ -78,9 +80,10 @@ export function VaultProvider({ children }) {
   // lock
   // ---------------------------------------------------------------------------
 
-  const lock = useCallback(async () => {
+  // `scope` is 'device' only from the idle timer; a click handler passes an event, which means "everywhere".
+  const lock = useCallback(async (scope) => {
     stopIdleTimer()
-    try { await vaultLock() } catch { /* ignore network errors on lock */ }
+    try { await vaultLock(scope === 'device' ? 'device' : undefined) } catch { /* ignore network errors on lock */ }
     setIsUnlocked(false)
     setIdleWarning(false)
   }, [stopIdleTimer])
@@ -141,6 +144,46 @@ export function VaultProvider({ children }) {
     lastActivityRef.current = Date.now()
     setIdleWarning(false)
   }, [])
+
+  // ---------------------------------------------------------------------------
+  // Locked from elsewhere: another tab, browser or device pressed Lock (or the Vault epoch changed:
+  // password change, recovery, reset). Most reads do not fail when the Vault is locked, they just
+  // return empty personal details, so the SPA asks the server every 30 seconds and when the tab
+  // gets the focus back, and shows the lock screen as soon as the server says locked.
+  // ---------------------------------------------------------------------------
+
+  useEffect(() => {
+    if (!isUnlocked) return undefined
+    let busy = false
+    const check = async () => {
+      if (busy) return
+      busy = true
+      try {
+        const data = await fetchVaultStatus()
+        // Fresh server truth goes into the status query too: VaultGate re-opens the gate from that
+        // cache (markUnlocked) and would undo the lock below with a stale "unlocked".
+        queryClient.setQueryData(['vault-status'], data)
+        if (data?.setup === true && data?.unlocked === false) {
+          stopIdleTimer()
+          setIsUnlocked(false)
+          setIdleWarning(false)
+        }
+      } catch {
+        /* network error: keep the screen as it is */
+      } finally {
+        busy = false
+      }
+    }
+    const onVisible = () => { if (document.visibilityState === 'visible') check() }
+    const timer = setInterval(check, 30 * 1000)
+    window.addEventListener('focus', check)
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('focus', check)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [isUnlocked, stopIdleTimer, queryClient])
 
   // ---------------------------------------------------------------------------
   // Cleanup on unmount

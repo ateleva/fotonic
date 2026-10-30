@@ -77,7 +77,7 @@ export default function BackupSettingsSection({ onSetupVault }) {
     return (
       <div className="space-y-3">
         <p className="text-sm text-gray-500">
-          {__('Encrypted backups reuse your Vault password and authenticator, so the Vault must be set up first.', 'eleva-crm-for-photographers')}
+          {__('Encrypted backups are protected by your Vault password, so the Vault must be set up first.', 'eleva-crm-for-photographers')}
         </p>
         <button
           type="button"
@@ -171,13 +171,13 @@ export default function BackupSettingsSection({ onSetupVault }) {
       {status.drift_count > 0 && (
         <p className="text-xs text-amber-600 flex items-start gap-1.5">
           <AlertTriangle size={12} className="shrink-0 mt-0.5" />
-          {__('This backup may be missing recently added fields. Contact support if a restored backup ever looks incomplete.', 'eleva-crm-for-photographers')}
+          {__('This backup may be missing recently added fields. Contact support if a backup ever looks incomplete.', 'eleva-crm-for-photographers')}
         </p>
       )}
 
       <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
         <p className="text-xs text-blue-900">
-          {__('This archive can only be opened with your vault password and authenticator code. Nobody else can read it.', 'eleva-crm-for-photographers')}
+          {__('This archive can only be opened with your vault password or your recovery code. A strong vault password (minimum 8 characters, longer is safer) is what keeps it safe if the file is ever copied, so keep the file private. Nobody else can read it.', 'eleva-crm-for-photographers')}
         </p>
         <p className="text-xs text-blue-900">
           {__('If you lose your vault password and your recovery code and your recovery phrase, this archive can never be opened.', 'eleva-crm-for-photographers')}

@@ -16,6 +16,7 @@ import VaultSetup from '../vault/VaultSetup'
 import ResetVaultFlow from '../vault/ResetVaultFlow'
 import { QrCanvas } from '../vault/TotpEnroll'
 import ConfirmDialog from '../../components/ConfirmDialog'
+import PasswordInput from '../../components/PasswordInput'
 import { MIN_VAULT_PASSWORD } from '../../utils/recoveryKit'
 import BackupSettingsSection from './BackupSettingsSection'
 
@@ -171,16 +172,16 @@ function ChangePasswordForm() {
       </p>
       <div className="ftnc-grid-2">
         <FieldRow label={__('Current Password', 'eleva-crm-for-photographers')} required>
-          <input type="password" value={form.current_password} onChange={handleChange('current_password')} autoComplete="current-password" className={inputCls} />
+          <PasswordInput value={form.current_password} onChange={handleChange('current_password')} autoComplete="current-password" className={inputCls} />
         </FieldRow>
         <FieldRow label={__('Current OTP Code', 'eleva-crm-for-photographers')} required>
           <input type="text" inputMode="numeric" maxLength={6} value={form.otp} onChange={handleChange('otp')} placeholder="000000" autoComplete="one-time-code" className={inputCls + ' font-mono tracking-widest'} />
         </FieldRow>
         <FieldRow label={__('New Password', 'eleva-crm-for-photographers')} required>
-          <input type="password" value={form.new_password} onChange={handleChange('new_password')} autoComplete="new-password" className={inputCls} />
+          <PasswordInput value={form.new_password} onChange={handleChange('new_password')} autoComplete="new-password" className={inputCls} />
         </FieldRow>
         <FieldRow label={__('Confirm New Password', 'eleva-crm-for-photographers')} required>
-          <input type="password" value={form.confirm} onChange={handleChange('confirm')} autoComplete="new-password" className={inputCls} />
+          <PasswordInput value={form.confirm} onChange={handleChange('confirm')} autoComplete="new-password" className={inputCls} />
         </FieldRow>
       </div>
       {error && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>}
@@ -253,7 +254,7 @@ function ResetTotpForm() {
         <form onSubmit={handleSubmit} className="space-y-3">
           <div className="ftnc-grid-2">
             <FieldRow label={__('Vault Password', 'eleva-crm-for-photographers')} required>
-              <input type="password" value={form.password} onChange={f('password')} autoComplete="current-password" className={inputCls} />
+              <PasswordInput value={form.password} onChange={f('password')} autoComplete="current-password" className={inputCls} />
             </FieldRow>
             <FieldRow label={__('Current OTP Code', 'eleva-crm-for-photographers')} required>
               <input type="text" inputMode="numeric" maxLength={6} value={form.otp} onChange={f('otp')} placeholder="000000" className={inputCls + ' font-mono tracking-widest'} />

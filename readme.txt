@@ -1,18 +1,18 @@
 === Eleva CRM for Photographers ===
 Contributors: eleva
-Tags: photography-crm, client-management, booking, invoicing, photographers
+Tags: crm, photography, photographer, client-management, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-The CRM for wedding and event photographers: clients, bookings, payments, and an encrypted vault, all inside your own WordPress admin.
+Free CRM for wedding and event photographers: clients, bookings, payments and memory cards, with an encrypted vault. No subscription.
 
 == Description ==
 
-Eleva is the CRM built for wedding and event photographers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
+Eleva is a free photography business manager and CRM, built for wedding and event photographers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
 
 You already have enough to think about on shoot day. Eleva handles the rest: who is getting married and when, what they owe and what they have paid, which memory card belongs to which shoot, and where every contract and file lives. The client details that matter most, names, contacts, home addresses, are protected by a dedicated encryption vault, so a leaked database never hands anyone a usable list of your clients.
 
@@ -53,6 +53,14 @@ Eleva CRM Pro is a separate, optional add-on. If you choose to connect it to Goo
 
 Wedding and event photographers who want a CRM built around how a shoot actually works: one client, one date, a handful of payments, and a stack of files, not a generic sales pipeline.
 
+= Is there a free CRM for photographers in WordPress? =
+
+Yes. Eleva is a free CRM that runs inside your own WordPress admin. It keeps your clients, bookings, payments, files and calendar in one place, with no monthly fee and no feature locked behind an upgrade.
+
+= What can I manage with Eleva? =
+
+Eleva works as a photography business manager. You can track customers (with more than one contact per booking), your catalog of services and prices, every booking with its date, locations and files, deposits and balances with automatic Paid, Partial or Unpaid status, a monthly calendar, and an inventory of your memory cards. Client details stay encrypted in your own database.
+
 = Do I need a subscription? =
 
 No. Eleva is free, with no monthly fee and no feature paywall inside the app. An optional paid add-on, Eleva CRM Pro, exists for studios that want a team (collaborators), a Kanban board, analytics, quotes with VAT and PDF, and automatic scheduled backups to Google Drive, but nothing in the free plugin nags you to upgrade.
@@ -91,13 +99,13 @@ No. Eleva only loads on its own admin screen inside WP Admin; it adds nothing to
 
 = Can I get my data out if I stop using Eleva? =
 
-Yes, any time, from the Settings page: download a complete encrypted backup of every customer, booking, service, and file. It is your data in a portable archive, not locked to the plugin.
+Yes, any time, from the Settings page: download a complete encrypted backup of every customer, booking, service, and file. It is your data in a portable archive, not locked to the plugin. A standalone command-line tool that ships with the plugin opens the archive on any computer and gives you your data as readable files. Importing a backup back into the plugin is not available yet.
 
 = Does Eleva back up my data? =
 
 Yes. From Settings, download a single encrypted archive of your entire CRM: customers, bookings, services, memory cards, and every attached file. Nothing leaves your server: the archive is built locally and saved to your own computer.
 
-That archive is encrypted with your Vault password and authenticator code before it is ever written. Nobody, including us, can open it without them, and there is no back door: lose your password, recovery code, and recovery phrase together, and the archive is unrecoverable.
+That archive is encrypted with a key protected by your Vault password before it is ever written. Nobody, including us, can open it without that password or your recovery code, and there is no back door: lose your password, recovery code, and recovery phrase together, and the archive is unrecoverable. Its protection rests on your Vault password: the minimum is 8 characters, but a longer, less guessable password is safer, so choose a strong one and keep the file private.
 
 This backs up your CRM data, not your whole WordPress site. Themes, other plugins, and unrelated content are not included.
 
@@ -143,6 +151,19 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.6.2 =
+* Security: the Vault now locks everywhere. Before, pressing Lock, changing the Vault password or recovering with your phrase or code only cleared the cookie of the browser you were using, so a copy of that cookie, or a second computer left open, kept working until the WordPress login ended. Now each of those actions refuses every earlier session on every browser and device, the 24-hour limit is checked by the server too, and a page left open elsewhere shows the lock screen within 30 seconds. After updating, everyone unlocks the Vault once.
+* Security: guessing the Vault password or a recovery code is much harder. Failed attempts are now counted for the whole Vault (5 failures in 15 minutes) and only one check runs at a time. Before, the count was kept per user and many requests sent at once could try more guesses than allowed.
+* Security: the plugin's records (customers, services, works, memory cards and payment status) no longer have screens in the classic WordPress admin and can be reached only by administrators. Before, an Editor or Author could open those screens, because they followed WordPress default permissions. Everything is managed in the Eleva CRM app; other plugins and user roles are not touched.
+* Security: private files are better protected. Backup file names now carry 32 random characters instead of 8, the protection files of the backups folder are put back if they go missing, and a new Site Health test ("Eleva CRM private files are protected") checks that your web server does not hand out the backups and Vault folders. On nginx servers, which ignore the .htaccess file that protects them on Apache, the test shows the rules to add. Nothing changes on Apache.
+* Security: stored files can now carry a Vault encryption layer, which Eleva CRM Pro 1.6.3 uses for quote PDFs because they contain client names and addresses. Such files are decrypted only for you, with the Vault unlocked, and the offline backup tool removes the layer, so a backup gives you readable files. The Reset screen warns that these files become unreadable after a reset.
+* Fix: the customer search could also match unrelated content, for example a draft page with a similar title. It now searches customers only.
+* Fix: the backup texts said that the authenticator code protects the archive. It does not: the archive is protected by your Vault password alone, so a strong password matters. The Settings page, the readme and the offline tool guide now say so, and that the minimum length is 8 characters.
+* Fix: a file that cannot be opened because the Vault was locked in another tab, window or device now explains that and what to do, instead of the generic "You do not have permission".
+* New: every password field has a show/hide button, so a mistyped password can be checked, and the copy buttons for the recovery kit, the username and the authenticator key work in every browser.
+* Change: the page text and the readme no longer suggest that a backup can be imported back into the plugin: importing is not available yet. The offline tool opens the archive and gives you your data as readable files. The plugin page description and FAQ also explain more clearly what Eleva does.
+* Compatibility: tested with the latest WordPress (7.1.x). Update Eleva CRM Pro to 1.6.3 for encrypted quote PDFs.
 
 = 1.6.1 =
 * New: Vault recovery kit. After setting up the Vault (and on the first unlock after this update) a short wizard shows your recovery phrase and recovery code, asks you to retype the last characters of each to prove you saved them, and emails the kit to the site administrator address. Settings gains "New recovery kit" to replace them at any time.
@@ -290,6 +311,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.2 =
+Security update: the Vault now locks on every browser and device, failed Vault attempts are limited per Vault, plugin records are reachable only from the Eleva CRM app, and backups are better protected. You unlock the Vault once after updating. Safe in-place update.
 
 = 1.6.1 =
 Adds a Vault recovery kit (phrase and code, shown, verified and emailed to the site administrator) and a way to rebuild password and authenticator from it without losing data, plus a safer two-step Vault setup. After updating, the first unlock asks you to save a new recovery kit. Safe in-place update, compatible with Eleva CRM Pro.

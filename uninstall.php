@@ -107,6 +107,8 @@ $ftnc_options = array(
 	'fotonic_vault_pending',
 	'fotonic_vault_pending_totp',
 	'fotonic_vault_recovery_ack',
+	'fotonic_vault_attempt_lock',
+	'fotonic_vault_epoch',
 	'fotonic_server_secret_fallback',
 	'fotonic_payment_types',
 	'fotonic_pro_license_key',
@@ -121,7 +123,7 @@ foreach ( $ftnc_options as $ftnc_option ) {
 
 // ---------------------------------------------------------------------------
 // 5. Delete all fotonic transients (rate-limit counters, reencrypt lock).
-//    Transient keys: fotonic_vault_fails_{user_id}, fotonic_vault_recovery_fails_{user_id},
+//    Transient keys: fotonic_vault_attempts_credentials, fotonic_vault_attempts_recovery,
 //    fotonic_vault_reset_code, fotonic_vault_reset_requests, fotonic_vault_reencrypt_lock.
 //    The LIKE delete below covers all of them (and the totp-used markers).
 // ---------------------------------------------------------------------------

@@ -1165,13 +1165,15 @@ class Fotonic_Meta_Boxes {
 		$term = '%' . $wpdb->esc_like( $wp_query->query_vars['s'] ) . '%';
 
 		// Scoped to the `_ftnc_people` meta key only (set in extend_customer_search_join).
-		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $wpdb->postmeta is a trusted WP core property, not user input.
-		$search .= $wpdb->prepare(
-			" OR (ftnc_people_pm.meta_value LIKE %s)",
+		$meta_match = $wpdb->prepare(
+			'(ftnc_people_pm.meta_value LIKE %s)',
 			$term
 		);
 
-		return $search;
+		// WP_Query appends the post_type, post_status and permission predicates after $search
+		// with AND. A bare " OR (...)" on the end would let this branch escape all of them
+		// (AND binds tighter than OR), so both branches go inside one parenthesised group.
+		return ' AND ( ( 1=1 ' . $search . ' ) OR ' . $meta_match . ' )';
 	}
 
 	/**

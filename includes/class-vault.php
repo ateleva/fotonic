@@ -37,6 +37,8 @@ class Fotonic_Vault {
 	const COOKIE_NAME  = 'fotonic_vault_session';
 	const COOKIE_EXPIRY = 86400; // 24 hours in seconds.
 	const CIPHER        = 'aes-256-gcm';
+	const OPTION_EPOCH  = 'fotonic_vault_epoch';        // hex(16 random bytes): every session cookie carries it, a new value locks every browser and device.
+	const COOKIE_PLAIN  = 88;                           // MK[32] || binding[32] || epoch[16] || issued-at[8].
 
 	// ---------------------------------------------------------------------------
 	// Option keys
@@ -214,6 +216,7 @@ class Fotonic_Vault {
 		// Provision the backup keypair while MK is available (idempotent).
 		Fotonic_Backup_Keys::setup( $mk );
 
+		self::rotate_epoch(); // A new Vault: no cookie from before is valid.
 		self::set_session_cookie( $mk );
 		return true;
 	}
@@ -360,6 +363,49 @@ class Fotonic_Vault {
 		unset( $_COOKIE[ self::COOKIE_NAME ] );
 	}
 
+	/**
+	 * Lock this browser AND every other browser and device: the epoch every session cookie carries
+	 * is replaced, so a cookie issued before (a second tab on another computer, or a copy of the
+	 * cookie) is refused from now on. Used by the Lock button, a Vault reset, a password change,
+	 * a recovery and a legacy migration. A WordPress login or logout only clears this browser's
+	 * cookie (lock()): the cookie is already bound to the login session, and a global lock there
+	 * would lock a second administrator who is working.
+	 *
+	 * @return void
+	 */
+	public static function lock_everywhere(): void {
+		self::rotate_epoch();
+		self::lock();
+	}
+
+	/** Replace the epoch: every session cookie issued so far stops working. */
+	public static function rotate_epoch(): void {
+		update_option( self::OPTION_EPOCH, bin2hex( random_bytes( 16 ) ), false );
+	}
+
+	/**
+	 * The current epoch as 16 raw bytes, or '' when there is none. With $create a missing epoch is
+	 * made first (add_option never overwrites, so two requests that race end up with one value).
+	 *
+	 * @param bool $create Create it when missing.
+	 * @return string
+	 */
+	private static function epoch( bool $create = false ): string {
+		$hex   = (string) get_option( self::OPTION_EPOCH, '' );
+		$valid = 32 === strlen( $hex ) && ctype_xdigit( $hex );
+		if ( ! $valid && $create ) {
+			if ( '' === $hex ) {
+				add_option( self::OPTION_EPOCH, bin2hex( random_bytes( 16 ) ), '', false );
+			} else {
+				update_option( self::OPTION_EPOCH, bin2hex( random_bytes( 16 ) ), false ); // A damaged value is replaced.
+			}
+			$hex   = (string) get_option( self::OPTION_EPOCH, '' );
+			$valid = 32 === strlen( $hex ) && ctype_xdigit( $hex );
+		}
+		$raw = $valid ? hex2bin( $hex ) : false;
+		return false === $raw ? '' : $raw;
+	}
+
 	// ---------------------------------------------------------------------------
 	// Password management
 	// ---------------------------------------------------------------------------
@@ -408,7 +454,8 @@ class Fotonic_Vault {
 		update_option( self::OPTION_SALT_PW, $new_salt_pw, false );
 		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
 
-		// Refresh session cookie with same MK.
+		// New epoch: every other browser and device is locked; this one gets a fresh cookie with the same MK.
+		self::rotate_epoch();
 		self::update_session_key( $mk );
 		return true;
 	}
@@ -465,6 +512,7 @@ class Fotonic_Vault {
 		update_option( self::OPTION_SALT_PW, $new_salt_pw, false );
 		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
 
+		self::rotate_epoch(); // A recovery locks every other browser and device.
 		self::set_session_cookie( $mk );
 
 		return false !== self::stage_pending_totp();
@@ -686,13 +734,14 @@ class Fotonic_Vault {
 		// Reset-code state dies with the vault it was meant to reset.
 		delete_transient( self::TRANSIENT_RESET_CODE );
 		delete_transient( self::TRANSIENT_RESET_REQUESTS );
-		delete_transient( 'fotonic_vault_recovery_fails_' . get_current_user_id() );
-		// A fresh vault starts with a clean unlock/confirm counter, otherwise a
-		// user who failed unlocks before resetting is refused at setup confirm.
-		delete_transient( 'fotonic_vault_fails_' . get_current_user_id() );
+		// A fresh vault starts with clean attempt counters (unlock/confirm and recovery),
+		// otherwise someone who failed unlocks before resetting is refused at setup confirm.
+		Fotonic_Vault_Attempts::clear_all();
 		// Destroying MK strands the wrapped backup private key — it could never be
 		// unwrapped again. Drop both halves so the next setup() mints a fresh pair.
 		Fotonic_Backup_Keys::delete_all();
+		// No epoch at all: no session cookie is valid until a new Vault is set up.
+		delete_option( self::OPTION_EPOCH );
 		self::lock();
 		return true;
 	}
@@ -716,8 +765,9 @@ class Fotonic_Vault {
 
 		$blob = base64_decode( sanitize_text_field( wp_unslash( $_COOKIE[ self::COOKIE_NAME ] ) ), true );
 
-		// 12-byte nonce + 16-byte GCM tag + 64-byte plaintext (MK[32] || binding[32]).
-		if ( false === $blob || strlen( $blob ) < 92 ) {
+		// 12-byte nonce + 16-byte GCM tag + 88-byte plaintext (MK[32] || binding[32] || epoch[16] || issued-at[8]).
+		// A cookie from before the epoch existed (64-byte plaintext) is shorter: it counts as locked.
+		if ( false === $blob || strlen( $blob ) !== 28 + self::COOKIE_PLAIN ) {
 			return null;
 		}
 
@@ -729,16 +779,29 @@ class Fotonic_Vault {
 
 		$plain = openssl_decrypt( $ciphertext, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag );
 
-		// Plaintext must be exactly MK[32] || login-session binding[32].
-		if ( false === $plain || strlen( $plain ) !== 64 ) {
+		if ( false === $plain || strlen( $plain ) !== self::COOKIE_PLAIN ) {
 			return null;
 		}
 
-		$key  = substr( $plain, 0, 32 );
-		$bind = substr( $plain, 32, 32 );
+		$key    = substr( $plain, 0, 32 );
+		$bind   = substr( $plain, 32, 32 );
+		$epoch  = substr( $plain, 64, 16 );
+		$issued = (int) unpack( 'J', substr( $plain, 80, 8 ) )[1];
 
 		// Reject cookies minted under a different WP login session / user.
 		if ( ! hash_equals( self::session_binding(), $bind ) ) {
+			return null;
+		}
+
+		// Reject a cookie from before the last global lock (or when there is no Vault epoch at all).
+		$current = self::epoch();
+		if ( '' === $current || ! hash_equals( $current, $epoch ) ) {
+			return null;
+		}
+
+		// The 24 hours are checked on the server too, not only by the browser's cookie expiry.
+		$now = time();
+		if ( $issued > $now + 300 || $now - $issued > self::COOKIE_EXPIRY ) {
 			return null;
 		}
 
@@ -837,6 +900,7 @@ class Fotonic_Vault {
 		// Remove the legacy plaintext-under-K TOTP option.
 		delete_option( self::OPTION_TOTP );
 
+		self::rotate_epoch();
 		self::set_session_cookie( $mk );
 
 		// This is the ONE path that replaces MK rather than re-wrapping it, so any
@@ -875,7 +939,7 @@ class Fotonic_Vault {
 	/**
 	 * Encrypt MK with the server secret and write the cookie.
 	 *
-	 * Cookie value: base64( nonce[12] || GCM-tag[16] || AES-256-GCM( MK, hash(AUTH_KEY) ) )
+	 * Cookie value: base64( nonce[12] || GCM-tag[16] || AES-256-GCM( MK || binding || epoch || issued-at, hash(AUTH_KEY) ) )
 	 *
 	 * @param string $key 32-byte MK.
 	 * @return void
@@ -885,7 +949,7 @@ class Fotonic_Vault {
 		$iv         = random_bytes( 12 );
 		$tag        = '';
 		// Bind the session to the current WP login: MK[32] || binding[32].
-		$plain      = $key . self::session_binding();
+		$plain      = $key . self::session_binding() . self::epoch( true ) . pack( 'J', time() );
 		$ciphertext = openssl_encrypt( $plain, self::CIPHER, $server_key, OPENSSL_RAW_DATA, $iv, $tag, '', 16 );
 
 		if ( false === $ciphertext ) {

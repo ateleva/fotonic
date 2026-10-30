@@ -1,7 +1,10 @@
 # How to open an Eleva CRM backup
 
 **Your computer is gone. You have a backup file and you remember your vault password.
-This page gets your data back.**
+This page opens the file and gives you your data as readable files.**
+
+Note: this tool reads a backup. It does not load it back into the plugin, because importing
+a backup into Eleva CRM is not available yet.
 
 You do not need WordPress. You do not need the plugin. You do not need your old
 computer, your old website, or an internet connection. You need the backup file,
@@ -12,10 +15,15 @@ your password, and about ten minutes.
 ## What you need in front of you
 
 1. **The backup file**: a `.zip` named something like
-   `eleva-backup-2026-08-11-120000-ab12cd34.zip`, downloaded from your Google Drive.
+   `eleva-backup-2026-08-11-120000-0123456789abcdef0123456789abcdef.zip`, downloaded from your Google Drive.
 2. **Your vault password.**
 3. **Your phone**, with the authenticator app you used to unlock the vault (for the
    6-digit code).
+
+Note on security: this tool asks for the 6-digit code as a confirmation step, but the
+archive's encryption itself is protected by your vault password (or your recovery code or
+phrase). Whoever holds the file and knows or guesses that password can read it, so choose a
+strong vault password (the minimum is 8 characters, longer is safer) and keep the backup file private.
 
 Lost the password or the phone? Skip to [If you lost your password or your phone](#if-you-lost-your-password-or-your-phone).
 
@@ -80,7 +88,7 @@ with the name of your backup file:
 
 ```bash
 cd ~/Desktop/restore
-php eleva-backup-decrypt.php eleva-backup-2026-08-11-120000-ab12cd34.zip
+php eleva-backup-decrypt.php eleva-backup-2026-08-11-120000-0123456789abcdef0123456789abcdef.zip
 ```
 
 It will:
@@ -103,9 +111,8 @@ That's it. Your data is in `out`.
 | `out/manifest.json` | A copy of the archive's inventory: what was in it, how big, and the checksums. |
 
 Personal details inside `data.json` (names, emails, phone numbers, addresses) stay
-encrypted exactly as the plugin stored them in the database. That is deliberate: the
-records are ready to be loaded straight back into a WordPress site with your vault,
-without your customers' details ever sitting in a plain text file. Work titles,
+encrypted exactly as the plugin stored them in the database. That is deliberate: your
+customers' details never sit in a plain text file. Work titles,
 prices, notes, dates and payment status are readable.
 
 ---
@@ -128,8 +135,8 @@ Dashes, spaces and capitals do not matter, type it however you wrote it down.
 
 You will still be asked for the 6-digit code, so you also need the authenticator app.
 
-**If the password, the recovery code, the recovery phrase and the authenticator are
-all gone, the archive cannot be opened.** Not by this tool, not by us, not by anyone.
+**If the password, the recovery code and the recovery phrase are all gone, the archive
+cannot be opened.** Not by this tool, not by us, not by anyone.
 That is the same guarantee that keeps your customers' data safe from whoever steals
 the backup: it cannot be true in one direction only. Look properly for the recovery
 code before giving up: it is often in a password manager, a printout, or a photo.

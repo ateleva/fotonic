@@ -2497,77 +2497,70 @@ msgstr ""
 msgid "Either one opens the vault and lets you set a new password and a new authenticator, without losing any data. Anyone who has them can open the vault."
 msgstr ""
 
-#: includes/class-vault-mailer.php:56
-msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
-"\n"
-"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
-"\n"
-"Recovery phrase: %4$s\n"
-"Recovery code: %5$s\n"
-"\n"
-"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
-"\n"
-"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
-"\n"
-"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+#: src/src/features/settings/BackupSettingsSection.jsx:80
+msgid "Encrypted backups are protected by your Vault password, so the Vault must be set up first."
 msgstr ""
 
-#: includes/class-vault-mailer.php:95
-msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
-"\n"
-"Reset code: %3$s\n"
-"\n"
-"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
-"\n"
-"If you did not ask for this, ignore this email and check your site's administrators."
+#: src/src/features/settings/BackupSettingsSection.jsx:180
+msgid "This archive can only be opened with your vault password or your recovery code. A strong vault password (minimum 8 characters, longer is safer) is what keeps it safe if the file is ever copied, so keep the file private. Nobody else can read it."
 msgstr ""
 
-#: includes/class-vault-mailer.php:56
-msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
-"\n"
-"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
-"\n"
-"Recovery phrase: %4$s\n"
-"Recovery code: %5$s\n"
-"\n"
-"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
-"\n"
-"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
-"\n"
-"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+#: src/src/components/PasswordInput.jsx:12
+msgid "Hide password"
 msgstr ""
 
-#: includes/class-vault-mailer.php:95
-msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
-"\n"
-"Reset code: %3$s\n"
-"\n"
-"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
-"\n"
-"If you did not ask for this, ignore this email and check your site's administrators."
+#: src/src/components/PasswordInput.jsx:13
+msgid "Show password"
 msgstr ""
 
-#: includes/class-vault-mailer.php:56
-msgid "This is the recovery kit for the Eleva CRM vault on %1$s (%2$s), created on %3$s.\n"
-"\n"
-"Keep this email. If you forget the vault password or lose your authenticator app, open Eleva CRM, click \"Lost your password or authenticator?\" on the vault screen and paste ONE of these:\n"
-"\n"
-"Recovery phrase: %4$s\n"
-"Recovery code: %5$s\n"
-"\n"
-"Either one opens the vault and lets you set a new password and a new authenticator, without losing any data.\n"
-"\n"
-"Anyone who reads this email can open the vault. Do not forward it. If you think someone else has seen it, open Eleva CRM > Settings > Vault and generate a new recovery kit: this one stops working at once.\n"
-"\n"
-"If you did not set up or recover the vault yourself, someone with administrator access to the site did. Check your site's administrators."
+#: src/src/components/CopyButton.jsx:30
+msgid "Could not copy. Select the text and press Ctrl+C (Cmd+C on Mac)."
 msgstr ""
 
-#: includes/class-vault-mailer.php:95
-msgid "Someone asked to reset the Eleva CRM vault on %1$s (%2$s).\n"
-"\n"
-"Reset code: %3$s\n"
-"\n"
-"The code expires in 15 minutes. Resetting the vault makes every piece of data already encrypted unreadable forever.\n"
-"\n"
-"If you did not ask for this, ignore this email and check your site's administrators."
+#: includes/class-site-health.php:19
+msgid "Eleva CRM private files are protected"
+msgstr ""
+
+#: includes/class-site-health.php:116
+msgid "Security"
+msgstr ""
+
+#: includes/class-site-health.php:117
+msgid "Eleva CRM keeps backups, quote PDFs and Vault files in folders that the web must not serve. A test file placed in each folder was refused by your web server."
+msgstr ""
+
+#: includes/class-site-health.php:123
+msgid "Eleva CRM private files can be downloaded without logging in"
+msgstr ""
+
+#: includes/class-site-health.php:128
+msgid "A test file placed in these Eleva CRM folders was served to anyone who knows its address: %s. Your web server ignores the .htaccess file that protects them (this happens on nginx). Until you block the folders, backups and quote PDFs are protected only by their long random file names."
+msgstr ""
+
+#: includes/class-site-health.php:132
+msgid "Add these rules to the server block of your site in the nginx configuration (or ask your hosting provider to), then reload nginx. Apache servers need nothing."
+msgstr ""
+
+#: includes/class-site-health.php:135
+msgid "Eleva CRM could not check whether its private files are protected"
+msgstr ""
+
+#: includes/class-site-health.php:137
+msgid "The check could not reach your own site over HTTP, so nothing was verified. Run the test again later. If it keeps failing, make sure a file inside wp-content/uploads/fotonic/backups cannot be opened in a browser."
+msgstr ""
+
+#: src/src/features/settings/BackupSettingsSection.jsx:174
+msgid "This backup may be missing recently added fields. Contact support if a backup ever looks incomplete."
+msgstr ""
+
+#: includes/class-rest-api.php:629
+msgid "This file is encrypted and cannot be opened with the current Vault key."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:115
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable, and so will the quote PDFs already generated."
+msgstr ""
+
+#: includes/class-rest-api.php:384
+msgid "The Vault is locked, so this file cannot be opened. Unlock the Vault (it may have been locked in another tab or window) and try again."
 msgstr ""
