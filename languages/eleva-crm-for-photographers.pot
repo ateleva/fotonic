@@ -18,11 +18,6 @@ msgstr ""
 msgid "CRM"
 msgstr ""
 
-#: includes/class-activator.php:8
-msgid ""
-"Fotonic requires the PHP OpenSSL extension. Please enable it on your server."
-msgstr ""
-
 #: includes/class-rest-api.php:333
 msgid ""
 "Vault is already configured. Use change-password to update credentials."
@@ -1294,10 +1289,6 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/src/features/settings/SettingsPage.jsx:649
-msgid "Eleva Pro License"
-msgstr ""
-
 #: src/src/features/settings/SettingsPage.jsx:654
 msgid "Vault"
 msgstr ""
@@ -1994,10 +1985,6 @@ msgstr ""
 msgid "Automatic Backups"
 msgstr ""
 
-#: src/src/features/settings/SettingsPage.jsx:730
-msgid "Automatic backups to Google Drive require an active Eleva Pro license."
-msgstr ""
-
 #: src/src/features/works/FilesSection.jsx:112
 msgid "These files exceed the %s limit and were skipped:"
 msgstr ""
@@ -2563,4 +2550,16 @@ msgstr ""
 
 #: includes/class-rest-api.php:384
 msgid "The Vault is locked, so this file cannot be opened. Unlock the Vault (it may have been locked in another tab or window) and try again."
+msgstr ""
+
+#: includes/class-activator.php:8
+msgid "Eleva CRM for Photographers requires the PHP OpenSSL extension. Please enable it on your server."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:435
+msgid "Eleva CRM Pro License"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:511
+msgid "Automatic backups to Google Drive require an active Eleva CRM Pro license."
 msgstr ""

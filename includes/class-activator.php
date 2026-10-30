@@ -4,8 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Fotonic_Activator {
     public static function activate(): void {
         if ( ! extension_loaded( 'openssl' ) ) {
-            deactivate_plugins( 'fotonic/fotonic.php' );
-            wp_die( esc_html__( 'Fotonic requires the PHP OpenSSL extension. Please enable it on your server.', 'eleva-crm-for-photographers' ) );
+            deactivate_plugins( plugin_basename( FOTONIC_DIR . 'fotonic.php' ) );
+            wp_die( esc_html__( 'Eleva CRM for Photographers requires the PHP OpenSSL extension. Please enable it on your server.', 'eleva-crm-for-photographers' ) );
         }
 
         $upload_dir = wp_upload_dir();
@@ -17,7 +17,7 @@ class Fotonic_Activator {
             // prompts that are unavailable during activation hooks. The path is fully controlled
             // (built from wp_upload_dir()), contains no user input, and is a one-time write.
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
-            file_put_contents( $vault_dir . '/.htaccess', "Require all denied\n# Block direct access to Fotonic vault files\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order deny,allow\n    Deny from all\n</IfModule>" );
+            file_put_contents( $vault_dir . '/.htaccess', "Require all denied\n# Block direct access to Eleva CRM vault files\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order deny,allow\n    Deny from all\n</IfModule>" );
         }
 
         add_option( 'fotonic_vault_enabled', false );

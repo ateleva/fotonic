@@ -187,7 +187,7 @@ class Fotonic_Backup_Cipher {
             throw new \RuntimeException( 'Truncated archive: incomplete header.' );
         }
         if ( 0 !== strncmp( $header, self::MAGIC, 8 ) ) {
-            throw new \RuntimeException( 'Not a Fotonic backup stream, or unsupported format version.' );
+            throw new \RuntimeException( 'Not an Eleva CRM backup stream, or unsupported format version.' );
         }
 
         // Authoritative prefix comes from the header, which every record's AAD

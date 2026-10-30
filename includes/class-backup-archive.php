@@ -217,7 +217,7 @@ class Fotonic_Backup_Archive {
         // Checked on every call, not only when the folder is created: a guard file that was deleted comes back.
         if ( ! file_exists( $dir . '/.htaccess' ) ) {
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- own controlled path, no user input; WP_Filesystem needs interactive auth unavailable here.
-            file_put_contents( $dir . '/.htaccess', "Require all denied\n# Block direct access to Fotonic backup archives\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order deny,allow\n    Deny from all\n</IfModule>" );
+            file_put_contents( $dir . '/.htaccess', "Require all denied\n# Block direct access to Eleva CRM backup archives\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order deny,allow\n    Deny from all\n</IfModule>" );
         }
         if ( ! file_exists( $dir . '/index.php' ) ) {
             // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- see above.

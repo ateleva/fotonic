@@ -432,7 +432,7 @@ export default function SettingsPage() {
 
       <div className="ftnc-stack">
         {LicenseSettingsSection && (
-          <SectionCard id="ftnc-sec-license" title={__('Eleva Pro License', 'eleva-crm-for-photographers')} icon={Key}>
+          <SectionCard id="ftnc-sec-license" title={__('Eleva CRM Pro License', 'eleva-crm-for-photographers')} icon={Key}>
             <LicenseSettingsSection />
           </SectionCard>
         )}
@@ -508,7 +508,7 @@ export default function SettingsPage() {
         {window.FotonicApp?.isPro && !window.FotonicApp?.features?.backup && (
           <SectionCard id="ftnc-sec-auto-backups" title={__('Automatic Backups', 'eleva-crm-for-photographers')} icon={UploadCloud}>
             <p className="text-sm text-gray-400">
-              {__('Automatic backups to Google Drive require an active Eleva Pro license.', 'eleva-crm-for-photographers')}
+              {__('Automatic backups to Google Drive require an active Eleva CRM Pro license.', 'eleva-crm-for-photographers')}
             </p>
           </SectionCard>
         )}

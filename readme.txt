@@ -14,7 +14,7 @@ Free CRM for wedding and event photographers: clients, bookings, payments and me
 
 Eleva CRM for Photographers is a free business manager built for wedding and event photographers and video makers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
 
-You already have enough to think about on shoot day. Eleva handles the rest: who is getting married and when, what they owe and what they have paid, which memory card belongs to which shoot, and where every contract and file lives. The client details that matter most, names, contacts, home addresses, are protected by a dedicated encryption vault, so a leaked database never hands anyone a usable list of your clients.
+You already have enough to think about on shoot day. Eleva CRM for Photographers handles the rest: who is getting married and when, what they owe and what they have paid, which memory card belongs to which shoot, and where every contract and file lives. The client details that matter most, names, contacts, home addresses, are protected by a dedicated encryption vault, so a leaked database never hands anyone a usable list of your clients.
 
 = Features =
 
@@ -34,7 +34,7 @@ You already have enough to think about on shoot day. Eleva handles the rest: who
 
 = No dependencies, nothing leaves your server =
 
-Eleva doesn't require ACF, WooCommerce, or any other plugin, and makes zero outbound requests of its own: nothing is ever sent to us or to anyone else. Every byte of your data stays in your own WordPress database, on your own server.
+Eleva CRM for Photographers doesn't require ACF, WooCommerce, or any other plugin, and makes zero outbound requests of its own: nothing is ever sent to us or to anyone else. Every byte of your data stays in your own WordPress database, on your own server.
 
 Eleva CRM Pro is a separate, optional add-on. If you choose to connect it to Google Calendar or Google Drive, those are its own connections, made only when you turn them on, never by the free plugin.
 
@@ -43,15 +43,15 @@ Eleva CRM Pro is a separate, optional add-on. If you choose to connect it to Goo
 1. Download the plugin ZIP from WordPress.org.
 2. Go to Plugins > Add New > Upload Plugin in your WordPress admin.
 3. Upload the ZIP and click Install Now, then Activate.
-4. Navigate to Eleva in the WP Admin sidebar.
+4. Open CRM in the WP Admin sidebar.
 5. On first launch, set your Vault master password and scan the QR code with an authenticator app (Google Authenticator, Authy, or any TOTP-compatible app).
 6. Enter your Vault password and the current OTP code to unlock the CRM.
 
 == Frequently Asked Questions ==
 
-= Who is Eleva for? =
+= Who is this CRM for? =
 
-Wedding and event photographers who want a CRM built around how a shoot actually works: one client, one date, a handful of payments, and a stack of files, not a generic sales pipeline.
+Wedding and event photographers and video makers who want a CRM built around how a shoot actually works: one client, one date, a handful of payments, and a stack of files, not a generic sales pipeline.
 
 = Is there a free CRM for photographers in WordPress? =
 
@@ -63,15 +63,15 @@ Eleva CRM for Photographers is a business manager for your photography work. You
 
 = Do I need a subscription? =
 
-No. Eleva is free, with no monthly fee and no feature paywall inside the app. An optional paid add-on, Eleva CRM Pro, exists for studios that want a team (collaborators), a Kanban board, analytics, quotes with VAT and PDF, and automatic scheduled backups to Google Drive, but nothing in the free plugin nags you to upgrade.
+No. Eleva CRM for Photographers is free, with no monthly fee and no feature paywall inside the app. An optional paid add-on, Eleva CRM Pro, exists for studios that want a team (collaborators), a Kanban board, analytics, quotes with VAT and PDF, and automatic scheduled backups to Google Drive, but nothing in the free plugin nags you to upgrade.
 
 = Does this require ACF (Advanced Custom Fields)? =
 
-No. Eleva uses only native WordPress meta boxes and registers all custom post types itself. No third-party field plugin is required or used.
+No. The plugin uses only native WordPress meta boxes and registers all custom post types itself. No third-party field plugin is required or used.
 
 = Does this work without WooCommerce? =
 
-Yes. Eleva is completely standalone and has no dependency on WooCommerce or any other plugin.
+Yes. The plugin is completely standalone and has no dependency on WooCommerce or any other plugin.
 
 = What is the Vault? =
 
@@ -83,7 +83,7 @@ Booking details like the event date, price, and your own notes sit outside the V
 
 = What if I forget my Vault password? =
 
-Eleva gives you two separate fallbacks, both set up ahead of time from the Settings page. If you still know your password but lost your authenticator app, the one-time recovery code gets you back in. If you forgot your password itself, only the recovery phrase can reset it without losing your encrypted data. Set up both, since they cover different problems. Losing your password, your authenticator, and both recovery credentials together means the data cannot be recovered by anyone, including us. That is what makes the encryption real.
+The plugin gives you two separate fallbacks, both set up ahead of time from the Settings page. If you still know your password but lost your authenticator app, the one-time recovery code gets you back in. If you forgot your password itself, only the recovery phrase can reset it without losing your encrypted data. Set up both, since they cover different problems. Losing your password, your authenticator, and both recovery credentials together means the data cannot be recovered by anyone, including us. That is what makes the encryption real.
 
 = Does the plugin work on shared hosting? =
 
@@ -91,17 +91,17 @@ Yes. It needs PHP 7.4 or higher and WordPress 6.0 or higher, both standard on mo
 
 = Where is my data stored? =
 
-Entirely in your own WordPress database. Eleva makes no external HTTP requests and sends no data to any external server, ours or anyone else's. You own and control your data completely.
+Entirely in your own WordPress database. The plugin makes no external HTTP requests and sends no data to any external server, ours or anyone else's. You own and control your data completely.
 
-= Will Eleva slow down my site? =
+= Will the plugin slow down my site? =
 
-No. Eleva only loads on its own admin screen inside WP Admin; it adds nothing to your public-facing site, so visitor-facing performance is unaffected.
+No. The plugin only loads on its own admin screen inside WP Admin; it adds nothing to your public-facing site, so visitor-facing performance is unaffected.
 
-= Can I get my data out if I stop using Eleva? =
+= Can I get my data out if I stop using the plugin? =
 
 Yes, any time, from the Settings page: download a complete encrypted backup of every customer, booking, service, and file. It is your data in a portable archive, not locked to the plugin. A standalone command-line tool that ships with the plugin opens the archive on any computer and gives you your data as readable files. Importing a backup back into the plugin is not available yet.
 
-= Does Eleva back up my data? =
+= Does the plugin back up my data? =
 
 Yes. From Settings, download a single encrypted archive of your entire CRM: customers, bookings, services, memory cards, and every attached file. Nothing leaves your server: the archive is built locally and saved to your own computer.
 
@@ -251,7 +251,7 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Security: the vault file download ownership check now compares file IDs exactly, closing a gap where the previous check could match the wrong file in rare cases.
 * Security: the password-derived encryption key now uses 600,000 rounds of iteration (up from 100,000), matching current OWASP guidance. Existing vaults keep working exactly as before.
 * Security: the customer search filter is now scoped precisely to customer contact fields.
-* Fix: admin notices, including security and update warnings, are no longer suppressed on the Eleva screen.
+* Fix: admin notices, including security and update warnings, are no longer suppressed on the CRM screen.
 * Reliability: if a required encryption extension is missing on activation, the plugin now deactivates itself cleanly instead of leaving things in a broken state.
 * i18n: translator notes added to strings containing placeholders, improving translation accuracy.
 

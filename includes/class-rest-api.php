@@ -3316,7 +3316,7 @@ class Fotonic_REST_API {
 		$ip      = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ?? 'unknown' ) );
 		$context = array_merge( [ 'user_id' => $user_id, 'ip' => $ip ], $extra );
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( '[Fotonic Vault] ' . $event . ' ' . wp_json_encode( $context ) );
+		error_log( '[Eleva CRM Vault] ' . $event . ' ' . wp_json_encode( $context ) );
 	}
 
 	private static function looks_encrypted( string $value ): bool {

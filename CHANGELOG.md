@@ -31,7 +31,7 @@
 
 ### Fixed
 
-- Dashboard: `get_dashboard_stats()` now scopes each payment installment by its own date instead of its parent work's event date — matching Fotonic Pro's `/analytics` endpoint. A payment dated in a different year than its work's event was previously double-counted in one report and missing from the other.
+- Dashboard: `get_dashboard_stats()` now scopes each payment installment by its own date instead of its parent work's event date — matching Eleva CRM Pro's `/analytics` endpoint. A payment dated in a different year than its work's event was previously double-counted in one report and missing from the other.
 - Google Calendar: removing an event from the Calendar view no longer appears to succeed when the request actually failed — the failure is now logged and the popup stays open instead of closing as if nothing went wrong.
 - Settings page: the Vault and Backup sections' description text no longer renders capped to a narrow reading-width column, leaving a large empty gap beside it; text now fills the panel the same way every other section already did.
 
@@ -89,7 +89,7 @@
 
 ### Changed
 
-- **Admin notice handling**: dropped the `remove_all_actions()` calls on `admin_notices`, `all_admin_notices`, `network_admin_notices`, and `user_admin_notices` on the Fotonic SPA page. Security and update warnings still fire (so administrators are not blinded to important messages); they are only hidden visually inside the SPA viewport via the existing scoped CSS rule. This aligns with WordPress.org guideline 11 (no admin hijacking).
+- **Admin notice handling**: dropped the `remove_all_actions()` calls on `admin_notices`, `all_admin_notices`, `network_admin_notices`, and `user_admin_notices` on the Eleva CRM app page. Security and update warnings still fire (so administrators are not blinded to important messages); they are only hidden visually inside the SPA viewport via the existing scoped CSS rule. This aligns with WordPress.org guideline 11 (no admin hijacking).
 - **Activator OpenSSL guard**: corrected `deactivate_plugins()` argument from `plugin_basename(__FILE__)` (which resolved to the activator file path, not the main plugin file) to the canonical `'fotonic/fotonic.php'` so the main plugin is properly disabled when PHP OpenSSL is unavailable.
 - **Menu icon SVG caching**: `Fotonic_Admin_Page::add_menu()` now reads the icon SVG once per request and caches the resulting data URI in a static property, avoiding redundant filesystem reads.
 
@@ -103,7 +103,7 @@
 
 ### Added
 - **Customer Works recap**: the Customer edit page in the React SPA now shows a table of all linked works below the customer form. Columns: title (link to work), date, services (comma-separated), total price, payment status badge. Footer row shows work count, sum of total price, sum paid (from installments), and sum unpaid.
-- **Taxable Price field on Work** (Pro-gated): new `Taxable Price (€)` number input displayed next to Total Price in the Work form when Fotonic Pro is active. Stored as `_ftnc_total_price_taxable` post meta. Hidden when Pro is not installed.
+- **Taxable Price field on Work** (Pro-gated): new `Taxable Price (€)` number input displayed next to Total Price in the Work form when Eleva CRM Pro is active. Stored as `_ftnc_total_price_taxable` post meta. Hidden when Pro is not installed.
 - **`customer_id` filter on GET `/works`**: REST endpoint now accepts a `customer_id` query parameter to return only works linked to a specific customer. Used internally by the customer works recap.
 
 ### i18n
@@ -117,19 +117,19 @@
 ### Added
 - **Calendar view**: monthly calendar is now a free feature — available to all users without a Pro license. Only Google Calendar sync remains Pro-only.
 - **Vault description**: Settings page now shows explanatory text in the Vault section — a detailed explanation when the vault has not yet been configured, and a short reminder when it is active.
-- **Fotonic logotype**: React SPA sidebar now shows the Fotonic SVG logotype instead of a plain text label.
-- **WP admin icon**: Fotonic menu entry in the WordPress admin sidebar now uses the custom Fotonic logo mark SVG.
+- **Eleva CRM logotype**: React SPA sidebar now shows the Eleva CRM SVG logotype instead of a plain text label.
+- **WP admin icon**: the CRM menu entry in the WordPress admin sidebar now uses the custom Eleva CRM logo mark SVG.
 - **GitHub README**: plugin logo (icon-256x256.png) shown above the title on the repository page.
 
 ### Changed
 - Calendar month names and event date labels now respect the WordPress site language (derived from `window.FotonicApp.locale`) instead of the browser/OS locale.
-- WP admin footer (`#wpfooter`) is hidden on the Fotonic admin page; `#wpbody-content` bottom padding removed so the React SPA fills the viewport without overflow.
+- WP admin footer (`#wpfooter`) is hidden on the Eleva CRM admin page; `#wpbody-content` bottom padding removed so the React SPA fills the viewport without overflow.
 
 ### Fixed
-- Work Owner and Collaborators fields no longer appear in the `ftnc_work` classic editor or React form when Fotonic Pro is not installed or the license is not valid. Calendar Color remains visible to all users.
+- Work Owner and Collaborators fields no longer appear in the `ftnc_work` classic editor or React form when Eleva CRM Pro is not installed or the license is not valid. Calendar Color remains visible to all users.
 - Settings sidebar: active nav item now has correct right-side padding and full border-radius (was clipped on the right edge).
 - Works list: payment status filter dropdown now sizes to the widest option instead of clipping the "All Statuses" label.
-- REST `/collaborator-options`: returns an empty collaborators array when Fotonic Pro is inactive, preventing a PHP error in the free plugin.
+- REST `/collaborator-options`: returns an empty collaborators array when Eleva CRM Pro is inactive, preventing a PHP error in the free plugin.
 
 ---
 
@@ -166,7 +166,7 @@
 ### Security
 - **VULN-801**: `vault/setup` REST endpoint now returns `409 Conflict` if the vault is already initialised. Previously any `manage_options` user could re-POST to the endpoint at any time, generating a new key and making all existing encrypted PII permanently unreadable.
 - **VULN-810**: Vault cookie server-secret fallback replaced. Was `get_site_url() . $wpdb->prefix` (publicly guessable). Now a 64-character random key generated once and persisted as a WordPress option.
-- **VULN-007**: `can_save()` in `class-meta-boxes.php` upgraded from `edit_post` to `manage_options` capability check, matching the REST API auth model and preventing lower-privilege users from saving Fotonic meta boxes.
+- **VULN-007**: `can_save()` in `class-meta-boxes.php` upgraded from `edit_post` to `manage_options` capability check, matching the REST API auth model and preventing lower-privilege users from saving the plugin's meta boxes.
 
 ### Changed
 - `wp_enqueue_script` updated from boolean `true` to array-style `[ 'in_footer' => true ]` (WordPress 6.3+ deprecation).

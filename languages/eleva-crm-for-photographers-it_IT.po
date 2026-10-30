@@ -20,11 +20,6 @@ msgstr ""
 msgid "CRM"
 msgstr "CRM"
 
-#: includes/class-activator.php:8
-msgid ""
-"Fotonic requires the PHP OpenSSL extension. Please enable it on your server."
-msgstr "Fotonic richiede l'estensione PHP OpenSSL. Abilitala sul tuo server."
-
 #: includes/class-rest-api.php:333
 msgid ""
 "Vault is already configured. Use change-password to update credentials."
@@ -1051,9 +1046,6 @@ msgstr "Modifica cliente"
 msgid "Eleva CRM for Photographers"
 msgstr "Eleva CRM per Fotografi"
 
-msgid "Eleva Pro License"
-msgstr "Licenza Eleva Pro"
-
 msgid "Enter a 6-digit code"
 msgstr "Inserisci un codice a 6 cifre"
 
@@ -1687,10 +1679,6 @@ msgstr "AES-256-GCM non è disponibile su questo server."
 msgid "Automatic Backups"
 msgstr "Backup automatici"
 
-msgid "Automatic backups to Google Drive require an active Eleva Pro license."
-msgstr ""
-"I backup automatici su Google Drive richiedono una licenza Eleva Pro attiva."
-
 msgid "Backup created and downloaded."
 msgstr "Backup creato e scaricato."
 
@@ -2282,3 +2270,12 @@ msgstr "Questo file è crittografato e non si può aprire con la chiave attuale 
 
 msgid "The Vault is locked, so this file cannot be opened. Unlock the Vault (it may have been locked in another tab or window) and try again."
 msgstr "Il Vault è bloccato, quindi non si può aprire questo file. Sblocca il Vault (potrebbe essersi bloccato in un'altra scheda o finestra) e riprova."
+
+msgid "Eleva CRM Pro License"
+msgstr "Licenza Eleva CRM Pro"
+
+msgid "Automatic backups to Google Drive require an active Eleva CRM Pro license."
+msgstr "I backup automatici su Google Drive richiedono una licenza Eleva CRM Pro attiva."
+
+msgid "Eleva CRM for Photographers requires the PHP OpenSSL extension. Please enable it on your server."
+msgstr "Eleva CRM for Photographers richiede l'estensione PHP OpenSSL. Abilitala sul tuo server."
