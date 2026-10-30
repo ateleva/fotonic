@@ -12,7 +12,7 @@ Free CRM for wedding and event photographers: clients, bookings, payments and me
 
 == Description ==
 
-Eleva is a free photography business manager and CRM, built for wedding and event photographers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
+Eleva CRM for Photographers is a free business manager built for wedding and event photographers and video makers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
 
 You already have enough to think about on shoot day. Eleva handles the rest: who is getting married and when, what they owe and what they have paid, which memory card belongs to which shoot, and where every contract and file lives. The client details that matter most, names, contacts, home addresses, are protected by a dedicated encryption vault, so a leaked database never hands anyone a usable list of your clients.
 
@@ -55,11 +55,11 @@ Wedding and event photographers who want a CRM built around how a shoot actually
 
 = Is there a free CRM for photographers in WordPress? =
 
-Yes. Eleva is a free CRM that runs inside your own WordPress admin. It keeps your clients, bookings, payments, files and calendar in one place, with no monthly fee and no feature locked behind an upgrade.
+Yes. Eleva CRM for Photographers is a free CRM that runs inside your own WordPress admin. It keeps your clients, bookings, payments, files and calendar in one place, with no monthly fee and no feature locked behind an upgrade.
 
-= What can I manage with Eleva? =
+= What can I manage with Eleva CRM for Photographers? =
 
-Eleva works as a photography business manager. You can track customers (with more than one contact per booking), your catalog of services and prices, every booking with its date, locations and files, deposits and balances with automatic Paid, Partial or Unpaid status, a monthly calendar, and an inventory of your memory cards. Client details stay encrypted in your own database.
+Eleva CRM for Photographers is a business manager for your photography work. You can track customers (with more than one contact per booking), your catalog of services and prices, every booking with its date, locations and files, deposits and balances with automatic Paid, Partial or Unpaid status, a monthly calendar, and an inventory of your memory cards. Client details stay encrypted in your own database.
 
 = Do I need a subscription? =
 
@@ -162,7 +162,7 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Fix: the backup texts said that the authenticator code protects the archive. It does not: the archive is protected by your Vault password alone, so a strong password matters. The Settings page, the readme and the offline tool guide now say so, and that the minimum length is 8 characters.
 * Fix: a file that cannot be opened because the Vault was locked in another tab, window or device now explains that and what to do, instead of the generic "You do not have permission".
 * New: every password field has a show/hide button, so a mistyped password can be checked, and the copy buttons for the recovery kit, the username and the authenticator key work in every browser.
-* Change: the page text and the readme no longer suggest that a backup can be imported back into the plugin: importing is not available yet. The offline tool opens the archive and gives you your data as readable files. The plugin page description and FAQ also explain more clearly what Eleva does.
+* Change: the page text and the readme no longer suggest that a backup can be imported back into the plugin: importing is not available yet. The offline tool opens the archive and gives you your data as readable files. The plugin page description and FAQ also explain more clearly what Eleva CRM for Photographers does.
 * Compatibility: tested with the latest WordPress (7.1.x). Update Eleva CRM Pro to 1.6.3 for encrypted quote PDFs.
 
 = 1.6.1 =

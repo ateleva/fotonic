@@ -110,7 +110,7 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 - **Fix:** the backup texts said that the authenticator code protects the archive. It does not: the archive is protected by your Vault password alone, so a strong password matters. The Settings page, the readme and the offline tool guide now say so, and that the minimum length is 8 characters.
 - **Fix:** a file that cannot be opened because the Vault was locked in another tab, window or device now explains that and what to do, instead of the generic "You do not have permission".
 - **New:** every password field has a show/hide button, so a mistyped password can be checked, and the copy buttons for the recovery kit, the username and the authenticator key work in every browser.
-- **Change:** the page text and the readme no longer suggest that a backup can be imported back into the plugin: importing is not available yet. The offline tool opens the archive and gives you your data as readable files. The plugin page description and FAQ also explain more clearly what Eleva does.
+- **Change:** the page text and the readme no longer suggest that a backup can be imported back into the plugin: importing is not available yet. The offline tool opens the archive and gives you your data as readable files. The plugin page description and FAQ also explain more clearly what Eleva CRM for Photographers does.
 - **Compatibility:** tested with the latest WordPress (7.1.x). Update Eleva CRM Pro to 1.6.3 for encrypted quote PDFs.
 
 ### 1.6.0
