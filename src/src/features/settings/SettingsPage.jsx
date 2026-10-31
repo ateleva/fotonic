@@ -446,15 +446,19 @@ export default function SettingsPage() {
                 <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
                   <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe', 'eleva-crm-for-photographers')}</p>
                   <p className="ftnc-prose text-sm text-blue-800">
-                    {__('The Vault protects the personal details you store for each client: names, phone numbers, email addresses, and home addresses. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database.', 'eleva-crm-for-photographers')}
+                    {__('The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes and your service catalog. With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients, works and quotes stay readable.', 'eleva-crm-for-photographers')}
                   </p>
                   <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
                     <li>{__('Pick a strong master password (at least 8 characters) and store it somewhere safe.', 'eleva-crm-for-photographers')}</li>
                     <li>{__('Download any free authenticator app on your phone (Google Authenticator, Authy, or similar) and scan a QR code to add a second check each time you open the Vault.', 'eleva-crm-for-photographers')}</li>
                     <li>{__('Right after setup you will get a recovery phrase and a recovery code, also emailed to the site administrator. Keep them safe: they are your fallback if you lose access.', 'eleva-crm-for-photographers')}</li>
                     <li>{__('Lock the Vault when you finish working to keep client details protected.', 'eleva-crm-for-photographers')}</li>
+                    <li>{__('Turning the Vault on also encrypts the data you have already entered: a window shows the progress, and you keep it open until it finishes.', 'eleva-crm-for-photographers')}</li>
                   </ul>
                 </div>
+                <p className="text-sm text-amber-800 rounded-md bg-amber-50 border border-amber-200 px-3 py-2">
+                  {__('The Vault is off: your personal data is stored as plain text and encrypted backups are not available.', 'eleva-crm-for-photographers')}
+                </p>
                 <button
                   type="button"
                   onClick={() => setShowSetup(true)}

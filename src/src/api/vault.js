@@ -11,6 +11,15 @@ export const fetchVaultStatus = () => apiFetch('vault/status')
 
 export const vaultUnlock = (data) => post('vault/unlock', data)
 
+// First-run choice: "Not now" (the other answer is the setup wizard).
+export const setVaultChoice = (choice) => post('vault/choice', { choice })
+
+// Encrypt-existing job: one step per call, until the status is 'done'.
+export const encryptExistingStep = () => post('vault/encrypt-existing')
+export const pauseEncrypt = () => post('vault/encrypt-existing/pause')
+export const resumeEncrypt = () => post('vault/encrypt-existing/resume')
+export const cancelEncrypt = () => post('vault/encrypt-existing/cancel')
+
 // Lock button: locks every browser and device. scope 'device' (the idle timer) only locks this browser.
 export const vaultLock = (scope) =>
   post('vault/lock', scope === 'device' ? { scope: 'device' } : {})

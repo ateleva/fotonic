@@ -7,6 +7,10 @@ import Spinner from '../../components/Spinner'
 import Button from '../../components/Button'
 import VaultLock from './VaultLock'
 import RecoveryKitWizard from './RecoveryKitWizard'
+import VaultChoiceScreen from './VaultChoiceScreen'
+import EncryptExistingScreen from './EncryptExistingScreen'
+import EncryptPausedBar from './EncryptPausedBar'
+import { showChoice, encryptView, readDismissed, writeDismissed } from '../../utils/vaultFlow'
 import TotpEnroll from './TotpEnroll'
 import { __ } from '../../utils/i18n'
 
@@ -82,6 +86,8 @@ export default function VaultGate({ router }) {
   const { silentReopen, isUnlocked, markUnlocked } = useVault()
   const [isTryingReopen, setIsTryingReopen] = useState(false)
   const [reopenDone, setReopenDone]         = useState(false)
+  // "Cancel and continue later" on a failed encryption hides its screen until the page is reloaded.
+  const [encryptDismissed, setEncryptDismissed] = useState(readDismissed)
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['vault-status'],
@@ -136,7 +142,11 @@ export default function VaultGate({ router }) {
     )
   }
 
-  // Vault not set up — render app (VaultSetup is accessible via settings)
+  // No Vault and the person was never asked: the first-run choice. Once answered ("Not now"), or after a
+  // reset, the app opens and the Vault can be turned on from Settings.
+  if (showChoice(data)) {
+    return <VaultChoiceScreen />
+  }
   if (data?.setup === false) {
     return <RouterProvider router={router} />
   }
@@ -161,7 +171,22 @@ export default function VaultGate({ router }) {
   // resets wizard state.
   if (isUnlocked && data?.totp_pending) return <PendingTotpScreen />
 
-  if (isUnlocked && data?.kit_ok === false) return <RecoveryKitWizard />
+  // Data entered before the Vault (or before a release added protected fields) is encrypted first, then the
+  // recovery kit. A paused job leaves the app open under a floating bar.
+  const encView = isUnlocked ? encryptView(data, encryptDismissed) : null
+  if (encView === 'modal') {
+    return (
+      <EncryptExistingScreen
+        encrypt={data.encrypt}
+        onDismiss={() => { writeDismissed(); setEncryptDismissed(true) }}
+      />
+    )
+  }
 
-  return <RouterProvider router={router} />
+  return (
+    <>
+      {isUnlocked && data?.kit_ok === false ? <RecoveryKitWizard /> : <RouterProvider router={router} />}
+      {encView === 'bar' && <EncryptPausedBar encrypt={data.encrypt} />}
+    </>
+  )
 }

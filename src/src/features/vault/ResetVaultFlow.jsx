@@ -112,7 +112,7 @@ export default function ResetVaultFlow({ allowCredentials = false, onDone }) {
             {__('This action is irreversible.', 'eleva-crm-for-photographers')}
           </p>
           <p className="text-sm text-red-700 mt-1">
-            {__('The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted client data will become unreadable, and so will the quote PDFs already generated.', 'eleva-crm-for-photographers')}
+            {__('The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, event addresses, notes, the service catalog and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated.', 'eleva-crm-for-photographers')}
           </p>
         </div>
 

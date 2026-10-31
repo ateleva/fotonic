@@ -26,8 +26,8 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
         return {
           ...row,
           service_id: val,
-          service_title: svc ? svc.title : '',
-          price_override: svc ? svc.base_price : '',
+          service_title: svc ? (svc.title ?? '') : '',
+          price_override: svc ? (svc.base_price ?? '') : '', // null = the price could not be read: leave the field empty
         }
       }
       return { ...row, [field]: val }
@@ -60,7 +60,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                       <option value="">{__('Select service', 'eleva-crm-for-photographers')}</option>
                       {services.map((svc) => (
                         <option key={svc.id} value={svc.id}>
-                          {svc.title}
+                          {svc.title ?? ''}
                         </option>
                       ))}
                     </select>
