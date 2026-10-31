@@ -63,6 +63,7 @@ $ftnc_meta_prefixes = array(
 	'_ftnc_backup_done',
 	'_ftnc_formatting_done',
 	'_ftnc_notifications',
+	'_ftnc_uid',
 );
 
 foreach ( $ftnc_meta_prefixes as $ftnc_key ) {
@@ -109,6 +110,11 @@ $ftnc_options = array(
 	'fotonic_vault_recovery_ack',
 	'fotonic_vault_attempt_lock',
 	'fotonic_vault_epoch',
+	'fotonic_vault_choice',
+	'fotonic_vault_encrypt_job',
+	'fotonic_vault_encrypt_version',
+	'fotonic_vault_encrypt_lock',
+	'fotonic_uid_backfill_done',
 	'fotonic_server_secret_fallback',
 	'fotonic_payment_types',
 	'fotonic_pro_license_key',

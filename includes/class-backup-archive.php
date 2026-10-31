@@ -134,6 +134,9 @@ class Fotonic_Backup_Archive {
                 'total_size'             => 0,
             );
 
+            // Every record leaves with its uid, even when the admin backfill never ran (cron, no admin visits).
+            Fotonic_Record_Uid::ensure_all();
+
             $datasets         = Fotonic_Backup_Registry::datasets();
             $collected        = self::collect_all_datasets( $datasets, $manifest );
             $payload_datasets = $collected['payload'];

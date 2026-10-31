@@ -31,7 +31,7 @@ class Fotonic_Backup_Registry {
                 'post_type'  => 'ftnc_customer',
                 'label'      => __( 'Customers', 'eleva-crm-for-photographers' ),
                 'supports'   => [ 'title' ],
-                'meta_keys'  => [ '_ftnc_people' ],
+                'meta_keys'  => [ '_ftnc_people', '_ftnc_uid' ],
                 'taxonomies' => [],
                 'ref_fields' => [],
             ],
@@ -39,7 +39,7 @@ class Fotonic_Backup_Registry {
                 'post_type'  => 'ftnc_service',
                 'label'      => __( 'Services', 'eleva-crm-for-photographers' ),
                 'supports'   => [ 'title' ],
-                'meta_keys'  => [ '_ftnc_base_price', '_ftnc_notes' ],
+                'meta_keys'  => [ '_ftnc_base_price', '_ftnc_notes', '_ftnc_uid' ],
                 'taxonomies' => [],
                 'ref_fields' => [],
             ],
@@ -49,6 +49,7 @@ class Fotonic_Backup_Registry {
                 // 'content': post_content is the notes field on ftnc_work — do not omit.
                 'supports'   => [ 'title', 'content' ],
                 'meta_keys'  => [
+                    '_ftnc_uid',
                     '_ftnc_event_date',
                     '_ftnc_event_time_from',
                     '_ftnc_event_time_to',
@@ -94,8 +95,8 @@ class Fotonic_Backup_Registry {
                 'post_type'  => 'ftnc_memory_card',
                 'label'      => __( 'Memory Cards', 'eleva-crm-for-photographers' ),
                 'supports'   => [ 'title' ],
-                // No postmeta at all — ftnc_card_status is this CPT's only state.
-                'meta_keys'  => [],
+                // ftnc_card_status is this CPT's only state; the one postmeta is the record uid.
+                'meta_keys'  => [ '_ftnc_uid' ],
                 'taxonomies' => [
                     // NOT derived: this is the card's only state, it must round-trip.
                     'ftnc_card_status' => [ 'derived' => false ],

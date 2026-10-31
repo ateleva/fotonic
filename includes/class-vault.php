@@ -73,6 +73,9 @@ class Fotonic_Vault {
 	// Single source for the vault password minimum (client mirrors it in utils/recoveryKit.js).
 	const MIN_PASSWORD_LENGTH = 8;
 
+	// First-run choice. '' = never asked, 'skipped' = "Not now". A set-up Vault reports 'enabled'.
+	const OPTION_CHOICE = 'fotonic_vault_choice';
+
 	// ---------------------------------------------------------------------------
 	// Status helpers
 	// ---------------------------------------------------------------------------
@@ -84,6 +87,32 @@ class Fotonic_Vault {
 	 */
 	public static function is_setup(): bool {
 		return (bool) get_option( self::OPTION_SETUP, false );
+	}
+
+	/**
+	 * The person's first-run choice about the Vault.
+	 *
+	 * @return string 'enabled' (Vault set up), 'skipped' ("Not now") or '' (never asked).
+	 */
+	public static function get_choice(): string {
+		if ( self::is_setup() ) {
+			return 'enabled';
+		}
+		return 'skipped' === get_option( self::OPTION_CHOICE, '' ) ? 'skipped' : '';
+	}
+
+	/**
+	 * Remember "Not now". Nothing else can be stored, and a set-up Vault has no choice to make.
+	 *
+	 * @param string $choice Only 'skipped' is accepted.
+	 * @return bool True when stored.
+	 */
+	public static function set_choice( string $choice ): bool {
+		if ( 'skipped' !== $choice || self::is_setup() ) {
+			return false;
+		}
+		update_option( self::OPTION_CHOICE, 'skipped', false );
+		return true;
 	}
 
 	/**
@@ -218,6 +247,8 @@ class Fotonic_Vault {
 
 		self::rotate_epoch(); // A new Vault: no cookie from before is valid.
 		self::set_session_cookie( $mk );
+		// What was entered before the Vault exists is still plain: one job (not started, blocks nothing yet) encrypts it.
+		Fotonic_Vault_Encrypt_Existing::create( true );
 		return true;
 	}
 
@@ -742,6 +773,12 @@ class Fotonic_Vault {
 		Fotonic_Backup_Keys::delete_all();
 		// No epoch at all: no session cookie is valid until a new Vault is set up.
 		delete_option( self::OPTION_EPOCH );
+		// The person knows the Vault and just reset it: the reset flow sends them to the
+		// setup wizard, so the first-run choice must not ask again.
+		update_option( self::OPTION_CHOICE, 'skipped', false );
+		// A job of the destroyed Vault, and what this site had been through, mean nothing now.
+		Fotonic_Vault_Encrypt_Existing::clear();
+		delete_option( Fotonic_Vault_Encrypt_Existing::OPTION_VERSION );
 		self::lock();
 		return true;
 	}

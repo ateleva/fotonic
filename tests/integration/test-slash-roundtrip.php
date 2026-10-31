@@ -130,12 +130,12 @@ $scenario = function ( string $label, ?string $key ) use ( $rest, $meta_json, $T
     // ----- Services -----
     $res = Fotonic_REST_API::create_service( $rest( 'POST', [], [ 'title' => $T[1], 'base_price' => 10, 'notes' => $H[1] ] ) );
     $sid = t_cleanup( (int) ( $res->get_data()['id'] ?? 0 ) );
-    t_equals( $T[1], get_post_field( 'post_title', $sid, 'raw' ), "{$label}: create_service title stored" );
-    t_equals( $H[1], get_post_meta( $sid, '_ftnc_notes', true ), "{$label}: create_service notes stored" );
+    t_equals( $T[1], Fotonic_Field_Crypt::read( get_post_field( 'post_title', $sid, 'raw' ), $key ), "{$label}: create_service title stored" );
+    t_equals( $H[1], Fotonic_Field_Crypt::read( (string) get_post_meta( $sid, '_ftnc_notes', true ), $key ), "{$label}: create_service notes stored" );
     t_equals( [ $T[1], $H[1] ], [ $res->get_data()['title'] ?? null, $res->get_data()['notes'] ?? null ], "{$label}: create_service response" );
     $res = Fotonic_REST_API::update_service( $rest( 'PUT', [ 'id' => $sid ], [ 'title' => $T[2], 'notes' => $H[2] ] ) );
-    t_equals( $T[2], get_post_field( 'post_title', $sid, 'raw' ), "{$label}: update_service title stored" );
-    t_equals( $H[2], get_post_meta( $sid, '_ftnc_notes', true ), "{$label}: update_service notes stored" );
+    t_equals( $T[2], Fotonic_Field_Crypt::read( get_post_field( 'post_title', $sid, 'raw' ), $key ), "{$label}: update_service title stored" );
+    t_equals( $H[2], Fotonic_Field_Crypt::read( (string) get_post_meta( $sid, '_ftnc_notes', true ), $key ), "{$label}: update_service notes stored" );
     t_equals( [ $T[2], $H[2] ], [ $res->get_data()['title'] ?? null, $res->get_data()['notes'] ?? null ], "{$label}: update_service response" );
 
     // ----- Memory cards -----
@@ -165,19 +165,19 @@ $scenario = function ( string $label, ?string $key ) use ( $rest, $meta_json, $T
     $check_work = function ( int $id, array $data, int $n, string $step ) use ( $label, $T, $H, $meta_json, $encrypted, $key ) {
         $street = 'Via ' . $T[ $n ];
         t_equals( $T[ $n ], get_post_field( 'post_title', $id, 'raw' ), "{$label}: {$step} work title stored" );
-        t_equals( $H[ $n ], get_post_field( 'post_content', $id, 'raw' ), "{$label}: {$step} work notes stored" );
+        t_equals( $H[ $n ], Fotonic_Field_Crypt::read( get_post_field( 'post_content', $id, 'raw' ), $key ), "{$label}: {$step} work notes stored" );
         $addr = $meta_json( $id, '_ftnc_event_addresses' );
         t_equals( $T[ $n ], $addr[0]['label'] ?? null, "{$label}: {$step} address label stored" );
         t_equals( $street, Fotonic_REST_API::decrypt_value( (string) ( $addr[0]['street'] ?? '' ), $key ), "{$label}: {$step} address street stored" );
         if ( $encrypted ) {
             t_true( $street !== ( $addr[0]['street'] ?? '' ), "{$label}: {$step} street is stored encrypted" );
         }
-        t_equals( $T[ $n ], $meta_json( $id, '_ftnc_work_services' )[0]['notes_override'] ?? null, "{$label}: {$step} service notes_override stored" );
+        t_equals( $T[ $n ], Fotonic_Field_Crypt::read( (string) ( $meta_json( $id, '_ftnc_work_services' )[0]['notes_override'] ?? '' ), $key ), "{$label}: {$step} service notes_override stored" );
         t_equals( $T[ $n ], $meta_json( $id, '_ftnc_installments' )[0]['title'] ?? null, "{$label}: {$step} installment title stored" );
         $file = $meta_json( $id, '_ftnc_work_files' )[0] ?? [];
         t_equals( [ $T[ $n ], 'https://example.com/a/b?x=1' ], [ $file['label'] ?? null, $file['url'] ?? null ], "{$label}: {$step} file label and link stored" );
         t_equals( $H[ $n ], get_post_meta( $id, '_ftnc_quick_notes', true ), "{$label}: {$step} quick notes stored" );
-        t_equals( $T[ $n ], $meta_json( $id, '_ftnc_memory_cards' )[0]['notes'] ?? null, "{$label}: {$step} memory card notes stored" );
+        t_equals( $T[ $n ], Fotonic_Field_Crypt::read( (string) ( $meta_json( $id, '_ftnc_memory_cards' )[0]['notes'] ?? '' ), $key ), "{$label}: {$step} memory card notes stored" );
 
         t_equals( $T[ $n ], $data['title'] ?? null, "{$label}: {$step} work title in the response" );
         t_equals( $H[ $n ], $data['notes'] ?? null, "{$label}: {$step} work notes in the response" );

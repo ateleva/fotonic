@@ -110,10 +110,13 @@ That's it. Your data is in `out`.
 | `out/files/` | Your attachments (contracts, invoices, PDFs, photos), decrypted and byte-for-byte identical to the originals. |
 | `out/manifest.json` | A copy of the archive's inventory: what was in it, how big, and the checksums. |
 
-Personal details inside `data.json` (names, emails, phone numbers, addresses) stay
-encrypted exactly as the plugin stored them in the database. That is deliberate: your
-customers' details never sit in a plain text file. Work titles,
-prices, notes, dates and payment status are readable.
+Personal details inside `data.json` (names, emails, phone numbers, addresses) and the
+free-text notes (work notes, notes on a memory card or a service inside a work, service
+titles, prices and notes; with Eleva CRM Pro also collaborators, suppliers, products, expense
+notes and quote notes) stay encrypted exactly as the plugin stored them in the database
+(the ones that start with `f1:` are the notes, titles and other free-text fields). That is deliberate: your
+customers' details never sit in a plain text file. Work titles, prices, dates and payment
+status are readable.
 
 ---
 

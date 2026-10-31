@@ -32,6 +32,36 @@ class Fotonic_REST_API {
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
+		register_rest_route( self::NAMESPACE, '/vault/choice', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_choice' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_encrypt_existing' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing/pause', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_encrypt_pause' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing/cancel', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_encrypt_cancel' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing/resume', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_encrypt_resume' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
 		register_rest_route( self::NAMESPACE, '/vault/unlock', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_unlock' ],
@@ -380,7 +410,9 @@ class Fotonic_REST_API {
 		}
 		if ( ! Fotonic_Vault::is_unlocked() ) {
 			if ( ! Fotonic_Vault::is_setup() ) {
-				return false; // No Vault at all: nothing to unlock, keep the plain refusal.
+				// No Vault at all: nothing to unlock and the files are plain. A file kept under the
+				// Vault layer (.enc) without a key is still refused by vault_download() with a 422.
+				return true;
 			}
 			return new \WP_Error(
 				'vault_locked',
@@ -540,6 +572,79 @@ class Fotonic_REST_API {
 	}
 
 	/**
+	 * POST /vault/choice
+	 * Body: { choice: 'skipped' }
+	 * Remembers "Not now" on the first-run screen. Setting the Vault up is the other answer
+	 * and goes through /vault/setup. Returns: { choice }
+	 */
+	public static function vault_choice( \WP_REST_Request $req ): \WP_REST_Response {
+		if ( Fotonic_Vault::is_setup() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'already_setup', 'message' => __( 'Vault is already configured. Use change-password to update credentials.', 'eleva-crm-for-photographers' ) ],
+				409
+			);
+		}
+		$body   = $req->get_json_params();
+		$choice = is_array( $body ) && isset( $body['choice'] ) ? sanitize_key( (string) $body['choice'] ) : '';
+		if ( ! Fotonic_Vault::set_choice( $choice ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_choice', 'message' => __( 'Invalid choice.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+		return new \WP_REST_Response( [ 'choice' => Fotonic_Vault::get_choice() ], 200 );
+	}
+
+	/**
+	 * POST /vault/encrypt-existing
+	 * Does one small step of the job that encrypts the data that was entered before the Vault
+	 * (or before a release added protected fields). Needs the Vault unlocked. Call it again until
+	 * the status is 'done'. Returns the job status: { status, phase, percent, eta_seconds, ... }.
+	 */
+	public static function vault_encrypt_existing( \WP_REST_Request $_req ): \WP_REST_Response {
+		$key = Fotonic_Vault::get_session_key();
+		if ( null === $key ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'vault_locked', 'message' => __( 'Unlock the Vault to continue encrypting your data.', 'eleva-crm-for-photographers' ) ],
+				423
+			);
+		}
+		return new \WP_REST_Response( Fotonic_Vault_Encrypt_Existing::run_batch( $key ), 200 );
+	}
+
+	/** POST /vault/encrypt-existing/pause */
+	public static function vault_encrypt_pause( \WP_REST_Request $_req ): \WP_REST_Response {
+		if ( ! Fotonic_Vault_Encrypt_Existing::pause() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_running', 'message' => __( 'The encryption is not running.', 'eleva-crm-for-photographers' ) ],
+				409
+			);
+		}
+		return new \WP_REST_Response( Fotonic_Vault_Encrypt_Existing::status(), 200 );
+	}
+
+	/**
+	 * POST /vault/encrypt-existing/cancel
+	 * The way out of a job that cannot finish. Safe for the data: records that are part plain and part
+	 * encrypted read fine, and the next status read creates a new pending job. Returns the (now empty) status.
+	 */
+	public static function vault_encrypt_cancel( \WP_REST_Request $_req ): \WP_REST_Response {
+		Fotonic_Vault_Encrypt_Existing::cancel();
+		return new \WP_REST_Response( Fotonic_Vault_Encrypt_Existing::status(), 200 );
+	}
+
+	/** POST /vault/encrypt-existing/resume */
+	public static function vault_encrypt_resume( \WP_REST_Request $_req ): \WP_REST_Response {
+		if ( ! Fotonic_Vault_Encrypt_Existing::resume() ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_paused', 'message' => __( 'The encryption is not paused.', 'eleva-crm-for-photographers' ) ],
+				409
+			);
+		}
+		return new \WP_REST_Response( Fotonic_Vault_Encrypt_Existing::status(), 200 );
+	}
+
+	/**
 	 * POST /vault/lock
 	 * Returns: { locked: true }
 	 */
@@ -558,17 +663,36 @@ class Fotonic_REST_API {
 
 	/**
 	 * GET /vault/status
-	 * Returns: { setup, unlocked, scheme, kit_ok, totp_pending, email_hint }
+	 * Returns: { setup, choice, encrypt_pending, encrypt, unlocked, scheme, kit_ok, totp_pending, email_hint }
 	 */
 	public static function vault_status( \WP_REST_Request $_req ): \WP_REST_Response {
+		Fotonic_Vault_Encrypt_Existing::ensure_job(); // A Vault from before the current field list gets one pending job.
 		return new \WP_REST_Response( [
 			'setup'        => Fotonic_Vault::is_setup(),
+			'choice'       => Fotonic_Vault::get_choice(),
+			'encrypt_pending' => Fotonic_Vault_Encrypt_Existing::is_pending(),
+			'encrypt'      => Fotonic_Vault_Encrypt_Existing::status(),
 			'unlocked'     => Fotonic_Vault::is_unlocked(),
 			'scheme'       => Fotonic_Vault::get_scheme(),
 			'kit_ok'       => Fotonic_Vault::is_recovery_kit_ok(),
 			'totp_pending' => Fotonic_Vault::has_pending_totp(),
 			'email_hint'   => Fotonic_Vault_Mailer::mask_email( Fotonic_Vault_Mailer::recipient() ),
 		], 200 );
+	}
+
+	/**
+	 * The name a stored file is shown and downloaded under: the name on disk without the Vault
+	 * layer suffix, unless a filter gives it a better one (Pro: a quote PDF keeps its quote code,
+	 * not the random suffix of the stored file).
+	 *
+	 * @param int    $attachment_id Attachment ID.
+	 * @param string $real_file     Path of the stored file.
+	 * @return string
+	 */
+	public static function attachment_download_name( int $attachment_id, string $real_file ): string {
+		$name     = Fotonic_File_Crypt::plain_name( basename( $real_file ) );
+		$filtered = apply_filters( 'ftnc_attachment_download_name', $name, $attachment_id, $real_file );
+		return is_string( $filtered ) && '' !== $filtered ? $filtered : $name;
 	}
 
 	/**
@@ -659,7 +783,7 @@ class Fotonic_REST_API {
 
 		// Sanitize headers before output.
 		$mime     = sanitize_mime_type( $post->post_mime_type );
-		$filename = sanitize_file_name( Fotonic_File_Crypt::plain_name( basename( $real_file ) ) );
+		$filename = sanitize_file_name( self::attachment_download_name( $id, $real_file ) );
 		// Strip any CRLF that could cause header injection.
 		$filename = str_replace( [ "\r", "\n" ], '', $filename );
 
@@ -1597,18 +1721,69 @@ class Fotonic_REST_API {
 	 * @return \WP_REST_Response|null
 	 */
 	private static function locked_write_response( array $body ): ?\WP_REST_Response {
+		$job = self::encrypt_job_response();
+		if ( $job ) {
+			return $job;
+		}
 		if ( null !== Fotonic_Vault::get_session_key() || ! Fotonic_Vault::is_setup() ) {
 			return null;
 		}
 		$plain = ( isset( $body['people'] ) && is_array( $body['people'] ) && self::rows_have_plain_text( $body['people'], array_merge( self::PEOPLE_RANDOM_FIELDS, self::PEOPLE_DETERMINISTIC_FIELDS ) ) )
-			|| ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) && self::rows_have_plain_text( $body['event_addresses'], [ 'street' ] ) );
-		if ( ! $plain ) {
+			|| ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) && self::rows_have_plain_text( $body['event_addresses'], [ 'street' ] ) )
+			|| ( isset( $body['notes'] ) && is_string( $body['notes'] ) && '' !== $body['notes'] )
+			|| ( isset( $body['memory_cards'] ) && is_array( $body['memory_cards'] ) && self::rows_have_plain_text( $body['memory_cards'], [ 'notes' ] ) )
+			|| ( isset( $body['services'] ) && is_array( $body['services'] ) && self::rows_have_plain_text( $body['services'], [ 'notes_override' ] ) );
+		return self::locked_response_if( $plain );
+	}
+
+	/** 423 while the encrypt-existing job runs or is paused: nothing is edited while it is being encrypted. */
+	private static function encrypt_job_response(): ?\WP_REST_Response {
+		if ( ! Fotonic_Vault_Encrypt_Existing::is_blocking() ) {
+			return null;
+		}
+		return new \WP_REST_Response(
+			[ 'code' => 'encrypt_in_progress', 'message' => __( 'Your data is being encrypted. Wait until it has finished, then save again.', 'eleva-crm-for-photographers' ) ],
+			423
+		);
+	}
+
+	/** The "Vault is locked" 423 when the Vault is set up, locked and the write carries protected text. */
+	private static function locked_response_if( bool $has_protected_text ): ?\WP_REST_Response {
+		if ( ! $has_protected_text || null !== Fotonic_Vault::get_session_key() || ! Fotonic_Vault::is_setup() ) {
 			return null;
 		}
 		return new \WP_REST_Response(
 			[ 'code' => 'vault_locked', 'message' => __( 'The Vault is locked. Unlock it to save personal details: your changes are still in the form.', 'eleva-crm-for-photographers' ) ],
 			423
 		);
+	}
+
+	/**
+	 * The stored form of a protected free-text field, or the value already stored when it must not change.
+	 *
+	 * @param mixed       $new    From the body: a string, or null = the screen could not read it, leave it.
+	 * @param string      $stored What the database holds now.
+	 * @param string|null $key    Master Key when the Vault is unlocked.
+	 * @return string
+	 */
+	private static function field_to_store( $new, string $stored, ?string $key ): string {
+		if ( null === $new ) {
+			return $stored;
+		}
+		// Vault set up but locked: a value that is encrypted now is never overwritten from a screen that cannot read it.
+		if ( null === $key && Fotonic_Vault::is_setup() && Fotonic_Field_Crypt::is_encrypted( $stored ) ) {
+			return $stored;
+		}
+		$out = Fotonic_Field_Crypt::store( (string) $new, $key );
+		if ( false === $out ) {
+			throw new \RuntimeException( 'Eleva CRM: a field could not be encrypted, nothing was saved.' );
+		}
+		return $out;
+	}
+
+	/** A protected text for the screen: the plain text, or null when it cannot be read (never ''). */
+	private static function field_for_screen( string $stored, ?string $key ): ?string {
+		return Fotonic_Field_Crypt::read( $stored, $key );
 	}
 
 	// ---------------------------------------------------------------------------
@@ -1774,6 +1949,10 @@ class Fotonic_REST_API {
 		foreach ( $query->posts as $post ) {
 			$data[] = self::format_service( $post );
 		}
+		// The titles may be encrypted, so the SQL order by title is not usable: sort after reading them.
+		usort( $data, function ( $a, $b ) {
+			return strnatcasecmp( (string) $a['title'], (string) $b['title'] );
+		} );
 
 		return new \WP_REST_Response( [
 			'data'  => $data,
@@ -1810,12 +1989,21 @@ class Fotonic_REST_API {
 				400
 			);
 		}
+		$blocked = self::encrypt_job_response() ?: self::locked_response_if( true );
+		if ( $blocked ) {
+			return $blocked;
+		}
 
-		$post_id = wp_insert_post( wp_slash( [
+		$key  = Fotonic_Vault::get_session_key();
+		$args = [
 			'post_type'   => 'ftnc_service',
 			'post_status' => 'publish',
-			'post_title'  => $title,
-		] ), true );
+			'post_title'  => self::field_to_store( $title, '', $key ),
+		];
+		if ( null !== $key ) {
+			$args['post_name'] = 'service-' . strtolower( wp_generate_password( 10, false ) ); // The slug must not spell the title.
+		}
+		$post_id = wp_insert_post( wp_slash( $args ), true );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_REST_Response(
@@ -1841,11 +2029,22 @@ class Fotonic_REST_API {
 		}
 
 		$body = $req->get_json_params();
+		$body = is_array( $body ) ? $body : [];
+
+		$blocked = self::encrypt_job_response() ?: self::locked_response_if( isset( $body['title'] ) || isset( $body['notes'] ) || isset( $body['base_price'] ) );
+		if ( $blocked ) {
+			return $blocked;
+		}
 
 		if ( isset( $body['title'] ) ) {
 			$title = sanitize_text_field( $body['title'] );
 			if ( ! empty( $title ) ) {
-				wp_update_post( wp_slash( [ 'ID' => $id, 'post_title' => $title ] ) );
+				$key  = Fotonic_Vault::get_session_key();
+				$args = [ 'ID' => $id, 'post_title' => self::field_to_store( $title, (string) $post->post_title, $key ) ];
+				if ( null !== $key ) {
+					$args['post_name'] = 'service-' . $id;
+				}
+				wp_update_post( wp_slash( $args ) );
 			}
 		}
 
@@ -1967,7 +2166,7 @@ class Fotonic_REST_API {
 			'post_type'    => 'ftnc_work',
 			'post_status'  => 'publish',
 			'post_title'   => $title,
-			'post_content' => isset( $body['notes'] ) ? wp_kses_post( $body['notes'] ) : '',
+			'post_content' => self::field_to_store( isset( $body['notes'] ) ? wp_kses_post( $body['notes'] ) : '', '', Fotonic_Vault::get_session_key() ),
 		] ), true );
 
 		if ( is_wp_error( $post_id ) ) {
@@ -2018,7 +2217,7 @@ class Fotonic_REST_API {
 			}
 		}
 		if ( isset( $body['notes'] ) ) {
-			$update['post_content'] = wp_kses_post( $body['notes'] );
+			$update['post_content'] = self::field_to_store( wp_kses_post( $body['notes'] ), (string) $post->post_content, Fotonic_Vault::get_session_key() );
 		}
 		if ( count( $update ) > 1 ) {
 			wp_update_post( wp_slash( $update ) );
@@ -2276,12 +2475,13 @@ class Fotonic_REST_API {
 	 * @param array $body    Request body.
 	 */
 	private static function save_service_meta( int $post_id, array $body ): void {
+		$key = Fotonic_Vault::get_session_key();
 		if ( isset( $body['base_price'] ) ) {
 			$price = (float) $body['base_price'];
-			update_post_meta( $post_id, '_ftnc_base_price', $price >= 0 ? $price : 0 );
+			update_post_meta( $post_id, '_ftnc_base_price', self::field_to_store( (string) ( $price >= 0 ? $price : 0 ), (string) get_post_meta( $post_id, '_ftnc_base_price', true ), $key ) );
 		}
 		if ( isset( $body['notes'] ) ) {
-			update_post_meta( $post_id, '_ftnc_notes', wp_slash( wp_kses_post( $body['notes'] ) ) );
+			update_post_meta( $post_id, '_ftnc_notes', wp_slash( self::field_to_store( wp_kses_post( $body['notes'] ), (string) get_post_meta( $post_id, '_ftnc_notes', true ), $key ) ) );
 		}
 	}
 
@@ -2322,6 +2522,26 @@ class Fotonic_REST_API {
 
 		update_post_meta( $post_id, '_ftnc_total_price', $total );
 		return $total;
+	}
+
+	/**
+	 * The rows of a JSON postmeta grouped by one of their id columns, in stored order. Used to find the
+	 * stored row of a service or a memory card when a save arrives, so a note the screen could not read
+	 * (null) keeps what is stored.
+	 *
+	 * @return array<int, array[]>
+	 */
+	private static function stored_rows_by( int $post_id, string $meta_key, string $id_col ): array {
+		$rows = json_decode( (string) get_post_meta( $post_id, $meta_key, true ), true );
+		$out  = [];
+		if ( is_array( $rows ) ) {
+			foreach ( $rows as $row ) {
+				if ( is_array( $row ) ) {
+					$out[ (int) ( $row[ $id_col ] ?? 0 ) ][] = $row;
+				}
+			}
+		}
+		return $out;
 	}
 
 	/**
@@ -2386,15 +2606,19 @@ class Fotonic_REST_API {
 
 		// Services.
 		if ( isset( $body['services'] ) && is_array( $body['services'] ) ) {
-			$clean = [];
+			$clean  = [];
+			$stored = self::stored_rows_by( $post_id, '_ftnc_work_services', 'service_id' );
 			foreach ( $body['services'] as $svc ) {
 				if ( ! is_array( $svc ) ) {
 					continue;
 				}
+				$sid     = (int) ( $svc['service_id'] ?? 0 );
+				$old_row = ! empty( $stored[ $sid ] ) ? array_shift( $stored[ $sid ] ) : [];
 				$clean[] = [
-					'service_id'     => (int) ( $svc['service_id'] ?? 0 ),
+					'service_id'     => $sid,
 					'price_override' => max( 0.0, (float) ( $svc['price_override'] ?? 0 ) ),
-					'notes_override' => sanitize_text_field( $svc['notes_override'] ?? '' ),
+					// null = the screen could not read it: the stored note stays as it is.
+					'notes_override' => self::field_to_store( array_key_exists( 'notes_override', $svc ) && null === $svc['notes_override'] ? null : sanitize_text_field( $svc['notes_override'] ?? '' ), (string) ( $old_row['notes_override'] ?? '' ), $vault_key ),
 				];
 			}
 			update_post_meta( $post_id, '_ftnc_work_services', wp_slash( wp_json_encode( $clean ) ) );
@@ -2477,6 +2701,7 @@ class Fotonic_REST_API {
 		// Memory cards.
 		if ( isset( $body['memory_cards'] ) && is_array( $body['memory_cards'] ) ) {
 			$clean_cards = [];
+			$stored      = self::stored_rows_by( $post_id, '_ftnc_memory_cards', 'card_id' );
 			foreach ( $body['memory_cards'] as $mc ) {
 				if ( ! is_array( $mc ) ) {
 					continue;
@@ -2485,9 +2710,10 @@ class Fotonic_REST_API {
 				if ( $card_id <= 0 || get_post_type( $card_id ) !== 'ftnc_memory_card' ) {
 					continue;
 				}
+				$old_row       = ! empty( $stored[ $card_id ] ) ? array_shift( $stored[ $card_id ] ) : [];
 				$clean_cards[] = [
 					'card_id' => $card_id,
-					'notes'   => sanitize_text_field( $mc['notes'] ?? '' ),
+					'notes'   => self::field_to_store( array_key_exists( 'notes', $mc ) && null === $mc['notes'] ? null : sanitize_text_field( $mc['notes'] ?? '' ), (string) ( $old_row['notes'] ?? '' ), $vault_key ),
 				];
 			}
 			update_post_meta( $post_id, '_ftnc_memory_cards', wp_slash( wp_json_encode( $clean_cards ) ) );
@@ -2541,11 +2767,14 @@ class Fotonic_REST_API {
 	 * @return array
 	 */
 	private static function format_service( \WP_Post $post ): array {
+		$key   = Fotonic_Vault::get_session_key();
+		$price = self::field_for_screen( (string) get_post_meta( $post->ID, '_ftnc_base_price', true ), $key );
+		// An unreadable value is null (never '' and never 0), so a screen cannot save it back as empty.
 		return [
 			'id'         => $post->ID,
-			'title'      => $post->post_title,
-			'base_price' => (float) get_post_meta( $post->ID, '_ftnc_base_price', true ),
-			'notes'      => (string) get_post_meta( $post->ID, '_ftnc_notes', true ),
+			'title'      => self::field_for_screen( (string) $post->post_title, $key ),
+			'base_price' => null === $price ? null : (float) $price,
+			'notes'      => self::field_for_screen( (string) get_post_meta( $post->ID, '_ftnc_notes', true ), $key ),
 		];
 	}
 
@@ -2566,6 +2795,7 @@ class Fotonic_REST_API {
 		}
 
 		// Services.
+		$field_key    = Fotonic_Vault::get_session_key();
 		$raw_services = get_post_meta( $post->ID, '_ftnc_work_services', true );
 		$services     = [];
 		if ( ! empty( $raw_services ) ) {
@@ -2575,9 +2805,9 @@ class Fotonic_REST_API {
 					$svc_post = get_post( $svc['service_id'] ?? 0 );
 					$services[] = [
 						'service_id'    => (int) ( $svc['service_id'] ?? 0 ),
-						'service_title' => $svc_post ? $svc_post->post_title : '',
+						'service_title' => $svc_post ? self::field_for_screen( (string) $svc_post->post_title, $field_key ) : '',
 						'price_override' => max( 0.0, (float) ( $svc['price_override'] ?? 0 ) ),
-						'notes_override' => (string) ( $svc['notes_override'] ?? '' ),
+						'notes_override' => self::field_for_screen( (string) ( $svc['notes_override'] ?? '' ), $field_key ),
 					];
 				}
 			}
@@ -2622,7 +2852,7 @@ class Fotonic_REST_API {
 						'type'     => 'attachment',
 						'id'       => $attach_id,
 						'url'      => $url,
-						'filename' => Fotonic_File_Crypt::plain_name( basename( get_attached_file( $attach_id ) ) ),
+						'filename' => self::attachment_download_name( $attach_id, (string) get_attached_file( $attach_id ) ),
 						'mime'     => $post_attach->post_mime_type,
 						'label'    => $label,
 					];
@@ -2657,7 +2887,7 @@ class Fotonic_REST_API {
 
 		// Decrypt vault-protected fields.
 		$vault_key           = Fotonic_Vault::get_session_key();
-		$notes               = $post->post_content;
+		$notes               = self::field_for_screen( (string) $post->post_content, $vault_key );
 		$raw_event_addresses = get_post_meta( $post->ID, '_ftnc_event_addresses', true );
 		$event_addresses     = [];
 		if ( ! empty( $raw_event_addresses ) ) {
@@ -2673,7 +2903,8 @@ class Fotonic_REST_API {
 		$owner_label = '';
 		if ( 'collaborator' === $owner_type && $owner_id ) {
 			$owner_post  = get_post( $owner_id );
-			$owner_label = $owner_post ? $owner_post->post_title : '';
+			// A collaborator's title is under the Vault when Pro protects it; a label that cannot be read is blank (display only, never saved back).
+			$owner_label = $owner_post ? (string) self::field_for_screen( (string) $owner_post->post_title, $vault_key ) : '';
 		} else {
 			$owner_user  = $owner_id ? get_user_by( 'id', $owner_id ) : null;
 			if ( $owner_user ) {
@@ -2694,7 +2925,7 @@ class Fotonic_REST_API {
 					$c_name = '';
 					if ( 'collaborator' === ( $c['type'] ?? '' ) ) {
 						$c_post = get_post( (int) ( $c['id'] ?? 0 ) );
-						$c_name = $c_post ? $c_post->post_title : '';
+						$c_name = $c_post ? (string) self::field_for_screen( (string) $c_post->post_title, $vault_key ) : '';
 					} else {
 						$c_user = get_user_by( 'id', (int) ( $c['id'] ?? 0 ) );
 						$c_name = $c_user ? ( $c_user->display_name ?: $c_user->user_login ) : '';
@@ -2755,7 +2986,7 @@ class Fotonic_REST_API {
 						'card_id'    => $card_id,
 						'card_title' => $card_post->post_title,
 						'status'     => $card_status,
-						'notes'      => (string) ( $mc['notes'] ?? '' ),
+						'notes'      => self::field_for_screen( (string) ( $mc['notes'] ?? '' ), $field_key ),
 					];
 				}
 			}
@@ -3319,7 +3550,7 @@ class Fotonic_REST_API {
 		error_log( '[Eleva CRM Vault] ' . $event . ' ' . wp_json_encode( $context ) );
 	}
 
-	private static function looks_encrypted( string $value ): bool {
+	public static function looks_encrypted( string $value ): bool {
 		// Prefixed formats are unambiguously encrypted.
 		if ( strncmp( $value, 'v1d:', 4 ) === 0 || strncmp( $value, 'v2:', 3 ) === 0 ) {
 			return true;
