@@ -4,7 +4,7 @@ Tags: crm, photography, photographer, client-management, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.2
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -29,7 +29,7 @@ You already have enough to think about on shoot day. Eleva CRM for Photographers
 * Calendar colors: tag each booking with one of twelve colors, so a glance at the calendar tells you which is which.
 * Memory Cards: an inventory of your SD and CF cards, so you always know which ones are safe to format. Status moves itself: Ready, In Use, Backed Up, or Damaged, as you attach a card to a shoot and check off the backup.
 * Quick Notes: a short rich-text field on every booking for the one-line reminder you need at a glance, kept separate from your full notes.
-* Vault: a dedicated encryption layer, protected by its own password and a TOTP authenticator app, that keeps client names, contact details, and addresses unreadable in the database, even to someone with direct database access.
+* Vault: an optional dedicated encryption layer, protected by its own password and a TOTP authenticator app, that keeps client names, contact details, addresses, notes and your service catalog unreadable in the database, even to someone with direct database access.
 * Encrypted backup: download one encrypted archive of your entire CRM (customers, bookings, services, and files) whenever you want, protected by your Vault credentials and opened by no one but you.
 
 = No dependencies, nothing leaves your server =
@@ -79,7 +79,9 @@ The Vault is a dedicated encryption layer for the personal details tied to your 
 
 You set a Vault master password, independent of your WordPress login, and pair it with a TOTP authenticator app (Google Authenticator, Authy, or similar); unlocking always needs both. The password itself is never stored: it is stretched through PBKDF2 with 600,000 iterations, and the resulting key lives only in a temporary, authenticated session cookie (AES-256-GCM), never in the database. The Vault locks itself again after 15 minutes of inactivity, and on every WordPress login or logout, so a shared computer is never left open.
 
-Booking details like the event date, price, and your own notes sit outside the Vault. Only the personal contact details listed above are encrypted.
+The Vault is optional. The first time you open the CRM it asks whether you want it. If you choose "Not now", you can turn it on later from Settings, and everything you have already entered is encrypted at that moment. Without the Vault the same data is stored as plain text in your database, and encrypted backups are not available.
+
+Besides the personal details above, the Vault protects your notes, the notes inside a booking and the titles, prices and notes of your service catalog. With Eleva CRM Pro it also protects collaborators, suppliers, products, expense notes and quote notes. Dates, prices, payments, statistics and the titles of clients, bookings and quotes sit outside the Vault and stay readable.
 
 = What if I forget my Vault password? =
 
@@ -151,6 +153,17 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.6.4 =
+* New: the Vault is now optional. The first time you open Eleva CRM you choose between protecting personal data with the Vault and "Not now", and you can turn the Vault on later from Settings. Sites that already have a Vault see no choice.
+* New: when you turn the Vault on, or update with it already on, the data you had already entered is encrypted in small steps, with a progress screen, a pause button and a floating progress bar. Closing the tab loses nothing: the work carries on where it stopped.
+* Security: the notes of a work, the notes of a memory card or a service inside a work, and the titles, base prices and notes of your services are now encrypted by the Vault. They stay readable to you once you unlock it. Eleva CRM Pro adds collaborators, suppliers, products, expense notes and quote notes.
+* Security: the Reset screen and the Vault texts now list everything that becomes unreadable after a reset.
+* Note: the search no longer finds words inside encrypted notes, because the server cannot read them.
+* New: every customer, work, service and memory card gets an internal identifier, groundwork for restoring backups later without duplicates.
+* Fix: downloading an attached file works on a site without a Vault.
+* Fix: a quote PDF downloads under its quote code (with the matching Eleva CRM Pro update).
+* Compatibility: tested with the latest WordPress (7.1.x).
 
 = 1.6.2 =
 * Security: the Vault now locks everywhere. Before, pressing Lock, changing the Vault password or recovering with your phrase or code only cleared the cookie of the browser you were using, so a copy of that cookie, or a second computer left open, kept working until the WordPress login ended. Now each of those actions refuses every earlier session on every browser and device, the 24-hour limit is checked by the server too, and a page left open elsewhere shows the lock screen within 30 seconds. After updating, everyone unlocks the Vault once.
@@ -311,6 +324,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.4 =
+The Vault is now optional: sites without one are asked once whether to turn it on, and notes and the service catalog are now encrypted too. After updating, unlock the Vault and let the short encryption finish. Update Eleva CRM Pro too.
 
 = 1.6.2 =
 Security update: the Vault now locks on every browser and device, failed Vault attempts are limited per Vault, plugin records are reachable only from the Eleva CRM app, and backups are better protected. You unlock the Vault once after updating. Safe in-place update.

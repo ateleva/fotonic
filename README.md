@@ -17,7 +17,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Works / Projects** — the central hub linking customers, services, files, and payment installments; Total Price tracked per project
 - **Payment Tracking** — track deposits and balances; paid/partial/unpaid status assigned automatically
 - **File Vault** — attach contracts and files to any project; protected storage with REST-gated downloads
-- **Vault Security** — AES-256 encryption behind a master password and TOTP two-factor authentication; all PII is encrypted at rest
+- **Vault Security**: optional AES-256 encryption behind a master password and TOTP two-factor authentication; client details, event addresses, notes and the service catalog are encrypted at rest
 - **Dashboard** — annual revenue, upcoming events, unpaid balances, and the next five scheduled works
 - **Quick Notes** — a WYSIWYG notes field on each Work for short reminders visible at a glance
 - **Calendar Color** — assign an event color (12-color palette) to each Work
@@ -68,7 +68,7 @@ No. Eleva CRM for Photographers is fully standalone and has no third-party plugi
 All data is stored in your own WordPress database. The plugin makes no external HTTP requests — your data never leaves your server.
 
 **What is the Vault?**
-The Vault encrypts all personally identifiable information (names, emails, phone numbers, addresses) with AES-256 before it is written to the database. You protect it with a master password and a TOTP authenticator app. The session key lives only in an HTTP-Only, SameSite=Strict cookie encrypted with AES-256-GCM — authenticated encryption that rejects any tampered cookie.
+The Vault is optional (you choose the first time, or later from Settings: what you already entered is encrypted then). It encrypts the personally identifiable information (names, emails, phone numbers, addresses), your notes and your service catalog (with Eleva CRM Pro also collaborators, suppliers, products, expense notes and quote notes) with AES-256 before it is written to the database. You protect it with a master password and a TOTP authenticator app. The session key lives only in an HTTP-Only, SameSite=Strict cookie encrypted with AES-256-GCM, authenticated encryption that rejects any tampered cookie.
 
 **Does it work on shared hosting?**
 Yes, as long as the host meets the PHP 7.4+ and WordPress 6.0+ requirements.
@@ -98,6 +98,18 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 ---
 
 ## Changelog
+
+### 1.6.4
+
+- **New:** the Vault is now optional. The first time you open Eleva CRM you choose between protecting personal data with the Vault and "Not now", and you can turn the Vault on later from Settings. Sites that already have a Vault see no choice.
+- **New:** when you turn the Vault on, or update with it already on, the data you had already entered is encrypted in small steps, with a progress screen, a pause button and a floating progress bar. Closing the tab loses nothing.
+- **Security:** the notes of a work, the notes of a memory card or a service inside a work, and the titles, base prices and notes of your services are now encrypted by the Vault. Eleva CRM Pro adds collaborators, suppliers, products, expense notes and quote notes.
+- **Security:** the Reset screen and the Vault texts now list everything that becomes unreadable after a reset.
+- **Note:** the search no longer finds words inside encrypted notes, because the server cannot read them.
+- **New:** every customer, work, service and memory card gets an internal identifier, groundwork for restoring backups later without duplicates.
+- **Fix:** downloading an attached file works on a site without a Vault.
+- **Fix:** a quote PDF downloads under its quote code (with the matching Eleva CRM Pro update).
+- **Compatibility:** tested with the latest WordPress (7.1.x).
 
 ### 1.6.2
 
