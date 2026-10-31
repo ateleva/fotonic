@@ -2279,3 +2279,144 @@ msgstr "I backup automatici su Google Drive richiedono una licenza Eleva CRM Pro
 
 msgid "Eleva CRM for Photographers requires the PHP OpenSSL extension. Please enable it on your server."
 msgstr "Eleva CRM for Photographers richiede l'estensione PHP OpenSSL. Abilitala sul tuo server."
+
+msgid "Invalid choice."
+msgstr "Scelta non valida."
+
+msgid "Unlock the Vault to continue encrypting your data."
+msgstr "Sblocca il Vault per continuare a cifrare i tuoi dati."
+
+msgid "The encryption is not running."
+msgstr "La cifratura non è in corso."
+
+msgid "The encryption is not paused."
+msgstr "La cifratura non è in pausa."
+
+msgid "Your data is being encrypted. Wait until it has finished, then save again."
+msgstr "I tuoi dati sono in fase di cifratura. Aspetta che finisca, poi salva di nuovo."
+
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes and your service catalog. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients and works stay readable."
+msgstr "Il Vault protegge i dati personali che conservi per ogni cliente (nomi, numeri di telefono, indirizzi email, indirizzi), le tue note e il tuo catalogo servizi. Quando è attivo, tutto questo è bloccato e nessun altro può leggerlo, nemmeno con accesso diretto al tuo sito o al database. Date, prezzi, pagamenti, statistiche e i titoli di clienti e lavori restano leggibili."
+
+msgid "Turning the Vault on also encrypts the data you have already entered: a window shows the progress, and you keep it open until it finishes."
+msgstr "Attivando il Vault vengono cifrati anche i dati che hai già inserito: una finestra mostra l'avanzamento e la tieni aperta finché non finisce."
+
+msgid "The Vault is off: your personal data is stored as plain text and encrypted backups are not available."
+msgstr "Il Vault è disattivato: i tuoi dati personali sono salvati in chiaro e i backup cifrati non sono disponibili."
+
+msgid "Do you want to protect personal data with the Vault?"
+msgstr "Vuoi proteggere i dati personali con il Vault?"
+
+msgid "The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both. That is the only cost: one more password to enter."
+msgstr "Il Vault è un livello di sicurezza in più. Scegli una password e aggiungi un codice di un'app di autenticazione, e ogni volta che apri Eleva CRM dopo averlo bloccato lo sblocchi con entrambi. È l'unico costo: una password in più da inserire."
+
+msgid "What the Vault protects"
+msgstr "Cosa protegge il Vault"
+
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes and your service catalog (titles, prices and notes)."
+msgstr "I dati personali dei tuoi clienti (nomi, email, numeri di telefono, indirizzi, codici fiscali), gli indirizzi degli eventi, le tue note e il tuo catalogo servizi (titoli, prezzi e note)."
+
+msgid "What stays readable"
+msgstr "Cosa resta leggibile"
+
+msgid "Dates, work prices and payments, statistics, and the titles of your clients and works."
+msgstr "Date, prezzi e pagamenti dei lavori, statistiche, e i titoli dei tuoi clienti e dei tuoi lavori."
+
+msgid "If you choose Not now"
+msgstr "Se scegli Non ora"
+
+msgid "Your personal data is stored as plain text in the database, and entering it without the Vault does not make it safer. Encrypted backups, including the ones sent to Google Drive with Eleva CRM Pro, are not available. You can turn the Vault on later from Settings: the data you already entered is encrypted at that moment."
+msgstr "I tuoi dati personali vengono salvati in chiaro nel database, e inserirli senza il Vault non li rende più sicuri. I backup cifrati, compresi quelli inviati a Google Drive con Eleva CRM Pro, non sono disponibili. Puoi attivare il Vault più tardi dalle Impostazioni: i dati che hai già inserito vengono cifrati in quel momento."
+
+msgid "Your responsibility"
+msgstr "La tua responsabilità"
+
+msgid "The Vault is a security extra, and keeping its keys safe is up to you, like the keys of a crypto wallet. Store your password, your recovery code and your recovery phrase in a safe place. If you lose all of them and reset the Vault, the encrypted data is lost for good, while the data that stays readable is kept. With the recovery code or the recovery phrase you lose nothing: recovering is not resetting."
+msgstr "Il Vault è un extra di sicurezza e conservarne le chiavi è compito tuo, come le chiavi di un portafoglio di criptovalute. Tieni la password del Vault, il codice di recupero e la frase di recupero in un posto sicuro. Se perdi tutto e fai il reset del Vault, i dati cifrati sono persi per sempre, mentre i dati che restano leggibili si conservano. Con il codice di recupero o la frase di recupero non perdi nulla: recuperare non è resettare."
+
+msgid "Protect personal data with the Vault (recommended)"
+msgstr "Proteggi i dati personali con il Vault (consigliato)"
+
+msgid "Not now"
+msgstr "Non ora"
+
+msgid "Encryption paused"
+msgstr "Cifratura in pausa"
+
+msgid "You can read your data. Saving is disabled until the encryption has finished."
+msgstr "Puoi leggere i tuoi dati. Il salvataggio è disattivato finché la cifratura non è finita."
+
+msgid "Resume"
+msgstr "Riprendi"
+
+msgid "Reading your data"
+msgstr "Sto leggendo i dati"
+
+msgid "Analyzing your data"
+msgstr "Sto analizzando i dati"
+
+msgid "Preparing the encryption"
+msgstr "Sto preparando la cifratura"
+
+msgid "Encrypting your data"
+msgstr "Sto cifrando i dati"
+
+msgid "Finishing the encryption"
+msgstr "Sto finendo la cifratura"
+
+msgid "The Vault key could not encrypt a test text. Try again. If it keeps failing, cancel and ask for help."
+msgstr "La chiave del Vault non è riuscita a cifrare un testo di prova. Riprova. Se continua a fallire, annulla e chiedi aiuto."
+
+msgid "Some data could not be encrypted after several tries. Try again, or cancel and continue later."
+msgstr "Alcuni dati non si sono potuti cifrare dopo vari tentativi. Riprova, oppure annulla e continua più tardi."
+
+msgid "Something went wrong while encrypting. Try again."
+msgstr "Qualcosa è andato storto durante la cifratura. Riprova."
+
+msgid "Less than a minute left."
+msgstr "Manca meno di un minuto."
+
+msgid "About %d min left."
+msgstr "Mancano circa %d min."
+
+msgid "Encrypting the data you already entered"
+msgstr "Cifratura dei dati che hai già inserito"
+
+msgid "Your Vault is on, but some data you entered earlier is still stored as plain text. Eleva CRM will now encrypt it, so it is protected like the rest."
+msgstr "Il tuo Vault è attivo, ma alcuni dati che hai inserito prima sono ancora salvati in chiaro. Eleva CRM li cifrerà adesso, così saranno protetti come il resto."
+
+msgid "Close any other tab or window of Eleva CRM, and do not make changes while this runs."
+msgstr "Chiudi le altre schede o finestre di Eleva CRM e non fare modifiche mentre la cifratura è in corso."
+
+msgid "It can take a few minutes on a large archive. Keep this window open."
+msgstr "Con un archivio grande può servire qualche minuto. Tieni aperta questa finestra."
+
+msgid "If you must stop, use Pause: your data stays readable, and saving is disabled until you resume."
+msgstr "Se devi fermarti, usa Pausa: i dati restano leggibili e il salvataggio è disattivato finché non riprendi."
+
+msgid "Start encryption"
+msgstr "Avvia la cifratura"
+
+msgid "%1$d of %2$d records need encryption."
+msgstr "%1$d record su %2$d da cifrare."
+
+msgid "Keep this window open and do not make changes while it runs."
+msgstr "Tieni aperta questa finestra e non fare modifiche mentre la cifratura è in corso."
+
+msgid "Cancel and continue later"
+msgstr "Annulla e continua più tardi"
+
+msgid "Pause"
+msgstr "Pausa"
+
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes and your service catalog (titles, prices and notes). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes."
+msgstr "I dati personali dei tuoi clienti (nomi, email, numeri di telefono, indirizzi, codici fiscali), gli indirizzi degli eventi, le tue note e il tuo catalogo servizi (titoli, prezzi e note). Con Eleva CRM Pro anche collaboratori, fornitori, prodotti, note delle spese e note dei preventivi."
+
+msgid "Dates, work prices and payments, statistics, and the titles of your clients, works and quotes."
+msgstr "Date, prezzi e pagamenti dei lavori, statistiche, e i titoli dei tuoi clienti, dei tuoi lavori e dei tuoi preventivi."
+
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes and your service catalog. With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients, works and quotes stay readable."
+msgstr "Il Vault protegge i dati personali che conservi per ogni cliente (nomi, numeri di telefono, indirizzi email, indirizzi), le tue note e il tuo catalogo servizi. Con Eleva CRM Pro protegge anche collaboratori, fornitori, prodotti, note delle spese e note dei preventivi. Quando è attivo, tutto questo è bloccato e nessun altro può leggerlo, nemmeno con accesso diretto al tuo sito o al database. Date, prezzi, pagamenti, statistiche e i titoli di clienti, lavori e preventivi restano leggibili."
+
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, event addresses, notes, the service catalog and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
+msgstr "La password del Vault, il segreto TOTP e le credenziali di recupero verranno eliminati definitivamente. Tutti i dati crittografati diventeranno illeggibili: dati dei clienti, indirizzi degli eventi, note, catalogo servizi e, con Eleva CRM Pro, collaboratori, fornitori, prodotti, note delle spese, note dei preventivi e i PDF dei preventivi già generati."

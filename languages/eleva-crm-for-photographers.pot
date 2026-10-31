@@ -2563,3 +2563,191 @@ msgstr ""
 #: src/src/features/settings/SettingsPage.jsx:511
 msgid "Automatic backups to Google Drive require an active Eleva CRM Pro license."
 msgstr ""
+
+#: includes/class-rest-api.php:567
+msgid "Invalid choice."
+msgstr ""
+
+#: includes/class-rest-api.php:602
+msgid "Unlock the Vault to continue encrypting your data."
+msgstr ""
+
+#: includes/class-rest-api.php:613
+msgid "The encryption is not running."
+msgstr ""
+
+#: includes/class-rest-api.php:624
+msgid "The encryption is not paused."
+msgstr ""
+
+#: includes/class-rest-api.php:1729
+msgid "Your data is being encrypted. Wait until it has finished, then save again."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:449
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes and your service catalog. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients and works stay readable."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:456
+msgid "Turning the Vault on also encrypts the data you have already entered: a window shows the progress, and you keep it open until it finishes."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:460
+msgid "The Vault is off: your personal data is stored as plain text and encrypted backups are not available."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:52
+msgid "Do you want to protect personal data with the Vault?"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:55
+msgid "The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both. That is the only cost: one more password to enter."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:61
+msgid "What the Vault protects"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:63
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes and your service catalog (titles, prices and notes)."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:67
+msgid "What stays readable"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:69
+msgid "Dates, work prices and payments, statistics, and the titles of your clients and works."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:75
+msgid "If you choose Not now"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:77
+msgid "Your personal data is stored as plain text in the database, and entering it without the Vault does not make it safer. Encrypted backups, including the ones sent to Google Drive with Eleva CRM Pro, are not available. You can turn the Vault on later from Settings: the data you already entered is encrypted at that moment."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:82
+msgid "Your responsibility"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:84
+msgid "The Vault is a security extra, and keeping its keys safe is up to you, like the keys of a crypto wallet. Store your password, your recovery code and your recovery phrase in a safe place. If you lose all of them and reset the Vault, the encrypted data is lost for good, while the data that stays readable is kept. With the recovery code or the recovery phrase you lose nothing: recovering is not resetting."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:92
+msgid "Protect personal data with the Vault (recommended)"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:95
+msgid "Not now"
+msgstr ""
+
+#: src/src/features/vault/EncryptPausedBar.jsx:31
+msgid "Encryption paused"
+msgstr ""
+
+#: src/src/features/vault/EncryptPausedBar.jsx:32
+msgid "You can read your data. Saving is disabled until the encryption has finished."
+msgstr ""
+
+#: src/src/features/vault/EncryptPausedBar.jsx:34
+msgid "Resume"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:14
+msgid "Reading your data"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:15
+msgid "Analyzing your data"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:16
+msgid "Preparing the encryption"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:17
+msgid "Encrypting your data"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:18
+msgid "Finishing the encryption"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:24
+msgid "The Vault key could not encrypt a test text. Try again. If it keeps failing, cancel and ask for help."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:27
+msgid "Some data could not be encrypted after several tries. Try again, or cancel and continue later."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:29
+msgid "Something went wrong while encrypting. Try again."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:35
+msgid "Less than a minute left."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:36
+msgid "About %d min left."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:137
+msgid "Encrypting the data you already entered"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:144
+msgid "Your Vault is on, but some data you entered earlier is still stored as plain text. Eleva CRM will now encrypt it, so it is protected like the rest."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:147
+msgid "Close any other tab or window of Eleva CRM, and do not make changes while this runs."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:148
+msgid "It can take a few minutes on a large archive. Keep this window open."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:149
+msgid "If you must stop, use Pause: your data stays readable, and saving is disabled until you resume."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:153
+msgid "Start encryption"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:181
+msgid "%1$d of %2$d records need encryption."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:189
+msgid "Keep this window open and do not make changes while it runs."
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:206
+msgid "Cancel and continue later"
+msgstr ""
+
+#: src/src/features/vault/EncryptExistingScreen.jsx:222
+msgid "Pause"
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:449
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes and your service catalog. With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients, works and quotes stay readable."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:63
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes and your service catalog (titles, prices and notes). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:69
+msgid "Dates, work prices and payments, statistics, and the titles of your clients, works and quotes."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:115
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, event addresses, notes, the service catalog and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
+msgstr ""
