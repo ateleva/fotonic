@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { useService, useCreateService, useUpdateService, useDeleteService } from '../../api/services'
 import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
@@ -10,6 +10,10 @@ import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import { __ } from '../../utils/i18n'
+
+// Pro adds a switch to the service (a percentage added on top of the price typed in a work). A plain
+// {value, onChange} component: the form state stays here, nothing crosses the bundle boundary.
+const ServiceSurchargeField = window.FotonicProComponents?.ServiceSurchargeField ?? null
 
 export default function ServiceForm() {
   const { id } = useParams()
@@ -46,9 +50,10 @@ export default function ServiceForm() {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { title: '', base_price: '', notes: '' },
+    defaultValues: { title: '', base_price: '', notes: '', surcharge: false },
   })
 
   useEffect(() => {
@@ -57,6 +62,7 @@ export default function ServiceForm() {
         title: service.title ?? '',
         base_price: service.base_price ?? '',
         notes: service.notes ?? '',
+        surcharge: !!service.surcharge,
       })
     }
   }, [service, reset])
@@ -98,38 +104,55 @@ export default function ServiceForm() {
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="ftnc-fields">
-        <FormField
-          label={__('Title', 'eleva-crm-for-photographers')}
-          htmlFor="title"
-          required
-          error={errors.title?.message}
-        >
-          <input
-            id="title"
-            type="text"
-            placeholder={__('e.g. Wedding Photography', 'eleva-crm-for-photographers')}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-            {...register('title', { required: __('Title is required', 'eleva-crm-for-photographers') })}
-          />
-        </FormField>
+        {/* One row: title, base price and (with Pro) the surcharge switch; notes full width below. */}
+        <div className="flex flex-wrap items-start gap-x-6 gap-y-4">
+          <div className="flex-1 min-w-[16rem]">
+            <FormField
+              label={__('Title', 'eleva-crm-for-photographers')}
+              htmlFor="title"
+              required
+              error={errors.title?.message}
+            >
+              <input
+                id="title"
+                type="text"
+                placeholder={__('e.g. Wedding Photography', 'eleva-crm-for-photographers')}
+                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                {...register('title', { required: __('Title is required', 'eleva-crm-for-photographers') })}
+              />
+            </FormField>
+          </div>
 
-        <FormField
-          label={__('Base Price (€)', 'eleva-crm-for-photographers')}
-          htmlFor="base_price"
-          error={errors.base_price?.message}
-        >
-          <input
-            id="base_price"
-            type="number"
-            min="0"
-            step="0.01"
-            placeholder="0.00"
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-            {...register('base_price', {
-              min: { value: 0, message: __('Price must be 0 or more', 'eleva-crm-for-photographers') },
-            })}
-          />
-        </FormField>
+          <div className="w-44">
+            <FormField
+              label={__('Base Price (€)', 'eleva-crm-for-photographers')}
+              htmlFor="base_price"
+              error={errors.base_price?.message}
+            >
+              <input
+                id="base_price"
+                type="number"
+                min="0"
+                step="any"
+                placeholder="0.00"
+                className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                {...register('base_price', {
+                  min: { value: 0, message: __('Price must be 0 or more', 'eleva-crm-for-photographers') },
+                })}
+              />
+            </FormField>
+          </div>
+
+          {ServiceSurchargeField && window.FotonicApp?.features?.surcharge && (
+            <Controller
+              name="surcharge"
+              control={control}
+              render={({ field }) => (
+                <ServiceSurchargeField value={!!field.value} onChange={field.onChange} />
+              )}
+            />
+          )}
+        </div>
 
         <FormField label={__('Notes', 'eleva-crm-for-photographers')} htmlFor="notes" error={errors.notes?.message}>
           <textarea

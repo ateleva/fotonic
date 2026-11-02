@@ -145,7 +145,7 @@ export default function WorkForm() {
   }
 
   const customers = Array.isArray(customersData) ? customersData : customersData?.data ?? []
-  const services = Array.isArray(servicesData) ? servicesData : servicesData?.data ?? []
+  const services = useMemo(() => (Array.isArray(servicesData) ? servicesData : servicesData?.data ?? []), [servicesData])
 
   const {
     register,
@@ -221,8 +221,15 @@ export default function WorkForm() {
       }
       return sum + amount
     }, 0)
-    return Math.round((subtotal + addedFees) * 100) / 100
-  }, [watchedServices, watchedSuppliers])
+    // Services that carry a percentage on top of the typed price (Pro): per row, rounded to cents. Supplier
+    // percentage fees above keep using the typed prices, without this.
+    const surcharge = (watchedServices ?? []).reduce((sum, row) => {
+      const pct = Number(services.find((svc) => String(svc.id) === String(row?.service_id))?.surcharge_pct) || 0
+      const price = parseFloat(row?.price_override) || 0
+      return sum + Math.round(price * pct) / 100
+    }, 0)
+    return Math.round((subtotal + surcharge + addedFees) * 100) / 100
+  }, [watchedServices, watchedSuppliers, services])
 
   useEffect(() => {
     setValue('total_price', computedTotal)

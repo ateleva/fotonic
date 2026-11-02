@@ -16,6 +16,9 @@ class Fotonic_REST_API {
 
 	const NAMESPACE = 'fotonic/v1';
 
+	/** Marker for Pro: this version has the service hooks (ftnc_format_service, ftnc_after_save_service) and a total that follows a service surcharge. */
+	const SERVICE_HOOKS = true;
+
 	// ---------------------------------------------------------------------------
 	// Route registration
 	// ---------------------------------------------------------------------------
@@ -2483,6 +2486,9 @@ class Fotonic_REST_API {
 		if ( isset( $body['notes'] ) ) {
 			update_post_meta( $post_id, '_ftnc_notes', wp_slash( self::field_to_store( wp_kses_post( $body['notes'] ), (string) get_post_meta( $post_id, '_ftnc_notes', true ), $key ) ) );
 		}
+
+		// Pro stores its own service fields (the surcharge switch) from the same request body.
+		do_action( 'ftnc_after_save_service', $post_id, $body );
 	}
 
 	/**
@@ -2770,12 +2776,21 @@ class Fotonic_REST_API {
 		$key   = Fotonic_Vault::get_session_key();
 		$price = self::field_for_screen( (string) get_post_meta( $post->ID, '_ftnc_base_price', true ), $key );
 		// An unreadable value is null (never '' and never 0), so a screen cannot save it back as empty.
-		return [
+		$data = [
 			'id'         => $post->ID,
 			'title'      => self::field_for_screen( (string) $post->post_title, $key ),
 			'base_price' => null === $price ? null : (float) $price,
 			'notes'      => self::field_for_screen( (string) get_post_meta( $post->ID, '_ftnc_notes', true ), $key ),
 		];
+
+		/**
+		 * Lets Pro add to a formatted service (e.g. `surcharge_pct`, a percentage added on top of the price
+		 * typed in a work row; free only reads that number, it does not know what it stands for).
+		 *
+		 * @param array   $data Formatted service.
+		 * @param WP_Post $post The service post.
+		 */
+		return apply_filters( 'ftnc_format_service', $data, $post );
 	}
 
 	/**

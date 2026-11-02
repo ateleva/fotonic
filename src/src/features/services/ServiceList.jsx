@@ -47,6 +47,18 @@ export default function ServiceList() {
         <span className="text-gray-700">{formatPrice(row.base_price)}</span>
       ),
     },
+    // Pro: whether the service adds the INPS surcharge to the price (a plain yes / no, no filter).
+    ...(window.FotonicApp?.features?.surcharge
+      ? [{
+          key: 'surcharge',
+          label: __('INPS surcharge (4%)', 'eleva-crm-for-photographers'),
+          render: (row) => (
+            <span className={row.surcharge ? 'font-medium text-green-700' : 'text-gray-400'}>
+              {row.surcharge ? __('Yes', 'eleva-crm-for-photographers') : __('No', 'eleva-crm-for-photographers')}
+            </span>
+          ),
+        }]
+      : []),
     {
       key: 'notes',
       label: __('Notes', 'eleva-crm-for-photographers'),
