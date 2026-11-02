@@ -99,6 +99,16 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.6.5
+
+- **New:** "What's new" after an update. A small star appears next to the sections that changed, and opening it explains the change in a few words. Close it and it does not come back.
+- **New:** a Changelog page. Click the version number at the bottom of the menu to read what changed in every version.
+- **New:** payment types open from a button at the top of the Works list, instead of a section at the bottom.
+- **New:** the name and the base price of a service sit on the same row, and the arrows on a price change it by one whole euro.
+- **Change:** fields and buttons have the same height everywhere, so forms look tidier.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.6.5, which adds reminders, Google Calendar updates both ways and the INPS surcharge.
+
 ### 1.6.4
 
 - **New:** the Vault is now optional. The first time you open Eleva CRM you choose between protecting personal data with the Vault and "Not now", and you can turn the Vault on later from Settings. Sites that already have a Vault see no choice.
