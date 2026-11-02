@@ -2420,3 +2420,6 @@ msgstr "Il Vault protegge i dati personali che conservi per ogni cliente (nomi, 
 
 msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, event addresses, notes, the service catalog and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
 msgstr "La password del Vault, il segreto TOTP e le credenziali di recupero verranno eliminati definitivamente. Tutti i dati crittografati diventeranno illeggibili: dati dei clienti, indirizzi degli eventi, note, catalogo servizi e, con Eleva CRM Pro, collaboratori, fornitori, prodotti, note delle spese, note dei preventivi e i PDF dei preventivi già generati."
+
+msgid "Manage payment types"
+msgstr "Gestisci metodi di pagamento"

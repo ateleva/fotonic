@@ -2751,3 +2751,7 @@ msgstr ""
 #: src/src/features/vault/ResetVaultFlow.jsx:115
 msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, event addresses, notes, the service catalog and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
 msgstr ""
+
+#: src/src/features/works/WorkList.jsx:111
+msgid "Manage payment types"
+msgstr ""
