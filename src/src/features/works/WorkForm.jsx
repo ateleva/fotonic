@@ -247,7 +247,9 @@ export default function WorkForm() {
         price: c.price !== '' ? parseFloat(c.price) : 0,
         status: c.status,
       })),
+      // Spread first: Pro owns the row shape (e.g. payment_date) and its PHP sanitizer is the whitelist.
       suppliers: (data.suppliers ?? []).map((s) => ({
+        ...s,
         id: parseInt(s.id, 10),
         fee_type: s.fee_type,
         fee_value: s.fee_value !== '' ? parseFloat(s.fee_value) : 0,
