@@ -12,5 +12,13 @@ class Fotonic_i18n {
             false,
             dirname( plugin_basename( FOTONIC_DIR . 'fotonic.php' ) ) . '/languages'
         );
+
+        // A WordPress.org language pack wins over the bundled file and only holds the strings imported so far,
+        // so a string added by an update would show in English until the next import. Load the bundled file as
+        // well: WordPress asks the pack first and falls back to this one for what the pack does not have.
+        $bundled = FOTONIC_DIR . 'languages/eleva-crm-for-photographers-' . determine_locale() . '.mo';
+        if ( is_readable( $bundled ) ) {
+            load_textdomain( 'eleva-crm-for-photographers', $bundled );
+        }
     }
 }
