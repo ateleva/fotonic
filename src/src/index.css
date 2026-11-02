@@ -101,6 +101,25 @@
   box-shadow: none;
 }
 
+/* One height for every single-line control, in both plugins: text, number, search, date, time,
+   select... all as tall as a primary Button (2.25rem = py-2 + a 1.25rem line, the "Update work"
+   button). `!important` on purpose: Pro draws its fields with inline styles and the native date and
+   time inputs add their own inner padding, so nothing weaker would line them all up. Checkboxes,
+   radios, colour, range and file inputs, and textareas, keep their own size. */
+#fotonic-app-root input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]):not([type="image"]):not([type="button"]):not([type="submit"]):not([type="reset"]),
+#fotonic-app-root select {
+  height: 2.25rem !important;
+  min-height: 2.25rem !important;
+  box-sizing: border-box !important;
+}
+/* A select's text sits centred in its fixed height: no vertical padding and a one-line height, or WP admin's
+   line-height: 2 plus a field's own padding push the text below the edge and it looks cut. */
+#fotonic-app-root select {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 1.25rem !important;
+}
+
 /* Sidebar active nav link — solid WP base color + white text */
 #fotonic-app-root .nav-link-active {
   background-color: var(--fotonic-nav, #1d2327);

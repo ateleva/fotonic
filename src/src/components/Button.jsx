@@ -1,6 +1,7 @@
 const variants = {
   primary:   'bg-fotonic-primary text-white hover:opacity-90',
-  secondary: 'bg-white text-gray-700 border border-solid border-gray-200 hover:bg-gray-50',
+  // ring-inset, not border: a border would make it 2px taller than a primary Button.
+  secondary: 'bg-white text-gray-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50',
   danger:    'bg-red-600 text-white hover:bg-red-700',
   ghost:     'bg-transparent text-gray-600 hover:bg-gray-100',
 }
