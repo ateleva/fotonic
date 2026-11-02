@@ -2423,3 +2423,102 @@ msgstr "La password del Vault, il segreto TOTP e le credenziali di recupero verr
 
 msgid "Manage payment types"
 msgstr "Gestisci metodi di pagamento"
+
+msgid "This service adds %s%% to the price you enter. The total of the work already includes it."
+msgstr "Questo servizio aggiunge il %s%% al prezzo che inserisci. Il totale del lavoro lo include già."
+
+msgid "INPS surcharge (4%)"
+msgstr "Rivalsa INPS 4%"
+
+msgid "Yes"
+msgstr "Sì"
+
+msgid "No"
+msgstr "No"
+
+msgid "Payment types are easier to find"
+msgstr "I metodi di pagamento sono più facili da trovare"
+
+msgid "Add, rename or remove your payment types from the new button at the top of the Works list. No more scrolling down to find them."
+msgstr "Aggiungi, rinomina o elimina i tuoi metodi di pagamento dal nuovo pulsante in alto nella lista Lavori. Non devi più scorrere fino in fondo per trovarli."
+
+msgid "Tidier forms"
+msgstr "Moduli più ordinati"
+
+msgid "Fields and buttons now have the same height everywhere in the app, so forms line up and look cleaner."
+msgstr "Campi e pulsanti hanno ora la stessa altezza in tutto il gestionale, così i moduli sono allineati e più puliti."
+
+msgid "A more compact service form"
+msgstr "Un modulo servizio più compatto"
+
+msgid "The name and the base price of a service now sit on the same row, with the notes below. The arrows on a price change it by one whole euro."
+msgstr "Il nome e il prezzo base di un servizio stanno ora sulla stessa riga, con le note sotto. Le frecce di un prezzo lo cambiano di un euro intero."
+
+msgid "What's new in %s"
+msgstr "Novità in %s"
+
+msgid "What's new in version %s"
+msgstr "Novità della versione %s"
+
+msgid "Here is what changed in this update. Open a section to read the details; you can close this window, it will not come back."
+msgstr "Ecco cosa è cambiato in questo aggiornamento. Apri una sezione per leggere i dettagli. Puoi chiudere questa finestra: non tornerà."
+
+msgid "Read"
+msgstr "Leggi"
+
+msgid "Changelog"
+msgstr "Cronologia delle versioni"
+
+msgid "Version"
+msgstr "Versione"
+
+msgid "Installed"
+msgstr "Installata"
+
+msgid "Show older versions"
+msgstr "Mostra le versioni precedenti"
+
+msgid "No changelog available."
+msgstr "Nessuna cronologia disponibile."
+
+msgid "See what changed in each version"
+msgstr "Guarda cosa è cambiato in ogni versione"
+
+msgid "Eleva CRM"
+msgstr "Eleva CRM"
+
+msgid "New: \"What's new\" after an update. A small star appears next to the sections that changed, and opening it explains the change in a few words. Close it and it does not come back."
+msgstr "Novità: «Novità» dopo un aggiornamento. Una piccola stella compare accanto alle sezioni cambiate e aprendola trovi la spiegazione in poche parole. Se la chiudi, non torna."
+
+msgid "New: a Changelog page. Click the version number at the bottom of the menu to read what changed in every version."
+msgstr "Novità: una pagina Cronologia. Clicca il numero di versione in fondo al menu per leggere cosa è cambiato in ogni versione."
+
+msgid "New: payment types open from a button at the top of the Works list, instead of a section at the bottom."
+msgstr "Novità: i metodi di pagamento si aprono da un pulsante in alto nella lista Lavori, invece che da una sezione in fondo."
+
+msgid "New: the name and the base price of a service sit on the same row, and the arrows on a price change it by one whole euro."
+msgstr "Novità: il nome e il prezzo base di un servizio stanno sulla stessa riga e le frecce di un prezzo lo cambiano di un euro intero."
+
+msgid "Change: fields and buttons have the same height everywhere, so forms look tidier."
+msgstr "Modifica: campi e pulsanti hanno la stessa altezza ovunque, così i moduli sono più ordinati."
+
+msgid "Compatibility: works with Eleva CRM Pro 1.6.5, which adds reminders, Google Calendar updates both ways and the INPS surcharge."
+msgstr "Compatibilità: funziona con Eleva CRM Pro 1.6.5, che aggiunge i promemoria, gli aggiornamenti di Google Calendar in entrambe le direzioni e la rivalsa INPS."
+
+msgid "Go to the %s section"
+msgstr "Vai alla sezione %s"
+
+msgid "New version available"
+msgstr "Nuova versione disponibile"
+
+msgid "Version %s is available."
+msgstr "È disponibile la versione %s."
+
+msgid "Update now"
+msgstr "Aggiorna ora"
+
+msgid "Read more"
+msgstr "Leggi di più"
+
+msgid "Here is everything that changed in this update. Each section keeps a star in the menu until you have seen its changes."
+msgstr "Qui trovi tutto ciò che è cambiato in questo aggiornamento. Ogni sezione tiene la sua stella nel menu finché non hai visto le sue novità."

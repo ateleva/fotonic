@@ -2755,3 +2755,135 @@ msgstr ""
 #: src/src/features/works/WorkList.jsx:111
 msgid "Manage payment types"
 msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:87
+msgid "This service adds %s%% to the price you enter. The total of the work already includes it."
+msgstr ""
+
+#: src/src/features/services/ServiceList.jsx:54
+msgid "INPS surcharge (4%)"
+msgstr ""
+
+#: src/src/features/services/ServiceList.jsx:57
+msgid "Yes"
+msgstr ""
+
+#: src/src/features/services/ServiceList.jsx:57
+msgid "No"
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Payment types are easier to find"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "Add, rename or remove your payment types from the new button at the top of the Works list. No more scrolling down to find them."
+msgstr ""
+
+#: includes/class-whats-new.php:73
+msgid "Tidier forms"
+msgstr ""
+
+#: includes/class-whats-new.php:74
+msgid "Fields and buttons now have the same height everywhere in the app, so forms line up and look cleaner."
+msgstr ""
+
+#: includes/class-whats-new.php:81
+msgid "A more compact service form"
+msgstr ""
+
+#: includes/class-whats-new.php:82
+msgid "The name and the base price of a service now sit on the same row, with the notes below. The arrows on a price change it by one whole euro."
+msgstr ""
+
+#: includes/class-whats-new.php:201
+msgid "Eleva CRM"
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:30
+msgid "Changelog"
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:50
+msgid "No changelog available."
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:56
+msgid "Version"
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:58
+msgid "Installed"
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:68
+msgid "Show older versions"
+msgstr ""
+
+#: src/src/components/Layout.jsx:230
+msgid "See what changed in each version"
+msgstr ""
+
+#: src/src/components/WhatsNew.jsx:20
+msgid "What's new in %s"
+msgstr ""
+
+#: src/src/components/WhatsNew.jsx:60
+msgid "What's new in version %s"
+msgstr ""
+
+#: src/src/components/WhatsNew.jsx:61
+msgid "Here is what changed in this update. Open a section to read the details; you can close this window, it will not come back."
+msgstr ""
+
+#: src/src/components/WhatsNew.jsx:72
+msgid "Read"
+msgstr ""
+
+#: includes/class-whats-new.php:207
+msgid "New: \"What's new\" after an update. A small star appears next to the sections that changed, and opening it explains the change in a few words. Close it and it does not come back."
+msgstr ""
+
+#: includes/class-whats-new.php:208
+msgid "New: a Changelog page. Click the version number at the bottom of the menu to read what changed in every version."
+msgstr ""
+
+#: includes/class-whats-new.php:209
+msgid "New: payment types open from a button at the top of the Works list, instead of a section at the bottom."
+msgstr ""
+
+#: includes/class-whats-new.php:210
+msgid "New: the name and the base price of a service sit on the same row, and the arrows on a price change it by one whole euro."
+msgstr ""
+
+#: includes/class-whats-new.php:211
+msgid "Change: fields and buttons have the same height everywhere, so forms look tidier."
+msgstr ""
+
+#: includes/class-whats-new.php:212
+msgid "Compatibility: works with Eleva CRM Pro 1.6.5, which adds reminders, Google Calendar updates both ways and the INPS surcharge."
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:51
+msgid "New version available"
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:52
+msgid "Version %s is available."
+msgstr ""
+
+#: src/src/features/changelog/ChangelogPage.jsx:57
+msgid "Update now"
+msgstr ""
+
+#: src/src/components/WhatsNew.jsx:56
+msgid "Go to the %s section"
+msgstr ""
+
+#: src/src/components/WhatsNew.jsx:133
+msgid "Read more"
+msgstr ""
+
+#: src/src/components/WhatsNew.jsx:122
+msgid "Here is everything that changed in this update. Each section keeps a star in the menu until you have seen its changes."
+msgstr ""
