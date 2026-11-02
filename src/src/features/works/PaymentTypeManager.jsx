@@ -7,10 +7,11 @@ import {
   useDeletePaymentType,
 } from '../../api/paymentTypes'
 import Button from '../../components/Button'
+import Modal from '../../components/Modal'
+import ConfirmDialog from '../../components/ConfirmDialog'
 import { __ } from '../../utils/i18n'
 
-export default function PaymentTypeManager() {
-  const [open, setOpen]           = useState(false)
+export default function PaymentTypeManager({ open, onClose }) {
   const [addName, setAddName]     = useState('')
   const [addError, setAddError]   = useState(null)
   const [editId, setEditId]       = useState(null)
@@ -22,6 +23,17 @@ export default function PaymentTypeManager() {
   const createMutation = useCreatePaymentType()
   const updateMutation = useUpdatePaymentType()
   const deleteMutation = useDeletePaymentType()
+
+  // Reset every transient state on close so reopening never shows a stale edit row or error.
+  function close() {
+    setAddName('')
+    setAddError(null)
+    setEditId(null)
+    setEditName('')
+    setEditError(null)
+    setDeleteId(null)
+    onClose()
+  }
 
   function startEdit(t) {
     setEditId(t.id)
@@ -56,25 +68,16 @@ export default function PaymentTypeManager() {
   }
 
   return (
-    <div className="mt-12 rounded-lg border border-gray-200 overflow-hidden">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between bg-white px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none"
-      >
-        <span>{__('Payment Types', 'eleva-crm-for-photographers')}</span>
-        <span className="text-gray-400 text-xs">{open ? '▲' : '▼'}</span>
-      </button>
-
-      {open && (
-        <div className="border-t border-gray-100 bg-white px-4 py-4 space-y-4">
+    <>
+      <Modal open={open} onClose={close} title={__('Payment Types', 'eleva-crm-for-photographers')} size="lg">
+        <div className="space-y-4">
           {/* Add form */}
           <form onSubmit={handleAdd} className="flex items-center gap-2">
             <input
               value={addName}
               onChange={(e) => { setAddName(e.target.value); setAddError(null) }}
               placeholder={__('New payment type…', 'eleva-crm-for-photographers')}
-              className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-56"
+              className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 min-w-0"
             />
             <Button type="submit" variant="primary" size="sm" disabled={createMutation.isPending}>
               {createMutation.isPending
@@ -93,7 +96,7 @@ export default function PaymentTypeManager() {
           ) : types.length === 0 ? (
             <p className="text-sm text-gray-400 italic">{__('No payment types yet.', 'eleva-crm-for-photographers')}</p>
           ) : (
-            <div className="divide-y divide-gray-100 rounded-md border border-gray-200 overflow-hidden">
+            <div className="max-h-[50vh] overflow-y-auto divide-y divide-gray-100 rounded-md border border-gray-200">
               {types.map((t) => (
                 <div key={t.id} className="flex items-center justify-between px-3 py-2 bg-white hover:bg-gray-50">
                   <div className="flex-1 min-w-0">
@@ -143,30 +146,14 @@ export default function PaymentTypeManager() {
             </div>
           )}
         </div>
-      )}
+      </Modal>
 
-      {/* Delete confirmation */}
-      {deleteId !== null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full mx-4">
-            <p className="text-sm text-gray-700 mb-5">
-              {__('Delete this payment type? Existing installments will keep their current type.', 'eleva-crm-for-photographers')}
-            </p>
-            <div className="flex justify-end gap-2">
-              <Button variant="secondary" onClick={() => setDeleteId(null)}>
-                {__('Cancel', 'eleva-crm-for-photographers')}
-              </Button>
-              <Button
-                variant="danger"
-                onClick={() => deleteMutation.mutate(deleteId, { onSuccess: () => setDeleteId(null) })}
-                disabled={deleteMutation.isPending}
-              >
-                {__('Delete', 'eleva-crm-for-photographers')}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+      <ConfirmDialog
+        open={deleteId !== null}
+        onClose={() => setDeleteId(null)}
+        onConfirm={() => deleteMutation.mutate(deleteId)}
+        message={__('Delete this payment type? Existing installments will keep their current type.', 'eleva-crm-for-photographers')}
+      />
+    </>
   )
 }

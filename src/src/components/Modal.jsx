@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 
 const SIZE_CLASSES = {
   md: 'max-w-md p-6',
+  lg: 'max-w-xl p-6',
   full: 'max-w-5xl w-[90vw] h-[85vh] p-6 flex flex-col',
 }
 

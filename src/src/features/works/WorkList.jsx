@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Pencil, PlusCircle } from 'lucide-react'
+import { Pencil, PlusCircle, Settings2 } from 'lucide-react'
 import { useWorks } from '../../api/works'
 import { formatDate } from '../../utils/date'
 import PageHeader from '../../components/PageHeader'
@@ -10,6 +10,12 @@ import Badge from '../../components/Badge'
 import Spinner from '../../components/Spinner'
 import PaymentTypeManager from './PaymentTypeManager'
 import { __ } from '../../utils/i18n'
+
+// The reminders overview is a Pro page: its button (with the due count) comes from Pro, behind the
+// same two guards as the route in router.jsx.
+const RemindersButton = window.FotonicApp?.features?.kanban && window.FotonicProComponents?.RemindersList
+  ? window.FotonicProComponents?.RemindersButton ?? null
+  : null
 
 function formatPrice(amount) {
   return '€' + Number(amount || 0).toLocaleString('it-IT', {
@@ -22,6 +28,7 @@ export default function WorkList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const [paymentStatus, setPaymentStatus] = useState('')
+  const [typesOpen, setTypesOpen] = useState(false)
 
   const params = {}
   if (search) params.search = search
@@ -95,10 +102,17 @@ export default function WorkList() {
       <PageHeader
         title={__('Works', 'eleva-crm-for-photographers')}
         action={
-          <Button onClick={() => navigate('/works/new')}>
-            <PlusCircle size={15} />
-            {__('Add Work', 'eleva-crm-for-photographers')}
-          </Button>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            {RemindersButton && <RemindersButton />}
+            <Button variant="secondary" size="sm" onClick={() => setTypesOpen(true)}>
+              <Settings2 size={14} />
+              {__('Manage payment types', 'eleva-crm-for-photographers')}
+            </Button>
+            <Button size="sm" onClick={() => navigate('/works/new')}>
+              <PlusCircle size={14} />
+              {__('Add Work', 'eleva-crm-for-photographers')}
+            </Button>
+          </div>
         }
       />
 
@@ -113,7 +127,7 @@ export default function WorkList() {
         <select
           value={paymentStatus}
           onChange={(e) => setPaymentStatus(e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           style={{ width: 'auto', minWidth: 'max-content', paddingRight: '2rem' }}
         >
           <option value="">{__('All Statuses', 'eleva-crm-for-photographers')}</option>
@@ -135,7 +149,7 @@ export default function WorkList() {
         />
       )}
 
-      <PaymentTypeManager />
+      <PaymentTypeManager open={typesOpen} onClose={() => setTypesOpen(false)} />
 
     </div>
   )
