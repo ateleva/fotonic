@@ -8,6 +8,11 @@ import Spinner from '../../components/Spinner'
 import Table from '../../components/Table'
 import { apiFetch } from '../../api/client'
 
+// Pro strip with the late / due-today reminders; renders nothing when there are none.
+const RemindersDashboardCard = window.FotonicApp?.features?.kanban
+  ? window.FotonicProComponents?.RemindersDashboardCard ?? null
+  : null
+
 function formatEuro(amount) {
   return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(amount ?? 0)
 }
@@ -161,6 +166,8 @@ export default function Dashboard() {
         </div>
 
       </div>
+
+      {RemindersDashboardCard && <RemindersDashboardCard />}
 
       {/* Recent Works */}
       <div>

@@ -102,6 +102,14 @@ export function createRouter() { return createHashRouter([
           </Suspense>
         )
       }] : []),
+      ...(window.FotonicApp?.features?.kanban && window.FotonicProComponents?.RemindersList ? [{
+        path: 'reminders',
+        element: (
+          <Suspense fallback={<Fallback />}>
+            <window.FotonicProComponents.RemindersList />
+          </Suspense>
+        )
+      }] : []),
       ...(window.FotonicApp?.features?.analytics && window.FotonicProComponents?.Analytics ? [{
         path: 'analytics',
         element: (
