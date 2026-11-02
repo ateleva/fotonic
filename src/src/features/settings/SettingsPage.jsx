@@ -408,7 +408,7 @@ export default function SettingsPage() {
   return (
     <>
     {(showSetup || wantsSetup) && vaultStatus && !vaultStatus.setup && (
-      <div className="fixed inset-0 z-[9999]">
+      <div className="fixed inset-0 z-[100000]">
         <VaultSetup />
       </div>
     )}

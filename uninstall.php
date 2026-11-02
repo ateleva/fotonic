@@ -121,11 +121,15 @@ $ftnc_options = array(
 	'fotonic_backup_pubkey',
 	'fotonic_backup_wrap_priv',
 	'fotonic_smtp_settings',
+	'fotonic_whats_new_baseline',
 );
 
 foreach ( $ftnc_options as $ftnc_option ) {
 	delete_option( $ftnc_option );
 }
+
+// The "What's new" entries each admin has closed.
+delete_metadata( 'user', 0, 'fotonic_whats_new_dismissed', '', true );
 
 // ---------------------------------------------------------------------------
 // 5. Delete all fotonic transients (rate-limit counters, reencrypt lock).

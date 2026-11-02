@@ -18,6 +18,7 @@ const WorkForm       = lazy(() => import('./features/works/WorkForm'))
 const MemoryCardList = lazy(() => import('./features/memory-cards/MemoryCardList'))
 const MemoryCardForm = lazy(() => import('./features/memory-cards/MemoryCardForm'))
 const SettingsPage   = lazy(() => import('./features/settings/SettingsPage'))
+const ChangelogPage  = lazy(() => import('./features/changelog/ChangelogPage'))
 const CalendarView   = lazy(() => import('./features/calendar/CalendarView').then(m => ({ default: m.CalendarView })))
 
 function Fallback() {
@@ -56,6 +57,7 @@ export function createRouter() { return createHashRouter([
       { path: 'memory-cards/new',  element: <Lazy component={MemoryCardForm} /> },
       { path: 'memory-cards/:id',  element: <Lazy component={MemoryCardForm} /> },
       { path: 'calendar',          element: <Lazy component={CalendarView} /> },
+      { path: 'changelog',         element: <Lazy component={ChangelogPage} /> },
       { path: 'settings',          element: <Lazy component={SettingsPage} /> },
       // Pro routes — only active when FotonicPro bundle is loaded
       ...(window.FotonicApp?.features?.quotes && window.FotonicProComponents?.QuoteList ? [

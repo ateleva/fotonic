@@ -1,13 +1,23 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { NavLink, Outlet, useLocation, Link } from 'react-router-dom'
 import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, MemoryStick, PanelLeftClose, PanelLeftOpen, FileText } from 'lucide-react'
 import logoPng from '../assets/icon-256x256.png'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
 import useSidebarCollapse from '../hooks/useSidebarCollapse'
 import { __ } from '../utils/i18n'
+import { useWhatsNew } from '../api/whatsNew'
+import { WhatsNewIcon, WhatsNewSectionBanner } from './WhatsNew'
+import WhatsNewHost from './WhatsNewHost'
+import { groupBySection } from '../utils/whatsNew'
 
 const features = window.FotonicApp?.features ?? {}
+
+// The "What's new" section each sidebar item stands for (Pro adds its entries under the same keys).
+const SECTION_OF = {
+  '/dashboard': 'dashboard', '/services': 'services', '/works': 'works', '/quotes': 'quotes',
+  '/kanban': 'kanban', '/analytics': 'analytics', '/suppliers': 'suppliers', '/expenses': 'expenses',
+}
 
 // `.ftnc-navlink` owns display / grid-template-columns / align-items / gap / transition
 // (see index.css), so `flex items-center gap-3 transition-colors` is deliberately absent
@@ -28,6 +38,14 @@ export default function Layout() {
   const { isUnlocked, lock } = useVault()
   const shellRef = useRef(null)
   const [collapsed, toggleCollapsed] = useSidebarCollapse()
+
+  // What changed in the last update, for this admin: an icon next to each section that has something to
+  // read, and one overview window right after the update. Closing either dismisses it for good.
+  const { data: whatsNew } = useWhatsNew()
+  const bySection = groupBySection(whatsNew?.entries ?? [])
+  const [openSection, setOpenSection] = useState(null)
+  // The section of the page being visited ('/services/12' is still Services).
+  const currentSection = SECTION_OF[`/${pathname.split('/')[1]}`] ?? null
 
   // One tooltip node for the whole rail. See the `.ftnc-sidebar-tip` comment in index.css
   // for why it has to be `position: fixed` and a sibling of <aside>.
@@ -166,10 +184,13 @@ export default function Layout() {
         {/* Nav */}
         <nav id="ftnc-sidebar-nav" className="flex-1 px-3 py-1.5 space-y-0.5">
           {navItems.map(({ to, label, icon: Icon }) => (
-            <NavLink key={to} to={to} className={navLinkClass('text-gray-600')} {...tipProps(label)}>
-              <Icon size={16} />
-              <span>{label}</span>
-            </NavLink>
+            <div key={to} className="relative">
+              <NavLink to={to} className={navLinkClass('text-gray-600')} {...tipProps(label)}>
+                <Icon size={16} />
+                <span>{label}</span>
+              </NavLink>
+              {bySection[SECTION_OF[to]] && <WhatsNewIcon section={SECTION_OF[to]} onOpen={setOpenSection} />}
+            </div>
           ))}
 
           {proNavItems.some(({ feature }) => features[feature]) && (
@@ -178,10 +199,13 @@ export default function Layout() {
                 <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">{__('Pro', 'eleva-crm-for-photographers')}</span>
               </div>
               {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon, alsoActive }) => (
-                <NavLink key={to} to={to} className={navLinkClass('text-gray-600', alsoActive?.includes(pathname) ?? false)} {...tipProps(label)}>
-                  <Icon size={16} />
-                  <span>{label}</span>
-                </NavLink>
+                <div key={to} className="relative">
+                  <NavLink to={to} className={navLinkClass('text-gray-600', alsoActive?.includes(pathname) ?? false)} {...tipProps(label)}>
+                    <Icon size={16} />
+                    <span>{label}</span>
+                  </NavLink>
+                  {bySection[SECTION_OF[to]] && <WhatsNewIcon section={SECTION_OF[to]} onOpen={setOpenSection} />}
+                </div>
               ))}
             </>
           )}
@@ -204,9 +228,9 @@ export default function Layout() {
             </button>
           )}
           <div className="ftnc-sidebar__meta px-3 pt-1.5 mt-0.5 border-t border-gray-100 flex items-center gap-2 flex-wrap">
-            <span className="text-xs text-gray-400">CRM v{window.FotonicApp?.version ?? '–'}</span>
+            <Link to="/changelog?tab=free" className="text-xs text-gray-400 hover:text-gray-600 hover:underline" title={__('See what changed in each version', 'eleva-crm-for-photographers')}>CRM v{window.FotonicApp?.version ?? '–'}</Link>
             {window.FotonicApp?.proVersion && (
-              <span className="text-xs text-indigo-400">CRM Pro v{window.FotonicApp.proVersion}</span>
+              <Link to="/changelog?tab=pro" className="text-xs text-indigo-400 hover:text-indigo-600 hover:underline" title={__('See what changed in each version', 'eleva-crm-for-photographers')}>CRM Pro v{window.FotonicApp.proVersion}</Link>
             )}
           </div>
         </div>
@@ -233,6 +257,8 @@ export default function Layout() {
 
       {/* Main content */}
       <main className="flex-1 min-w-0 overflow-y-auto">
+        {/* The changes of the section being visited, laid over the top of the page until they are dismissed. */}
+        <WhatsNewSectionBanner section={currentSection} entries={currentSection ? bySection[currentSection] ?? [] : []} />
         <Outlet />
       </main>
 
@@ -248,6 +274,9 @@ export default function Layout() {
           {tip.label}
         </div>
       )}
+
+      {/* What's new: the overview once after an update, and the window of one section. */}
+      <WhatsNewHost openSection={openSection} setOpenSection={setOpenSection} />
     </div>
   )
 }

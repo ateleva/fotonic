@@ -20,6 +20,9 @@ class Fotonic_Activator {
             file_put_contents( $vault_dir . '/.htaccess', "Require all denied\n# Block direct access to Eleva CRM vault files\n<IfModule mod_authz_core.c>\n    Require all denied\n</IfModule>\n<IfModule !mod_authz_core.c>\n    Order deny,allow\n    Deny from all\n</IfModule>" );
         }
 
+        // A fresh install has nothing "new" to read: only entries newer than this version will show.
+        Fotonic_Whats_New::set_baseline( 'free', FOTONIC_VERSION );
+
         add_option( 'fotonic_vault_enabled', false );
         add_option( 'fotonic_vault_salt', wp_generate_password( 64, true, true ) );
 

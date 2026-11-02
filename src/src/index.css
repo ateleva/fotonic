@@ -120,6 +120,44 @@
   line-height: 1.25rem !important;
 }
 
+/* "What's new" star next to a sidebar item: a solid button in the theme colour with a white star and a white ring,
+   a sibling of the link (not inside it). On the active item (itself in the theme colour) it inverts, so it never
+   disappears into it. On the collapsed rail it moves to the top corner of the item and grows enough to be seen. */
+#fotonic-app-root .ftnc-whatsnew-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 9999px;
+  color: #fff;
+  background: var(--fotonic-primary);
+  box-shadow: 0 0 0 2px #fff, 0 1px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+}
+#fotonic-app-root .ftnc-whatsnew-btn:hover {
+  filter: brightness(1.12);
+}
+#fotonic-app-root .nav-link-active + .ftnc-whatsnew-btn {
+  color: var(--fotonic-primary);
+  background: #fff;
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-whatsnew-btn {
+  right: -5px;
+  top: -3px;
+  transform: none;
+  width: 20px;
+  height: 20px;
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-whatsnew-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
 /* Sidebar active nav link — solid WP base color + white text */
 #fotonic-app-root .nav-link-active {
   background-color: var(--fotonic-nav, #1d2327);
