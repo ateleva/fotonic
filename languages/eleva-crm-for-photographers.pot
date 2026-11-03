@@ -3215,3 +3215,79 @@ msgstr ""
 #: src/src/components/Pagination.jsx:29
 msgid "Next page"
 msgstr ""
+
+#: includes/class-whats-new.php:83
+msgid "Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. A Copy message button prepares the text for your client, with the link, the password and the expiry date. The Shots History tab adds it all up by year."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:657
+msgid "Gallery password"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:692
+msgid "Copy message"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:699
+msgid "Add a link to prepare the message for your client."
+msgstr ""
+
+#: src/src/utils/deliveryMessage.js:21
+msgid "Hi %1$s, you can find the gallery at this link: %2$s"
+msgstr ""
+
+#: src/src/utils/deliveryMessage.js:22
+msgid "Hi, you can find the gallery at this link: %s"
+msgstr ""
+
+#: src/src/utils/deliveryMessage.js:26
+msgid "To unlock the gallery use this password: %s"
+msgstr ""
+
+#: src/src/utils/deliveryMessage.js:29
+msgid "The link expires on %s."
+msgstr ""
+
+#: src/src/features/customers/CustomerPicker.jsx:34
+msgid "No customers found"
+msgstr ""
+
+#: src/src/features/customers/CustomerPicker.jsx:35
+msgid "Showing %1$s of %2$s customers. Type to narrow down."
+msgstr ""
+
+#: src/src/features/works/StorageLocationsSection.jsx:61
+msgid "No backup locations found"
+msgstr ""
+
+#: src/src/features/works/ServicesRepeater.jsx:62
+msgid "No services found"
+msgstr ""
+
+#: src/src/features/works/MemoryCardsSection.jsx:105
+msgid "No cards available"
+msgstr ""
+
+#: src/src/components/SearchSelect.jsx:107
+msgid "Type to search…"
+msgstr ""
+
+#: src/src/components/SearchSelect.jsx:124
+msgid "Clear"
+msgstr ""
+
+#: src/src/components/SearchSelect.jsx:140
+msgid "Searching…"
+msgstr ""
+
+#: src/src/components/SearchSelect.jsx:140
+msgid "No results"
+msgstr ""
+
+#: includes/class-whats-new.php:90
+msgid "Find a record by typing"
+msgstr ""
+
+#: includes/class-whats-new.php:91
+msgid "The fields where you pick a customer, a service, a memory card or a backup location now have a search: type a few letters and choose. The customer list is no longer limited to 100."
+msgstr ""

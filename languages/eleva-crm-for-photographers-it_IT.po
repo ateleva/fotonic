@@ -2768,3 +2768,60 @@ msgstr "Pagina precedente"
 
 msgid "Next page"
 msgstr "Pagina successiva"
+
+msgid "Hi %1$s, you can find the gallery at this link: %2$s"
+msgstr "Ciao %1$s, a questo link trovi la galleria: %2$s"
+
+msgid "Hi, you can find the gallery at this link: %s"
+msgstr "Ciao, a questo link trovi la galleria: %s"
+
+msgid "To unlock the gallery use this password: %s"
+msgstr "Per sbloccare la galleria usa questa password: %s"
+
+msgid "The link expires on %s."
+msgstr "Il link scade il %s."
+
+msgid "Gallery password"
+msgstr "Password galleria"
+
+msgid "Copy message"
+msgstr "Copia messaggio"
+
+msgid "Add a link to prepare the message for your client."
+msgstr "Aggiungi un link per preparare il messaggio per il tuo cliente."
+
+msgid "Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. A Copy message button prepares the text for your client, with the link, the password and the expiry date. The Shots History tab adds it all up by year."
+msgstr "Scrivi quante foto hai scattato e consegnato e come le hai consegnate: un link a una galleria, un trasferimento o una chiavetta USB. Un pulsante Copia messaggio prepara il testo per il tuo cliente, con il link, la password e la scadenza. La scheda Storico scatti somma tutto per anno."
+
+msgid "No customers found"
+msgstr "Nessun cliente trovato"
+
+msgid "Showing %1$s of %2$s customers. Type to narrow down."
+msgstr "Mostro %1$s clienti su %2$s. Scrivi per restringere la ricerca."
+
+msgid "No backup locations found"
+msgstr "Nessun archivio backup trovato"
+
+msgid "No services found"
+msgstr "Nessun servizio trovato"
+
+msgid "No cards available"
+msgstr "Nessuna scheda disponibile"
+
+msgid "Type to search…"
+msgstr "Scrivi per cercare…"
+
+msgid "Clear"
+msgstr "Cancella"
+
+msgid "Searching…"
+msgstr "Ricerca in corso…"
+
+msgid "No results"
+msgstr "Nessun risultato"
+
+msgid "Find a record by typing"
+msgstr "Trova un elemento scrivendo"
+
+msgid "The fields where you pick a customer, a service, a memory card or a backup location now have a search: type a few letters and choose. The customer list is no longer limited to 100."
+msgstr "I campi dove scegli un cliente, un servizio, una scheda di memoria o un archivio backup hanno ora una ricerca: scrivi qualche lettera e scegli. L'elenco dei clienti non è più limitato a 100."
