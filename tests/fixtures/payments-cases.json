@@ -1,0 +1,44 @@
+[
+  {
+    "name": "no VAT: 500 cash + 1000 with surcharge",
+    "types": { "cash": 0, "inps": 4 },
+    "vat": { "mode": "none", "rate": 0 },
+    "rows": [ { "base": 500, "type": "cash" }, { "base": 1000, "type": "inps" } ],
+    "expect": { "total": 1540, "taxable": 1040, "vat": 0, "to_collect": 1540, "amounts": [500, 1040], "taxables": [false, true] }
+  },
+  {
+    "name": "VAT excluded 22",
+    "types": { "cash": 0, "inps": 4 },
+    "vat": { "mode": "excluded", "rate": 22 },
+    "rows": [ { "base": 500, "type": "cash" }, { "base": 1000, "type": "inps" } ],
+    "expect": { "total": 1540, "taxable": 1040, "vat": 228.8, "to_collect": 1768.8, "amounts": [500, 1268.8], "taxables": [false, true] }
+  },
+  {
+    "name": "VAT included 22",
+    "types": { "cash": 0, "inps": 4 },
+    "vat": { "mode": "included", "rate": 22 },
+    "rows": [ { "base": 500, "type": "cash" }, { "base": 1000, "type": "inps" } ],
+    "expect": { "total": 1540, "taxable": 852.46, "vat": 187.54, "to_collect": 1540, "amounts": [500, 1040], "taxables": [false, true] }
+  },
+  {
+    "name": "taxable toggle on a row without surcharge, VAT excluded 22",
+    "types": { "cash": 0, "inps": 4 },
+    "vat": { "mode": "excluded", "rate": 22 },
+    "rows": [ { "base": 500, "type": "cash", "taxable": true }, { "base": 1000, "type": "inps" } ],
+    "expect": { "total": 1540, "taxable": 1540, "vat": 338.8, "to_collect": 1878.8, "amounts": [610, 1268.8], "taxables": [true, true] }
+  },
+  {
+    "name": "cents: three rows of a thousand",
+    "types": { "cash": 0 },
+    "vat": { "mode": "none", "rate": 0 },
+    "rows": [ { "base": 333.33, "type": "cash" }, { "base": 333.33, "type": "cash" }, { "base": 333.34, "type": "cash" } ],
+    "expect": { "total": 1000, "taxable": 0, "vat": 0, "to_collect": 1000, "amounts": [333.33, 333.33, 333.34], "taxables": [false, false, false] }
+  },
+  {
+    "name": "surcharge rounds to the cent per row",
+    "types": { "inps": 4 },
+    "vat": { "mode": "none", "rate": 0 },
+    "rows": [ { "base": 33.33, "type": "inps" }, { "base": 33.33, "type": "inps" } ],
+    "expect": { "total": 69.32, "taxable": 69.32, "vat": 0, "to_collect": 69.32, "amounts": [34.66, 34.66], "taxables": [true, true] }
+  }
+]

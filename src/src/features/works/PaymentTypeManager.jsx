@@ -11,8 +11,14 @@ import Modal from '../../components/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import { __ } from '../../utils/i18n'
 
+// Pro: a switch on the payment type for the extra percentage added to the rows that use it (Rivalsa INPS).
+// A plain {value, onChange} component, where value is the percentage (0 = off).
+const RivalsaTypeField = window.FotonicProComponents?.RivalsaTypeField ?? null
+
 export default function PaymentTypeManager({ open, onClose }) {
   const [addName, setAddName]     = useState('')
+  const [addPct, setAddPct]       = useState(0)
+  const [editPct, setEditPct]     = useState(0)
   const [addError, setAddError]   = useState(null)
   const [editId, setEditId]       = useState(null)
   const [editName, setEditName]   = useState('')
@@ -27,6 +33,7 @@ export default function PaymentTypeManager({ open, onClose }) {
   // Reset every transient state on close so reopening never shows a stale edit row or error.
   function close() {
     setAddName('')
+    setAddPct(0)
     setAddError(null)
     setEditId(null)
     setEditName('')
@@ -37,6 +44,7 @@ export default function PaymentTypeManager({ open, onClose }) {
 
   function startEdit(t) {
     setEditId(t.id)
+    setEditPct(Number(t.surcharge_pct) || 0)
     setEditName(t.label)
     setEditError(null)
   }
@@ -51,8 +59,8 @@ export default function PaymentTypeManager({ open, onClose }) {
     e.preventDefault()
     const label = addName.trim()
     if (!label) { setAddError(__('Name is required.', 'eleva-crm-for-photographers')); return }
-    createMutation.mutate(label, {
-      onSuccess: () => { setAddName(''); setAddError(null) },
+    createMutation.mutate(RivalsaTypeField ? { label, surcharge_pct: addPct } : label, {
+      onSuccess: () => { setAddName(''); setAddPct(0); setAddError(null) },
       onError: (err) => setAddError(err?.message ?? __('Error adding type.', 'eleva-crm-for-photographers')),
     })
   }
@@ -61,7 +69,7 @@ export default function PaymentTypeManager({ open, onClose }) {
     e.preventDefault()
     const label = editName.trim()
     if (!label) { setEditError(__('Name is required.', 'eleva-crm-for-photographers')); return }
-    updateMutation.mutate({ id: editId, label }, {
+    updateMutation.mutate(RivalsaTypeField ? { id: editId, label, surcharge_pct: editPct } : { id: editId, label }, {
       onSuccess: () => cancelEdit(),
       onError: (err) => setEditError(err?.message ?? __('Error updating type.', 'eleva-crm-for-photographers')),
     })
@@ -79,6 +87,9 @@ export default function PaymentTypeManager({ open, onClose }) {
               placeholder={__('New payment type…', 'eleva-crm-for-photographers')}
               className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 min-w-0"
             />
+            {RivalsaTypeField && window.FotonicApp?.features?.surcharge && (
+              <RivalsaTypeField value={addPct} onChange={setAddPct} />
+            )}
             <Button type="submit" variant="primary" size="sm" disabled={createMutation.isPending}>
               {createMutation.isPending
                 ? <Loader size={13} className="animate-spin" />
@@ -108,12 +119,20 @@ export default function PaymentTypeManager({ open, onClose }) {
                           onChange={(e) => setEditName(e.target.value)}
                           className="rounded-md border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-48"
                         />
+                        {RivalsaTypeField && window.FotonicApp?.features?.surcharge && (
+                          <RivalsaTypeField value={editPct} onChange={setEditPct} />
+                        )}
                         {editError && <span className="text-red-600 text-xs">{editError}</span>}
                       </form>
                     ) : (
                       // t.label is admin-editable data (fotonic_payment_types option), already
                       // final text by the time it reaches here — not a __()-translatable string.
-                      <span className="text-sm font-medium text-gray-800">{t.label}</span>
+                      <span className="text-sm font-medium text-gray-800">
+                        {t.label}
+                        {Number(t.surcharge_pct) > 0 && (
+                          <span className="ml-2 rounded bg-gray-100 px-1.5 py-0.5 text-xs font-medium text-gray-600">+{Number(t.surcharge_pct)}%</span>
+                        )}
+                      </span>
                     )}
                   </div>
                   <div className="flex items-center gap-1.5 ml-3 shrink-0">

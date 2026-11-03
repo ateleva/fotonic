@@ -43,6 +43,7 @@ require_once FOTONIC_DIR . 'includes/class-vault-mailer.php';
 require_once FOTONIC_DIR . 'includes/class-backup-keys.php';
 require_once FOTONIC_DIR . 'includes/class-backup-cipher.php';
 require_once FOTONIC_DIR . 'includes/class-backup-archive.php';
+require_once FOTONIC_DIR . 'includes/class-payments.php';
 require_once FOTONIC_DIR . 'includes/class-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-whats-new.php';
 require_once FOTONIC_DIR . 'includes/class-memory-card-rest-api.php';

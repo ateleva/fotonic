@@ -3475,3 +3475,123 @@ msgstr ""
 #: src/src/components/RowReorder.jsx:29
 msgid "Move down"
 msgstr ""
+
+#: includes/class-rest-api.php:2849
+msgid "Add at least one service."
+msgstr ""
+
+#: includes/class-rest-api.php:2852
+msgid "Add at least one installment."
+msgstr ""
+
+#: includes/class-rest-api.php:2855
+msgid "Every installment needs an amount above zero."
+msgstr ""
+
+#: includes/class-rest-api.php:2859
+msgid "The installments add up to %2$s but must add up to %1$s."
+msgstr ""
+
+#: includes/class-whats-new.php:99
+msgid "Payments are easier to get right"
+msgstr ""
+
+#: includes/class-whats-new.php:100
+msgid "On each installment you now write the part of the services price it covers. The installments must add up to the amount shown above them, and the total is worked out for you, so you can no longer get it wrong. Works you saved before show a notice: check their installments the next time you open them."
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:63
+msgid "Share of services (€)"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:64
+msgid "Added"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:65
+msgid "Taxable"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:66
+msgid "Client pays"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:122
+msgid "A row with the extra percentage is always taxable."
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:172
+msgid "Left to assign: %s"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:173
+msgid "Over by %s: lower the shares of the rows."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:265
+msgid "The installments must add up to the amount they have to cover."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:732
+msgid "This work was saved before the payments changed. Check the installments below: each one is now a share of the services price, and they must add up to the amount shown before you can save."
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:29
+msgid "Supplier fees added to the price"
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:34
+msgid "The installments must cover"
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:44
+msgid "Worked out from the installments."
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:49
+msgid "Taxable Price (€)"
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:51
+msgid "The installments marked as taxable."
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:57
+msgid "VAT"
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:64
+msgid "Total to collect (€)"
+msgstr ""
+
+#: src/src/features/works/PaymentsSummary.jsx:66
+msgid "Total price plus VAT."
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:64
+msgid "Installment %s"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:116
+msgid "Extra added: %s"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:114
+msgid "Previous installments"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:117
+msgid "Next installments"
+msgstr ""
+
+#: src/src/components/RowReorder.jsx:38
+msgid "Move left"
+msgstr ""
+
+#: src/src/components/RowReorder.jsx:41
+msgid "Move right"
+msgstr ""
+
+#: src/src/features/works/InstallmentsRepeater.jsx:214
+msgid "%1$s added for the INPS surcharge (%2$s%%)"
+msgstr ""

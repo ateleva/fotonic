@@ -15,6 +15,7 @@ import Modal from '../../components/Modal'
 import SectionHeading from '../../components/SectionHeading'
 import ServicesRepeater from './ServicesRepeater'
 import InstallmentsRepeater from './InstallmentsRepeater'
+import PaymentsSummary from './PaymentsSummary'
 import FilesSection from './FilesSection'
 import EventAddressesRepeater from './EventAddressesRepeater'
 import MemoryCardsSection from './MemoryCardsSection'
@@ -24,6 +25,8 @@ import { normalizeLink } from '../../utils/link'
 import { buildDeliveryMessage, mainContactName } from '../../utils/deliveryMessage'
 import CopyButton from '../../components/CopyButton'
 import { __ } from '../../utils/i18n'
+import { NO_VAT, computeInstallmentRows, leftToAssign, requiredAmount } from '../../utils/installments'
+import { usePaymentTypes } from '../../api/paymentTypes'
 
 const COLOR_PALETTE = [
   { label: 'Default',   hex: '' },
@@ -45,7 +48,7 @@ const COLOR_PALETTE = [
    the swatch row, and belongs above the rule with the title. */
 function ColorPicker({ value, onChange }) {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, paddingTop: 2 }}>
       {COLOR_PALETTE.map(({ label, hex }) => {
         const isSelected = value === hex
         const isDefault  = hex === ''
@@ -56,22 +59,24 @@ function ColorPicker({ value, onChange }) {
             title={label}
             onClick={() => onChange(hex)}
             style={{
-              width: 30,
-              height: 30,
+              width: 20,
+              height: 20,
               borderRadius: '50%',
               background: isDefault ? '#e5e7eb' : hex,
-              border: isSelected ? '3px solid #1d2327' : isDefault ? '2px dashed #9ca3af' : '2px solid transparent',
+              border: isSelected ? '2px solid #1d2327' : isDefault ? '1.5px dashed #9ca3af' : '2px solid transparent',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 14,
+              fontSize: 11,
+              lineHeight: 1,
+              padding: 0,
               color: isDefault ? '#374151' : '#fff',
               fontWeight: 700,
               transition: 'transform 0.1s',
               flexShrink: 0,
             }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.15)' }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.2)' }}
             onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}
           >
             {isSelected ? '✓' : ''}
@@ -97,8 +102,6 @@ const defaultValues = {
   files: [],
   notes: '',
   total_price: '',
-  legacy_total: false,
-  total_price_taxable: '',
   installments: [],
   color: '',
   gcal_sync: false,
@@ -112,11 +115,12 @@ const defaultValues = {
 
 const OwnerField = window.FotonicProComponents?.OwnerField ?? null
 const CollaboratorsSection = window.FotonicProComponents?.CollaboratorsSection ?? null
-const TaxablePriceField = window.FotonicProComponents?.TaxablePriceField ?? null
 const GCalSyncField = window.FotonicProComponents?.GCalSyncField ?? null
 const RemindersSection = window.FotonicProComponents?.RemindersSection ?? null
 const SuppliersSection = window.FotonicProComponents?.SuppliersSection ?? null
-const VatSummaryField = window.FotonicProComponents?.VatSummaryField ?? null
+// Pro: the VAT setting this work is computed with (its own copy once saved, today's settings for a new work).
+// A hook, but the same function on every render, so calling it unconditionally is safe.
+const useInstallmentVat = window.FotonicProComponents?.useInstallmentVat ?? (() => NO_VAT)
 const WorkSourceQuoteLink = window.FotonicProComponents?.WorkSourceQuoteLink ?? null
 
 export default function WorkForm() {
@@ -164,14 +168,12 @@ export default function WorkForm() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
 
-  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal, watchedTaxable, watchedInstallments, shotsTaken, shotsDelivered, watchedCustomerId, deliveryUrl, deliveryPassword, deliveryExpires] = watch([
+  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, watchedInstallments, shotsTaken, shotsDelivered, watchedCustomerId, deliveryUrl, deliveryPassword, deliveryExpires] = watch([
     'owner_type',
     'owner_id',
     'event_date',
     'services',
     'suppliers',
-    'legacy_total',
-    'total_price_taxable',
     'installments',
     'shots_taken',
     'shots_delivered',
@@ -213,8 +215,6 @@ export default function WorkForm() {
         files: work.files ?? [],
         notes: work.notes ?? '',
         total_price: work.total_price ?? '',
-        legacy_total: work.legacy_total ?? false,
-        total_price_taxable: work.total_price_taxable ?? '',
         installments: work.installments ?? [],
         color: work.color ?? '',
         gcal_sync: work.gcal_sync ?? false,
@@ -243,42 +243,43 @@ export default function WorkForm() {
     }
   }, [work, reset])
 
-  const computedTotal = useMemo(() => {
-    const subtotal = (watchedServices ?? []).reduce(
-      (sum, row) => sum + (parseFloat(row?.price_override) || 0),
-      0
-    )
-    const addedFees = (watchedSuppliers ?? []).reduce((sum, row) => {
-      if ((row?.applied ?? 'added') !== 'added') {
-        return sum
-      }
-      const value = parseFloat(row?.fee_value) || 0
-      let amount = 0
-      if (row?.fee_type === 'percentage') {
-        amount = (subtotal * value) / 100
-      } else if (row?.fee_type === 'fixed') {
-        amount = value
-      }
-      return sum + amount
-    }, 0)
-    // Services that carry a percentage on top of the typed price (Pro): per row, rounded to cents. Supplier
-    // percentage fees above keep using the typed prices, without this.
-    const surcharge = (watchedServices ?? []).reduce((sum, row) => {
-      const pct = Number(services.find((svc) => String(svc.id) === String(row?.service_id))?.surcharge_pct) || 0
-      const price = parseFloat(row?.price_override) || 0
-      return sum + Math.round(price * pct) / 100
-    }, 0)
-    return Math.round((subtotal + surcharge + addedFees) * 100) / 100
-  }, [watchedServices, watchedSuppliers, services])
+  // The work asks for the services plus the supplier fees marked "added"; the installments must cover exactly
+  // that. Every other figure (total, taxable price, VAT) is worked out from the installment rows.
+  const { subtotal: servicesSubtotal, fees: addedFees, required } = useMemo(
+    () => requiredAmount(watchedServices, watchedSuppliers),
+    [watchedServices, watchedSuppliers]
+  )
+  const { data: paymentTypes = [] } = usePaymentTypes()
+  const vat = useInstallmentVat(work ?? null)
+  const calc = useMemo(
+    () => computeInstallmentRows({ rows: watchedInstallments ?? [], types: paymentTypes, vat }),
+    [watchedInstallments, paymentTypes, vat]
+  )
+  const planned = calc.planned
+  const left = leftToAssign(required, planned)
+  const noServices = (watchedServices ?? []).length === 0
+  const noInstallments = (watchedInstallments ?? []).length === 0
+  // An empty, zero or negative share is refused by the server (unless nothing has to be covered), even when
+  // the others add up, so the form says so before the save.
+  const badShare = required > 0 && (watchedInstallments ?? []).some((row) => !(parseFloat(row?.base) > 0))
+  const paymentsBlock = noServices
+    ? __('Add at least one service.', 'eleva-crm-for-photographers')
+    : noInstallments
+      ? __('Add at least one installment.', 'eleva-crm-for-photographers')
+      : badShare
+        ? __('Every installment needs an amount above zero.', 'eleva-crm-for-photographers')
+        : Math.abs(left) >= 0.005
+        ? __('The installments must add up to the amount they have to cover.', 'eleva-crm-for-photographers')
+        : ''
 
   useEffect(() => {
-    setValue('total_price', computedTotal)
-  }, [computedTotal, setValue])
+    setValue('total_price', calc.total)
+  }, [calc.total, setValue])
 
   const mutation = isEdit ? updateWork : createWork
 
   async function onSubmit(data) {
-    if (remindersBlocked) {
+    if (remindersBlocked || paymentsBlock) {
       return
     }
 
@@ -303,10 +304,15 @@ export default function WorkForm() {
         override: !!s.override,
         applied: s.applied,
       })),
-      total_price_taxable: data.total_price_taxable !== '' && data.total_price_taxable != null ? parseFloat(data.total_price_taxable) : null,
+      // Only what the admin decides goes up: the share of each row and its taxable toggle. The server works out
+      // the surcharge, the VAT and the total again.
       installments: data.installments.map((inst) => ({
-        ...inst,
-        amount: inst.amount !== '' ? parseFloat(inst.amount) : 0,
+        title: inst.title ?? '',
+        type: inst.type,
+        status: inst.status,
+        date: inst.date ?? '',
+        base: inst.base !== '' && inst.base != null ? parseFloat(inst.base) : 0,
+        taxable: !!inst.taxable,
       })),
       services: data.services.map((svc) => ({
         ...svc,
@@ -728,52 +734,31 @@ export default function WorkForm() {
         <section>
           <SectionHeading>{__('Payments', 'eleva-crm-for-photographers')}</SectionHeading>
           <div className="ftnc-fields">
-            {legacyTotal && (watchedServices ?? []).length === 0 && (
+            {work?.legacy_payments && (
               <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2 mb-3">
                 {__(
-                  "This work's total was set before automatic calculation was introduced in version 1.5.0. Add at least one service row above so it can be calculated automatically.",
+                  'This work was saved before the payments changed. Check the installments below: each one is now a share of the services price, and they must add up to the amount shown before you can save.',
                   'eleva-crm-for-photographers'
                 )}
               </p>
             )}
-            <div className="flex flex-wrap gap-6">
-              <FormField label={__('Total Price (€)', 'eleva-crm-for-photographers')} htmlFor="total_price">
-                <input
-                  id="total_price"
-                  type="text"
-                  readOnly
-                  tabIndex={-1}
-                  value={new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(computedTotal)}
-                  className="rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-600 w-48 cursor-not-allowed"
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  {__('Computed from the services rows and supplier fees.', 'eleva-crm-for-photographers')}
-                </p>
-              </FormField>
-              {TaxablePriceField && window.FotonicApp?.features?.taxable_price && (
-                <TaxablePriceField register={register} error={errors.total_price_taxable?.message} />
-              )}
-              {VatSummaryField && window.FotonicApp?.features?.quotes && (
-                <VatSummaryField
-                  total={computedTotal}
-                  taxable={watchedTaxable}
-                  installments={watchedInstallments ?? []}
-                  work={work ?? null}
-                />
-              )}
-            </div>
+            <PaymentsSummary
+              subtotal={servicesSubtotal}
+              fees={addedFees}
+              required={required}
+              calc={calc}
+              vat={vat}
+              showTaxable={!!window.FotonicApp?.features?.taxable_price}
+            />
 
             <div>
-              {/* Sub-heading inside the Payments section, so an <h3> under the section's
-                  <h2>, never a second SectionHeading (that would emit a sibling <h2>).
-                  Type treatment is unchanged; `mb-3` is deliberately tighter than the
-                  16px `.ftnc-section-heading` gap so the level reads as subordinate. */}
-              <h3 className="text-sm font-medium text-gray-700 mb-3">{__('Installments', 'eleva-crm-for-photographers')}</h3>
+              {/* The Installments sub-heading (an <h3> under the section's <h2>), the paid and unpaid totals and the
+                  arrows of the cards are drawn by the repeater itself. */}
               <Controller
                 name="installments"
                 control={control}
                 render={({ field }) => (
-                  <InstallmentsRepeater value={field.value} onChange={field.onChange} />
+                  <InstallmentsRepeater value={field.value} onChange={field.onChange} required={required} vat={vat} />
                 )}
               />
             </div>
@@ -800,6 +785,10 @@ export default function WorkForm() {
           </section>
         )}
 
+        {paymentsBlock && (
+          <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2">{paymentsBlock}</p>
+        )}
+
         {mutation.error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
             {mutation.error.message ?? __('An error occurred. Please try again.', 'eleva-crm-for-photographers')}
@@ -807,7 +796,7 @@ export default function WorkForm() {
         )}
 
         <div className="flex items-center gap-3 pt-2">
-          <Button type="submit" disabled={isSubmitting || mutation.isPending || remindersBlocked}>
+          <Button type="submit" disabled={isSubmitting || mutation.isPending || remindersBlocked || !!paymentsBlock}>
             {mutation.isPending
               ? __('Saving...', 'eleva-crm-for-photographers')
               : isEdit

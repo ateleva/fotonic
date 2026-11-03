@@ -5,6 +5,7 @@ import { useWorks } from '../../api/works'
 import { formatDate } from '../../utils/date'
 import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
+import { useWhatsNew } from '../../api/whatsNew'
 import Table from '../../components/Table'
 import Badge from '../../components/Badge'
 import Spinner from '../../components/Spinner'
@@ -33,6 +34,10 @@ export default function WorkList() {
   const [alertFilter, setAlertFilter] = useState(false)
   const [page, setPage] = useState(1)
   const [typesOpen, setTypesOpen] = useState(false)
+  // Since 1.6.6 the payment types hold the extra percentage (Rivalsa INPS): while the notice that says so is
+  // unread, the button is outlined, so it is the first thing seen on this page.
+  const { data: whatsNew } = useWhatsNew()
+  const highlightTypes = (whatsNew?.entries ?? []).some((e) => e.section === 'works' && /:works-payment-types$/.test(e.id))
 
   const params = {}
   if (search) params.search = search
@@ -122,7 +127,11 @@ export default function WorkList() {
         action={
           <div className="flex flex-wrap items-center justify-end gap-2">
             {RemindersButton && <RemindersButton />}
-            <Button variant="secondary" onClick={() => setTypesOpen(true)}>
+            <Button
+              variant="secondary"
+              onClick={() => setTypesOpen(true)}
+              className={highlightTypes ? 'ftnc-attention' : undefined}
+            >
               <Settings2 size={14} />
               {__('Manage payment types', 'eleva-crm-for-photographers')}
             </Button>

@@ -92,6 +92,15 @@ class Fotonic_Whats_New {
 				'body'    => __( 'Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. A Copy message button prepares the text for your client, with the link, the password and the expiry date. The Shots History tab adds it all up by year.', 'eleva-crm-for-photographers' ),
 			],
 			[
+				'id'      => '1.6.6:works-payments',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'works',
+				'title'   => __( 'Payments are easier to get right', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'On each installment you now write the part of the services price it covers. The installments must add up to the amount shown above them, and the total is worked out for you, so you can no longer get it wrong. Works you saved before show a notice: check their installments the next time you open them.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
 				'id'      => '1.6.6:works-search',
 				'plugin'  => 'free',
 				'since'   => '1.6.6',

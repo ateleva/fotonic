@@ -54,6 +54,7 @@ $ftnc_meta_prefixes = array(
 	'_ftnc_work_services',
 	'_ftnc_work_files',
 	'_ftnc_total_price',
+	'_ftnc_pay_model',
 	'_ftnc_installments',
 	'_ftnc_quick_notes',
 	'_ftnc_color',

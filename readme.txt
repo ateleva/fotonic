@@ -172,6 +172,7 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * New: Shots. In a work, write how many photos you took and how many you delivered. The Shots History tab lists them for every work, with the totals and a filter by year.
 * New: Delivery. In a work, write how you delivered the photos: a title (for example Pixieset gallery), the link, the date the link expires, a gallery password and a note. The Copy message button prepares a message for your client with the link, the password and the expiry date, ready to paste into WhatsApp, a social app or an email. For a USB stick, write it in the title and leave the link empty.
 * New: every page of the app names its browser tab (for example Works), so you can tell several open tabs apart. While the Vault is locked, the tab says so.
+* Change: the Payments section of a work works differently. On each installment you write the part of the services price it covers; the installments must add up to the amount shown, and the total price is worked out from them. Works you saved before show a notice: check their installments the next time you open them.
 * New: long lists are split into pages: 48 rows in Works and 24 in the other lists, with Previous and Next buttons.
 * New: the fields where you pick a customer, a service, a memory card or a backup location now have a search box: type a few letters and choose. Before, the customer list in a work showed only the first 100 customers.
 * Fix: the Works and Customers lists showed only the first 20 records, so with more than 20 the others could not be seen. They now show every record, page by page.
@@ -361,7 +362,7 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 == Upgrade Notice ==
 
 = 1.6.6 =
-Memory Cards move into a new Storage page, where you can also keep your backup locations, count your shots and write how you delivered each work. You can also unlock the Vault with a touch, where your browser supports it. Long lists now have pages. Update Eleva CRM Pro to 1.6.6 too.
+Memory Cards move into a new Storage page, with backup locations, shots and delivery notes. Unlock the Vault with a touch where your browser supports it. Payments are now worked out from the installments of a work. Update Eleva CRM Pro to 1.6.6 too.
 
 = 1.6.5 =
 A star now shows what changed in each section after an update, there is a Changelog page, and forms look more even. Update Eleva CRM Pro to 1.6.5 too: reminders, two-way Google Calendar sync and the INPS surcharge need both plugins.

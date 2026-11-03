@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { useService, useCreateService, useUpdateService, useDeleteService } from '../../api/services'
 import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
@@ -10,10 +10,6 @@ import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import { __ } from '../../utils/i18n'
-
-// Pro adds a switch to the service (a percentage added on top of the price typed in a work). A plain
-// {value, onChange} component: the form state stays here, nothing crosses the bundle boundary.
-const ServiceSurchargeField = window.FotonicProComponents?.ServiceSurchargeField ?? null
 
 export default function ServiceForm() {
   const { id } = useParams()
@@ -50,10 +46,9 @@ export default function ServiceForm() {
     register,
     handleSubmit,
     reset,
-    control,
     formState: { errors, isSubmitting },
   } = useForm({
-    defaultValues: { title: '', base_price: '', notes: '', surcharge: false },
+    defaultValues: { title: '', base_price: '', notes: '' },
   })
 
   useEffect(() => {
@@ -62,7 +57,6 @@ export default function ServiceForm() {
         title: service.title ?? '',
         base_price: service.base_price ?? '',
         notes: service.notes ?? '',
-        surcharge: !!service.surcharge,
       })
     }
   }, [service, reset])
@@ -104,7 +98,7 @@ export default function ServiceForm() {
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="ftnc-fields">
-        {/* One row: title, base price and (with Pro) the surcharge switch; notes full width below. */}
+        {/* One row: title and base price; notes full width below. */}
         <div className="flex flex-wrap items-start gap-x-6 gap-y-4">
           <div className="flex-1 min-w-[16rem]">
             <FormField
@@ -142,16 +136,6 @@ export default function ServiceForm() {
               />
             </FormField>
           </div>
-
-          {ServiceSurchargeField && window.FotonicApp?.features?.surcharge && (
-            <Controller
-              name="surcharge"
-              control={control}
-              render={({ field }) => (
-                <ServiceSurchargeField value={!!field.value} onChange={field.onChange} />
-              )}
-            />
-          )}
         </div>
 
         <FormField label={__('Notes', 'eleva-crm-for-photographers')} htmlFor="notes" error={errors.notes?.message}>

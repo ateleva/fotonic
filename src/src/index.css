@@ -617,3 +617,18 @@
   background-clip: padding-box;
 }
 #fotonic-app-root .ftnc-table-scroll > table { background: transparent; }
+
+/* A button the admin is asked to notice (a What's new notice points at it): the theme colour as an outline with a
+   soft pulse, which stops for people who ask for less motion. Gone as soon as the notice is closed. */
+#fotonic-app-root .ftnc-attention {
+  outline: 2px solid var(--fotonic-primary);
+  outline-offset: 2px;
+  animation: ftnc-attention-pulse 2s ease-in-out infinite;
+}
+@keyframes ftnc-attention-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--fotonic-primary) 35%, transparent); }
+  50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--fotonic-primary) 0%, transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #fotonic-app-root .ftnc-attention { animation: none; }
+}

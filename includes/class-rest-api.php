@@ -2410,6 +2410,11 @@ class Fotonic_REST_API {
 			);
 		}
 
+		$payments_error = self::payments_error( (array) $body, 0 );
+		if ( $payments_error ) {
+			return $payments_error;
+		}
+
 		$post_id = wp_insert_post( wp_slash( [
 			'post_type'    => 'ftnc_work',
 			'post_status'  => 'publish',
@@ -2455,6 +2460,11 @@ class Fotonic_REST_API {
 		$locked = self::locked_write_response( (array) $body );
 		if ( $locked ) {
 			return $locked;
+		}
+
+		$payments_error = self::payments_error( (array) $body, $id );
+		if ( $payments_error ) {
+			return $payments_error;
 		}
 
 		$update = [ 'ID' => $id ];
@@ -2747,6 +2757,19 @@ class Fotonic_REST_API {
 	 * @return float The persisted total.
 	 */
 	public static function recompute_total_price( int $post_id ): float {
+		// Payments model 2: the installment rows decide the total (their shares plus any surcharge).
+		// A work that has no rows yet (made from a quote, waiting for its installments) still follows its services.
+		$stored_rows = self::stored_installments( $post_id );
+		if ( $stored_rows && (int) get_post_meta( $post_id, Fotonic_Payments::MODEL_META, true ) === Fotonic_Payments::MODEL ) {
+			$sum = 0.0;
+			foreach ( $stored_rows as $inst ) {
+				$sum += (float) ( $inst['base'] ?? 0 ) + (float) ( $inst['surcharge'] ?? 0 );
+			}
+			$total = Fotonic_Payments::round2( $sum );
+			update_post_meta( $post_id, '_ftnc_total_price', $total );
+			return $total;
+		}
+
 		$rows     = json_decode( (string) get_post_meta( $post_id, '_ftnc_work_services', true ), true );
 		$subtotal = 0.0;
 		if ( is_array( $rows ) ) {
@@ -2773,6 +2796,72 @@ class Fotonic_REST_API {
 
 		update_post_meta( $post_id, '_ftnc_total_price', $total );
 		return $total;
+	}
+
+	/** The stored installment rows of a work (an empty list when there are none). */
+	private static function stored_installments( int $post_id ): array {
+		$rows = json_decode( (string) get_post_meta( $post_id, '_ftnc_installments', true ), true );
+		return is_array( $rows ) ? array_values( array_filter( $rows, 'is_array' ) ) : [];
+	}
+
+	/**
+	 * Payments check before anything is written: a save that touches the services or the installments needs at
+	 * least one of each, and the shares typed on the installments must add up to what the work asks for. A
+	 * request with neither key (a partial update) is not checked. When only one side is sent, the other is read
+	 * from the stored work. Returns the 400 answer, or null.
+	 */
+	private static function payments_error( array $body, int $post_id ): ?\WP_REST_Response {
+		$has_svc  = isset( $body['services'] ) && is_array( $body['services'] );
+		$has_inst = isset( $body['installments'] ) && is_array( $body['installments'] );
+		if ( ! $has_svc && ! $has_inst ) {
+			return null;
+		}
+		// Services without installments, on a work that has none stored (a work made by a quote conversion, or an
+		// API client that only sends services): nothing to compare yet. The app always sends both.
+		if ( ! $has_inst && ( ! $post_id || ! self::stored_installments( $post_id ) ) ) {
+			return null;
+		}
+		if ( $has_svc ) {
+			$services = $body['services'];
+		} else {
+			$stored   = $post_id ? json_decode( (string) get_post_meta( $post_id, '_ftnc_work_services', true ), true ) : [];
+			$services = is_array( $stored ) ? $stored : [];
+		}
+		$installments = $has_inst ? $body['installments'] : ( $post_id ? self::stored_installments( $post_id ) : [] );
+
+		/**
+		 * Supplier fees marked "added" (Pro): they raise what the installments must cover. Receives the request
+		 * body because the suppliers of this save are not stored yet.
+		 *
+		 * @param float $adjustment Amount added to the services subtotal.
+		 * @param array $body       Request body.
+		 * @param int   $post_id    Work ID, 0 for a work being created.
+		 */
+		$adjustment = (float) apply_filters( 'ftnc_work_required_adjustment', 0.0, $body, $post_id );
+		$error      = Fotonic_Payments::check( $services, $installments, $adjustment );
+		if ( ! $error ) {
+			return null;
+		}
+		$required = number_format( $error['required'], 2, '.', '' );
+		$planned  = number_format( $error['planned'], 2, '.', '' );
+		switch ( $error['code'] ) {
+			case 'no_services':
+				$message = __( 'Add at least one service.', 'eleva-crm-for-photographers' );
+				break;
+			case 'no_installments':
+				$message = __( 'Add at least one installment.', 'eleva-crm-for-photographers' );
+				break;
+			case 'invalid_installment':
+				$message = __( 'Every installment needs an amount above zero.', 'eleva-crm-for-photographers' );
+				break;
+			default:
+				/* translators: 1: amount the installments must cover, 2: amount entered */
+				$message = sprintf( __( 'The installments add up to %2$s but must add up to %1$s.', 'eleva-crm-for-photographers' ), $required, $planned );
+		}
+		return new \WP_REST_Response(
+			[ 'code' => $error['code'], 'message' => $message, 'required' => (float) $error['required'], 'planned' => (float) $error['planned'] ],
+			400
+		);
 	}
 
 	/**
@@ -2943,30 +3032,38 @@ class Fotonic_REST_API {
 			update_post_meta( $post_id, '_ftnc_work_files', wp_slash( wp_json_encode( array_values( $clean ) ) ) );
 		}
 
-		// Payments.
-		self::recompute_total_price( $post_id );
-
-		if ( isset( $body['installments'] )&& is_array( $body['installments'] ) ) {
-			$clean = [];
+		// Payments. The rows are stored first: from the model 2 on they decide the total.
+		if ( isset( $body['installments'] ) && is_array( $body['installments'] ) ) {
+			$types       = self::get_payment_types_option();
+			$valid_slugs = self::get_valid_payment_type_slugs();
+			$fallback    = ! empty( $valid_slugs ) ? $valid_slugs[0] : 'default';
+			$rows        = [];
 			foreach ( $body['installments'] as $inst ) {
 				if ( ! is_array( $inst ) ) {
 					continue;
 				}
-				$status      = ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid';
-				$valid_slugs = self::get_valid_payment_type_slugs();
-				$fallback    = ! empty( $valid_slugs ) ? $valid_slugs[0] : 'default';
-				$type        = ( isset( $inst['type'] ) && in_array( $inst['type'], $valid_slugs, true ) ) ? $inst['type'] : $fallback;
-				$raw_date    = sanitize_text_field( $inst['date'] ?? '' );
-				$clean[]     = [
-					'title'  => sanitize_text_field( $inst['title'] ?? '' ),
-					'amount' => max( 0.0, (float) ( $inst['amount'] ?? 0 ) ),
-					'status' => $status,
-					'type'   => $type,
-					'date'   => preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw_date ) ? $raw_date : '',
+				$raw_date = sanitize_text_field( $inst['date'] ?? '' );
+				$rows[]   = [
+					'title'   => sanitize_text_field( $inst['title'] ?? '' ),
+					'base'    => $inst['base'] ?? ( $inst['amount'] ?? 0 ),
+					'status'  => ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid',
+					'type'    => ( isset( $inst['type'] ) && in_array( $inst['type'], $valid_slugs, true ) ) ? $inst['type'] : $fallback,
+					'taxable' => ! empty( $inst['taxable'] ),
+					'date'    => preg_match( '/^\d{4}-\d{2}-\d{2}$/', $raw_date ) ? $raw_date : '',
 				];
 			}
-			update_post_meta( $post_id, '_ftnc_installments', wp_slash( wp_json_encode( $clean ) ) );
+			/**
+			 * The VAT setting the work was saved with (Pro). Without Pro there is no VAT.
+			 *
+			 * @param array $vat     [mode => none|excluded|included, rate => percent].
+			 * @param int   $post_id Work ID.
+			 */
+			$vat  = (array) apply_filters( 'ftnc_work_vat_for_installments', [ 'mode' => 'none', 'rate' => 0.0 ], $post_id );
+			$calc = Fotonic_Payments::compute( $rows, $types, $vat );
+			update_post_meta( $post_id, '_ftnc_installments', wp_slash( wp_json_encode( $calc['rows'] ) ) );
+			update_post_meta( $post_id, Fotonic_Payments::MODEL_META, Fotonic_Payments::MODEL );
 		}
+		self::recompute_total_price( $post_id );
 
 		// Calendar color.
 		if ( array_key_exists( 'color', $body ) ) {
@@ -3223,11 +3320,16 @@ class Fotonic_REST_API {
 						continue;
 					}
 					$installments[] = [
-						'title'  => (string) ( $inst['title'] ?? '' ),
-						'amount' => max( 0.0, (float) ( $inst['amount'] ?? 0 ) ),
-						'status' => ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid',
-						'type'   => (string) ( $inst['type'] ?? 'default' ),
-						'date'   => (string) ( $inst['date'] ?? '' ),
+						'title'     => (string) ( $inst['title'] ?? '' ),
+						'amount'    => max( 0.0, (float) ( $inst['amount'] ?? 0 ) ),
+						// A row saved before payments model 2 has no share: its old amount stands in for it.
+						'base'      => max( 0.0, (float) ( $inst['base'] ?? ( $inst['amount'] ?? 0 ) ) ),
+						'surcharge' => max( 0.0, (float) ( $inst['surcharge'] ?? 0 ) ),
+						'taxable'   => ! empty( $inst['taxable'] ),
+						'vat'       => max( 0.0, (float) ( $inst['vat'] ?? 0 ) ),
+						'status'    => ( isset( $inst['status'] ) && $inst['status'] === 'paid' ) ? 'paid' : 'unpaid',
+						'type'      => (string) ( $inst['type'] ?? 'default' ),
+						'date'      => (string) ( $inst['date'] ?? '' ),
 					];
 				}
 			}
@@ -3387,6 +3489,8 @@ class Fotonic_REST_API {
 			'total_price_taxable' => self::format_taxable_price( $post->ID ),
 			'gcal_sync'           => (bool) get_post_meta( $post->ID, '_ftnc_gcal_sync', true ),
 			'installments'        => $installments,
+			// True for a work saved before payments model 2: its first save must make the installments add up.
+			'legacy_payments'     => (int) get_post_meta( $post->ID, Fotonic_Payments::MODEL_META, true ) !== Fotonic_Payments::MODEL,
 			'payment_status'  => $payment_status,
 			'notes'           => $notes,
 			'quick_notes'     => (string) get_post_meta( $post->ID, '_ftnc_quick_notes', true ),
@@ -3623,7 +3727,11 @@ class Fotonic_REST_API {
 	}
 
 	public static function get_payment_types( \WP_REST_Request $request ): \WP_REST_Response {
-		return new \WP_REST_Response( self::get_payment_types_option(), 200 );
+		$types = array_map( static function ( $t ) {
+			$t['surcharge_pct'] = max( 0.0, min( 100.0, (float) ( $t['surcharge_pct'] ?? 0 ) ) );
+			return $t;
+		}, self::get_payment_types_option() );
+		return new \WP_REST_Response( $types, 200 );
 	}
 
 	public static function create_payment_type( \WP_REST_Request $request ): \WP_REST_Response {
@@ -3645,6 +3753,9 @@ class Fotonic_REST_API {
 			}
 		}
 		$new     = [ 'id' => $max_id + 1, 'slug' => $slug, 'label' => $label ];
+		if ( null !== $request->get_param( 'surcharge_pct' ) ) {
+			$new['surcharge_pct'] = max( 0.0, min( 100.0, (float) $request->get_param( 'surcharge_pct' ) ) );
+		}
 		$types[] = $new;
 		self::save_payment_types_option( $types );
 		return new \WP_REST_Response( $new, 201 );
@@ -3662,6 +3773,9 @@ class Fotonic_REST_API {
 		foreach ( $types as &$t ) {
 			if ( (int) $t['id'] === $id ) {
 				$t['label'] = $label;
+				if ( null !== $request->get_param( 'surcharge_pct' ) ) {
+					$t['surcharge_pct'] = max( 0.0, min( 100.0, (float) $request->get_param( 'surcharge_pct' ) ) );
+				}
 				$updated    = $t;
 				$found      = true;
 				break;

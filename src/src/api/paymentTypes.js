@@ -12,10 +12,11 @@ export function usePaymentTypes() {
 export function useCreatePaymentType() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (label) =>
+    // A plain label, or { label, surcharge_pct } (Pro sets the percentage).
+    mutationFn: (input) =>
       apiFetch('payment-types', {
         method: 'POST',
-        body: JSON.stringify({ label }),
+        body: JSON.stringify(typeof input === 'string' ? { label: input } : input),
       }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['payment-types'] }),
   })
@@ -24,10 +25,10 @@ export function useCreatePaymentType() {
 export function useUpdatePaymentType() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, label }) =>
+    mutationFn: ({ id, ...fields }) =>
       apiFetch(`payment-types/${id}`, {
         method: 'PUT',
-        body: JSON.stringify({ label }),
+        body: JSON.stringify(fields),
       }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['payment-types'] }),
   })

@@ -3,7 +3,7 @@ import Button from '../../components/Button'
 import RowReorder from '../../components/RowReorder'
 import { moveRow } from '../../utils/moveRow'
 import SearchSelect from '../../components/SearchSelect'
-import { __, sprintf } from '../../utils/i18n'
+import { __ } from '../../utils/i18n'
 
 const emptyRow = () => ({
   service_id: '',
@@ -73,32 +73,15 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                     />
                   </td>
                   <td className="px-3 py-2">
-                    {(() => {
-                      // A service can carry a percentage added on top of the typed price (Pro sets it).
-                      // The field keeps what the admin types; the suffix says it will be increased.
-                      const pct = Number(services.find((svc) => String(svc.id) === String(row.service_id))?.surcharge_pct) || 0
-                      return (
-                        <div className="relative">
-                          <input
-                            type="number"
-                            min="0"
-                            step="any"
-                            value={row.price_override}
-                            onChange={(e) => updateRow(index, 'price_override', e.target.value)}
-                            className={`w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500${pct > 0 ? ' pr-12' : ''}`}
-                            placeholder="0.00"
-                          />
-                          {pct > 0 && (
-                            <span
-                              className="absolute right-2 top-1/2 -translate-y-1/2 cursor-help rounded bg-amber-50 px-1 text-xs font-medium text-amber-700"
-                              title={sprintf(__('This service adds %s%% to the price you enter. The total of the work already includes it.', 'eleva-crm-for-photographers'), pct)}
-                            >
-                              +{pct}%
-                            </span>
-                          )}
-                        </div>
-                      )
-                    })()}
+                    <input
+                      type="number"
+                      min="0"
+                      step="any"
+                      value={row.price_override}
+                      onChange={(e) => updateRow(index, 'price_override', e.target.value)}
+                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      placeholder="0.00"
+                    />
                   </td>
                   <td className="px-3 py-2">
                     <input

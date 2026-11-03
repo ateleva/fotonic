@@ -156,7 +156,7 @@ $scenario = function ( string $label, ?string $key ) use ( $rest, $meta_json, $T
             'customer_id'     => $cid,
             'event_addresses' => [ [ 'label' => $T[ $n ], 'street' => 'Via ' . $T[ $n ] ] ],
             'services'        => [ [ 'service_id' => $svc, 'price_override' => 100, 'notes_override' => $T[ $n ] ] ],
-            'installments'    => [ [ 'title' => $T[ $n ], 'amount' => 50, 'status' => 'unpaid', 'type' => 'default', 'date' => '2099-05-01' ] ],
+            'installments'    => [ [ 'title' => $T[ $n ], 'base' => 100, 'status' => 'unpaid', 'type' => 'default', 'date' => '2099-05-01' ] ],
             'files'           => [ [ 'type' => 'link', 'url' => 'https://example.com/a/b?x=1', 'label' => $T[ $n ] ] ],
             'quick_notes'     => $H[ $n ],
             'memory_cards'    => [ [ 'card_id' => $card, 'notes' => $T[ $n ] ] ],

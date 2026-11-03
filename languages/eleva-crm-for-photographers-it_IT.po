@@ -2963,3 +2963,93 @@ msgstr "Sposta su"
 
 msgid "Move down"
 msgstr "Sposta giù"
+
+msgid "Add at least one service."
+msgstr "Aggiungi almeno un servizio."
+
+msgid "Add at least one installment."
+msgstr "Aggiungi almeno una rata."
+
+msgid "Every installment needs an amount above zero."
+msgstr "Ogni rata deve avere un importo maggiore di zero."
+
+msgid "The installments add up to %2$s but must add up to %1$s."
+msgstr "Le rate sommano %2$s ma devono sommare %1$s."
+
+msgid "Share of services (€)"
+msgstr "Quota dei servizi (€)"
+
+msgid "Added"
+msgstr "Aggiunta"
+
+msgid "Taxable"
+msgstr "Imponibile"
+
+msgid "Client pays"
+msgstr "Il cliente paga"
+
+msgid "A row with the extra percentage is always taxable."
+msgstr "Una rata con la percentuale aggiuntiva è sempre imponibile."
+
+msgid "Left to assign: %s"
+msgstr "Da assegnare: %s"
+
+msgid "Over by %s: lower the shares of the rows."
+msgstr "Eccedenza di %s: abbassa le quote delle rate."
+
+msgid "Supplier fees added to the price"
+msgstr "Commissioni dei fornitori aggiunte al prezzo"
+
+msgid "The installments must cover"
+msgstr "Le rate devono coprire"
+
+msgid "Worked out from the installments."
+msgstr "Calcolato dalle rate."
+
+msgid "Taxable Price (€)"
+msgstr "Prezzo imponibile (€)"
+
+msgid "The installments marked as taxable."
+msgstr "Le rate segnate come imponibili."
+
+msgid "VAT"
+msgstr "IVA"
+
+msgid "Total to collect (€)"
+msgstr "Totale da incassare (€)"
+
+msgid "Total price plus VAT."
+msgstr "Prezzo totale più IVA."
+
+msgid "The installments must add up to the amount they have to cover."
+msgstr "Le rate devono sommare all'importo che devono coprire."
+
+msgid "This work was saved before the payments changed. Check the installments below: each one is now a share of the services price, and they must add up to the amount shown before you can save."
+msgstr "Questo lavoro è stato salvato prima del cambio dei pagamenti. Controlla le rate qui sotto: ognuna è ora una quota del prezzo dei servizi e, per salvare, devono sommare all'importo indicato."
+
+msgid "Payments are easier to get right"
+msgstr "I pagamenti sono più facili da gestire"
+
+msgid "On each installment you now write the part of the services price it covers. The installments must add up to the amount shown above them, and the total is worked out for you, so you can no longer get it wrong. Works you saved before show a notice: check their installments the next time you open them."
+msgstr "Su ogni rata ora scrivi la parte del prezzo dei servizi che copre. Le rate devono sommare all'importo mostrato sopra di loro e il totale lo calcola l'app, quindi non puoi più sbagliarlo. I lavori salvati prima mostrano un avviso: controlla le loro rate la prossima volta che li apri."
+
+msgid "Installment %s"
+msgstr "Rata %s"
+
+msgid "Extra added: %s"
+msgstr "Aggiunta: %s"
+
+msgid "Move left"
+msgstr "Sposta a sinistra"
+
+msgid "Move right"
+msgstr "Sposta a destra"
+
+msgid "Previous installments"
+msgstr "Rate precedenti"
+
+msgid "Next installments"
+msgstr "Rate successive"
+
+msgid "%1$s added for the INPS surcharge (%2$s%%)"
+msgstr "%1$s aggiunti per la rivalsa INPS (%2$s%%)"

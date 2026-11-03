@@ -75,6 +75,7 @@ class Fotonic_Backup_Registry {
                     '_ftnc_delivery_password',
                     '_ftnc_delivery_expires',
                     '_ftnc_gcal_sync',
+                    '_ftnc_pay_model',
                     // Free never writes this (Pro's Google Calendar sync does via
                     // ftnc_after_save_work / its own sync path) but it is work-scoped
                     // state exposed by free's own REST formatter, same as _ftnc_gcal_sync
