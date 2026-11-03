@@ -385,6 +385,22 @@ class Fotonic_Vault {
 	}
 
 	/**
+	 * Open a session with a Master Key that was already proven by another route (the fingerprint
+	 * wrap opened). Same steps as the end of unlock(): the session cookie, and the backup keypair
+	 * backfill. Callers must have checked that the key is the real one; GCM success is that proof.
+	 *
+	 * @param string $mk Raw 32-byte Master Key.
+	 * @return void
+	 */
+	public static function unlock_with_key( string $mk ): void {
+		if ( 32 !== strlen( $mk ) ) {
+			return;
+		}
+		self::set_session_cookie( $mk );
+		Fotonic_Backup_Keys::setup( $mk );
+	}
+
+	/**
 	 * Destroy the vault session cookie.
 	 *
 	 * @return void

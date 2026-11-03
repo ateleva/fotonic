@@ -3379,3 +3379,35 @@ msgstr ""
 #: src/src/features/vault/FingerprintPanel.jsx:117
 msgid "Your device will ask you to confirm twice. This only happens once. Each code works only once: if you just used it, wait for the next one."
 msgstr ""
+
+#: includes/class-rest-api.php:1005
+msgid "The fingerprint setup changed in the meantime. Try again."
+msgstr ""
+
+#: includes/class-rest-api.php:1011
+msgid "Could not read the fingerprint answer."
+msgstr ""
+
+#: includes/class-rest-api.php:1018
+msgid "The fingerprint was not accepted. Use your password and code."
+msgstr ""
+
+#: src/src/features/vault/useFingerprintUnlock.js:49
+msgid "The fingerprint did not work. Use your password and code."
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:101
+msgid "Or use your password and code"
+msgstr ""
+
+#: src/src/features/vault/FingerprintInvite.jsx:52
+msgid "Unlock faster"
+msgstr ""
+
+#: src/src/features/vault/FingerprintInvite.jsx:53
+msgid "Next time, open the Vault with a touch. It takes a few seconds to set up."
+msgstr ""
+
+#: src/src/features/vault/FingerprintInvite.jsx:58
+msgid "Turn on"
+msgstr ""

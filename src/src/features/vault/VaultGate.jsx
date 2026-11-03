@@ -10,6 +10,7 @@ import RecoveryKitWizard from './RecoveryKitWizard'
 import VaultChoiceScreen from './VaultChoiceScreen'
 import EncryptExistingScreen from './EncryptExistingScreen'
 import EncryptPausedBar from './EncryptPausedBar'
+import FingerprintInvite from './FingerprintInvite'
 import { showChoice, encryptView, readDismissed, writeDismissed } from '../../utils/vaultFlow'
 import TotpEnroll from './TotpEnroll'
 import { __ } from '../../utils/i18n'
@@ -187,6 +188,7 @@ export default function VaultGate({ router }) {
     <>
       {isUnlocked && data?.kit_ok === false ? <RecoveryKitWizard /> : <RouterProvider router={router} />}
       {encView === 'bar' && <EncryptPausedBar encrypt={data.encrypt} />}
+      {isUnlocked && data?.kit_ok !== false && !encView && <FingerprintInvite />}
     </>
   )
 }

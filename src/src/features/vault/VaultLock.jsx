@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
-import { Lock } from 'lucide-react'
+import { Lock, Fingerprint } from 'lucide-react'
 import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import PasswordInput from '../../components/PasswordInput'
 import Spinner from '../../components/Spinner'
 import VaultRecoveryPanel from './VaultRecoveryPanel'
+import { useFingerprintUnlock } from './useFingerprintUnlock'
 import { __ } from '../../utils/i18n'
 
 /**
@@ -16,7 +17,7 @@ import { __ } from '../../utils/i18n'
  */
 export default function VaultLock() {
   const queryClient = useQueryClient()
-  const { unlock } = useVault()
+  const { unlock, markUnlocked } = useVault()
   const [showRecovery, setShowRecovery] = useState(false)
 
   // The browser tab says so while the Vault is locked, so a tab that was left open can be told from the others.
@@ -27,6 +28,12 @@ export default function VaultLock() {
     document.title = `🔒 ${__('Vault locked', 'eleva-crm-for-photographers')} · Eleva CRM`
     return () => { document.title = original }
   }, [])
+
+  // After the server opened the Vault with the fingerprint, the gate re-reads the status like after a password unlock.
+  const fingerprint = useFingerprintUnlock(async () => {
+    markUnlocked()
+    await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+  })
 
   const {
     register,
@@ -44,6 +51,8 @@ export default function VaultLock() {
       })
       return
     }
+    // One-time invite to turn on the fingerprint is shown after a password unlock (see FingerprintInvite).
+    try { sessionStorage.setItem('ftnc_fp_invite', '1') } catch { /* private mode: no invite */ }
     // Vault is now unlocked in memory — invalidate status so VaultGate re-renders
     await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
@@ -74,6 +83,24 @@ export default function VaultLock() {
                 {__('Enter your vault password and authenticator code to access your data.', 'eleva-crm-for-photographers')}
               </p>
             </div>
+
+            {fingerprint.available && (
+              <div className="mb-5 space-y-2">
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="w-full"
+                  onClick={fingerprint.start}
+                  disabled={fingerprint.busy}
+                >
+                  {fingerprint.busy
+                    ? <Spinner size="sm" />
+                    : <><Fingerprint size={16} className="mr-2 inline" />{__('Unlock with fingerprint', 'eleva-crm-for-photographers')}</>}
+                </Button>
+                {fingerprint.error && <p className="text-sm text-red-600 text-center">{fingerprint.error}</p>}
+                <p className="text-xs text-gray-400 text-center">{__('Or use your password and code', 'eleva-crm-for-photographers')}</p>
+              </div>
+            )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {/* Must be inside <form> — browser only links username hint to password fields in the same form */}

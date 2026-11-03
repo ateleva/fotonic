@@ -30,6 +30,8 @@ export const vaultResetTotp = (data) => post('vault/reset-totp', data)
 
 // Fingerprint unlock (WebAuthn PRF). Enrol: begin (password + code) then finish (credential + key).
 export const fetchFingerprintDevices = () => apiFetch('vault/fingerprint')
+export const fetchFingerprintChallenge = (host) => apiFetch('vault/fingerprint/challenge?host=' + encodeURIComponent(host))
+export const fingerprintUnlock = (data) => post('vault/fingerprint/unlock', data)
 export const fingerprintBegin = (data) => post('vault/fingerprint/begin', data)
 export const fingerprintFinish = (data) => post('vault/fingerprint/finish', data)
 export const fingerprintRemove = (credId) => post('vault/fingerprint/remove', { cred_id: credId })

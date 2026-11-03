@@ -2891,3 +2891,27 @@ msgstr "Il dispositivo non ha completato la configurazione. Riprova con un nuovo
 
 msgid "Your device will ask you to confirm twice. This only happens once. Each code works only once: if you just used it, wait for the next one."
 msgstr "Il dispositivo ti chiederà di confermare due volte. Succede solo questa volta. Ogni codice vale una sola volta: se l'hai appena usato, aspetta il successivo."
+
+msgid "Or use your password and code"
+msgstr "Oppure usa password e codice"
+
+msgid "The fingerprint did not work. Use your password and code."
+msgstr "L'impronta non ha funzionato. Usa password e codice."
+
+msgid "The fingerprint setup changed in the meantime. Try again."
+msgstr "La configurazione dell'impronta è cambiata nel frattempo. Riprova."
+
+msgid "The fingerprint was not accepted. Use your password and code."
+msgstr "L'impronta non è stata accettata. Usa password e codice."
+
+msgid "Could not read the fingerprint answer."
+msgstr "Impossibile leggere la risposta dell'impronta."
+
+msgid "Unlock faster"
+msgstr "Sblocca più in fretta"
+
+msgid "Next time, open the Vault with a touch. It takes a few seconds to set up."
+msgstr "La prossima volta apri il Vault con un tocco. Bastano pochi secondi per attivarlo."
+
+msgid "Turn on"
+msgstr "Attiva"

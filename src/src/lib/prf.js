@@ -130,3 +130,43 @@ export function guessDeviceName() {
   else if (/Linux/.test(ua)) os = 'Linux'
   return os ? `${browser} on ${os}` : browser
 }
+
+/**
+ * Ask the device for the secrets of the enrolled credentials of this host (one prompt) and derive the
+ * two keys the server needs: the one that opens the wrap now and the one it is wrapped under next.
+ *
+ * @param {Array<{cred_id:string,salt_cur:string,salt_next:string,gen:number}>} devices From the challenge.
+ * @returns {{device: object, kekCur: string, kekNext: string}} base64url keys
+ * @throws Error with .code: 'cancelled' | 'prf_unsupported' | 'insecure' | 'failed'
+ */
+export async function unlockCredential(devices) {
+  const evalByCredential = {}
+  for (const d of devices) {
+    evalByCredential[d.cred_id] = { first: b64uDecode(d.salt_cur), second: b64uDecode(d.salt_next) }
+  }
+  try {
+    const assertion = await navigator.credentials.get({
+      publicKey: {
+        rpId: window.location.hostname,
+        challenge: crypto.getRandomValues(new Uint8Array(32)),
+        allowCredentials: devices.map((d) => ({ type: 'public-key', id: b64uDecode(d.cred_id) })),
+        userVerification: 'required',
+        timeout: 120000,
+        extensions: { prf: { evalByCredential } },
+      },
+    })
+    const rawId = new Uint8Array(assertion.rawId)
+    const device = devices.find((d) => d.cred_id === b64uEncode(rawId))
+    const results = assertion.getClientExtensionResults?.()?.prf?.results
+    // Both secrets or nothing: a missing "second" must never turn into an unlock that does not rotate.
+    if (!device || !results?.first || !results?.second) throw failure('prf_unsupported')
+    const [kekCur, kekNext] = await Promise.all([deriveKek(results.first, rawId), deriveKek(results.second, rawId)])
+    return { device, kekCur: b64uEncode(kekCur), kekNext: b64uEncode(kekNext) }
+  } catch (err) {
+    if (err?.code) throw err
+    console.warn('[Eleva CRM] fingerprint unlock failed:', err?.name, err?.message)
+    if (err?.name === 'NotAllowedError' || err?.name === 'AbortError') throw failure('cancelled')
+    if (err?.name === 'SecurityError') throw failure('insecure')
+    throw failure('failed')
+  }
+}

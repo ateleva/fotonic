@@ -76,6 +76,24 @@ $r = Fotonic_Vault_Attempts::acquire( 'recovery' );
 t_true( ! $r->exhausted(), 'the recovery bucket is independent' );
 $r = null;
 
+// The fingerprint bucket is its own: five fingerprint failures never touch the password bucket (and the reverse).
+Fotonic_Vault_Attempts::clear_all();
+for ( $i = 1; $i <= 5; $i++ ) {
+	$f = Fotonic_Vault_Attempts::acquire( 'fingerprint' );
+	$f->failed();
+	$f = null;
+}
+$f = Fotonic_Vault_Attempts::acquire( 'fingerprint' );
+t_true( $f->exhausted(), 'after 5 failures the fingerprint bucket is exhausted' );
+$f = null;
+$c = Fotonic_Vault_Attempts::acquire( 'credentials' );
+t_true( ! $c->exhausted(), 'fingerprint failures do not lock the password route' );
+$c = null;
+Fotonic_Vault_Attempts::clear_all();
+$f = Fotonic_Vault_Attempts::acquire( 'fingerprint' );
+t_true( ! $f->exhausted(), 'clear_all also resets the fingerprint bucket' );
+$f = null;
+
 Fotonic_Vault_Attempts::clear_all();
 $x = Fotonic_Vault_Attempts::acquire( 'credentials' );
 t_true( ! $x->exhausted(), 'clear_all resets the counters' );
