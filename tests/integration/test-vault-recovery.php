@@ -20,6 +20,11 @@ t_preserve_options( [
 	'fotonic_vault_recovery_ack',
 	'fotonic_backup_pubkey',
 	'fotonic_backup_wrap_priv',
+	// reset_vault() also clears these three: without the snapshot, every run of this test made the open app start
+	// the "encrypt your data" window again at the next unlock (the fields this site had been through were forgotten).
+	'fotonic_vault_encrypt_version',
+	'fotonic_vault_encrypt_job',
+	'fotonic_vault_choice',
 ] );
 $t_cookie = isset( $_COOKIE ) ? $_COOKIE : array();
 
