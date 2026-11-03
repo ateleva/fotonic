@@ -13,6 +13,18 @@ const TINT_SOFT = 'color-mix(in srgb, var(--fotonic-primary) 6%, white)'
 
 // Version history of the plugins, one tab each: Eleva CRM, and Eleva CRM Pro when Pro is active. The text
 // comes from each plugin's own changelog (English). The sidebar footer links here with ?tab=free or ?tab=pro.
+// A new feature starts with its label ("New", "Novità" in Italian) in capitals and bold, so it stands out from the
+// fixes and changes. The label comes from the changelog line itself (already translated by the server).
+function ChangelogItem({ text }) {
+  const m = /^(New|Novità): ([\s\S]*)$/.exec(text)
+  if (!m) return <li>{text}</li>
+  return (
+    <li>
+      <strong className="font-bold uppercase text-gray-900">{m[1]}</strong>: {m[2]}
+    </li>
+  )
+}
+
 export default function ChangelogPage() {
   const { data, isLoading } = useChangelog()
   const [params, setParams] = useSearchParams()
@@ -79,7 +91,7 @@ export default function ChangelogPage() {
                 )}
               </h2>
               <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-gray-700">
-                {r.items.map((item, i) => <li key={i}>{item}</li>)}
+                {r.items.map((item, i) => <ChangelogItem key={i} text={item} />)}
               </ul>
             </section>
           ))}

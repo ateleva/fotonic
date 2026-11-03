@@ -28,26 +28,26 @@ t_equals( '1.6.4', Fotonic_Whats_New::baseline( 'free' ), 'a site with no baseli
 $v = Fotonic_Whats_New::visible_for( $admin );
 t_true( in_array( '1.6.5:works-payment-types', $ids( $v ), true ), 'such a site sees the 1.6.5 entries' );
 t_true( $v['overview']['show'], 'and the overview' );
-t_equals( 'overview:1.6.5', $v['overview']['id'], 'the overview id carries the newest version' );
-t_equals( '1.6.5', $v['entries'][0]['since'], 'every entry says which version brought it' );
+t_equals( 'overview:1.6.6', $v['overview']['id'], 'the overview id carries the newest version' );
+t_equals( '1.6.6', $v['entries'][0]['since'], 'every entry says which version brought it' );
 
 // Pro may be active here and brings its own entries: a fresh install has both baselines.
-Fotonic_Whats_New::set_baseline( 'free', '1.6.5' );
-Fotonic_Whats_New::set_baseline( 'pro', '1.6.5' );
-t_equals( [], $ids( Fotonic_Whats_New::visible_for( $admin ) ), 'a fresh install of 1.6.5 sees nothing' );
+Fotonic_Whats_New::set_baseline( 'free', '1.6.6' );
+Fotonic_Whats_New::set_baseline( 'pro', '1.6.6' );
+t_equals( [], $ids( Fotonic_Whats_New::visible_for( $admin ) ), 'a fresh install of 1.6.6 sees nothing' );
 t_equals( false, Fotonic_Whats_New::visible_for( $admin )['overview']['show'], 'and no overview' );
 Fotonic_Whats_New::set_baseline( 'free', '1.0.0' );
-t_equals( '1.6.5', Fotonic_Whats_New::baseline( 'free' ), 'a baseline is written once' );
-t_equals( '1.6.5', Fotonic_Whats_New::baseline( 'pro' ), 'each plugin has its own baseline' );
+t_equals( '1.6.6', Fotonic_Whats_New::baseline( 'free' ), 'a baseline is written once' );
+t_equals( '1.6.6', Fotonic_Whats_New::baseline( 'pro' ), 'each plugin has its own baseline' );
 delete_option( Fotonic_Whats_New::BASELINE_OPTION );
 
 // --- dismissal is per user --------------------------------------------------------------------------------
-Fotonic_Whats_New::dismiss( $admin, [ '1.6.5:works-payment-types', 'overview:1.6.5', 'bad id with spaces', '' ] );
+Fotonic_Whats_New::dismiss( $admin, [ '1.6.5:works-payment-types', 'overview:1.6.6', 'bad id with spaces', '' ] );
 $v = Fotonic_Whats_New::visible_for( $admin );
 t_true( ! in_array( '1.6.5:works-payment-types', $ids( $v ), true ), 'a closed entry stays closed' );
 t_true( in_array( '1.6.5:works-tidier', $ids( $v ), true ), 'the others stay' );
 t_equals( false, $v['overview']['show'], 'a closed overview stays closed' );
-t_equals( [ '1.6.5:works-payment-types', 'overview:1.6.5' ], Fotonic_Whats_New::dismissed( $admin ), 'only well-formed ids are stored' );
+t_equals( [ '1.6.5:works-payment-types', 'overview:1.6.6' ], Fotonic_Whats_New::dismissed( $admin ), 'only well-formed ids are stored' );
 
 $second = wp_insert_user( [ 'user_login' => 'ftnc_whatsnew_b_' . wp_generate_password( 6, false ), 'user_pass' => wp_generate_password( 20 ), 'role' => 'administrator' ] );
 $v2     = Fotonic_Whats_New::visible_for( (int) $second );

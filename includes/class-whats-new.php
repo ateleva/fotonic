@@ -58,6 +58,47 @@ class Fotonic_Whats_New {
 	private static function free_entries(): array {
 		return [
 			[
+				'id'      => '1.6.6:storage-page',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'storage',
+				'title'   => __( 'Storage: cards, backups and shots in one place', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'Memory Cards now live in Storage, next to two new tabs: Backup Locations, where you list the drives and cloud spaces that hold your backups, and Shots History.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
+				'id'      => '1.6.6:works-backups',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'works',
+				'title'   => __( 'Where each work is backed up', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'In a work, choose the backup locations where its photos are saved. If you delete a location later, the works that used it show a red sign in the list, and a button above the list shows only those works.', 'eleva-crm-for-photographers' ),
+			],
+			[
+				'id'      => '1.6.6:works-shots-delivery',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'works',
+				'title'   => __( 'Shots and delivery', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. The Shots History tab adds it all up by year.', 'eleva-crm-for-photographers' ),
+			],
+			[
+				'id'      => '1.6.6:works-pages',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'works',
+				'title'   => __( 'Long lists have pages', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'Works show 48 at a time and the other lists 24, with Previous and Next buttons. Before, only the first 20 works and customers were shown.', 'eleva-crm-for-photographers' ),
+			],
+			[
+				'id'      => '1.6.6:dashboard-tabs',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'dashboard',
+				'title'   => __( 'Every page names its browser tab', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'With several tabs open, each one says which page it shows, for example Works or Settings. When the Vault is locked, the tab says so with a lock.', 'eleva-crm-for-photographers' ),
+			],
+			[
 				'id'      => '1.6.5:works-payment-types',
 				'plugin'  => 'free',
 				'since'   => '1.6.5',
