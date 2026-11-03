@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { NavLink, Outlet, useLocation, Link } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, MemoryStick, PanelLeftClose, PanelLeftOpen, FileText } from 'lucide-react'
+import { NavLink, Outlet, useLocation, useMatches, Link } from 'react-router-dom'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, HardDrive, PanelLeftClose, PanelLeftOpen, FileText } from 'lucide-react'
 import logoPng from '../assets/icon-256x256.png'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
@@ -15,7 +15,7 @@ const features = window.FotonicApp?.features ?? {}
 
 // The "What's new" section each sidebar item stands for (Pro adds its entries under the same keys).
 const SECTION_OF = {
-  '/dashboard': 'dashboard', '/services': 'services', '/works': 'works', '/quotes': 'quotes',
+  '/dashboard': 'dashboard', '/services': 'services', '/works': 'works', '/storage': 'storage', '/quotes': 'quotes',
   '/kanban': 'kanban', '/analytics': 'analytics', '/suppliers': 'suppliers', '/expenses': 'expenses',
 }
 
@@ -35,6 +35,19 @@ const navLinkClass = (inactiveColor, forceActive = false) => ({ isActive }) =>
 export default function Layout() {
   const queryClient = useQueryClient()
   const { pathname } = useLocation()
+
+  // Name the browser tab after the page ("Edit Work · Eleva CRM"), so several tabs of the app can be told apart.
+  // The title comes from the route (see ROUTE_TITLES in router.jsx). Leaving the app (the lock screen unmounts this
+  // layout) puts the title WordPress had given the page back.
+  const matches = useMatches()
+  const leaf = matches[matches.length - 1]
+  const pageTitle = leaf?.handle?.title ? leaf.handle.title(leaf.params) : ''
+  useEffect(() => {
+    if (!pageTitle) return undefined
+    const original = document.title
+    document.title = `${pageTitle} · Eleva CRM`
+    return () => { document.title = original }
+  }, [pageTitle])
   const { isUnlocked, lock } = useVault()
   const shellRef = useRef(null)
   const [collapsed, toggleCollapsed] = useSidebarCollapse()
@@ -99,7 +112,7 @@ export default function Layout() {
     { to: '/customers',    label: __('Customers', 'eleva-crm-for-photographers'),     icon: Users },
     { to: '/services',     label: __('Services', 'eleva-crm-for-photographers'),      icon: Briefcase },
     { to: '/works',        label: __('Works', 'eleva-crm-for-photographers'),         icon: Camera },
-    { to: '/memory-cards', label: __('Memory Cards', 'eleva-crm-for-photographers'),  icon: MemoryStick },
+    { to: '/storage',      label: __('Storage', 'eleva-crm-for-photographers'),       icon: HardDrive },
     { to: '/calendar',     label: __('Calendar', 'eleva-crm-for-photographers'),      icon: CalendarDays },
   ]
 

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query'
 import { apiFetch } from './client'
 
 function buildQuery(params = {}) {
@@ -8,6 +8,8 @@ function buildQuery(params = {}) {
   if (params.per_page)       q.set('per_page',       params.per_page)
   if (params.payment_status) q.set('payment_status', params.payment_status)
   if (params.customer_id)    q.set('customer_id',    params.customer_id)
+  if (params.storage_alert)  q.set('storage_alert',  '1')
+  if (params.order)          q.set('order',          params.order)
   const qs = q.toString()
   return qs ? `works?${qs}` : 'works'
 }
@@ -16,6 +18,8 @@ export function useWorks(params = {}) {
   return useQuery({
     queryKey: ['works', params],
     queryFn: () => apiFetch(buildQuery(params)),
+    // Changing page or filter keeps the old rows on screen until the new ones arrive: no flash of a spinner.
+    placeholderData: keepPreviousData,
   })
 }
 
@@ -39,6 +43,8 @@ export function useCreateWork() {
       qc.invalidateQueries({ queryKey: ['works'] })
       qc.invalidateQueries({ queryKey: ['calendar'] })
       qc.invalidateQueries({ queryKey: ['memory-cards'] })
+      qc.invalidateQueries({ queryKey: ['backup-locations'] })
+      qc.invalidateQueries({ queryKey: ['shots-history'] })
     },
   })
 }
@@ -55,6 +61,8 @@ export function useUpdateWork() {
       qc.invalidateQueries({ queryKey: ['works'] })
       qc.invalidateQueries({ queryKey: ['calendar'] })
       qc.invalidateQueries({ queryKey: ['memory-cards'] })
+      qc.invalidateQueries({ queryKey: ['backup-locations'] })
+      qc.invalidateQueries({ queryKey: ['shots-history'] })
     },
   })
 }
@@ -67,6 +75,8 @@ export function useDeleteWork() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['works'] })
       qc.invalidateQueries({ queryKey: ['memory-cards'] })
+      qc.invalidateQueries({ queryKey: ['backup-locations'] })
+      qc.invalidateQueries({ queryKey: ['shots-history'] })
     },
   })
 }

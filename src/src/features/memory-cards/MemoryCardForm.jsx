@@ -63,7 +63,7 @@ export default function MemoryCardForm() {
       } else {
         await createCard.mutateAsync(data)
       }
-      navigate('/memory-cards')
+      navigate('/storage/cards')
     } catch {
       // Error shown below
     }
@@ -82,7 +82,7 @@ export default function MemoryCardForm() {
     <div className="p-6">
       <PageHeader
         title={isEdit ? __('Edit Card', 'eleva-crm-for-photographers') : __('New Card', 'eleva-crm-for-photographers')}
-        backTo="/memory-cards"
+        backTo="/storage/cards"
         onDelete={isEdit ? handleDeleteClick : undefined}
       />
 
@@ -135,7 +135,7 @@ export default function MemoryCardForm() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => navigate('/memory-cards')}
+            onClick={() => navigate('/storage/cards')}
           >
             {__('Cancel', 'eleva-crm-for-photographers')}
           </Button>
@@ -146,7 +146,7 @@ export default function MemoryCardForm() {
     <ConfirmDialog
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
-      onConfirm={() => deleteCard.mutate(id, { onSuccess: () => navigate('/memory-cards') })}
+      onConfirm={() => deleteCard.mutate(id, { onSuccess: () => navigate('/storage/cards') })}
       message={__('Delete this card? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>

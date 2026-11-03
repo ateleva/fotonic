@@ -6,6 +6,8 @@ import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Spinner from '../../components/Spinner'
+import Pagination from '../../components/Pagination'
+import { PAGE_SIZE } from '../../utils/pagination'
 import { __ } from '../../utils/i18n'
 
 function useDebounce(value, delay = 300) {
@@ -56,10 +58,13 @@ export default function CustomerList() {
   const navigate = useNavigate()
   const [search, setSearch] = useState('')
   const debouncedSearch = useDebounce(search)
+  const [page, setPage] = useState(1)
 
-  const { data, isLoading } = useCustomers(
-    debouncedSearch ? { search: debouncedSearch } : {}
-  )
+  const { data, isLoading } = useCustomers({
+    page,
+    per_page: PAGE_SIZE,
+    ...(debouncedSearch ? { search: debouncedSearch } : {}),
+  })
 
   const customers = Array.isArray(data) ? data : data?.data ?? []
 
@@ -162,7 +167,7 @@ export default function CustomerList() {
         <input
           type="search"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => { setSearch(e.target.value); setPage(1) }}
           placeholder={__('Search customers...', 'eleva-crm-for-photographers')}
           className="w-full max-w-sm rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
@@ -179,6 +184,8 @@ export default function CustomerList() {
           emptyMessage={__('No customers found. Add your first customer.', 'eleva-crm-for-photographers')}
         />
       )}
+
+      <Pagination page={page} pages={data?.pages ?? 1} total={data?.total ?? 0} size={PAGE_SIZE} onPage={setPage} />
 
     </div>
   )

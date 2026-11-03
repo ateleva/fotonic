@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { Lock } from 'lucide-react'
@@ -18,6 +18,15 @@ export default function VaultLock() {
   const queryClient = useQueryClient()
   const { unlock } = useVault()
   const [showRecovery, setShowRecovery] = useState(false)
+
+  // The browser tab says so while the Vault is locked, so a tab that was left open can be told from the others.
+  // The lock sign comes first: a narrow tab shows only the first letters. Once the Vault is open again the app
+  // names the tab after the page the person is on.
+  useEffect(() => {
+    const original = document.title
+    document.title = `🔒 ${__('Vault locked', 'eleva-crm-for-photographers')} · Eleva CRM`
+    return () => { document.title = original }
+  }, [])
 
   const {
     register,

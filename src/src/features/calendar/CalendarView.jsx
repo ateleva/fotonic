@@ -314,7 +314,6 @@ export function CalendarView() {
           {gcalEnabled && (
             <Button
               variant="primary"
-              size="sm"
               onClick={e => { e.stopPropagation(); handleSyncAll() }}
               disabled={syncAll.isPending}
             >

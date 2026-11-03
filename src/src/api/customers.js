@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query'
 import { apiFetch } from './client'
 
 function buildQuery(params = {}) {
@@ -14,6 +14,8 @@ export function useCustomers(params = {}) {
   return useQuery({
     queryKey: ['customers', params],
     queryFn: () => apiFetch(buildQuery(params)),
+    // Changing page or filter keeps the old rows on screen until the new ones arrive: no flash of a spinner.
+    placeholderData: keepPreviousData,
   })
 }
 

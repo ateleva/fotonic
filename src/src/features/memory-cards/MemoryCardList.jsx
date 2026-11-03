@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Pencil, PlusCircle } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { useMemoryCards } from '../../api/memory-cards'
-import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Spinner from '../../components/Spinner'
+import Pagination from '../../components/Pagination'
+import { usePagedItems } from '../../utils/pagination'
+import FilterPills from '../storage/FilterPills'
 import { __ } from '../../utils/i18n'
 
 const STATUS_STYLES = {
@@ -38,8 +40,15 @@ export default function MemoryCardList() {
 
   const params = statusFilter ? { status: statusFilter } : {}
   const { data, isLoading } = useMemoryCards(params)
+  // The stats count every card whatever the filter, so they come from the unfiltered list (same cache entry
+  // as the table when no filter is chosen).
+  const { data: allData } = useMemoryCards({})
 
-  const cards = Array.isArray(data) ? data : data?.data ?? []
+  const filteredCards = Array.isArray(data) ? data : data?.data ?? []
+  const paged = usePagedItems(filteredCards)
+  const cards = paged.pageItems
+  const allCards = Array.isArray(allData) ? allData : allData?.data ?? []
+  const count = (status) => allCards.filter((c) => c.status === status).length
 
   const columns = [
     {
@@ -49,7 +58,7 @@ export default function MemoryCardList() {
         <button
           type="button"
           className="border-0 bg-transparent p-0 text-left font-medium text-fotonic-primary underline cursor-pointer hover:opacity-80"
-          onClick={() => navigate(`/memory-cards/${row.id}`)}
+          onClick={() => navigate(`/storage/cards/${row.id}`)}
         >
           {row.title}
         </button>
@@ -86,7 +95,7 @@ export default function MemoryCardList() {
           <Button
             variant="secondary"
             size="sm"
-            onClick={() => navigate(`/memory-cards/${row.id}`)}
+            onClick={() => navigate(`/storage/cards/${row.id}`)}
           >
             <Pencil size={14} />
             {__('Edit', 'eleva-crm-for-photographers')}
@@ -97,33 +106,18 @@ export default function MemoryCardList() {
   ]
 
   return (
-    <div className="p-6">
-      <PageHeader
-        title={__('Memory Cards', 'eleva-crm-for-photographers')}
-        action={
-          <Button onClick={() => navigate('/memory-cards/new')}>
-            <PlusCircle size={15} />
-            {__('Add Card', 'eleva-crm-for-photographers')}
-          </Button>
-        }
-      />
+    <>
 
-      <div className="flex flex-wrap gap-2 mb-4">
-        {ALL_STATUSES.map(({ slug, label }) => (
-          <button
-            key={slug}
-            type="button"
-            onClick={() => setStatusFilter(slug)}
-            className={[
-              'px-3 py-1.5 rounded-md text-sm font-medium transition-colors border',
-              statusFilter === slug
-                ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                : 'bg-white border-gray-300 text-gray-600 hover:bg-gray-50',
-            ].join(' ')}
-          >
-            {label()}
-          </button>
-        ))}
+      <div className="mb-4">
+        <FilterPills
+          value={statusFilter}
+          onChange={(key) => { setStatusFilter(key); paged.setPage(1) }}
+          options={ALL_STATUSES.map(({ slug, label }) => ({
+            key: slug,
+            label: label(),
+            count: slug === '' ? allCards.length : count(slug),
+          }))}
+        />
       </div>
 
       {isLoading ? (
@@ -137,6 +131,8 @@ export default function MemoryCardList() {
           emptyMessage={__('No memory cards found. Add your first card.', 'eleva-crm-for-photographers')}
         />
       )}
-    </div>
+
+      <Pagination page={paged.page} pages={paged.pages} total={paged.total} size={paged.size} onPage={paged.setPage} />
+    </>
   )
 }

@@ -17,7 +17,9 @@ import InstallmentsRepeater from './InstallmentsRepeater'
 import FilesSection from './FilesSection'
 import EventAddressesRepeater from './EventAddressesRepeater'
 import MemoryCardsSection from './MemoryCardsSection'
+import StorageLocationsSection from './StorageLocationsSection'
 import WpEditor from '../../components/WpEditor'
+import { normalizeLink } from '../../utils/link'
 import { __ } from '../../utils/i18n'
 
 const COLOR_PALETTE = [
@@ -98,6 +100,10 @@ const defaultValues = {
   color: '',
   gcal_sync: false,
   memory_cards: { cards: [], backup_done: false, formatting_done: false },
+  storage_locations: [],
+  shots_taken: '',
+  shots_delivered: '',
+  delivery: { title: '', url: '', notes: '', expires: '' },
   reminders: [],
 }
 
@@ -157,7 +163,7 @@ export default function WorkForm() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
 
-  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal, watchedTaxable, watchedInstallments] = watch([
+  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal, watchedTaxable, watchedInstallments, shotsTaken, shotsDelivered] = watch([
     'owner_type',
     'owner_id',
     'event_date',
@@ -166,7 +172,12 @@ export default function WorkForm() {
     'legacy_total',
     'total_price_taxable',
     'installments',
+    'shots_taken',
+    'shots_delivered',
   ])
+
+  const deliveredOverTaken = shotsTaken !== '' && shotsDelivered !== ''
+    && shotsTaken != null && shotsDelivered != null && Number(shotsDelivered) > Number(shotsTaken)
 
   useEffect(() => {
     if (work) {
@@ -197,6 +208,20 @@ export default function WorkForm() {
           cards: (work.memory_cards ?? []).map((mc) => ({ card_id: mc.card_id, notes: mc.notes ?? '' })),
           backup_done: work.backup_done ?? false,
           formatting_done: work.formatting_done ?? false,
+        },
+        storage_locations: (work.storage_locations ?? []).map((l) => ({
+          location_id: l.location_id,
+          location_title: l.location_title ?? '',
+          deleted: !!l.deleted,
+        })),
+        shots_taken: work.shots_taken ?? '',
+        shots_delivered: work.shots_delivered ?? '',
+        // notes stays null when the Vault cannot read them: saving then leaves the stored note alone.
+        delivery: {
+          title: work.delivery?.title ?? '',
+          url: work.delivery?.url ?? '',
+          notes: work.delivery?.notes ?? null,
+          expires: work.delivery?.expires ?? '',
         },
         reminders: work.reminders ?? [],
       })
@@ -280,6 +305,17 @@ export default function WorkForm() {
         .map((mc) => ({ card_id: Number(mc.card_id), notes: mc.notes ?? '' })),
       backup_done: data.memory_cards?.backup_done ?? false,
       formatting_done: data.memory_cards?.formatting_done ?? false,
+      storage_locations: (data.storage_locations ?? [])
+        .filter((l) => l.location_id)
+        .map((l) => ({ location_id: Number(l.location_id) })),
+      shots_taken: data.shots_taken === '' || data.shots_taken == null ? null : Number(data.shots_taken),
+      shots_delivered: data.shots_delivered === '' || data.shots_delivered == null ? null : Number(data.shots_delivered),
+      delivery: {
+        title: data.delivery?.title ?? '',
+        url: normalizeLink(data.delivery?.url) ?? '',
+        notes: data.delivery?.notes ?? null,
+        expires: data.delivery?.expires ?? '',
+      },
     }
 
     try {
@@ -509,6 +545,115 @@ export default function WorkForm() {
               <MemoryCardsSection value={field.value} onChange={field.onChange} />
             )}
           />
+        </section>
+
+        {/* Section 9b: Storage & Backup */}
+        <section>
+          <SectionHeading description={__('Where the backups of this work are saved.', 'eleva-crm-for-photographers')}>
+            {__('Storage & Backup', 'eleva-crm-for-photographers')}
+          </SectionHeading>
+          <Controller
+            name="storage_locations"
+            control={control}
+            render={({ field }) => (
+              <StorageLocationsSection value={field.value} onChange={field.onChange} />
+            )}
+          />
+        </section>
+
+        {/* Section 9c: Shots */}
+        <section>
+          <SectionHeading description={__('Used for your yearly statistics.', 'eleva-crm-for-photographers')}>
+            {__('Shots', 'eleva-crm-for-photographers')}
+          </SectionHeading>
+          <div className="ftnc-fields">
+            <div className="ftnc-grid-3">
+              <FormField label={__('Shots taken', 'eleva-crm-for-photographers')} htmlFor="shots_taken">
+                <input
+                  id="shots_taken"
+                  type="number"
+                  step="1"
+                  min="0"
+                  inputMode="numeric"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('shots_taken')}
+                />
+              </FormField>
+              <FormField label={__('Photos delivered', 'eleva-crm-for-photographers')} htmlFor="shots_delivered">
+                <input
+                  id="shots_delivered"
+                  type="number"
+                  step="1"
+                  min="0"
+                  inputMode="numeric"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('shots_delivered')}
+                />
+              </FormField>
+            </div>
+            {deliveredOverTaken && (
+              <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-md px-3 py-2">
+                {__('You delivered more photos than you took. Check the two numbers.', 'eleva-crm-for-photographers')}
+              </p>
+            )}
+          </div>
+        </section>
+
+        {/* Section 9d: Delivery */}
+        <section>
+          <SectionHeading description={__('How the photos reached the client: a gallery link, a transfer, a USB stick…', 'eleva-crm-for-photographers')}>
+            {__('Delivery', 'eleva-crm-for-photographers')}
+          </SectionHeading>
+          <div className="ftnc-fields">
+            <div className="ftnc-grid-3">
+              <FormField label={__('Delivery title', 'eleva-crm-for-photographers')} htmlFor="delivery_title">
+                <input
+                  id="delivery_title"
+                  type="text"
+                  placeholder={__('e.g. Pixieset gallery', 'eleva-crm-for-photographers')}
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('delivery.title')}
+                />
+              </FormField>
+              <FormField label={__('Link', 'eleva-crm-for-photographers')} htmlFor="delivery_url" error={errors.delivery?.url?.message}>
+                <input
+                  id="delivery_url"
+                  type="text"
+                  inputMode="url"
+                  placeholder="https://"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('delivery.url', {
+                    validate: (v) => !v?.trim() || normalizeLink(v) !== null
+                      || __('This does not look like a web address. Use something like gallery.example.com', 'eleva-crm-for-photographers'),
+                  })}
+                />
+              </FormField>
+              <FormField label={__('Link expiry date', 'eleva-crm-for-photographers')} htmlFor="delivery_expires">
+                <input
+                  id="delivery_expires"
+                  type="date"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  {...register('delivery.expires')}
+                />
+              </FormField>
+            </div>
+            <FormField label={__('Delivery notes', 'eleva-crm-for-photographers')} htmlFor="delivery_notes">
+              <Controller
+                name="delivery.notes"
+                control={control}
+                render={({ field }) => (
+                  <input
+                    id="delivery_notes"
+                    type="text"
+                    value={field.value ?? ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                  />
+                )}
+              />
+            </FormField>
+          </div>
         </section>
 
         {/* Section 10: Notes */}

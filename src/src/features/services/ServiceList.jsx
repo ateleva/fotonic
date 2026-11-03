@@ -5,6 +5,8 @@ import PageHeader from '../../components/PageHeader'
 import Button from '../../components/Button'
 import Table from '../../components/Table'
 import Spinner from '../../components/Spinner'
+import Pagination from '../../components/Pagination'
+import { usePagedItems } from '../../utils/pagination'
 import { __ } from '../../utils/i18n'
 
 function formatPrice(amount) {
@@ -24,7 +26,9 @@ export default function ServiceList() {
 
   const { data, isLoading } = useServices()
 
-  const services = Array.isArray(data) ? data : data?.data ?? []
+  const allServices = Array.isArray(data) ? data : data?.data ?? []
+  const paged = usePagedItems(allServices)
+  const services = paged.pageItems
 
   const columns = [
     {
@@ -107,6 +111,8 @@ export default function ServiceList() {
           emptyMessage={__('No services found. Add your first service.', 'eleva-crm-for-photographers')}
         />
       )}
+
+      <Pagination page={paged.page} pages={paged.pages} total={paged.total} size={paged.size} onPage={paged.setPage} />
 
     </div>
   )
