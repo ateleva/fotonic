@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { fetchVaultStatus, vaultUnlock, vaultLock } from '../api/vault'
+import { noteUnlockedHere } from '../features/vault/vaultSession'
 
 // A real default (not null) so any render that happens outside VaultProvider,
 // or in the brief window before it commits, degrades to "vault appears
@@ -99,6 +100,7 @@ export function VaultProvider({ children }) {
   const unlock = useCallback(async (password, otp) => {
     try {
       await vaultUnlock({ password, otp })
+      noteUnlockedHere()
       setIsUnlocked(true)
       setIdleWarning(false)
       startIdleTimer()
@@ -116,6 +118,7 @@ export function VaultProvider({ children }) {
     try {
       const data = await fetchVaultStatus()
       if (data?.unlocked === true) {
+        noteUnlockedHere()
         setIsUnlocked(true)
         setIdleWarning(false)
         startIdleTimer()
@@ -132,6 +135,7 @@ export function VaultProvider({ children }) {
   // ---------------------------------------------------------------------------
 
   const markUnlocked = useCallback(() => {
+    noteUnlockedHere()
     setIsUnlocked(true)
     startIdleTimer()
   }, [startIdleTimer])

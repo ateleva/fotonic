@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { Lock, Fingerprint } from 'lucide-react'
 import { useVault } from '../../context/VaultContext'
+import { fetchVaultStatus } from '../../api/vault'
 import Button from '../../components/Button'
 import FormField from '../../components/FormField'
 import PasswordInput from '../../components/PasswordInput'
@@ -34,6 +35,31 @@ export default function VaultLock() {
     markUnlocked()
     await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   })
+
+  // Opened elsewhere in the meantime (another tab of this browser unlocked): the status is cached for 30 seconds,
+  // so ask the server when the tab is looked at again and every 15 seconds while it is on screen.
+  useEffect(() => {
+    let busy = false
+    const check = async () => {
+      if (busy || document.visibilityState !== 'visible') return
+      busy = true
+      try {
+        const data = await fetchVaultStatus()
+        if (data?.unlocked === true) {
+          queryClient.setQueryData(['vault-status'], data)
+          markUnlocked()
+        }
+      } catch { /* keep the lock screen */ } finally { busy = false }
+    }
+    const timer = setInterval(check, 15000)
+    window.addEventListener('focus', check)
+    document.addEventListener('visibilitychange', check)
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('focus', check)
+      document.removeEventListener('visibilitychange', check)
+    }
+  }, [markUnlocked, queryClient])
 
   const {
     register,

@@ -2,10 +2,12 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { __ } from '../../utils/i18n'
 import { fetchFingerprintChallenge, fingerprintUnlock } from '../../api/vault'
 import { prfSupported, unlockCredential } from '../../lib/prf'
+import { autoPromptAllowed } from './vaultSession'
 
 /**
  * Fingerprint unlock for the lock screen. Looks for devices enrolled for this host name; when there
- * are some it asks for the fingerprint once on its own (never again by itself), and offers a button.
+ * are some it asks for the fingerprint once on its own, only on the lock screen after a page load and
+ * only in a window that has the focus (never again by itself), and offers a button.
  * `onUnlocked` runs after the server opened the Vault.
  */
 export function useFingerprintUnlock(onUnlocked) {
@@ -57,7 +59,7 @@ export function useFingerprintUnlock(onUnlocked) {
     if (autoRef.current) return
     autoRef.current = true
     load()
-      .then((list) => { if (list.length && document.visibilityState === 'visible') attempt(list) })
+      .then((list) => { if (list.length && autoPromptAllowed() && document.visibilityState === 'visible' && document.hasFocus()) attempt(list) })
       .catch(() => {})
   }, [load, attempt])
 
