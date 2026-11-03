@@ -31,7 +31,7 @@ class Fotonic_Record_Uid {
 	 * @return string[]
 	 */
 	public static function post_types(): array {
-		$types = (array) apply_filters( 'ftnc_uid_post_types', array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_memory_card' ) );
+		$types = (array) apply_filters( 'ftnc_uid_post_types', array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_memory_card', 'ftnc_backup_loc' ) );
 		return array_values( array_unique( array_filter( $types, 'is_string' ) ) );
 	}
 

@@ -19,7 +19,7 @@ global $wpdb;
 // 1. Delete all custom post type posts (force delete — bypass trash).
 // ---------------------------------------------------------------------------
 
-$ftnc_post_types = array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_collaborator', 'ftnc_memory_card' );
+$ftnc_post_types = array( 'ftnc_customer', 'ftnc_service', 'ftnc_work', 'ftnc_collaborator', 'ftnc_memory_card', 'ftnc_backup_loc' );
 
 foreach ( $ftnc_post_types as $post_type ) {
 	$ftnc_post_ids = get_posts( array(
@@ -62,6 +62,17 @@ $ftnc_meta_prefixes = array(
 	'_ftnc_memory_cards',
 	'_ftnc_backup_done',
 	'_ftnc_formatting_done',
+	'_ftnc_storage_locations',
+	'_ftnc_shots_taken',
+	'_ftnc_shots_delivered',
+	'_ftnc_delivery_title',
+	'_ftnc_delivery_url',
+	'_ftnc_delivery_notes',
+	'_ftnc_delivery_expires',
+	'_ftnc_loc_type',
+	'_ftnc_loc_capacity',
+	'_ftnc_loc_status',
+	'_ftnc_loc_notes',
 	'_ftnc_notifications',
 	'_ftnc_uid',
 );

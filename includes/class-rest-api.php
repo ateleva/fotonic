@@ -262,6 +262,10 @@ class Fotonic_REST_API {
 						'enum'    => [ '', 'paid', 'partial', 'unpaid' ],
 					],
 					'customer_id'    => [ 'type' => 'integer', 'default' => 0, 'minimum' => 0 ],
+					// Only the works that point at a deleted backup location.
+					'storage_alert'  => [ 'type' => 'boolean', 'default' => false ],
+					// Event date order. Ascending stays the default (the Dashboard and the Calendar rely on it).
+					'order'          => [ 'type' => 'string', 'default' => 'asc', 'enum' => [ 'asc', 'desc' ] ],
 				],
 			],
 			[
@@ -1735,12 +1739,13 @@ class Fotonic_REST_API {
 			|| ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) && self::rows_have_plain_text( $body['event_addresses'], [ 'street' ] ) )
 			|| ( isset( $body['notes'] ) && is_string( $body['notes'] ) && '' !== $body['notes'] )
 			|| ( isset( $body['memory_cards'] ) && is_array( $body['memory_cards'] ) && self::rows_have_plain_text( $body['memory_cards'], [ 'notes' ] ) )
-			|| ( isset( $body['services'] ) && is_array( $body['services'] ) && self::rows_have_plain_text( $body['services'], [ 'notes_override' ] ) );
+			|| ( isset( $body['services'] ) && is_array( $body['services'] ) && self::rows_have_plain_text( $body['services'], [ 'notes_override' ] ) )
+			|| ( isset( $body['delivery']['notes'] ) && is_string( $body['delivery']['notes'] ) && '' !== $body['delivery']['notes'] );
 		return self::locked_response_if( $plain );
 	}
 
 	/** 423 while the encrypt-existing job runs or is paused: nothing is edited while it is being encrypted. */
-	private static function encrypt_job_response(): ?\WP_REST_Response {
+	public static function encrypt_job_response(): ?\WP_REST_Response {
 		if ( ! Fotonic_Vault_Encrypt_Existing::is_blocking() ) {
 			return null;
 		}
@@ -1751,7 +1756,7 @@ class Fotonic_REST_API {
 	}
 
 	/** The "Vault is locked" 423 when the Vault is set up, locked and the write carries protected text. */
-	private static function locked_response_if( bool $has_protected_text ): ?\WP_REST_Response {
+	public static function locked_response_if( bool $has_protected_text ): ?\WP_REST_Response {
 		if ( ! $has_protected_text || null !== Fotonic_Vault::get_session_key() || ! Fotonic_Vault::is_setup() ) {
 			return null;
 		}
@@ -1769,7 +1774,7 @@ class Fotonic_REST_API {
 	 * @param string|null $key    Master Key when the Vault is unlocked.
 	 * @return string
 	 */
-	private static function field_to_store( $new, string $stored, ?string $key ): string {
+	public static function field_to_store( $new, string $stored, ?string $key ): string {
 		if ( null === $new ) {
 			return $stored;
 		}
@@ -1785,7 +1790,7 @@ class Fotonic_REST_API {
 	}
 
 	/** A protected text for the screen: the plain text, or null when it cannot be read (never ''). */
-	private static function field_for_screen( string $stored, ?string $key ): ?string {
+	public static function field_for_screen( string $stored, ?string $key ): ?string {
 		return Fotonic_Field_Crypt::read( $stored, $key );
 	}
 
@@ -1803,8 +1808,8 @@ class Fotonic_REST_API {
 			'post_status'    => 'publish',
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
+			// The ID breaks ties between equal names, so paging never repeats or skips a customer.
+			'orderby'        => [ 'title' => 'ASC', 'ID' => 'ASC' ],
 		];
 
 		if ( ! empty( $search ) ) {
@@ -2082,15 +2087,16 @@ class Fotonic_REST_API {
 		$per_page       = (int) $req->get_param( 'per_page' );
 		$payment_status = (string) $req->get_param( 'payment_status' );
 		$customer_id    = (int) $req->get_param( 'customer_id' );
+		$order          = 'desc' === $req->get_param( 'order' ) ? 'DESC' : 'ASC';
 
 		$args = [
 			'post_type'      => 'ftnc_work',
 			'post_status'    => 'publish',
 			'posts_per_page' => $per_page,
 			'paged'          => $page,
-			'orderby'        => 'meta_value',
+			// The ID breaks ties, so a work never shows twice or goes missing between two pages.
+			'orderby'        => [ 'meta_value' => $order, 'ID' => $order ],
 			'meta_key'       => '_ftnc_event_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
-			'order'          => 'ASC',
 		];
 
 		if ( ! empty( $search ) ) {
@@ -2117,6 +2123,11 @@ class Fotonic_REST_API {
 			];
 		}
 
+		$alert_ids = Fotonic_Backup_Loc_CPT::alert_work_ids();
+		if ( rest_sanitize_boolean( $req->get_param( 'storage_alert' ) ) ) {
+			$args['post__in'] = $alert_ids ?: [ 0 ];
+		}
+
 		$query = new \WP_Query( $args );
 		$data  = [];
 
@@ -2125,9 +2136,11 @@ class Fotonic_REST_API {
 		}
 
 		return new \WP_REST_Response( [
-			'data'  => $data,
-			'total' => (int) $query->found_posts,
-			'pages' => (int) $query->max_num_pages,
+			'data'        => $data,
+			'total'       => (int) $query->found_posts,
+			'pages'       => (int) $query->max_num_pages,
+			// Every work with a deleted backup location, whatever the filters: the list shows it as a button.
+			'alert_count' => count( $alert_ids ),
 		], 200 );
 	}
 
@@ -2551,6 +2564,40 @@ class Fotonic_REST_API {
 	}
 
 	/**
+	 * A link typed by the admin, as a safe absolute web address, or '' when it is not one.
+	 *
+	 * "apple.com" is fine (the browser opens it too): it gets "https://" in front. What matters is the host:
+	 * name, a dot and an extension of at least two letters ("apple" alone is refused). Only http and https
+	 * are kept; "javascript:", "mailto:" and the like are refused. Keep in sync with `utils/link.js`.
+	 */
+	public static function normalize_link( string $raw ): string {
+		$raw = trim( $raw );
+		if ( '' === $raw || preg_match( '/\s/u', $raw ) ) {
+			return '';
+		}
+		if ( ! preg_match( '#^https?://#i', $raw ) ) {
+			if ( false !== strpos( $raw, '://' ) || preg_match( '/^[a-z][a-z0-9+.\-]*:(?!\d)/i', $raw ) ) {
+				return '';
+			}
+			$raw = 'https://' . $raw;
+		}
+		$host = wp_parse_url( $raw, PHP_URL_HOST );
+		if ( ! is_string( $host ) || ! preg_match( '/^(?:[\p{L}\p{N}](?:[\p{L}\p{N}-]{0,61}[\p{L}\p{N}])?\.)+(?:\p{L}{2,}|xn--[a-z0-9-]{2,})$/iu', $host ) ) {
+			return '';
+		}
+		return esc_url_raw( $raw, [ 'http', 'https' ] );
+	}
+
+	/** Store a meta value, or remove the meta when the value is empty (keeps "never filled in" distinct from ''). */
+	private static function set_or_delete_meta( int $post_id, string $key, string $value ): void {
+		if ( '' === $value ) {
+			delete_post_meta( $post_id, $key );
+		} else {
+			update_post_meta( $post_id, $key, $value );
+		}
+	}
+
+	/**
 	 * Save work meta from API body.
 	 * Encrypts PII fields (event_address) when the vault is unlocked.
 	 *
@@ -2723,6 +2770,58 @@ class Fotonic_REST_API {
 				];
 			}
 			update_post_meta( $post_id, '_ftnc_memory_cards', wp_slash( wp_json_encode( $clean_cards ) ) );
+		}
+
+		// Backup locations the work was saved to. A trashed location is accepted: the row must survive so the
+		// work can show "deleted" instead of silently losing the reference.
+		if ( isset( $body['storage_locations'] ) && is_array( $body['storage_locations'] ) ) {
+			$clean_locs = [];
+			$seen_locs  = [];
+			foreach ( $body['storage_locations'] as $row ) {
+				$loc_id = is_array( $row ) ? (int) ( $row['location_id'] ?? 0 ) : 0;
+				if ( $loc_id <= 0 || isset( $seen_locs[ $loc_id ] ) || get_post_type( $loc_id ) !== 'ftnc_backup_loc' ) {
+					continue;
+				}
+				$seen_locs[ $loc_id ] = true;
+				$clean_locs[]         = [ 'location_id' => $loc_id ];
+			}
+			update_post_meta( $post_id, '_ftnc_storage_locations', wp_slash( wp_json_encode( $clean_locs ) ) );
+		}
+
+		// Shot counts: whole numbers, empty = never filled in.
+		foreach ( [ 'shots_taken', 'shots_delivered' ] as $shots_field ) {
+			if ( ! array_key_exists( $shots_field, $body ) ) {
+				continue;
+			}
+			$shots = $body[ $shots_field ];
+			if ( null === $shots || '' === $shots || ! is_numeric( $shots ) ) {
+				delete_post_meta( $post_id, '_ftnc_' . $shots_field );
+			} else {
+				update_post_meta( $post_id, '_ftnc_' . $shots_field, (string) max( 0, (int) $shots ) );
+			}
+		}
+
+		// Delivery of the photos: one title / link / notes / link expiry per work, all optional.
+		if ( isset( $body['delivery'] ) && is_array( $body['delivery'] ) ) {
+			$delivery = $body['delivery'];
+			if ( array_key_exists( 'title', $delivery ) ) {
+				self::set_or_delete_meta( $post_id, '_ftnc_delivery_title', wp_slash( mb_substr( sanitize_text_field( (string) $delivery['title'] ), 0, 200 ) ) );
+			}
+			if ( array_key_exists( 'url', $delivery ) ) {
+				$url = self::normalize_link( (string) $delivery['url'] );
+				self::set_or_delete_meta( $post_id, '_ftnc_delivery_url', $url );
+			}
+			if ( array_key_exists( 'expires', $delivery ) ) {
+				$expires = sanitize_text_field( (string) $delivery['expires'] );
+				$valid   = preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $expires, $dm ) && checkdate( (int) $dm[2], (int) $dm[3], (int) $dm[1] );
+				self::set_or_delete_meta( $post_id, '_ftnc_delivery_expires', $valid ? $expires : '' );
+			}
+			if ( array_key_exists( 'notes', $delivery ) ) {
+				// null = the screen could not read the stored note: it stays as it is.
+				$new_notes    = null === $delivery['notes'] ? null : sanitize_textarea_field( (string) $delivery['notes'] );
+				$stored_notes = self::field_to_store( $new_notes, (string) get_post_meta( $post_id, '_ftnc_delivery_notes', true ), $vault_key );
+				update_post_meta( $post_id, '_ftnc_delivery_notes', wp_slash( $stored_notes ) );
+			}
 		}
 
 		// Backup / formatting / ready-for-next flags.
@@ -3007,6 +3106,24 @@ class Fotonic_REST_API {
 			}
 		}
 
+		// Backup locations. A trashed or removed location keeps its row, flagged `deleted`, so the admin sees what needs fixing.
+		$storage_locations = [];
+		$storage_alert     = false;
+		$raw_locs          = get_post_meta( $post->ID, '_ftnc_storage_locations', true );
+		if ( ! empty( $raw_locs ) ) {
+			$dec_locs = json_decode( $raw_locs, true );
+			if ( is_array( $dec_locs ) ) {
+				foreach ( $dec_locs as $loc_row ) {
+					if ( ! is_array( $loc_row ) || (int) ( $loc_row['location_id'] ?? 0 ) <= 0 ) {
+						continue;
+					}
+					$described           = Fotonic_Backup_Loc_CPT::describe_row( $loc_row );
+					$storage_alert       = $storage_alert || $described['deleted'];
+					$storage_locations[] = $described;
+				}
+			}
+		}
+
 		$data = [
 			'id'              => $post->ID,
 			'title'           => $post->post_title,
@@ -3037,6 +3154,16 @@ class Fotonic_REST_API {
 			'quick_notes'     => (string) get_post_meta( $post->ID, '_ftnc_quick_notes', true ),
 			'color'           => (string) get_post_meta( $post->ID, '_ftnc_color', true ),
 			'memory_cards'    => $memory_cards,
+			'storage_locations' => $storage_locations,
+			'storage_alert'     => $storage_alert,
+			'shots_taken'       => Fotonic_Backup_Loc_REST_API::shots_value( get_post_meta( $post->ID, '_ftnc_shots_taken', true ) ),
+			'shots_delivered'   => Fotonic_Backup_Loc_REST_API::shots_value( get_post_meta( $post->ID, '_ftnc_shots_delivered', true ) ),
+			'delivery'          => [
+				'title'   => (string) get_post_meta( $post->ID, '_ftnc_delivery_title', true ),
+				'url'     => (string) get_post_meta( $post->ID, '_ftnc_delivery_url', true ),
+				'expires' => (string) get_post_meta( $post->ID, '_ftnc_delivery_expires', true ),
+				'notes'   => self::field_for_screen( (string) get_post_meta( $post->ID, '_ftnc_delivery_notes', true ), $field_key ),
+			],
 			'backup_done'     => (bool) get_post_meta( $post->ID, '_ftnc_backup_done', true ),
 			'formatting_done' => (bool) get_post_meta( $post->ID, '_ftnc_formatting_done', true ),
 			// Guarded by $include_reminders: format_work() runs in a loop from

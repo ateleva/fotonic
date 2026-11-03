@@ -66,6 +66,13 @@ class Fotonic_Backup_Registry {
                     '_ftnc_memory_cards',
                     '_ftnc_backup_done',
                     '_ftnc_formatting_done',
+                    '_ftnc_storage_locations',
+                    '_ftnc_shots_taken',
+                    '_ftnc_shots_delivered',
+                    '_ftnc_delivery_title',
+                    '_ftnc_delivery_url',
+                    '_ftnc_delivery_notes',
+                    '_ftnc_delivery_expires',
                     '_ftnc_gcal_sync',
                     // Free never writes this (Pro's Google Calendar sync does via
                     // ftnc_after_save_work / its own sync path) but it is work-scoped
@@ -89,6 +96,7 @@ class Fotonic_Backup_Registry {
                     '_ftnc_work_services' => 'json:[].service_id',
                     '_ftnc_work_files'    => 'json:[].id|attachment',
                     '_ftnc_memory_cards'  => 'json:[].card_id|post',
+                    '_ftnc_storage_locations' => 'json:[].location_id|post',
                 ],
             ],
             'ftnc_memory_card' => [
@@ -101,6 +109,15 @@ class Fotonic_Backup_Registry {
                     // NOT derived: this is the card's only state, it must round-trip.
                     'ftnc_card_status' => [ 'derived' => false ],
                 ],
+                'ref_fields' => [],
+            ],
+            'ftnc_backup_loc' => [
+                'post_type'  => 'ftnc_backup_loc',
+                'label'      => __( 'Backup Locations', 'eleva-crm-for-photographers' ),
+                'supports'   => [ 'title' ],
+                // The status is a plain meta (active, full, retired), not a taxonomy.
+                'meta_keys'  => [ '_ftnc_uid', '_ftnc_loc_type', '_ftnc_loc_capacity', '_ftnc_loc_status', '_ftnc_loc_notes' ],
+                'taxonomies' => [],
                 'ref_fields' => [],
             ],
         ];

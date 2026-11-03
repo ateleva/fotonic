@@ -60,6 +60,14 @@ class Fotonic_Vault_Fields {
 					array( 'kind' => 'rows', 'meta' => '_ftnc_event_addresses', 'cols' => array( 'street' => 'v1' ) ),
 					array( 'kind' => 'rows', 'meta' => '_ftnc_memory_cards', 'cols' => array( 'notes' => 'f1' ) ),
 					array( 'kind' => 'rows', 'meta' => '_ftnc_work_services', 'cols' => array( 'notes_override' => 'f1' ) ),
+					array( 'kind' => 'meta', 'meta' => '_ftnc_delivery_notes', 'format' => 'f1' ),
+				),
+			),
+			'backup_locations' => array(
+				'label'     => __( 'Backup Locations', 'eleva-crm-for-photographers' ),
+				'post_type' => 'ftnc_backup_loc',
+				'fields'    => array(
+					array( 'kind' => 'meta', 'meta' => '_ftnc_loc_notes', 'format' => 'f1' ),
 				),
 			),
 			'services'  => array(
