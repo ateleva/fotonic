@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Trash2, PlusCircle } from 'lucide-react'
 import { useMemoryCards } from '../../api/memory-cards'
 import Button from '../../components/Button'
+import SearchSelect from '../../components/SearchSelect'
 import { __ } from '../../utils/i18n'
 
 const STATUS_STYLES = {
@@ -88,21 +89,21 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
             const selectedCard = allCards.find((c) => c.id === Number(row.card_id))
             return (
               <div key={idx} className="flex items-center gap-2">
-                <select
+                <SearchSelect
+                  className="flex-none w-44"
                   value={row.card_id ?? ''}
-                  onChange={(e) => updateRow(idx, 'card_id', e.target.value ? Number(e.target.value) : '')}
-                  className="flex-none w-44 rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="">{__('Select a card…', 'eleva-crm-for-photographers')}</option>
-                  {opts.map((c) => (
-                    <option key={c.id} value={c.id}>{c.title}</option>
-                  ))}
-                  {selectedCard && !opts.find((o) => o.id === selectedCard.id) && (
-                    <option value={selectedCard.id} disabled>
-                      {selectedCard.title} ({statusLabel(selectedCard.status)})
-                    </option>
-                  )}
-                </select>
+                  onChange={(val) => updateRow(idx, 'card_id', val ? Number(val) : '')}
+                  options={[
+                    ...opts.map((c) => ({ value: String(c.id), label: c.title })),
+                    // A card already in use elsewhere stays visible, but cannot be picked again.
+                    ...(selectedCard && !opts.find((o) => o.id === selectedCard.id)
+                      ? [{ value: String(selectedCard.id), label: `${selectedCard.title} (${statusLabel(selectedCard.status)})`, disabled: true }]
+                      : []),
+                  ]}
+                  selectedLabel={selectedCard?.title}
+                  placeholder={__('Select a card…', 'eleva-crm-for-photographers')}
+                  emptyText={__('No cards available', 'eleva-crm-for-photographers')}
+                />
                 {selectedCard && selectedCard.status !== 'free' ? (
                   <span className={`flex-none inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${STATUS_STYLES[selectedCard.status] ?? 'bg-gray-100 text-gray-700'}`}>
                     {statusLabel(selectedCard.status)}

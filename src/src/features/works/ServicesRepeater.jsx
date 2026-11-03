@@ -1,5 +1,6 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import Button from '../../components/Button'
+import SearchSelect from '../../components/SearchSelect'
 import { __, sprintf } from '../../utils/i18n'
 
 const emptyRow = () => ({
@@ -52,18 +53,14 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
               {value.map((row, index) => (
                 <tr key={index}>
                   <td className="px-3 py-2">
-                    <select
+                    <SearchSelect
                       value={row.service_id}
-                      onChange={(e) => updateRow(index, 'service_id', e.target.value)}
-                      className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    >
-                      <option value="">{__('Select service', 'eleva-crm-for-photographers')}</option>
-                      {services.map((svc) => (
-                        <option key={svc.id} value={svc.id}>
-                          {svc.title ?? ''}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(val) => updateRow(index, 'service_id', val)}
+                      options={services.map((svc) => ({ value: String(svc.id), label: svc.title ?? '' }))}
+                      selectedLabel={row.service_title}
+                      placeholder={__('Select service', 'eleva-crm-for-photographers')}
+                      emptyText={__('No services found', 'eleva-crm-for-photographers')}
+                    />
                   </td>
                   <td className="px-3 py-2">
                     {(() => {

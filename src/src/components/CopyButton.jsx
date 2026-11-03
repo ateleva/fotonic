@@ -10,7 +10,7 @@ import { __ } from '../utils/i18n'
 // it says so, instead of failing silently.
 //   variant 'button' (default): full-width secondary button with an icon.
 //   variant 'link': small underlined text link, for inline use next to a value.
-export default function CopyButton({ text, label, variant = 'button', className = 'w-full' }) {
+export default function CopyButton({ text, label, variant = 'button', buttonVariant = 'secondary', className = 'w-full' }) {
   const [state, setState] = useState('idle') // idle | copied | failed
   const timer = useRef(null)
 
@@ -48,8 +48,8 @@ export default function CopyButton({ text, label, variant = 'button', className 
 
   return (
     <div className={className}>
-      <Button variant="secondary" className="w-full" onClick={handleCopy}>
-        {copied ? <Check size={16} className="text-green-600" /> : <Copy size={16} />}
+      <Button variant={buttonVariant} className="w-full" onClick={handleCopy}>
+        {copied ? <Check size={16} className={buttonVariant === 'primary' ? '' : 'text-green-600'} /> : <Copy size={16} />}
         {shownLabel}
       </Button>
       {failure}

@@ -2,7 +2,8 @@ import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useForm, Controller } from 'react-hook-form'
 import { useWork, useCreateWork, useUpdateWork, useDeleteWork } from '../../api/works'
-import { useCustomers } from '../../api/customers'
+import { useCustomer } from '../../api/customers'
+import CustomerPicker from '../customers/CustomerPicker'
 import { useServices } from '../../api/services'
 import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
@@ -20,6 +21,8 @@ import MemoryCardsSection from './MemoryCardsSection'
 import StorageLocationsSection from './StorageLocationsSection'
 import WpEditor from '../../components/WpEditor'
 import { normalizeLink } from '../../utils/link'
+import { buildDeliveryMessage, mainContactName } from '../../utils/deliveryMessage'
+import CopyButton from '../../components/CopyButton'
 import { __ } from '../../utils/i18n'
 
 const COLOR_PALETTE = [
@@ -103,7 +106,7 @@ const defaultValues = {
   storage_locations: [],
   shots_taken: '',
   shots_delivered: '',
-  delivery: { title: '', url: '', notes: '', expires: '' },
+  delivery: { title: '', url: '', password: '', notes: '', expires: '' },
   reminders: [],
 }
 
@@ -127,7 +130,6 @@ export default function WorkForm() {
   const [remindersBlocked, setRemindersBlocked] = useState(false)
 
   const { data: work, isLoading: workLoading } = useWork(id)
-  const { data: customersData } = useCustomers({ per_page: 100 })
   const { data: servicesData } = useServices()
   const createWork = useCreateWork()
   const updateWork = useUpdateWork()
@@ -150,7 +152,6 @@ export default function WorkForm() {
     }
   }
 
-  const customers = Array.isArray(customersData) ? customersData : customersData?.data ?? []
   const services = useMemo(() => (Array.isArray(servicesData) ? servicesData : servicesData?.data ?? []), [servicesData])
 
   const {
@@ -163,7 +164,7 @@ export default function WorkForm() {
     formState: { errors, isSubmitting },
   } = useForm({ defaultValues })
 
-  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal, watchedTaxable, watchedInstallments, shotsTaken, shotsDelivered] = watch([
+  const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, legacyTotal, watchedTaxable, watchedInstallments, shotsTaken, shotsDelivered, watchedCustomerId, deliveryUrl, deliveryPassword, deliveryExpires] = watch([
     'owner_type',
     'owner_id',
     'event_date',
@@ -174,10 +175,23 @@ export default function WorkForm() {
     'installments',
     'shots_taken',
     'shots_delivered',
+    'customer_id',
+    'delivery.url',
+    'delivery.password',
+    'delivery.expires',
   ])
 
   const deliveredOverTaken = shotsTaken !== '' && shotsDelivered !== ''
     && shotsTaken != null && shotsDelivered != null && Number(shotsDelivered) > Number(shotsTaken)
+
+  // The message for the client: the main contact of the work's customer, the link, the password and the expiry.
+  const { data: deliveryCustomer } = useCustomer(watchedCustomerId)
+  const deliveryMessage = buildDeliveryMessage({
+    name: mainContactName(deliveryCustomer),
+    url: deliveryUrl,
+    password: deliveryPassword,
+    expires: deliveryExpires,
+  })
 
   useEffect(() => {
     if (work) {
@@ -220,6 +234,7 @@ export default function WorkForm() {
         delivery: {
           title: work.delivery?.title ?? '',
           url: work.delivery?.url ?? '',
+          password: work.delivery?.password ?? null,
           notes: work.delivery?.notes ?? null,
           expires: work.delivery?.expires ?? '',
         },
@@ -313,6 +328,7 @@ export default function WorkForm() {
       delivery: {
         title: data.delivery?.title ?? '',
         url: normalizeLink(data.delivery?.url) ?? '',
+        password: data.delivery?.password ?? null,
         notes: data.delivery?.notes ?? null,
         expires: data.delivery?.expires ?? '',
       },
@@ -420,28 +436,23 @@ export default function WorkForm() {
         {/* Section 2: Customer */}
         <section>
           <SectionHeading>{__('Customer', 'eleva-crm-for-photographers')}</SectionHeading>
-          <FormField label={__('Customer', 'eleva-crm-for-photographers')} htmlFor="customer_id">
-            <Controller
-              name="customer_id"
-              control={control}
-              render={({ field }) => (
-                <select
-                  id="customer_id"
-                  className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                  value={field.value ?? ''}
-                  onChange={(e) => field.onChange(e.target.value)}
-                  onBlur={field.onBlur}
-                >
-                  <option value="">{__('Select customer', 'eleva-crm-for-photographers')}</option>
-                  {customers.map((c) => (
-                    <option key={c.id} value={String(c.id)}>
-                      {c.title}
-                    </option>
-                  ))}
-                </select>
-              )}
-            />
-          </FormField>
+          {/* As wide as a long customer name (the same 40ch as the quote form), not the whole page. */}
+          <div style={{ maxWidth: '40ch' }}>
+            <FormField label={__('Customer', 'eleva-crm-for-photographers')} htmlFor="customer_id">
+              <Controller
+                name="customer_id"
+                control={control}
+                render={({ field }) => (
+                  <CustomerPicker
+                    id="customer_id"
+                    value={field.value}
+                    onChange={field.onChange}
+                    selectedTitle={work?.customer_title}
+                  />
+                )}
+              />
+            </FormField>
+          </div>
         </section>
 
         {/* Section 3: Calendar Color */}
@@ -605,54 +616,99 @@ export default function WorkForm() {
             {__('Delivery', 'eleva-crm-for-photographers')}
           </SectionHeading>
           <div className="ftnc-fields">
-            <div className="ftnc-grid-3">
-              <FormField label={__('Delivery title', 'eleva-crm-for-photographers')} htmlFor="delivery_title">
-                <input
-                  id="delivery_title"
-                  type="text"
-                  placeholder={__('e.g. Pixieset gallery', 'eleva-crm-for-photographers')}
-                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                  {...register('delivery.title')}
-                />
-              </FormField>
-              <FormField label={__('Link', 'eleva-crm-for-photographers')} htmlFor="delivery_url" error={errors.delivery?.url?.message}>
-                <input
-                  id="delivery_url"
-                  type="text"
-                  inputMode="url"
-                  placeholder="https://"
-                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                  {...register('delivery.url', {
-                    validate: (v) => !v?.trim() || normalizeLink(v) !== null
-                      || __('This does not look like a web address. Use something like gallery.example.com', 'eleva-crm-for-photographers'),
-                  })}
-                />
-              </FormField>
-              <FormField label={__('Link expiry date', 'eleva-crm-for-photographers')} htmlFor="delivery_expires">
-                <input
-                  id="delivery_expires"
-                  type="date"
-                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
-                  {...register('delivery.expires')}
-                />
-              </FormField>
-            </div>
-            <FormField label={__('Delivery notes', 'eleva-crm-for-photographers')} htmlFor="delivery_notes">
-              <Controller
-                name="delivery.notes"
-                control={control}
-                render={({ field }) => (
+            {/* Row 1: title (40%) and notes (60%) side by side. */}
+            <div className="flex flex-wrap gap-4">
+              <div className="min-w-[12rem]" style={{ flex: '2 1 0' }}>
+                <FormField label={__('Delivery title', 'eleva-crm-for-photographers')} htmlFor="delivery_title">
                   <input
-                    id="delivery_notes"
+                    id="delivery_title"
                     type="text"
-                    value={field.value ?? ''}
-                    onChange={(e) => field.onChange(e.target.value)}
-                    onBlur={field.onBlur}
+                    placeholder={__('e.g. Pixieset gallery', 'eleva-crm-for-photographers')}
                     className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                    {...register('delivery.title')}
                   />
+                </FormField>
+              </div>
+              <div className="min-w-[14rem]" style={{ flex: '3 1 0' }}>
+                <FormField label={__('Delivery notes', 'eleva-crm-for-photographers')} htmlFor="delivery_notes">
+                  <Controller
+                    name="delivery.notes"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        id="delivery_notes"
+                        type="text"
+                        value={field.value ?? ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                      />
+                    )}
+                  />
+                </FormField>
+              </div>
+            </div>
+
+            {/* Row 2: link, expiry date (the smallest) and gallery password, with the copy button on the right. */}
+            <div className="flex flex-wrap items-end gap-4">
+              <div className="min-w-[14rem]" style={{ flex: '2 1 0' }}>
+                <FormField label={__('Link', 'eleva-crm-for-photographers')} htmlFor="delivery_url" error={errors.delivery?.url?.message}>
+                  <input
+                    id="delivery_url"
+                    type="text"
+                    inputMode="url"
+                    placeholder="https://"
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                    {...register('delivery.url', {
+                      validate: (v) => !v?.trim() || normalizeLink(v) !== null
+                        || __('This does not look like a web address. Use something like gallery.example.com', 'eleva-crm-for-photographers'),
+                    })}
+                  />
+                </FormField>
+              </div>
+              <div className="w-44 shrink-0">
+                <FormField label={__('Link expiry date', 'eleva-crm-for-photographers')} htmlFor="delivery_expires">
+                  <input
+                    id="delivery_expires"
+                    type="date"
+                    className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                    {...register('delivery.expires')}
+                  />
+                </FormField>
+              </div>
+              <div className="min-w-[11rem]" style={{ flex: '1 1 0' }}>
+                <FormField label={__('Gallery password', 'eleva-crm-for-photographers')} htmlFor="delivery_password">
+                  <Controller
+                    name="delivery.password"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        id="delivery_password"
+                        type="text"
+                        autoComplete="off"
+                        value={field.value ?? ''}
+                        onChange={(e) => field.onChange(e.target.value)}
+                        onBlur={field.onBlur}
+                        className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                      />
+                    )}
+                  />
+                </FormField>
+              </div>
+              <div className="ml-auto shrink-0">
+                {deliveryMessage ? (
+                  <CopyButton text={deliveryMessage} label={__('Copy message', 'eleva-crm-for-photographers')} buttonVariant="primary" className="" />
+                ) : (
+                  <Button
+                    type="button"
+                    disabled
+                    title={__('Add a link to prepare the message for your client.', 'eleva-crm-for-photographers')}
+                  >
+                    {__('Copy message', 'eleva-crm-for-photographers')}
+                  </Button>
                 )}
-              />
-            </FormField>
+              </div>
+            </div>
           </div>
         </section>
 
