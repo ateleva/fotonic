@@ -57,7 +57,7 @@ function sameBytes(a, b) {
  * does not give a stable secret never gets a wrap it could not open again.
  *
  * @returns {{credId: string, kek: string, host: string}} base64url credential id, base64url KEK
- * @throws Error with .code: 'cancelled' | 'prf_unsupported' | 'prf_inconsistent' | 'failed'
+ * @throws Error with .code: 'cancelled' | 'prf_unsupported' | 'prf_inconsistent' | 'insecure' | 'failed'
  */
 export async function enrollCredential({ salt, label }) {
   const host = window.location.hostname
@@ -98,8 +98,12 @@ export async function enrollCredential({ salt, label }) {
 
     return { credId: b64uEncode(rawId), kek: b64uEncode(kek), host }
   } catch (err) {
-    if (err?.code && ['cancelled', 'prf_unsupported', 'prf_inconsistent', 'failed'].includes(err.code)) throw err
+    if (err?.code && ['cancelled', 'prf_unsupported', 'prf_inconsistent', 'insecure', 'failed'].includes(err.code)) throw err
+    // The browser's own error name, for whoever has to find out why a device refused (never a secret).
+    console.warn('[Eleva CRM] fingerprint setup failed:', err?.name, err?.message)
     if (err?.name === 'NotAllowedError' || err?.name === 'AbortError') throw failure('cancelled')
+    if (err?.name === 'NotSupportedError') throw failure('prf_unsupported')
+    if (err?.name === 'SecurityError') throw failure('insecure')
     throw failure('failed')
   }
 }

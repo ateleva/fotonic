@@ -3367,3 +3367,15 @@ msgstr ""
 #: src/src/features/vault/FingerprintPanel.jsx:119
 msgid "Turn on fingerprint unlock"
 msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:30
+msgid "The browser refused because of the website address. Fingerprint unlock needs a secure (https) address."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:32
+msgid "The device did not complete the setup. Try again with a new code, or use another browser."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:117
+msgid "Your device will ask you to confirm twice. This only happens once. Each code works only once: if you just used it, wait for the next one."
+msgstr ""

@@ -2882,3 +2882,12 @@ msgstr "Impossibile configurare l'impronta."
 
 msgid "That device is not in the list."
 msgstr "Quel dispositivo non è nell'elenco."
+
+msgid "The browser refused because of the website address. Fingerprint unlock needs a secure (https) address."
+msgstr "Il browser ha rifiutato a causa dell'indirizzo del sito. Lo sblocco con l'impronta richiede un indirizzo sicuro (https)."
+
+msgid "The device did not complete the setup. Try again with a new code, or use another browser."
+msgstr "Il dispositivo non ha completato la configurazione. Riprova con un nuovo codice o usa un altro browser."
+
+msgid "Your device will ask you to confirm twice. This only happens once. Each code works only once: if you just used it, wait for the next one."
+msgstr "Il dispositivo ti chiederà di confermare due volte. Succede solo questa volta. Ogni codice vale una sola volta: se l'hai appena usato, aspetta il successivo."

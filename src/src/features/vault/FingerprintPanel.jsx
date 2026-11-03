@@ -26,6 +26,10 @@ function errorText(err) {
       return __('This browser or device cannot do fingerprint unlock.', 'eleva-crm-for-photographers')
     case 'prf_inconsistent':
       return __('The device gave different answers. Try again.', 'eleva-crm-for-photographers')
+    case 'insecure':
+      return __('The browser refused because of the website address. Fingerprint unlock needs a secure (https) address.', 'eleva-crm-for-photographers')
+    case 'failed':
+      return __('The device did not complete the setup. Try again with a new code, or use another browser.', 'eleva-crm-for-photographers')
     default:
       return err?.message || __('Could not turn on fingerprint unlock.', 'eleva-crm-for-photographers')
   }
@@ -110,7 +114,7 @@ export default function FingerprintPanel() {
               <input type="text" maxLength={60} value={form.label} onChange={set('label')} className={inputCls} />
             </Field>
           </div>
-          <p className="text-xs text-gray-400">{__('Your device will ask you to confirm twice. This only happens once.', 'eleva-crm-for-photographers')}</p>
+          <p className="text-xs text-gray-400">{__('Your device will ask you to confirm twice. This only happens once. Each code works only once: if you just used it, wait for the next one.', 'eleva-crm-for-photographers')}</p>
           {error && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>}
           {done && <p className="text-xs text-green-700 bg-green-50 border border-green-200 rounded px-3 py-2">{__('Fingerprint unlock is on for this device.', 'eleva-crm-for-photographers')}</p>}
           <div className="flex justify-end">
