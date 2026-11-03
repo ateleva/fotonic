@@ -46,6 +46,7 @@ class WP_REST_Request {
 
 require __DIR__ . '/../../includes/class-crypto.php';
 require __DIR__ . '/../../includes/class-vault-attempts.php';
+require __DIR__ . '/../../includes/class-vault-fingerprint.php';
 require __DIR__ . '/../../includes/class-backup-keys.php';
 require __DIR__ . '/../../includes/class-field-crypt.php';
 require __DIR__ . '/../../includes/class-vault-fields.php';
