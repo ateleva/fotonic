@@ -3463,3 +3463,7 @@ msgstr ""
 #: src/src/features/vault/FingerprintPanel.jsx:152
 msgid "On the same computer, your browsers may share one passkey, so a browser can open the Vault with the entry of another one. That is normal, and \"Last used\" then shows on that entry."
 msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:31
+msgid "This device already opens the Vault with a fingerprint: its passkey is shared with another browser or device. There is nothing to turn on."
+msgstr ""

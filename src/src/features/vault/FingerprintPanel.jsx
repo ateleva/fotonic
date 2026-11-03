@@ -27,6 +27,8 @@ function errorText(err) {
       return __('This browser or device cannot do fingerprint unlock.', 'eleva-crm-for-photographers')
     case 'prf_inconsistent':
       return __('The device gave different answers. Try again.', 'eleva-crm-for-photographers')
+    case 'already':
+      return __('This device already opens the Vault with a fingerprint: its passkey is shared with another browser or device. There is nothing to turn on.', 'eleva-crm-for-photographers')
     case 'insecure':
       return __('The browser refused because of the website address. Fingerprint unlock needs a secure (https) address.', 'eleva-crm-for-photographers')
     case 'failed':
@@ -74,7 +76,7 @@ export default function FingerprintPanel({ supported = true }) {
     try {
       const begin = await fingerprintBegin({ password: form.password, otp: form.otp })
       const label = form.label.trim() || guessDeviceName()
-      const { credId, kek, host } = await enrollCredential({ salt: begin.salt, label })
+      const { credId, kek, host } = await enrollCredential({ salt: begin.salt, label, existingIds: devices.filter((d) => d.host === window.location.hostname).map((d) => d.cred_id) })
       await fingerprintFinish({ token: begin.token, cred_id: credId, kek, host, label })
       setForm({ password: '', otp: '', label: guessDeviceName() })
       setDone(true)

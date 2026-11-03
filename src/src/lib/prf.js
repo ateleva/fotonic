@@ -57,9 +57,9 @@ function sameBytes(a, b) {
  * does not give a stable secret never gets a wrap it could not open again.
  *
  * @returns {{credId: string, kek: string, host: string}} base64url credential id, base64url KEK
- * @throws Error with .code: 'cancelled' | 'prf_unsupported' | 'prf_inconsistent' | 'insecure' | 'failed'
+ * @throws Error with .code: 'cancelled' | 'prf_unsupported' | 'prf_inconsistent' | 'insecure' | 'already' | 'failed'
  */
-export async function enrollCredential({ salt, label }) {
+export async function enrollCredential({ salt, label, existingIds = [] }) {
   const host = window.location.hostname
   const saltBytes = b64uDecode(salt)
   const name = label || 'Eleva CRM'
@@ -72,6 +72,9 @@ export async function enrollCredential({ salt, label }) {
         pubKeyCredParams: [{ type: 'public-key', alg: -7 }, { type: 'public-key', alg: -257 }],
         authenticatorSelection: { authenticatorAttachment: 'platform', residentKey: 'preferred', userVerification: 'required' },
         timeout: 120000,
+        // Passkeys already enrolled for this address: when one of them is available on this computer (for example the
+        // same iCloud passkey in Safari and in Chrome) the browser refuses to make a second one.
+        excludeCredentials: existingIds.map((id) => ({ type: 'public-key', id: b64uDecode(id) })),
         extensions: { prf: { eval: { first: saltBytes } } },
       },
     })
@@ -98,9 +101,10 @@ export async function enrollCredential({ salt, label }) {
 
     return { credId: b64uEncode(rawId), kek: b64uEncode(kek), host }
   } catch (err) {
-    if (err?.code && ['cancelled', 'prf_unsupported', 'prf_inconsistent', 'insecure', 'failed'].includes(err.code)) throw err
+    if (err?.code && ['cancelled', 'prf_unsupported', 'prf_inconsistent', 'insecure', 'already', 'failed'].includes(err.code)) throw err
     // The browser's own error name, for whoever has to find out why a device refused (never a secret).
     console.warn('[Eleva CRM] fingerprint setup failed:', err?.name, err?.message)
+    if (err?.name === 'InvalidStateError') throw failure('already')
     if (err?.name === 'NotAllowedError' || err?.name === 'AbortError') throw failure('cancelled')
     if (err?.name === 'NotSupportedError') throw failure('prf_unsupported')
     if (err?.name === 'SecurityError') throw failure('insecure')
