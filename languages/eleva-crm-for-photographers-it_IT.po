@@ -2522,3 +2522,249 @@ msgstr "Leggi di più"
 
 msgid "Here is everything that changed in this update. Each section keeps a star in the menu until you have seen its changes."
 msgstr "Qui trovi tutto ciò che è cambiato in questo aggiornamento. Ogni sezione tiene la sua stella nel menu finché non hai visto le sue novità."
+
+msgid "Backup location name is required."
+msgstr "Il nome dell'archivio backup è necessario."
+
+msgid "Backup location not found."
+msgstr "Archivio backup non trovato."
+
+msgid "Backup Locations"
+msgstr "Archivi backup"
+
+msgid "Backup Location"
+msgstr "Archivio backup"
+
+msgid "Add New Backup Location"
+msgstr "Aggiungi nuovo archivio backup"
+
+msgid "Edit Backup Location"
+msgstr "Modifica archivio backup"
+
+msgid "New Backup Location"
+msgstr "Nuovo archivio backup"
+
+msgid "View Backup Location"
+msgstr "Visualizza archivio backup"
+
+msgid "Search Backup Locations"
+msgstr "Cerca archivi backup"
+
+msgid "No backup locations found."
+msgstr "Nessun archivio backup trovato."
+
+msgid "No backup locations found in trash."
+msgstr "Nessun archivio backup trovato nel cestino."
+
+msgid "All Backup Locations"
+msgstr "Tutti gli archivi backup"
+
+msgid "Active"
+msgstr "Attivo"
+
+msgid "Full"
+msgstr "Pieno"
+
+msgid "Retired"
+msgstr "Dismesso"
+
+msgid "Storage: cards, backups and shots in one place"
+msgstr "Archiviazione: schede, backup e scatti in un unico posto"
+
+msgid "Memory Cards now live in Storage, next to two new tabs: Backup Locations, where you list the drives and cloud spaces that hold your backups, and Shots History."
+msgstr "Le schede di memoria ora si trovano in Archiviazione, accanto a due nuove schede: Archivi backup, dove elenchi i dischi e gli spazi cloud che contengono i tuoi backup, e Storico scatti."
+
+msgid "Where each work is backed up"
+msgstr "Dove è salvato il backup di ogni lavoro"
+
+msgid "In a work, choose the backup locations where its photos are saved. If you delete a location later, the works that used it show a red sign in the list, and a button above the list shows only those works."
+msgstr "In un lavoro scegli gli archivi backup dove sono salvate le sue foto. Se in seguito elimini un archivio, i lavori che lo usavano mostrano un segno rosso nell'elenco e un pulsante sopra l'elenco mostra solo quei lavori."
+
+msgid "Shots and delivery"
+msgstr "Scatti e consegna"
+
+msgid "Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. The Shots History tab adds it all up by year."
+msgstr "Scrivi quante foto hai scattato e consegnato e come le hai consegnate: un link a una galleria, un trasferimento o una chiavetta USB. La scheda Storico scatti somma tutto per anno."
+
+msgid "Long lists have pages"
+msgstr "Le liste lunghe sono divise in pagine"
+
+msgid "Works show 48 at a time and the other lists 24, with Previous and Next buttons. Before, only the first 20 works and customers were shown."
+msgstr "I lavori ne mostrano 48 alla volta e le altre liste 24, con i pulsanti Pagina precedente e Pagina successiva. Prima si vedevano solo i primi 20 lavori e clienti."
+
+msgid "Every page names its browser tab"
+msgstr "Ogni pagina dà un nome alla scheda del browser"
+
+msgid "With several tabs open, each one says which page it shows, for example Works or Settings. When the Vault is locked, the tab says so with a lock."
+msgstr "Con più schede aperte, ognuna indica quale pagina mostra, per esempio Lavori o Impostazioni. Quando il Vault è bloccato, la scheda lo indica con un lucchetto."
+
+msgid "Shots History"
+msgstr "Storico scatti"
+
+msgid "Storage"
+msgstr "Archiviazione"
+
+msgid "New Quote"
+msgstr "Nuovo preventivo"
+
+msgid "Edit Quote"
+msgstr "Modifica preventivo"
+
+msgid "Quote Settings"
+msgstr "Impostazioni preventivi"
+
+msgid "Compare Periods"
+msgstr "Confronta periodi"
+
+msgid "New Collaborator"
+msgstr "Nuovo collaboratore"
+
+msgid "Edit Collaborator"
+msgstr "Modifica collaboratore"
+
+msgid "New Product"
+msgstr "Nuovo prodotto"
+
+msgid "Edit Product"
+msgstr "Modifica prodotto"
+
+msgid "New Supplier"
+msgstr "Nuovo fornitore"
+
+msgid "Edit Supplier"
+msgstr "Modifica fornitore"
+
+msgid "New Expense"
+msgstr "Nuova spesa"
+
+msgid "Edit Expense"
+msgstr "Modifica spesa"
+
+msgid "Shots taken"
+msgstr "Scatti realizzati"
+
+msgid "Photos delivered"
+msgstr "Foto consegnate"
+
+msgid "More photos delivered than taken. Check the two numbers in the work."
+msgstr "Hai consegnato più foto di quelle scattate. Controlla i due numeri nel lavoro."
+
+msgid "Year"
+msgstr "Anno"
+
+msgid "All years"
+msgstr "Tutti gli anni"
+
+msgid "No shot counts yet. Add them in the Shots section of a work."
+msgstr "Ancora nessun conteggio di scatti. Aggiungili nella sezione Scatti di un lavoro."
+
+msgid "Add Backup Location"
+msgstr "Aggiungi archivio backup"
+
+msgid "Storage sections"
+msgstr "Sezioni di Archiviazione"
+
+msgid "No works saved in this location yet."
+msgstr "Nessun lavoro salvato in questo archivio."
+
+msgid "e.g. Synology NAS, office"
+msgstr "es. NAS Synology, ufficio"
+
+msgid "Name is required"
+msgstr "Il nome è necessario"
+
+msgid "e.g. NAS, SSD, Google Drive"
+msgstr "es. NAS, SSD, Google Drive"
+
+msgid "Capacity"
+msgstr "Capacità"
+
+msgid "e.g. 4 TB"
+msgstr "es. 4 TB"
+
+msgid "Update Backup Location"
+msgstr "Aggiorna archivio backup"
+
+msgid "Create Backup Location"
+msgstr "Crea archivio backup"
+
+msgid "Delete this backup location? The works that use it will show a warning, so you can choose another location for them."
+msgstr "Vuoi eliminare questo archivio backup? I lavori che lo usano mostreranno un avviso, così potrai scegliere un altro archivio."
+
+msgid "No backup locations yet. Add your first one: a hard drive, a NAS, a cloud service…"
+msgstr "Ancora nessun archivio backup. Aggiungi il primo: un hard disk, un NAS, un servizio cloud…"
+
+msgid "Where the backups of this work are saved."
+msgstr "Dove sono salvati i backup di questo lavoro."
+
+msgid "Storage & Backup"
+msgstr "Archiviazione & Backup"
+
+msgid "Used for your yearly statistics."
+msgstr "Serve per le tue statistiche annuali."
+
+msgid "Shots"
+msgstr "Scatti"
+
+msgid "You delivered more photos than you took. Check the two numbers."
+msgstr "Hai consegnato più foto di quelle scattate. Controlla i due numeri."
+
+msgid "How the photos reached the client: a gallery link, a transfer, a USB stick…"
+msgstr "Come le foto sono arrivate al cliente: un link a una galleria, un trasferimento, una chiavetta USB…"
+
+msgid "Delivery"
+msgstr "Consegna"
+
+msgid "Delivery title"
+msgstr "Titolo consegna"
+
+msgid "e.g. Pixieset gallery"
+msgstr "es. Galleria Pixieset"
+
+msgid "This does not look like a web address. Use something like gallery.example.com"
+msgstr "Questo non sembra un indirizzo web. Usa qualcosa come galleria.esempio.com"
+
+msgid "Link expiry date"
+msgstr "Scadenza link"
+
+msgid "Delivery notes"
+msgstr "Note consegna"
+
+msgid "Select a backup location…"
+msgstr "Seleziona un archivio backup…"
+
+msgid "Deleted location"
+msgstr "Archivio eliminato"
+
+msgid "This backup location was deleted. Choose another one or remove the row."
+msgstr "Questo archivio backup è stato eliminato. Scegline un altro o rimuovi la riga."
+
+msgid "Create a new backup location"
+msgstr "Crea un nuovo archivio backup"
+
+msgid "A backup location of this work was deleted. Open the work to choose another one."
+msgstr "Un archivio backup di questo lavoro è stato eliminato. Apri il lavoro per sceglierne un altro."
+
+msgid "Works with warnings"
+msgstr "Lavori con avvisi"
+
+msgid "No works with warnings."
+msgstr "Nessun lavoro con avvisi."
+
+msgid "Vault locked"
+msgstr "Vault bloccato"
+
+msgid "Pagination"
+msgstr "Paginazione"
+
+msgid "%1$s-%2$s of %3$s"
+msgstr "%1$s-%2$s di %3$s"
+
+msgid "Page %1$s of %2$s"
+msgstr "Pagina %1$s di %2$s"
+
+msgid "Previous page"
+msgstr "Pagina precedente"
+
+msgid "Next page"
+msgstr "Pagina successiva"

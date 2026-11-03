@@ -2887,3 +2887,331 @@ msgstr ""
 #: src/src/components/WhatsNew.jsx:122
 msgid "Here is everything that changed in this update. Each section keeps a star in the menu until you have seen its changes."
 msgstr ""
+
+#: includes/class-backup-loc-rest-api.php:97
+msgid "Backup location name is required."
+msgstr ""
+
+#: includes/class-backup-loc-rest-api.php:253
+msgid "Backup location not found."
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:19
+msgid "Backup Locations"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:20
+msgid "Backup Location"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:22
+msgid "Add New Backup Location"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:23
+msgid "Edit Backup Location"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:24
+msgid "New Backup Location"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:25
+msgid "View Backup Location"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:26
+msgid "Search Backup Locations"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:27
+msgid "No backup locations found."
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:28
+msgid "No backup locations found in trash."
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:29
+msgid "All Backup Locations"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:53
+msgid "Active"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:54
+msgid "Full"
+msgstr ""
+
+#: includes/class-backup-loc-cpt.php:55
+msgid "Retired"
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Storage: cards, backups and shots in one place"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "Memory Cards now live in Storage, next to two new tabs: Backup Locations, where you list the drives and cloud spaces that hold your backups, and Shots History."
+msgstr ""
+
+#: includes/class-whats-new.php:74
+msgid "Where each work is backed up"
+msgstr ""
+
+#: includes/class-whats-new.php:75
+msgid "In a work, choose the backup locations where its photos are saved. If you delete a location later, the works that used it show a red sign in the list, and a button above the list shows only those works."
+msgstr ""
+
+#: includes/class-whats-new.php:82
+msgid "Shots and delivery"
+msgstr ""
+
+#: includes/class-whats-new.php:83
+msgid "Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. The Shots History tab adds it all up by year."
+msgstr ""
+
+#: includes/class-whats-new.php:90
+msgid "Long lists have pages"
+msgstr ""
+
+#: includes/class-whats-new.php:91
+msgid "Works show 48 at a time and the other lists 24, with Previous and Next buttons. Before, only the first 20 works and customers were shown."
+msgstr ""
+
+#: includes/class-whats-new.php:98
+msgid "Every page names its browser tab"
+msgstr ""
+
+#: includes/class-whats-new.php:99
+msgid "With several tabs open, each one says which page it shows, for example Works or Settings. When the Vault is locked, the tab says so with a lock."
+msgstr ""
+
+#: src/src/router.jsx:55
+msgid "Shots History"
+msgstr ""
+
+#: src/src/router.jsx:63
+msgid "Storage"
+msgstr ""
+
+#: src/src/router.jsx:67
+msgid "New Quote"
+msgstr ""
+
+#: src/src/router.jsx:67
+msgid "Edit Quote"
+msgstr ""
+
+#: src/src/router.jsx:67
+msgid "Quote Settings"
+msgstr ""
+
+#: src/src/router.jsx:69
+msgid "Compare Periods"
+msgstr ""
+
+#: src/src/router.jsx:70
+msgid "New Collaborator"
+msgstr ""
+
+#: src/src/router.jsx:70
+msgid "Edit Collaborator"
+msgstr ""
+
+#: src/src/router.jsx:71
+msgid "New Product"
+msgstr ""
+
+#: src/src/router.jsx:71
+msgid "Edit Product"
+msgstr ""
+
+#: src/src/router.jsx:72
+msgid "New Supplier"
+msgstr ""
+
+#: src/src/router.jsx:72
+msgid "Edit Supplier"
+msgstr ""
+
+#: src/src/router.jsx:73
+msgid "New Expense"
+msgstr ""
+
+#: src/src/router.jsx:73
+msgid "Edit Expense"
+msgstr ""
+
+#: src/src/features/storage/ShotsHistory.jsx:42
+msgid "Shots taken"
+msgstr ""
+
+#: src/src/features/storage/ShotsHistory.jsx:47
+msgid "Photos delivered"
+msgstr ""
+
+#: src/src/features/storage/ShotsHistory.jsx:57
+msgid "More photos delivered than taken. Check the two numbers in the work."
+msgstr ""
+
+#: src/src/features/storage/ShotsHistory.jsx:73
+msgid "Year"
+msgstr ""
+
+#: src/src/features/storage/ShotsHistory.jsx:80
+msgid "All years"
+msgstr ""
+
+#: src/src/features/storage/ShotsHistory.jsx:103
+msgid "No shot counts yet. Add them in the Shots section of a work."
+msgstr ""
+
+#: src/src/features/storage/StoragePage.jsx:37
+msgid "Add Backup Location"
+msgstr ""
+
+#: src/src/features/storage/StoragePage.jsx:47
+msgid "Storage sections"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:40
+msgid "No works saved in this location yet."
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:128
+msgid "e.g. Synology NAS, office"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:130
+msgid "Name is required"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:139
+msgid "e.g. NAS, SSD, Google Drive"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:144
+msgid "Capacity"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:148
+msgid "e.g. 4 TB"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:190
+msgid "Update Backup Location"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:191
+msgid "Create Backup Location"
+msgstr ""
+
+#: src/src/features/storage/BackupLocationForm.jsx:206
+msgid "Delete this backup location? The works that use it will show a warning, so you can choose another location for them."
+msgstr ""
+
+#: src/src/features/storage/BackupLocationList.jsx:104
+msgid "No backup locations yet. Add your first one: a hard drive, a NAS, a cloud service…"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:552
+msgid "Where the backups of this work are saved."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:553
+msgid "Storage & Backup"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:566
+msgid "Used for your yearly statistics."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:567
+msgid "Shots"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:596
+msgid "You delivered more photos than you took. Check the two numbers."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:604
+msgid "How the photos reached the client: a gallery link, a transfer, a USB stick…"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:605
+msgid "Delivery"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:609
+msgid "Delivery title"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:613
+msgid "e.g. Pixieset gallery"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:627
+msgid "This does not look like a web address. Use something like gallery.example.com"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:631
+msgid "Link expiry date"
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:640
+msgid "Delivery notes"
+msgstr ""
+
+#: src/src/features/works/StorageLocationsSection.jsx:58
+msgid "Select a backup location…"
+msgstr ""
+
+#: src/src/features/works/StorageLocationsSection.jsx:64
+msgid "Deleted location"
+msgstr ""
+
+#: src/src/features/works/StorageLocationsSection.jsx:75
+msgid "This backup location was deleted. Choose another one or remove the row."
+msgstr ""
+
+#: src/src/features/works/StorageLocationsSection.jsx:95
+msgid "Create a new backup location"
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:70
+msgid "A backup location of this work was deleted. Open the work to choose another one."
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:169
+msgid "Works with warnings"
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:182
+msgid "No works with warnings."
+msgstr ""
+
+#: src/src/features/vault/VaultLock.jsx:27
+msgid "Vault locked"
+msgstr ""
+
+#: src/src/components/Pagination.jsx:16
+msgid "Pagination"
+msgstr ""
+
+#: src/src/components/Pagination.jsx:18
+msgid "%1$s-%2$s of %3$s"
+msgstr ""
+
+#: src/src/components/Pagination.jsx:23
+msgid "Previous page"
+msgstr ""
+
+#: src/src/components/Pagination.jsx:26
+msgid "Page %1$s of %2$s"
+msgstr ""
+
+#: src/src/components/Pagination.jsx:29
+msgid "Next page"
+msgstr ""
