@@ -389,15 +389,24 @@ class Fotonic_Vault {
 	 * wrap opened). Same steps as the end of unlock(): the session cookie, and the backup keypair
 	 * backfill. Callers must have checked that the key is the real one; GCM success is that proof.
 	 *
+	 * The key must also be the CURRENT one: the TOTP secret is wrapped under the Master Key, so it
+	 * has to open. A wrap that holds an outdated key (a missed revoke, a database copied by hand, a
+	 * restore) must never start a session that would encrypt new data under the wrong key.
+	 *
 	 * @param string $mk Raw 32-byte Master Key.
-	 * @return void
+	 * @return bool True when the session was opened.
 	 */
-	public static function unlock_with_key( string $mk ): void {
+	public static function unlock_with_key( string $mk ): bool {
 		if ( 32 !== strlen( $mk ) ) {
-			return;
+			return false;
+		}
+		$wrap_totp = (string) get_option( self::OPTION_WRAP_TOTP, '' );
+		if ( '' === $wrap_totp || false === Fotonic_Crypto::unwrap( $wrap_totp, $mk ) ) {
+			return false;
 		}
 		self::set_session_cookie( $mk );
 		Fotonic_Backup_Keys::setup( $mk );
+		return true;
 	}
 
 	/**

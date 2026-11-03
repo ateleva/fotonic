@@ -991,8 +991,17 @@ class Fotonic_REST_API {
 			isset( $body['kek_next'] ) ? (string) $body['kek_next'] : ''
 		);
 
+		if ( ! empty( $result['ok'] ) && ! Fotonic_Vault::unlock_with_key( $result['mk'] ) ) {
+			// The wrap opened but holds a key that is no longer the Vault's: it can never work again.
+			Fotonic_Vault_Fingerprint::remove( isset( $body['cred_id'] ) ? (string) $body['cred_id'] : '' );
+			self::audit_log( 'vault_fingerprint_device_outdated', [ 'label' => $result['label'] ] );
+			return new \WP_REST_Response(
+				[ 'code' => 'device_outdated', 'message' => __( 'This fingerprint no longer matches the Vault. Use your password and code, then turn the fingerprint on again.', 'eleva-crm-for-photographers' ) ],
+				409
+			);
+		}
+
 		if ( ! empty( $result['ok'] ) ) {
-			Fotonic_Vault::unlock_with_key( $result['mk'] );
 			$attempts->clear();
 			self::audit_log( 'vault_fingerprint_unlock_ok', [ 'label' => $result['label'] ] );
 			return new \WP_REST_Response( [ 'unlocked' => true ], 200 );

@@ -41,6 +41,9 @@ export function useFingerprintUnlock(onUnlocked) {
     } catch (err) {
       if (err?.code === 'cancelled') {
         // The person closed the prompt: nothing to say, the button and the password form are there.
+      } else if (err?.code === 'device_outdated') {
+        setError(err.message)
+        await load().catch(() => {})
       } else if (err?.status === 409) {
         // Another tab rotated first. Fetch the new salts; the person presses the button again.
         await load().catch(() => {})

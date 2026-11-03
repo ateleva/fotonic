@@ -2948,3 +2948,6 @@ msgstr "Sblocca il Vault con un tocco"
 
 msgid "If your computer or phone has a fingerprint reader or face unlock, you can open the Vault with a touch instead of typing the password and the code. Turn it on in Settings, under Vault. Your password and code still work."
 msgstr "Se il tuo computer o telefono ha un lettore di impronte o lo sblocco con il volto, puoi aprire il Vault con un tocco invece di scrivere password e codice. Attivalo in Impostazioni, sotto Vault. Password e codice continuano a funzionare."
+
+msgid "This fingerprint no longer matches the Vault. Use your password and code, then turn the fingerprint on again."
+msgstr "Questa impronta non corrisponde più al Vault. Usa password e codice, poi attiva di nuovo l'impronta."

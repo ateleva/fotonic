@@ -361,7 +361,7 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 == Upgrade Notice ==
 
 = 1.6.6 =
-Memory Cards move into a new Storage page, where you can also keep your backup locations, count your shots and write how you delivered each work. You can also unlock the Vault with a touch, where your browser supports it. Long lists now have pages: before, only the first 20 works and customers showed. Update Eleva CRM Pro to 1.6.6 too.
+Memory Cards move into a new Storage page, where you can also keep your backup locations, count your shots and write how you delivered each work. You can also unlock the Vault with a touch, where your browser supports it. Long lists now have pages. Update Eleva CRM Pro to 1.6.6 too.
 
 = 1.6.5 =
 A star now shows what changed in each section after an update, there is a Changelog page, and forms look more even. Update Eleva CRM Pro to 1.6.5 too: reminders, two-way Google Calendar sync and the INPS surcharge need both plugins.

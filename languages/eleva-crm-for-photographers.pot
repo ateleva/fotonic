@@ -3455,3 +3455,7 @@ msgstr ""
 #: src/src/features/vault/FingerprintPanel.jsx:158
 msgid "This browser cannot turn on fingerprint unlock. You can still remove devices here."
 msgstr ""
+
+#: includes/class-rest-api.php:999
+msgid "This fingerprint no longer matches the Vault. Use your password and code, then turn the fingerprint on again."
+msgstr ""

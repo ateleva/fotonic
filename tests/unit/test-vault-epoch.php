@@ -24,6 +24,8 @@ function wp_unslash( $v ) { return $v; }
 function sanitize_text_field( $v ) { return $v; }
 function is_ssl() { return false; }
 
+require __DIR__ . '/../../includes/class-crypto.php';
+class Fotonic_Backup_Keys { public static function setup( $mk ) { return true; } }
 require __DIR__ . '/../../includes/class-vault.php';
 
 $mk = random_bytes( 32 );
@@ -45,6 +47,17 @@ $binding = function (): string {
 	return $m->invoke( null );
 };
 $epoch_raw = function () { return hex2bin( (string) get_option( Fotonic_Vault::OPTION_EPOCH, '' ) ); };
+
+// 0. unlock_with_key() opens a session only for the CURRENT Master Key (the TOTP wrap must open with it).
+update_option( Fotonic_Vault::OPTION_WRAP_TOTP, Fotonic_Crypto::wrap( 'totp-secret', $mk ) );
+t_equals( false, Fotonic_Vault::unlock_with_key( random_bytes( 32 ) ), 'a key that is not the Vault key opens nothing' );
+t_equals( null, Fotonic_Vault::get_session_key(), '... and sets no cookie' );
+t_equals( false, Fotonic_Vault::unlock_with_key( 'short' ), 'a key of the wrong length opens nothing' );
+t_equals( true, Fotonic_Vault::unlock_with_key( $mk ), 'the Vault key opens the session' );
+t_equals( $mk, Fotonic_Vault::get_session_key(), '... with that key in the cookie' );
+unset( $_COOKIE[ Fotonic_Vault::COOKIE_NAME ] );
+delete_option( Fotonic_Vault::OPTION_WRAP_TOTP );
+delete_option( Fotonic_Vault::OPTION_EPOCH );
 
 // 1. No cookie, no epoch: locked.
 t_equals( null, Fotonic_Vault::get_session_key(), 'no cookie: locked' );
