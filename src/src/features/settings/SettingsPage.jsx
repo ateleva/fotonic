@@ -491,9 +491,9 @@ export default function SettingsPage() {
                   <Accordion label={__('Recovery kit', 'eleva-crm-for-photographers')}>
                     <NewRecoveryKitAction />
                   </Accordion>
-                  {fingerprintSupported && (
+                  {(fingerprintSupported || vaultStatus.fingerprint_count > 0) && (
                     <Accordion label={__('Unlock with fingerprint', 'eleva-crm-for-photographers')}>
-                      <FingerprintPanel />
+                      <FingerprintPanel supported={fingerprintSupported} />
                     </Accordion>
                   )}
                   <Accordion label={__('Reset Vault', 'eleva-crm-for-photographers')}>

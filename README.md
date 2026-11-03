@@ -24,6 +24,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
 - **Memory Cards** — keep an inventory of your SD/CF cards with an auto-advancing status (Ready, In Use, Backed Up, Damaged); manage them from the sidebar or assign cards to a shoot inside the Work editor
 - **Storage**: one page with three tabs: Memory Cards, Backup Locations (hard drives, NAS and cloud spaces where you keep your files) and Shots History. Each work records where its backups are saved, how many shots you took and delivered, and how the photos were delivered (link, expiry date, notes)
+- **Fingerprint unlock**: optional, open the Vault with a touch (WebAuthn PRF, tested on Safari and Chrome on macOS); password and TOTP code stay as the fallback and the recovery path
 - **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password (minimum 8 characters, use a strong one: the archive is only as safe as that password); a standalone command-line decrypt tool ships with the plugin to open the archive on any machine and read your data and files (importing a backup back into the plugin is not available yet)
 
 ---
@@ -102,6 +103,8 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ### 1.6.6
 
+- **New:** unlock the Vault with a touch. If your computer or phone has a fingerprint reader or face unlock, turn it on in Settings, under Vault, and open the Vault without typing the password and the code. Your password and code keep working, and you still need them to turn the feature on and if you lose the device. It is tested on Safari and Chrome on macOS: other browsers show the option only when they support it.
+- **Security:** the fingerprint uses the check your device already has (fingerprint, face or device PIN), so anyone who can unlock the device can open the Vault from it, and passkeys saved in iCloud or Google can open it on your other devices. It works only on the address where you turned it on. Resetting or recovering the Vault removes the fingerprints; changing the Vault password keeps them. They are never part of a backup.
 - **New:** Storage. The Memory Cards entry in the menu is now Storage, with three tabs: Memory Cards, Backup Locations and Shots History.
 - **New:** Backup Locations. List the hard drives, NAS and cloud spaces where you keep your backups, with their type, size and a note. In each work, choose where its backups are saved, and open a location to see every work saved there.
 - **New:** if you delete a backup location that a work uses, the work shows a red warning in the Works list, and a button above the list shows only the works to fix. Open the work and choose another location.

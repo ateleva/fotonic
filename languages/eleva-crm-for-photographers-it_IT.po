@@ -2915,3 +2915,36 @@ msgstr "La prossima volta apri il Vault con un tocco. Bastano pochi secondi per 
 
 msgid "Turn on"
 msgstr "Attiva"
+
+msgid "Could not remove the device."
+msgstr "Impossibile rimuovere il dispositivo."
+
+msgid "Last used: %s"
+msgstr "Ultimo uso: %s"
+
+msgid "Not used yet"
+msgstr "Non ancora usato"
+
+msgid "Turned on for %s. It will not work on this address: turn it on again here, or remove it."
+msgstr "Attivato per %s. Su questo indirizzo non funzionerà: attivalo di nuovo qui, oppure rimuovilo."
+
+msgid "No device uses the fingerprint yet."
+msgstr "Nessun dispositivo usa ancora l'impronta."
+
+msgid "Remove this device"
+msgstr "Rimuovi questo dispositivo"
+
+msgid "This device will no longer open the Vault with the fingerprint. Your password and code are not affected."
+msgstr "Questo dispositivo non aprirà più il Vault con l'impronta. Password e codice non cambiano."
+
+msgid "This browser cannot turn on fingerprint unlock. You can still remove devices here."
+msgstr "Questo browser non può attivare lo sblocco con l'impronta. Qui puoi comunque rimuovere i dispositivi."
+
+msgid "Unlock the vault to remove a device."
+msgstr "Sblocca il Vault per rimuovere un dispositivo."
+
+msgid "Unlock the Vault with a touch"
+msgstr "Sblocca il Vault con un tocco"
+
+msgid "If your computer or phone has a fingerprint reader or face unlock, you can open the Vault with a touch instead of typing the password and the code. Turn it on in Settings, under Vault. Your password and code still work."
+msgstr "Se il tuo computer o telefono ha un lettore di impronte o lo sblocco con il volto, puoi aprire il Vault con un tocco invece di scrivere password e codice. Attivalo in Impostazioni, sotto Vault. Password e codice continuano a funzionare."

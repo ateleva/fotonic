@@ -58,6 +58,15 @@ class Fotonic_Whats_New {
 	private static function free_entries(): array {
 		return [
 			[
+				'id'      => '1.6.6:settings-fingerprint',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'settings',
+				'title'   => __( 'Unlock the Vault with a touch', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'If your computer or phone has a fingerprint reader or face unlock, you can open the Vault with a touch instead of typing the password and the code. Turn it on in Settings, under Vault. Your password and code still work.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
 				'id'      => '1.6.6:storage-page',
 				'plugin'  => 'free',
 				'since'   => '1.6.6',

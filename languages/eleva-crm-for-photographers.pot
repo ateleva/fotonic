@@ -3411,3 +3411,47 @@ msgstr ""
 #: src/src/features/vault/FingerprintInvite.jsx:58
 msgid "Turn on"
 msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Unlock the Vault with a touch"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "If your computer or phone has a fingerprint reader or face unlock, you can open the Vault with a touch instead of typing the password and the code. Turn it on in Settings, under Vault. Your password and code still work."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:95
+msgid "Could not remove the device."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:124
+msgid "Unlock the vault to remove a device."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:133
+msgid "Last used: %s"
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:134
+msgid "Not used yet"
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:138
+msgid "Turned on for %s. It will not work on this address: turn it on again here, or remove it."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:145
+msgid "No device uses the fingerprint yet."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:152
+msgid "Remove this device"
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:153
+msgid "This device will no longer open the Vault with the fingerprint. Your password and code are not affected."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:158
+msgid "This browser cannot turn on fingerprint unlock. You can still remove devices here."
+msgstr ""

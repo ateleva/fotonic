@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Sparkles, X, LayoutDashboard, Briefcase, Camera, FileText, Kanban, BarChart2, Store, Receipt, ArrowRight, HardDrive } from 'lucide-react'
+import { Sparkles, X, LayoutDashboard, Briefcase, Camera, FileText, Kanban, BarChart2, Store, Receipt, ArrowRight, HardDrive, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Modal from './Modal'
 import Button from './Button'
@@ -23,6 +23,7 @@ const SECTION_ICON = {
   analytics: BarChart2,
   suppliers: Store,
   expenses: Receipt,
+  settings: Settings,
 }
 
 function SectionBadge({ section, size = 36 }) {

@@ -16,7 +16,7 @@ const features = window.FotonicApp?.features ?? {}
 // The "What's new" section each sidebar item stands for (Pro adds its entries under the same keys).
 const SECTION_OF = {
   '/dashboard': 'dashboard', '/services': 'services', '/works': 'works', '/storage': 'storage', '/quotes': 'quotes',
-  '/kanban': 'kanban', '/analytics': 'analytics', '/suppliers': 'suppliers', '/expenses': 'expenses',
+  '/kanban': 'kanban', '/analytics': 'analytics', '/suppliers': 'suppliers', '/expenses': 'expenses', '/settings': 'settings',
 }
 
 // `.ftnc-navlink` owns display / grid-template-columns / align-items / gap / transition
@@ -225,10 +225,13 @@ export default function Layout() {
         </nav>
 
         <div className="px-3 pt-2 pb-3 border-t border-gray-100 flex flex-col gap-1">
-          <NavLink to="/settings" className={navLinkClass('text-gray-500')} {...tipProps(settingsLabel)}>
-            <Settings size={16} />
-            <span>{settingsLabel}</span>
-          </NavLink>
+          <div className="relative">
+            <NavLink to="/settings" className={navLinkClass('text-gray-500')} {...tipProps(settingsLabel)}>
+              <Settings size={16} />
+              <span>{settingsLabel}</span>
+            </NavLink>
+            {bySection.settings && <WhatsNewIcon section="settings" onOpen={setOpenSection} />}
+          </div>
           {isUnlocked && (
             <button
               type="button"

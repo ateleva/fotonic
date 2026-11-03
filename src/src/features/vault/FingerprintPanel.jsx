@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { Fingerprint } from 'lucide-react'
-import { __ } from '../../utils/i18n'
+import { Fingerprint, Trash2 } from 'lucide-react'
+import { __, sprintf } from '../../utils/i18n'
 import { useVault } from '../../context/VaultContext'
-import { fetchFingerprintDevices, fingerprintBegin, fingerprintFinish } from '../../api/vault'
+import { fetchFingerprintDevices, fingerprintBegin, fingerprintFinish, fingerprintRemove } from '../../api/vault'
 import { enrollCredential, guessDeviceName } from '../../lib/prf'
 import PasswordInput from '../../components/PasswordInput'
+import ConfirmDialog from '../../components/ConfirmDialog'
 
 const inputCls = 'w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500'
 
@@ -35,13 +36,19 @@ function errorText(err) {
   }
 }
 
-export default function FingerprintPanel() {
+/**
+ * @param {boolean} supported This browser can turn the fingerprint on. The list and "Remove" show either way,
+ *   so a device enrolled elsewhere can still be removed from a browser that cannot enrol.
+ */
+export default function FingerprintPanel({ supported = true }) {
   const queryClient = useQueryClient()
   const { isUnlocked } = useVault()
   const [form, setForm] = useState({ password: '', otp: '', label: guessDeviceName() })
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [done, setDone] = useState(false)
+  const [toRemove, setToRemove] = useState(null)
+  const [removeError, setRemoveError] = useState('')
 
   const { data } = useQuery({
     queryKey: ['vault-fingerprint'],
@@ -76,6 +83,21 @@ export default function FingerprintPanel() {
     }
   }
 
+  async function handleRemove() {
+    const target = toRemove
+    setToRemove(null)
+    setRemoveError('')
+    try {
+      await fingerprintRemove(target.cred_id)
+      await queryClient.invalidateQueries({ queryKey: ['vault-fingerprint'] })
+      await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
+    } catch (err) {
+      setRemoveError(err.message || __('Could not remove the device.', 'eleva-crm-for-photographers'))
+    }
+  }
+
+  const here = window.location.hostname
+
   return (
     <div className="space-y-3 pt-1">
       <p className="text-xs text-gray-500">
@@ -87,19 +109,54 @@ export default function FingerprintPanel() {
         <li>{__('It works only on this website address. If the address changes, turn it on again.', 'eleva-crm-for-photographers')}</li>
       </ul>
 
-      {devices.length > 0 && (
+      {devices.length > 0 ? (
         <div className="rounded-md border border-gray-200 divide-y divide-gray-100">
           {devices.map((d) => (
-            <div key={d.cred_id} className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700">
-              <Fingerprint size={14} className="text-indigo-500 shrink-0" />
-              <span className="font-medium">{d.label}</span>
-              <span className="text-xs text-gray-400">{d.host}</span>
+            <div key={d.cred_id} className="px-3 py-2 text-sm text-gray-700">
+              <div className="flex items-center gap-2">
+                <Fingerprint size={14} className="text-indigo-500 shrink-0" />
+                <span className="font-medium">{d.label}</span>
+                <span className="text-xs text-gray-400">{d.host}</span>
+                <button
+                  type="button"
+                  onClick={() => setToRemove(d)}
+                  disabled={!isUnlocked}
+                  title={isUnlocked ? undefined : __('Unlock the vault to remove a device.', 'eleva-crm-for-photographers')}
+                  className="ml-auto inline-flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+                >
+                  <Trash2 size={12} />
+                  {__('Remove', 'eleva-crm-for-photographers')}
+                </button>
+              </div>
+              <p className="mt-1 text-xs text-gray-400">
+                {d.last_used
+                  ? sprintf(__('Last used: %s', 'eleva-crm-for-photographers'), new Date(d.last_used * 1000).toLocaleString())
+                  : __('Not used yet', 'eleva-crm-for-photographers')}
+              </p>
+              {d.host !== here && (
+                <p className="mt-1 text-xs text-amber-700">
+                  {sprintf(__('Turned on for %s. It will not work on this address: turn it on again here, or remove it.', 'eleva-crm-for-photographers'), d.host)}
+                </p>
+              )}
             </div>
           ))}
         </div>
+      ) : (
+        <p className="text-xs text-gray-400">{__('No device uses the fingerprint yet.', 'eleva-crm-for-photographers')}</p>
       )}
+      {removeError && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{removeError}</p>}
+      <ConfirmDialog
+        open={toRemove !== null}
+        onClose={() => setToRemove(null)}
+        onConfirm={handleRemove}
+        title={__('Remove this device', 'eleva-crm-for-photographers')}
+        message={__('This device will no longer open the Vault with the fingerprint. Your password and code are not affected.', 'eleva-crm-for-photographers')}
+        confirmLabel={__('Remove', 'eleva-crm-for-photographers')}
+      />
 
-      {!isUnlocked ? (
+      {!supported ? (
+        <p className="text-xs text-gray-400">{__('This browser cannot turn on fingerprint unlock. You can still remove devices here.', 'eleva-crm-for-photographers')}</p>
+      ) : !isUnlocked ? (
         <p className="text-xs text-gray-400">{__('Unlock the vault to turn this on.', 'eleva-crm-for-photographers')}</p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3">

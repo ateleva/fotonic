@@ -12,12 +12,13 @@ export function sectionLabel(section) {
     case 'expenses': return __('Expenses', 'eleva-crm-for-photographers')
     case 'suppliers': return __('Suppliers', 'eleva-crm-for-photographers')
     case 'quotes': return __('Quotes', 'eleva-crm-for-photographers')
+    case 'settings': return __('Settings', 'eleva-crm-for-photographers')
     default: return section
   }
 }
 
 // Sections in the order of the sidebar, so the overview reads top to bottom like the menu.
-const SECTION_ORDER = ['dashboard', 'services', 'works', 'storage', 'quotes', 'kanban', 'analytics', 'suppliers', 'expenses']
+const SECTION_ORDER = ['dashboard', 'services', 'works', 'storage', 'quotes', 'kanban', 'analytics', 'suppliers', 'expenses', 'settings']
 
 export function groupBySection(entries = []) {
   const map = {}
@@ -33,7 +34,7 @@ export function orderedSections(map) {
 export function sectionPath(section) {
   const paths = {
     dashboard: '/dashboard', works: '/works', storage: '/storage', services: '/services', quotes: '/quotes',
-    kanban: '/kanban', analytics: '/analytics', suppliers: '/suppliers', expenses: '/expenses',
+    kanban: '/kanban', analytics: '/analytics', suppliers: '/suppliers', expenses: '/expenses', settings: '/settings',
   }
   return paths[section] ?? '/dashboard'
 }

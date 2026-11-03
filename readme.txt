@@ -32,6 +32,7 @@ You already have enough to think about on shoot day. Eleva CRM for Photographers
 * Delivery: write how you delivered the photos to the client: gallery link, transfer or USB stick, with the date the link expires and the gallery password. One button copies a ready message for your client, to paste into WhatsApp, a social app or an email.
 * Quick Notes: a short rich-text field on every booking for the one-line reminder you need at a glance, kept separate from your full notes.
 * Vault: an optional dedicated encryption layer, protected by its own password and a TOTP authenticator app, that keeps client names, contact details, addresses, notes and your service catalog unreadable in the database, even to someone with direct database access.
+* Fingerprint unlock: open the Vault with a touch (fingerprint, face or device PIN) on browsers that support it, with your password and code always available as the fallback.
 * Encrypted backup: download one encrypted archive of your entire CRM (customers, bookings, services, and files) whenever you want, protected by your Vault credentials and opened by no one but you.
 
 = No dependencies, nothing leaves your server =
@@ -79,11 +80,17 @@ Yes. The plugin is completely standalone and has no dependency on WooCommerce or
 
 The Vault is a dedicated encryption layer for the personal details tied to your clients and bookings: names, email addresses, phone numbers, home addresses, nationality, tax ID, Instagram handles, and each booking's event address. Every one of those is encrypted with AES-256 before it is written to the database.
 
-You set a Vault master password, independent of your WordPress login, and pair it with a TOTP authenticator app (Google Authenticator, Authy, or similar); unlocking always needs both. The password itself is never stored: it is stretched through PBKDF2 with 600,000 iterations, and the resulting key lives only in a temporary, authenticated session cookie (AES-256-GCM), never in the database. The Vault locks itself again after 15 minutes of inactivity, and on every WordPress login or logout, so a shared computer is never left open.
+You set a Vault master password, independent of your WordPress login, and pair it with a TOTP authenticator app (Google Authenticator, Authy, or similar); unlocking needs both, unless you turn on fingerprint unlock on a device (see below). The password itself is never stored: it is stretched through PBKDF2 with 600,000 iterations, and the resulting key lives only in a temporary, authenticated session cookie (AES-256-GCM), never in the database. The Vault locks itself again after 15 minutes of inactivity, and on every WordPress login or logout, so a shared computer is never left open.
 
 The Vault is optional. The first time you open the CRM it asks whether you want it. If you choose "Not now", you can turn it on later from Settings, and everything you have already entered is encrypted at that moment. Without the Vault the same data is stored as plain text in your database, and encrypted backups are not available.
 
 Besides the personal details above, the Vault protects your notes, the notes inside a booking, the notes of your backup locations, the notes and the password of your deliveries, and the titles, prices and notes of your service catalog. With Eleva CRM Pro it also protects collaborators, suppliers, products, expense notes and quote notes. Dates, prices, payments, statistics and the titles of clients, bookings and quotes sit outside the Vault and stay readable.
+
+= Can I unlock the Vault with my fingerprint? =
+
+Yes, on browsers that support it (tested on Safari and Chrome on macOS). Open Settings, then Vault, then "Unlock with fingerprint", enter your password and code once, and your device asks you to confirm. From then on the lock screen opens the Vault with a touch. Your password and code always keep working, and you still need them if you lose the device or use another browser.
+
+Good to know: it uses the check your device already has, so a fingerprint, face or device PIN, and anyone who can unlock the device can open the Vault from it. If you save passkeys in iCloud or Google, whoever controls that account can also use the passkey on other devices. It works only on the address where you turned it on, so if your site address changes, turn it on again. Resetting the Vault or recovering it with your phrase or code removes the fingerprints; changing the password keeps them. Under the hood the Vault key stays encrypted on your server and opens only with a secret that your device produces, so the server never opens it on its own, and the fingerprints are never part of a backup.
 
 = What if I forget my Vault password? =
 
@@ -157,6 +164,8 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 == Changelog ==
 
 = 1.6.6 =
+* New: unlock the Vault with a touch. If your computer or phone has a fingerprint reader or face unlock, turn it on in Settings, under Vault, and open the Vault without typing the password and the code. Your password and code keep working, and you still need them to turn the feature on and if you lose the device. It is tested on Safari and Chrome on macOS: other browsers show the option only when they support it.
+* Security: the fingerprint uses the check your device already has (fingerprint, face or device PIN), so anyone who can unlock the device can open the Vault from it, and passkeys saved in iCloud or Google can open it on your other devices. It works only on the address where you turned it on. Resetting or recovering the Vault removes the fingerprints; changing the Vault password keeps them. They are never part of a backup.
 * New: Storage. The Memory Cards entry in the menu is now Storage, with three tabs: Memory Cards, Backup Locations and Shots History.
 * New: Backup Locations. List the hard drives, NAS and cloud spaces where you keep your backups, with their type, size and a note. In each work, choose where its backups are saved, and open a location to see every work saved there.
 * New: if you delete a backup location that a work uses, the work shows a red warning in the Works list, and a button above the list shows only the works to fix. Open the work and choose another location.
@@ -352,7 +361,7 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 == Upgrade Notice ==
 
 = 1.6.6 =
-Memory Cards move into a new Storage page, where you can also keep your backup locations, count your shots and write how you delivered each work. Long lists now have pages: before, only the first 20 works and customers showed. Update Eleva CRM Pro to 1.6.6 too.
+Memory Cards move into a new Storage page, where you can also keep your backup locations, count your shots and write how you delivered each work. You can also unlock the Vault with a touch, where your browser supports it. Long lists now have pages: before, only the first 20 works and customers showed. Update Eleva CRM Pro to 1.6.6 too.
 
 = 1.6.5 =
 A star now shows what changed in each section after an update, there is a Changelog page, and forms look more even. Update Eleva CRM Pro to 1.6.5 too: reminders, two-way Google Calendar sync and the INPS surcharge need both plugins.
