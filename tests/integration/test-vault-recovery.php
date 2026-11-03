@@ -17,6 +17,7 @@ t_preserve_options( [
 	'fotonic_vault_wrap_phrase',
 	'fotonic_vault_pending',
 	'fotonic_vault_pending_totp',
+	'fotonic_vault_prf_devices',
 	'fotonic_vault_recovery_ack',
 	'fotonic_backup_pubkey',
 	'fotonic_backup_wrap_priv',

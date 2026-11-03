@@ -119,6 +119,7 @@ $ftnc_options = array(
 	'fotonic_vault_wrap_phrase',
 	'fotonic_vault_pending',
 	'fotonic_vault_pending_totp',
+	'fotonic_vault_prf_devices',
 	'fotonic_vault_recovery_ack',
 	'fotonic_vault_attempt_lock',
 	'fotonic_vault_epoch',
