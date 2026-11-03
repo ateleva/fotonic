@@ -1,5 +1,7 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import Button from '../../components/Button'
+import RowReorder from '../../components/RowReorder'
+import { moveRow } from '../../utils/moveRow'
 import SearchSelect from '../../components/SearchSelect'
 import { __, sprintf } from '../../utils/i18n'
 
@@ -13,6 +15,14 @@ const emptyRow = () => ({
 export default function ServicesRepeater({ value = [], onChange, services = [] }) {
   function addRow() {
     onChange([...value, emptyRow()])
+  }
+
+  // Saved rows are matched to their stored note by position inside the same service: with an unreadable
+  // value (Vault reset) moving a row could swap notes, so the arrows wait until it is fixed.
+  const moveLocked = value.some((r) => r.notes_override === null || r.price_override === null)
+
+  function moveRowBy(index, dir) {
+    onChange(moveRow(value, index, dir))
   }
 
   function removeRow(index) {
@@ -46,7 +56,7 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Service', 'eleva-crm-for-photographers')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-32">{__('Price (€)', 'eleva-crm-for-photographers')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Notes', 'eleva-crm-for-photographers')}</th>
-                <th className="px-3 py-2 w-10"></th>
+                <th className="px-3 py-2 w-28"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -100,9 +110,12 @@ export default function ServicesRepeater({ value = [], onChange, services = [] }
                     />
                   </td>
                   <td className="px-3 py-2">
-                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove service', 'eleva-crm-for-photographers')}>
-                      <Trash2 size={14} />
-                    </Button>
+                    <div className="flex items-center gap-1 whitespace-nowrap">
+                      <RowReorder index={index} count={value.length} onMove={moveRowBy} disabled={moveLocked} />
+                      <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove service', 'eleva-crm-for-photographers')}>
+                        <Trash2 size={14} />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -2957,3 +2957,9 @@ msgstr "Sullo stesso computer i browser possono condividere una passkey, quindi 
 
 msgid "This device already opens the Vault with a fingerprint: its passkey is shared with another browser or device. There is nothing to turn on."
 msgstr "Questo dispositivo apre già il Vault con l'impronta: la sua passkey è condivisa con un altro browser o dispositivo. Non c'è nulla da attivare."
+
+msgid "Move up"
+msgstr "Sposta su"
+
+msgid "Move down"
+msgstr "Sposta giù"

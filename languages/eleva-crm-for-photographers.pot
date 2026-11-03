@@ -3467,3 +3467,11 @@ msgstr ""
 #: src/src/features/vault/FingerprintPanel.jsx:31
 msgid "This device already opens the Vault with a fingerprint: its passkey is shared with another browser or device. There is nothing to turn on."
 msgstr ""
+
+#: src/src/components/RowReorder.jsx:20
+msgid "Move up"
+msgstr ""
+
+#: src/src/components/RowReorder.jsx:29
+msgid "Move down"
+msgstr ""

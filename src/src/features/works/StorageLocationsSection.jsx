@@ -2,6 +2,8 @@ import { Trash2, PlusCircle, AlertTriangle } from 'lucide-react'
 import { useBackupLocations } from '../../api/backup-locations'
 import Button from '../../components/Button'
 import SearchSelect from '../../components/SearchSelect'
+import RowReorder from '../../components/RowReorder'
+import { moveRow } from '../../utils/moveRow'
 import { __ } from '../../utils/i18n'
 
 /**
@@ -26,6 +28,10 @@ export default function StorageLocationsSection({ value = [], onChange }) {
 
   function removeRow(idx) {
     setRows(rows.filter((_, i) => i !== idx))
+  }
+
+  function moveRowBy(idx, dir) {
+    setRows(moveRow(rows, idx, dir))
   }
 
   function pick(idx, val) {
@@ -60,6 +66,7 @@ export default function StorageLocationsSection({ value = [], onChange }) {
                   placeholder={__('Select a backup location…', 'eleva-crm-for-photographers')}
                   emptyText={__('No backup locations found', 'eleva-crm-for-photographers')}
                 />
+                <RowReorder index={idx} count={rows.length} onMove={moveRowBy} />
                 <Button type="button" variant="danger" size="sm" onClick={() => removeRow(idx)} aria-label={__('Remove', 'eleva-crm-for-photographers')}>
                   <Trash2 size={14} />
                 </Button>

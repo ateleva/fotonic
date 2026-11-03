@@ -3,6 +3,8 @@ import { Trash2, PlusCircle } from 'lucide-react'
 import { useMemoryCards } from '../../api/memory-cards'
 import Button from '../../components/Button'
 import SearchSelect from '../../components/SearchSelect'
+import RowReorder from '../../components/RowReorder'
+import { moveRow } from '../../utils/moveRow'
 import { __ } from '../../utils/i18n'
 
 const STATUS_STYLES = {
@@ -68,6 +70,13 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
     update(cards.filter((_, i) => i !== idx), backupDone, formattingDone)
   }
 
+  // Same as services: a row with an unreadable note is matched to its stored note by position.
+  const moveLocked = cards.some((c) => c.notes === null)
+
+  function moveRowBy(idx, dir) {
+    update(moveRow(cards, idx, dir), backupDone, formattingDone)
+  }
+
   function updateRow(idx, field, val) {
     update(cards.map((row, i) => (i === idx ? { ...row, [field]: val } : row)), backupDone, formattingDone)
   }
@@ -116,6 +125,7 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
                   placeholder={__('Notes…', 'eleva-crm-for-photographers')}
                   className="flex-1 min-w-0 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
+                <RowReorder index={idx} count={cards.length} onMove={moveRowBy} disabled={moveLocked} />
                 <Button type="button" variant="danger" size="sm" onClick={() => removeRow(idx)} aria-label={__('Remove', 'eleva-crm-for-photographers')}>
                   <Trash2 size={14} />
                 </Button>

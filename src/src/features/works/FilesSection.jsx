@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Download, Trash2, Upload, PlusCircle, Link as LinkIcon, Eye, ExternalLink, Pencil } from 'lucide-react'
 import Button from '../../components/Button'
+import RowReorder from '../../components/RowReorder'
+import { moveRow } from '../../utils/moveRow'
 import Modal from '../../components/Modal'
 import FilePreviewModal from '../../components/FilePreviewModal'
 import { fetchFileBlob } from '../../api/files'
@@ -56,6 +58,10 @@ export default function FilesSection({ value = [], onChange }) {
 
   function removeFileAt(idx) {
     onChange(value.filter((_, i) => i !== idx))
+  }
+
+  function moveFileBy(idx, dir) {
+    onChange(moveRow(value, idx, dir))
   }
 
   function updateLabelAt(idx, label) {
@@ -153,7 +159,7 @@ ${names}`)
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Filename', 'eleva-crm-for-photographers')}</th>
                 <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500 uppercase">{__('Type', 'eleva-crm-for-photographers')}</th>
-                <th className="px-4 py-2 w-24"></th>
+                <th className="px-4 py-2 w-40"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -218,7 +224,9 @@ ${names}`)
                       {isLink ? `${__('Link', 'eleva-crm-for-photographers')} · ${hostnameOf(file.url)}` : file.mime}
                     </td>
                     <td className="px-4 py-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 whitespace-nowrap">
+                        {/* editingIdx is a row position: no moving while a name is being edited. */}
+                        <RowReorder index={index} count={value.length} onMove={moveFileBy} disabled={editingIdx !== null} />
                         {!isLink && (
                           <Button
                             type="button"

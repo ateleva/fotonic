@@ -1,12 +1,18 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import { __ } from '../../utils/i18n'
 import Button from '../../components/Button'
+import RowReorder from '../../components/RowReorder'
+import { moveRow } from '../../utils/moveRow'
 
 const emptyAddress = () => ({ label: '', street: '' })
 
 export default function EventAddressesRepeater({ value = [], onChange }) {
   function addRow() {
     onChange([...value, emptyAddress()])
+  }
+
+  function moveRowBy(index, dir) {
+    onChange(moveRow(value, index, dir))
   }
 
   function removeRow(index) {
@@ -37,7 +43,7 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase">
                   {__('Street', 'eleva-crm-for-photographers')}
                 </th>
-                <th className="px-3 py-2 w-10"></th>
+                <th className="px-3 py-2 w-28"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -62,9 +68,12 @@ export default function EventAddressesRepeater({ value = [], onChange }) {
                     />
                   </td>
                   <td className="px-3 py-2">
-                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove address', 'eleva-crm-for-photographers')}>
-                      <Trash2 size={14} />
-                    </Button>
+                    <div className="flex items-center gap-1 whitespace-nowrap">
+                      <RowReorder index={index} count={value.length} onMove={moveRowBy} />
+                      <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove address', 'eleva-crm-for-photographers')}>
+                        <Trash2 size={14} />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

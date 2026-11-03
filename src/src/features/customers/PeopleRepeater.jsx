@@ -1,5 +1,7 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import Button from '../../components/Button'
+import RowReorder from '../../components/RowReorder'
+import { moveRow } from '../../utils/moveRow'
 import { __ } from '../../utils/i18n'
 
 const emptyPerson = () => ({
@@ -33,6 +35,10 @@ export default function PeopleRepeater({ value = [], onChange, invalidEmails = [
     onChange([...people, emptyPerson()])
   }
 
+  function movePerson(index, dir) {
+    onChange(moveRow(people, index, dir))
+  }
+
   function removePerson(index) {
     if (people.length <= 1) return
     const next = people.filter((_, i) => i !== index)
@@ -64,6 +70,7 @@ export default function PeopleRepeater({ value = [], onChange, invalidEmails = [
                 />
                 {__('Main Contact', 'eleva-crm-for-photographers')}
               </label>
+              <RowReorder index={index} count={people.length} onMove={movePerson} />
               <Button
                 type="button"
                 variant="danger"

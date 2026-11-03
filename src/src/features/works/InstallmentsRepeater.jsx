@@ -1,6 +1,8 @@
 import { Trash2, PlusCircle } from 'lucide-react'
 import { __ } from '../../utils/i18n'
 import Button from '../../components/Button'
+import RowReorder from '../../components/RowReorder'
+import { moveRow } from '../../utils/moveRow'
 import { usePaymentTypes } from '../../api/paymentTypes'
 
 const emptyInstallment = () => ({
@@ -16,6 +18,10 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
 
   function addRow() {
     onChange([...value, emptyInstallment()])
+  }
+
+  function moveRowBy(index, dir) {
+    onChange(moveRow(value, index, dir))
   }
 
   function removeRow(index) {
@@ -51,7 +57,7 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Amount (€)', 'eleva-crm-for-photographers')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-36">{__('Date', 'eleva-crm-for-photographers')}</th>
                 <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 uppercase w-28">{__('Status', 'eleva-crm-for-photographers')}</th>
-                <th className="px-3 py-2 w-10"></th>
+                <th className="px-3 py-2 w-28"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -116,9 +122,12 @@ export default function InstallmentsRepeater({ value = [], onChange }) {
                     </button>
                   </td>
                   <td className="px-3 py-2">
-                    <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove installment', 'eleva-crm-for-photographers')}>
-                      <Trash2 size={14} />
-                    </Button>
+                    <div className="flex items-center gap-1 whitespace-nowrap">
+                      <RowReorder index={index} count={value.length} onMove={moveRowBy} />
+                      <Button type="button" variant="danger" size="sm" onClick={() => removeRow(index)} aria-label={__('Remove installment', 'eleva-crm-for-photographers')}>
+                        <Trash2 size={14} />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
