@@ -26,11 +26,15 @@ export function useFingerprintUnlock(onUnlocked) {
     return list
   }, [])
 
-  const attempt = useCallback(async (list) => {
-    if (!list.length) return
+  const attempt = useCallback(async (known) => {
+    if (!known.length) return
     setBusy(true)
     setError('')
     try {
+      // The lock screen may have been open for a while, and another browser that shares the same passkey
+      // (iCloud Keychain, Google) may have unlocked in between and rotated the salts: ask again right now.
+      const list = await load().catch(() => known)
+      if (!list.length) return
       const { device, kekCur, kekNext } = await unlockCredential(list)
       await fingerprintUnlock({ cred_id: device.cred_id, gen: device.gen, kek_cur: kekCur, kek_next: kekNext })
       await onUnlockedRef.current?.()
