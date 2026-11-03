@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *   vat       the VAT of the row (0 when it is not taxable or the VAT is off)
  *   amount    the cash the client pays for the row (keeps the meaning it always had: every report reads it)
  * `src/src/utils/installments.js` mirrors compute() operation by operation; both are checked against the same
- * case table (tests/js and tests/unit), so PHP and JS can never drift.
+ * case table in the development checks, so PHP and JS can never drift.
  */
 class Fotonic_Payments {
 

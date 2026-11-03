@@ -1,6 +1,5 @@
 // Mirror of Fotonic_Payments::compute() / ::check() in includes/class-payments.php. Keep both in lockstep:
-// tests/js/payments-check.mjs and tests/integration/test-payments-rework.php run the same case table
-// (tests/fixtures/payments-cases.json).
+// the development checks of both sides run the same case table.
 //
 // The admin types, on each installment row, only its `base` (its share of the services price). Per row:
 //   surcharge = round2(base x pct / 100), pct from the row's payment type (Pro: Rivalsa INPS)
