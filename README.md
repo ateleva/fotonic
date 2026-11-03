@@ -106,11 +106,12 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 - **New:** Backup Locations. List the hard drives, NAS and cloud spaces where you keep your backups, with their type, size and a note. In each work, choose where its backups are saved, and open a location to see every work saved there.
 - **New:** if you delete a backup location that a work uses, the work shows a red warning in the Works list, and a button above the list shows only the works to fix. Open the work and choose another location.
 - **New:** Shots. In a work, write how many photos you took and how many you delivered. The Shots History tab lists them for every work, with the totals and a filter by year.
-- **New:** Delivery. In a work, write how you delivered the photos: a title (for example Pixieset gallery), the link, the date the link expires and a note. For a USB stick, write it in the title and leave the link empty.
+- **New:** Delivery. In a work, write how you delivered the photos: a title (for example Pixieset gallery), the link, the date the link expires, a gallery password and a note. The Copy message button prepares a message for your client with the link, the password and the expiry date, ready to paste into WhatsApp, a social app or an email. For a USB stick, write it in the title and leave the link empty.
 - **New:** every page of the app names its browser tab (for example Works), so you can tell several open tabs apart. While the Vault is locked, the tab says so.
 - **New:** long lists are split into pages: 48 rows in Works and 24 in the other lists, with Previous and Next buttons.
+- **New:** the fields where you pick a customer, a service, a memory card or a backup location now have a search box: type a few letters and choose. Before, the customer list in a work showed only the first 100 customers.
 - **Fix:** the Works and Customers lists showed only the first 20 records, so with more than 20 the others could not be seen. They now show every record, page by page.
-- **Security:** the notes of a backup location and the delivery notes of a work are encrypted by the Vault like your other notes. After updating, unlock the Vault and let the short encryption finish.
+- **Security:** the notes of a backup location, the delivery notes and the gallery password of a work are encrypted by the Vault like your other notes. After updating, unlock the Vault and let the short encryption finish.
 - **Change:** the buttons at the top of Works and Calendar now have the same size as in the other pages.
 - **Compatibility:** tested with the latest WordPress (7.1.x).
 - **Compatibility:** works with Eleva CRM Pro 1.6.6, which adds the same pages to the Pro lists.

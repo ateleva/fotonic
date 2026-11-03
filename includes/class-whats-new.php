@@ -80,7 +80,15 @@ class Fotonic_Whats_New {
 				'since'   => '1.6.6',
 				'section' => 'works',
 				'title'   => __( 'Shots and delivery', 'eleva-crm-for-photographers' ),
-				'body'    => __( 'Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. The Shots History tab adds it all up by year.', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'Write how many photos you took and delivered, and how you handed them over: a gallery link, a transfer or a USB stick. A Copy message button prepares the text for your client, with the link, the password and the expiry date. The Shots History tab adds it all up by year.', 'eleva-crm-for-photographers' ),
+			],
+			[
+				'id'      => '1.6.6:works-search',
+				'plugin'  => 'free',
+				'since'   => '1.6.6',
+				'section' => 'works',
+				'title'   => __( 'Find a record by typing', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'The fields where you pick a customer, a service, a memory card or a backup location now have a search: type a few letters and choose. The customer list is no longer limited to 100.', 'eleva-crm-for-photographers' ),
 			],
 			[
 				'id'      => '1.6.6:works-pages',
