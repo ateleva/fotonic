@@ -28,6 +28,8 @@ You already have enough to think about on shoot day. Eleva CRM for Photographers
 * Monthly calendar: every booking as a colored pill on a real calendar. Click through to see the customer, date, and payment status.
 * Calendar colors: tag each booking with one of twelve colors, so a glance at the calendar tells you which is which.
 * Memory Cards: an inventory of your SD and CF cards, so you always know which ones are safe to format. Status moves itself: Ready, In Use, Backed Up, or Damaged, as you attach a card to a shoot and check off the backup.
+* Storage: one page for your memory cards, the backup locations where you keep your files (hard drives, NAS, cloud) and a history of the shots you took and delivered. In each work you choose where its backups are saved, and a warning appears if a location is deleted.
+* Delivery: write how you delivered the photos to the client: gallery link, transfer or USB stick, with the date the link expires.
 * Quick Notes: a short rich-text field on every booking for the one-line reminder you need at a glance, kept separate from your full notes.
 * Vault: an optional dedicated encryption layer, protected by its own password and a TOTP authenticator app, that keeps client names, contact details, addresses, notes and your service catalog unreadable in the database, even to someone with direct database access.
 * Encrypted backup: download one encrypted archive of your entire CRM (customers, bookings, services, and files) whenever you want, protected by your Vault credentials and opened by no one but you.
@@ -81,7 +83,7 @@ You set a Vault master password, independent of your WordPress login, and pair i
 
 The Vault is optional. The first time you open the CRM it asks whether you want it. If you choose "Not now", you can turn it on later from Settings, and everything you have already entered is encrypted at that moment. Without the Vault the same data is stored as plain text in your database, and encrypted backups are not available.
 
-Besides the personal details above, the Vault protects your notes, the notes inside a booking and the titles, prices and notes of your service catalog. With Eleva CRM Pro it also protects collaborators, suppliers, products, expense notes and quote notes. Dates, prices, payments, statistics and the titles of clients, bookings and quotes sit outside the Vault and stay readable.
+Besides the personal details above, the Vault protects your notes, the notes inside a booking, the notes of your backup locations and deliveries, and the titles, prices and notes of your service catalog. With Eleva CRM Pro it also protects collaborators, suppliers, products, expense notes and quote notes. Dates, prices, payments, statistics and the titles of clients, bookings and quotes sit outside the Vault and stay readable.
 
 = What if I forget my Vault password? =
 
@@ -153,6 +155,20 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.6.6 =
+* New: Storage. The Memory Cards entry in the menu is now Storage, with three tabs: Memory Cards, Backup Locations and Shots History.
+* New: Backup Locations. List the hard drives, NAS and cloud spaces where you keep your backups, with their type, size and a note. In each work, choose where its backups are saved, and open a location to see every work saved there.
+* New: if you delete a backup location that a work uses, the work shows a red warning in the Works list, and a button above the list shows only the works to fix. Open the work and choose another location.
+* New: Shots. In a work, write how many photos you took and how many you delivered. The Shots History tab lists them for every work, with the totals and a filter by year.
+* New: Delivery. In a work, write how you delivered the photos: a title (for example Pixieset gallery), the link, the date the link expires and a note. For a USB stick, write it in the title and leave the link empty.
+* New: every page of the app names its browser tab (for example Works), so you can tell several open tabs apart. While the Vault is locked, the tab says so.
+* New: long lists are split into pages: 48 rows in Works and 24 in the other lists, with Previous and Next buttons.
+* Fix: the Works and Customers lists showed only the first 20 records, so with more than 20 the others could not be seen. They now show every record, page by page.
+* Security: the notes of a backup location and the delivery notes of a work are encrypted by the Vault like your other notes. After updating, unlock the Vault and let the short encryption finish.
+* Change: the buttons at the top of Works and Calendar now have the same size as in the other pages.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* Compatibility: works with Eleva CRM Pro 1.6.6, which adds the same pages to the Pro lists.
 
 = 1.6.5 =
 * New: "What's new" after an update. A small star appears next to the sections that changed, and opening it explains the change in a few words. Close it and it does not come back.
@@ -333,6 +349,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.6 =
+Memory Cards move into a new Storage page, where you can also keep your backup locations, count your shots and write how you delivered each work. Long lists now have pages: before, only the first 20 works and customers showed. Update Eleva CRM Pro to 1.6.6 too.
 
 = 1.6.5 =
 A star now shows what changed in each section after an update, there is a Changelog page, and forms look more even. Update Eleva CRM Pro to 1.6.5 too: reminders, two-way Google Calendar sync and the INPS surcharge need both plugins.

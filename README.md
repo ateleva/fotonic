@@ -23,6 +23,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Calendar Color** — assign an event color (12-color palette) to each Work
 - **Monthly Calendar** — a full monthly calendar view showing all scheduled works as colored pills; click any entry for details
 - **Memory Cards** — keep an inventory of your SD/CF cards with an auto-advancing status (Ready, In Use, Backed Up, Damaged); manage them from the sidebar or assign cards to a shoot inside the Work editor
+- **Storage**: one page with three tabs: Memory Cards, Backup Locations (hard drives, NAS and cloud spaces where you keep your files) and Shots History. Each work records where its backups are saved, how many shots you took and delivered, and how the photos were delivered (link, expiry date, notes)
 - **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password (minimum 8 characters, use a strong one: the archive is only as safe as that password); a standalone command-line decrypt tool ships with the plugin to open the archive on any machine and read your data and files (importing a backup back into the plugin is not available yet)
 
 ---
@@ -98,6 +99,21 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 ---
 
 ## Changelog
+
+### 1.6.6
+
+- **New:** Storage. The Memory Cards entry in the menu is now Storage, with three tabs: Memory Cards, Backup Locations and Shots History.
+- **New:** Backup Locations. List the hard drives, NAS and cloud spaces where you keep your backups, with their type, size and a note. In each work, choose where its backups are saved, and open a location to see every work saved there.
+- **New:** if you delete a backup location that a work uses, the work shows a red warning in the Works list, and a button above the list shows only the works to fix. Open the work and choose another location.
+- **New:** Shots. In a work, write how many photos you took and how many you delivered. The Shots History tab lists them for every work, with the totals and a filter by year.
+- **New:** Delivery. In a work, write how you delivered the photos: a title (for example Pixieset gallery), the link, the date the link expires and a note. For a USB stick, write it in the title and leave the link empty.
+- **New:** every page of the app names its browser tab (for example Works), so you can tell several open tabs apart. While the Vault is locked, the tab says so.
+- **New:** long lists are split into pages: 48 rows in Works and 24 in the other lists, with Previous and Next buttons.
+- **Fix:** the Works and Customers lists showed only the first 20 records, so with more than 20 the others could not be seen. They now show every record, page by page.
+- **Security:** the notes of a backup location and the delivery notes of a work are encrypted by the Vault like your other notes. After updating, unlock the Vault and let the short encryption finish.
+- **Change:** the buttons at the top of Works and Calendar now have the same size as in the other pages.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.6.6, which adds the same pages to the Pro lists.
 
 ### 1.6.5
 
