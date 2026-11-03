@@ -2825,3 +2825,60 @@ msgstr "Trova un elemento scrivendo"
 
 msgid "The fields where you pick a customer, a service, a memory card or a backup location now have a search: type a few letters and choose. The customer list is no longer limited to 100."
 msgstr "I campi dove scegli un cliente, un servizio, una scheda di memoria o un archivio backup hanno ora una ricerca: scrivi qualche lettera e scegli. L'elenco dei clienti non è più limitato a 100."
+
+msgid "The fingerprint check was cancelled. Try again when you are ready."
+msgstr "Il controllo dell'impronta è stato annullato. Riprova quando vuoi."
+
+msgid "This browser or device cannot do fingerprint unlock."
+msgstr "Questo browser o dispositivo non può sbloccare con l'impronta."
+
+msgid "The device gave different answers. Try again."
+msgstr "Il dispositivo ha dato risposte diverse. Riprova."
+
+msgid "Could not turn on fingerprint unlock."
+msgstr "Impossibile attivare lo sblocco con l'impronta."
+
+msgid "Open the Vault with a touch instead of typing the password and the code. Your password and code keep working, and you will need them if you lose this device."
+msgstr "Apri il Vault con un tocco invece di scrivere password e codice. Password e codice continuano a funzionare e ti serviranno se perdi questo dispositivo."
+
+msgid "It uses the check your device already has: fingerprint, face or the device PIN. Anyone who can unlock this device can open the Vault from it."
+msgstr "Usa il controllo che il dispositivo ha già: impronta, volto o PIN del dispositivo. Chi può sbloccare questo dispositivo può aprire il Vault da qui."
+
+msgid "If you save passkeys in iCloud or Google, whoever controls that account can also use it on other devices."
+msgstr "Se salvi le passkey in iCloud o Google, chi controlla quell'account può usarla anche su altri dispositivi."
+
+msgid "It works only on this website address. If the address changes, turn it on again."
+msgstr "Funziona solo con questo indirizzo del sito. Se l'indirizzo cambia, attivalo di nuovo."
+
+msgid "Unlock the vault to turn this on."
+msgstr "Sblocca il Vault per attivarlo."
+
+msgid "Device name"
+msgstr "Nome del dispositivo"
+
+msgid "Your device will ask you to confirm twice. This only happens once."
+msgstr "Il dispositivo ti chiederà di confermare due volte. Succede solo questa volta."
+
+msgid "Fingerprint unlock is on for this device."
+msgstr "Lo sblocco con l'impronta è attivo su questo dispositivo."
+
+msgid "Waiting for your device…"
+msgstr "In attesa del dispositivo…"
+
+msgid "Turn on fingerprint unlock"
+msgstr "Attiva lo sblocco con l'impronta"
+
+msgid "Unlock with fingerprint"
+msgstr "Sblocca con l'impronta"
+
+msgid "The fingerprint setup took too long. Start again."
+msgstr "La configurazione dell'impronta ha richiesto troppo tempo. Ricomincia."
+
+msgid "Too many devices. Remove one first."
+msgstr "Troppi dispositivi. Rimuovine prima uno."
+
+msgid "Could not set up the fingerprint."
+msgstr "Impossibile configurare l'impronta."
+
+msgid "That device is not in the list."
+msgstr "Quel dispositivo non è nell'elenco."

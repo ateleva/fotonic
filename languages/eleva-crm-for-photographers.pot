@@ -3291,3 +3291,79 @@ msgstr ""
 #: includes/class-whats-new.php:91
 msgid "The fields where you pick a customer, a service, a memory card or a backup location now have a search: type a few letters and choose. The customer list is no longer limited to 100."
 msgstr ""
+
+#: includes/class-rest-api.php:934
+msgid "The fingerprint setup took too long. Start again."
+msgstr ""
+
+#: includes/class-rest-api.php:936
+msgid "Too many devices. Remove one first."
+msgstr ""
+
+#: includes/class-rest-api.php:937
+msgid "Could not set up the fingerprint."
+msgstr ""
+
+#: includes/class-rest-api.php:958
+msgid "That device is not in the list."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:495
+msgid "Unlock with fingerprint"
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:24
+msgid "The fingerprint check was cancelled. Try again when you are ready."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:26
+msgid "This browser or device cannot do fingerprint unlock."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:28
+msgid "The device gave different answers. Try again."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:30
+msgid "Could not turn on fingerprint unlock."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:78
+msgid "Open the Vault with a touch instead of typing the password and the code. Your password and code keep working, and you will need them if you lose this device."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:81
+msgid "It uses the check your device already has: fingerprint, face or the device PIN. Anyone who can unlock this device can open the Vault from it."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:82
+msgid "If you save passkeys in iCloud or Google, whoever controls that account can also use it on other devices."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:83
+msgid "It works only on this website address. If the address changes, turn it on again."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:99
+msgid "Unlock the vault to turn this on."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:109
+msgid "Device name"
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:113
+msgid "Your device will ask you to confirm twice. This only happens once."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:115
+msgid "Fingerprint unlock is on for this device."
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:119
+msgid "Waiting for your device…"
+msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:119
+msgid "Turn on fingerprint unlock"
+msgstr ""

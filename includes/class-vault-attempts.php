@@ -25,7 +25,7 @@ final class Fotonic_Vault_Attempts {
 	const WINDOW       = 900; // 15 minutes.
 	const LOCK_NAME    = 'fotonic_vault_attempt_lock';
 	const LOCK_TTL     = 30;  // Seconds before a lock left by a crashed request counts as stale.
-	const BUCKETS      = [ 'credentials', 'recovery' ];
+	const BUCKETS      = [ 'credentials', 'recovery', 'fingerprint' ];
 
 	/** @var string */
 	private $bucket;

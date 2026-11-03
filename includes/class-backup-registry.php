@@ -169,6 +169,8 @@ class Fotonic_Backup_Registry {
             // Staged, unconfirmed secrets: never part of a backup.
             'fotonic_vault_pending',
             'fotonic_vault_pending_totp',
+            // Fingerprint unlock wraps: bound to this site's passkeys and this Master Key.
+            'fotonic_vault_prf_devices',
             'fotonic_gcal_refresh_token',
             'fotonic_pro_slm_secret',
             'fotonic_pro_license_last_valid',

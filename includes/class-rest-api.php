@@ -83,6 +83,30 @@ class Fotonic_REST_API {
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
+		register_rest_route( self::NAMESPACE, '/vault/fingerprint', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'vault_fingerprint_list' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/fingerprint/begin', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_fingerprint_begin' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/fingerprint/finish', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_fingerprint_finish' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/vault/fingerprint/remove', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'vault_fingerprint_remove' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
 		register_rest_route( self::NAMESPACE, '/vault/change-password', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_change_password' ],
@@ -682,6 +706,7 @@ class Fotonic_REST_API {
 			'unlocked'     => Fotonic_Vault::is_unlocked(),
 			'scheme'       => Fotonic_Vault::get_scheme(),
 			'kit_ok'       => Fotonic_Vault::is_recovery_kit_ok(),
+			'fingerprint_count' => Fotonic_Vault_Fingerprint::count(),
 			'totp_pending' => Fotonic_Vault::has_pending_totp(),
 			'email_hint'   => Fotonic_Vault_Mailer::mask_email( Fotonic_Vault_Mailer::recipient() ),
 		], 200 );
@@ -818,6 +843,125 @@ class Fotonic_REST_API {
 	// ---------------------------------------------------------------------------
 	// Vault management
 	// ---------------------------------------------------------------------------
+
+	// ---------------------------------------------------------------------------
+	// Vault: fingerprint unlock (WebAuthn PRF), see Fotonic_Vault_Fingerprint
+	// ---------------------------------------------------------------------------
+
+	/** GET /vault/fingerprint: the enrolled devices (no secrets). */
+	public static function vault_fingerprint_list( \WP_REST_Request $_req ): \WP_REST_Response {
+		return new \WP_REST_Response( [ 'devices' => Fotonic_Vault_Fingerprint::devices() ], 200 );
+	}
+
+	/**
+	 * POST /vault/fingerprint/begin { password, otp }
+	 * Enrolment step 1: fresh password + code, then the PRF salt and a single-use token.
+	 */
+	public static function vault_fingerprint_begin( \WP_REST_Request $req ): \WP_REST_Response {
+		if ( ! Fotonic_Vault::is_unlocked() ) {
+			return self::vault_locked_response();
+		}
+		if ( ! Fotonic_Vault::is_setup() || Fotonic_Vault::get_scheme() < 2 ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_setup', 'message' => __( 'Vault is not set up.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		$attempts = Fotonic_Vault_Attempts::acquire( 'credentials' );
+		if ( null === $attempts ) {
+			return self::rate_limited_response();
+		}
+		if ( $attempts->exhausted() ) {
+			return new \WP_REST_Response(
+				array( 'code' => 'rate_limited', 'message' => __( 'Too many failed attempts. Try again in 15 minutes.', 'eleva-crm-for-photographers' ) ),
+				429
+			);
+		}
+
+		$body     = $req->get_json_params();
+		$password = isset( $body['password'] ) ? (string) $body['password'] : '';
+		$otp      = isset( $body['otp'] )      ? (string) $body['otp']      : '';
+		if ( '' === $password || '' === $otp ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'missing_fields', 'message' => __( 'Password and OTP are required.', 'eleva-crm-for-photographers' ) ],
+				400
+			);
+		}
+
+		if ( ! Fotonic_Vault::verify_credentials( $password, $otp ) ) {
+			$attempts->failed();
+			self::audit_log( 'vault_fingerprint_begin_fail' );
+			return new \WP_REST_Response(
+				[ 'code' => 'invalid_credentials', 'message' => __( 'Invalid password or OTP code.', 'eleva-crm-for-photographers' ) ],
+				401
+			);
+		}
+
+		$attempts->clear();
+		return new \WP_REST_Response( Fotonic_Vault_Fingerprint::begin_enroll( get_current_user_id() ), 200 );
+	}
+
+	/**
+	 * POST /vault/fingerprint/finish { token, cred_id, label, host, kek }
+	 * Enrolment step 2: the browser sends the key it derived from the device secret.
+	 */
+	public static function vault_fingerprint_finish( \WP_REST_Request $req ): \WP_REST_Response {
+		$mk = Fotonic_Vault::get_session_key();
+		if ( null === $mk ) {
+			return self::vault_locked_response();
+		}
+		$lock = Fotonic_Vault_Attempts::acquire( 'fingerprint' ); // Serialises the read-modify-write of the device list.
+		if ( null === $lock ) {
+			return self::rate_limited_response();
+		}
+
+		$body   = $req->get_json_params();
+		$result = Fotonic_Vault_Fingerprint::finish_enroll(
+			get_current_user_id(),
+			$mk,
+			isset( $body['token'] )   ? (string) $body['token']   : '',
+			isset( $body['cred_id'] ) ? (string) $body['cred_id'] : '',
+			isset( $body['label'] )   ? (string) $body['label']   : '',
+			isset( $body['host'] )    ? sanitize_text_field( (string) $body['host'] ) : '',
+			isset( $body['kek'] )     ? (string) $body['kek']     : ''
+		);
+
+		if ( empty( $result['ok'] ) ) {
+			$code    = (string) ( $result['code'] ?? 'bad_request' );
+			$status  = 'too_many_devices' === $code ? 409 : 400;
+			$message = 'enroll_expired' === $code
+				? __( 'The fingerprint setup took too long. Start again.', 'eleva-crm-for-photographers' )
+				: ( 'too_many_devices' === $code
+					? __( 'Too many devices. Remove one first.', 'eleva-crm-for-photographers' )
+					: __( 'Could not set up the fingerprint.', 'eleva-crm-for-photographers' ) );
+			return new \WP_REST_Response( [ 'code' => $code, 'message' => $message ], $status );
+		}
+
+		self::audit_log( 'vault_fingerprint_enrolled', [ 'label' => $result['device']['label'] ] );
+		return new \WP_REST_Response( [ 'device' => $result['device'] ], 200 );
+	}
+
+	/** POST /vault/fingerprint/remove { cred_id }: forget one device (Vault unlocked). */
+	public static function vault_fingerprint_remove( \WP_REST_Request $req ): \WP_REST_Response {
+		if ( ! Fotonic_Vault::is_unlocked() ) {
+			return self::vault_locked_response();
+		}
+		$lock = Fotonic_Vault_Attempts::acquire( 'fingerprint' );
+		if ( null === $lock ) {
+			return self::rate_limited_response();
+		}
+		$body    = $req->get_json_params();
+		$cred_id = isset( $body['cred_id'] ) ? (string) $body['cred_id'] : '';
+		if ( ! Fotonic_Vault_Fingerprint::remove( $cred_id ) ) {
+			return new \WP_REST_Response(
+				[ 'code' => 'not_found', 'message' => __( 'That device is not in the list.', 'eleva-crm-for-photographers' ) ],
+				404
+			);
+		}
+		self::audit_log( 'vault_fingerprint_removed' );
+		return new \WP_REST_Response( [ 'removed' => true ], 200 );
+	}
 
 	/**
 	 * POST /vault/change-password

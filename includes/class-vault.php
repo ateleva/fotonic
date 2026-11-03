@@ -543,6 +543,8 @@ class Fotonic_Vault {
 		update_option( self::OPTION_SALT_PW, $new_salt_pw, false );
 		update_option( self::OPTION_WRAP_PW, $new_wrap_pw, false );
 
+		// A recovery means the password may be lost or stolen: fingerprint enrolments are revoked too.
+		Fotonic_Vault_Fingerprint::revoke_all();
 		self::rotate_epoch(); // A recovery locks every other browser and device.
 		self::set_session_cookie( $mk );
 
@@ -755,6 +757,8 @@ class Fotonic_Vault {
 		delete_option( self::OPTION_PENDING );
 		delete_option( self::OPTION_RECOVERY_ACK );
 		delete_option( self::OPTION_PENDING_TOTP );
+		// Fingerprint unlock wraps die with the Master Key they wrap.
+		Fotonic_Vault_Fingerprint::revoke_all();
 		// Stale v3 option names — clean up any DB rows left from abandoned v3 path.
 		delete_option( 'fotonic_vault_salt_dek_pw' );
 		delete_option( 'fotonic_vault_wrap_dek_pw' );

@@ -33,6 +33,7 @@ require_once FOTONIC_DIR . 'includes/class-crypto.php';
 require_once FOTONIC_DIR . 'includes/class-totp.php';
 require_once FOTONIC_DIR . 'includes/class-vault.php';
 require_once FOTONIC_DIR . 'includes/class-vault-attempts.php';
+require_once FOTONIC_DIR . 'includes/class-vault-fingerprint.php';
 require_once FOTONIC_DIR . 'includes/class-file-crypt.php';
 require_once FOTONIC_DIR . 'includes/class-field-crypt.php';
 require_once FOTONIC_DIR . 'includes/class-vault-fields.php';
