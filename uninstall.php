@@ -68,6 +68,7 @@ $ftnc_meta_prefixes = array(
 	'_ftnc_delivery_title',
 	'_ftnc_delivery_url',
 	'_ftnc_delivery_notes',
+	'_ftnc_delivery_password',
 	'_ftnc_delivery_expires',
 	'_ftnc_loc_type',
 	'_ftnc_loc_capacity',

@@ -1740,7 +1740,8 @@ class Fotonic_REST_API {
 			|| ( isset( $body['notes'] ) && is_string( $body['notes'] ) && '' !== $body['notes'] )
 			|| ( isset( $body['memory_cards'] ) && is_array( $body['memory_cards'] ) && self::rows_have_plain_text( $body['memory_cards'], [ 'notes' ] ) )
 			|| ( isset( $body['services'] ) && is_array( $body['services'] ) && self::rows_have_plain_text( $body['services'], [ 'notes_override' ] ) )
-			|| ( isset( $body['delivery']['notes'] ) && is_string( $body['delivery']['notes'] ) && '' !== $body['delivery']['notes'] );
+			|| ( isset( $body['delivery']['notes'] ) && is_string( $body['delivery']['notes'] ) && '' !== $body['delivery']['notes'] )
+			|| ( isset( $body['delivery']['password'] ) && is_string( $body['delivery']['password'] ) && '' !== $body['delivery']['password'] );
 		return self::locked_response_if( $plain );
 	}
 
@@ -2822,6 +2823,12 @@ class Fotonic_REST_API {
 				$stored_notes = self::field_to_store( $new_notes, (string) get_post_meta( $post_id, '_ftnc_delivery_notes', true ), $vault_key );
 				update_post_meta( $post_id, '_ftnc_delivery_notes', wp_slash( $stored_notes ) );
 			}
+			if ( array_key_exists( 'password', $delivery ) ) {
+				// Same rule as the notes: null leaves the stored password alone, and it is stored encrypted.
+				$new_password    = null === $delivery['password'] ? null : sanitize_text_field( (string) $delivery['password'] );
+				$stored_password = self::field_to_store( $new_password, (string) get_post_meta( $post_id, '_ftnc_delivery_password', true ), $vault_key );
+				update_post_meta( $post_id, '_ftnc_delivery_password', wp_slash( $stored_password ) );
+			}
 		}
 
 		// Backup / formatting / ready-for-next flags.
@@ -3163,6 +3170,7 @@ class Fotonic_REST_API {
 				'url'     => (string) get_post_meta( $post->ID, '_ftnc_delivery_url', true ),
 				'expires' => (string) get_post_meta( $post->ID, '_ftnc_delivery_expires', true ),
 				'notes'   => self::field_for_screen( (string) get_post_meta( $post->ID, '_ftnc_delivery_notes', true ), $field_key ),
+				'password' => self::field_for_screen( (string) get_post_meta( $post->ID, '_ftnc_delivery_password', true ), $field_key ),
 			],
 			'backup_done'     => (bool) get_post_meta( $post->ID, '_ftnc_backup_done', true ),
 			'formatting_done' => (bool) get_post_meta( $post->ID, '_ftnc_formatting_done', true ),

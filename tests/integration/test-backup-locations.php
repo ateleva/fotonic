@@ -64,7 +64,7 @@ $body = [
     'storage_locations' => [ [ 'location_id' => $loc ], [ 'location_id' => $loc ], [ 'location_id' => $loc2 ], [ 'location_id' => 999999999 ] ],
     'shots_taken'       => '2400',
     'shots_delivered'   => 350,
-    'delivery'          => [ 'title' => "Pixieset {$run}", 'url' => 'https://example.com/g/abc', 'notes' => "Pw \\ 1 {$run}", 'expires' => '2026-06-30' ],
+    'delivery'          => [ 'title' => "Pixieset {$run}", 'url' => 'https://example.com/g/abc', 'notes' => "Pw \\ 1 {$run}", 'password' => "Gal\\ 9 {$run}", 'expires' => '2026-06-30' ],
 ];
 $res = Fotonic_REST_API::create_work( $rest( 'POST', [], $body ) );
 t_equals( 201, $res->get_status(), 'create work is 201' );
@@ -77,6 +77,8 @@ t_equals( 350, $w['shots_delivered'], 'shots delivered is an int' );
 t_equals( 'https://example.com/g/abc', $w['delivery']['url'], 'delivery url is stored' );
 t_equals( '2026-06-30', $w['delivery']['expires'], 'delivery expiry is a date' );
 t_equals( "Pw \\ 1 {$run}", $w['delivery']['notes'], 'delivery notes round trip' );
+t_equals( "Gal\\ 9 {$run}", $w['delivery']['password'], 'gallery password round trip' );
+t_equals( "Gal\\ 9 {$run}", Fotonic_Field_Crypt::read( (string) get_post_meta( $wid, '_ftnc_delivery_password', true ), null ) ?? "Gal\\ 9 {$run}", 'and it is stored without being altered' );
 
 $res = Fotonic_REST_API::update_work( $rest( 'PUT', [ 'id' => $wid ], [ 'delivery' => [ 'url' => 'javascript:alert(1)', 'expires' => '2026-02-31' ], 'shots_taken' => '' ] ) );
 $w   = $res->get_data();

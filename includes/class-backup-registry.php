@@ -72,6 +72,7 @@ class Fotonic_Backup_Registry {
                     '_ftnc_delivery_title',
                     '_ftnc_delivery_url',
                     '_ftnc_delivery_notes',
+                    '_ftnc_delivery_password',
                     '_ftnc_delivery_expires',
                     '_ftnc_gcal_sync',
                     // Free never writes this (Pro's Google Calendar sync does via
