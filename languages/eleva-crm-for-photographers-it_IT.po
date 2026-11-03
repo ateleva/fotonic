@@ -2951,3 +2951,6 @@ msgstr "Se il tuo computer o telefono ha un lettore di impronte o lo sblocco con
 
 msgid "This fingerprint no longer matches the Vault. Use your password and code, then turn the fingerprint on again."
 msgstr "Questa impronta non corrisponde più al Vault. Usa password e codice, poi attiva di nuovo l'impronta."
+
+msgid "On the same computer, your browsers may share one passkey, so a browser can open the Vault with the entry of another one. That is normal, and \"Last used\" then shows on that entry."
+msgstr "Sullo stesso computer i browser possono condividere una passkey, quindi un browser può aprire il Vault con la voce di un altro. È normale, e \"Ultimo uso\" compare allora su quella voce."

@@ -3459,3 +3459,7 @@ msgstr ""
 #: includes/class-rest-api.php:999
 msgid "This fingerprint no longer matches the Vault. Use your password and code, then turn the fingerprint on again."
 msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:152
+msgid "On the same computer, your browsers may share one passkey, so a browser can open the Vault with the entry of another one. That is normal, and \"Last used\" then shows on that entry."
+msgstr ""

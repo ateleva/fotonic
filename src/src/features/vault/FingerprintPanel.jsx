@@ -53,6 +53,10 @@ export default function FingerprintPanel({ supported = true }) {
   const { data } = useQuery({
     queryKey: ['vault-fingerprint'],
     queryFn: fetchFingerprintDevices,
+    // "Last used" changes at every unlock, also from another browser: never show a cached list.
+    staleTime: 0,
+    refetchOnMount: 'always',
+    refetchOnWindowFocus: true,
   })
   const devices = data?.devices ?? []
 
@@ -143,6 +147,9 @@ export default function FingerprintPanel({ supported = true }) {
         </div>
       ) : (
         <p className="text-xs text-gray-400">{__('No device uses the fingerprint yet.', 'eleva-crm-for-photographers')}</p>
+      )}
+      {devices.length > 1 && (
+        <p className="text-xs text-gray-400">{__('On the same computer, your browsers may share one passkey, so a browser can open the Vault with the entry of another one. That is normal, and "Last used" then shows on that entry.', 'eleva-crm-for-photographers')}</p>
       )}
       {removeError && <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{removeError}</p>}
       <ConfirmDialog
