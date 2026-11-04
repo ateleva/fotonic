@@ -101,6 +101,14 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.6.7
+
+- **Fix:** on a new installation the Vault screens (the first question, the setup, the recovery kit and the unlock) could be taller than the window with no way to scroll, so the buttons could not be reached and the Vault could not be set up. They now fit the window and their buttons always stay in view.
+- **Change:** the first screen, which asks whether to protect personal data, is wider and easier to read, and says that you can unlock the Vault with a fingerprint or face on devices that have one.
+- **Change:** the Vault screens look more tidy, with icons and the colour of your WordPress theme.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.6.6.
+
 ### 1.6.6
 
 - **New:** unlock the Vault with a touch. If your computer or phone has a fingerprint reader or face unlock, turn it on in Settings, under Vault, and open the Vault without typing the password and the code. Your password and code keep working, and you still need them to turn the feature on and if you lose the device. It is tested on Safari and Chrome on macOS: other browsers show the option only when they support it.

@@ -4,7 +4,7 @@ Tags: crm, photography, photographer, client-management, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,6 +162,13 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.6.7 =
+* Fix: on a new installation the Vault screens (the first question, the setup, the recovery kit and the unlock) could be taller than the window with no way to scroll, so the buttons could not be reached and the Vault could not be set up. They now fit the window and their buttons always stay in view.
+* Change: the first screen, which asks whether to protect personal data, is wider and easier to read, and says that you can unlock the Vault with a fingerprint or face on devices that have one.
+* Change: the Vault screens look more tidy, with icons and the colour of your WordPress theme.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* Compatibility: works with Eleva CRM Pro 1.6.6.
 
 = 1.6.6 =
 * New: unlock the Vault with a touch. If your computer or phone has a fingerprint reader or face unlock, turn it on in Settings, under Vault, and open the Vault without typing the password and the code. Your password and code keep working, and you still need them to turn the feature on and if you lose the device. It is tested on Safari and Chrome on macOS: other browsers show the option only when they support it.
@@ -360,6 +367,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.7 =
+Fixes the Vault screens on a new installation, which could be cut off with no way to reach their buttons. Recommended if you have not set up the Vault yet.
 
 = 1.6.6 =
 Memory Cards move into a new Storage page, with backup locations, shots and delivery notes. Unlock the Vault with a touch where your browser supports it. Payments are now worked out from the installments of a work. Update Eleva CRM Pro to 1.6.6 too.
