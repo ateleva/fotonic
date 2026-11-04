@@ -101,6 +101,14 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.6.8
+
+- **Change:** the CRM is easier to use on a phone or a small screen. The side menu is narrower, page titles and their buttons wrap onto their own rows, the calendar shows small coloured squares and opens an event as a card at the bottom of the screen, and floating cards stay inside the screen. A screen of 13 inches or more is still the most comfortable.
+- **Change:** the Dashboard cards fit their numbers better, with each title on one line, and the card Payment types used is now called Payment types.
+- **Change:** in Settings, under Vault, the box Unlock with fingerprint is always listed. When the browser does not treat the page as secure (for example a site address that starts with http), it says so and asks you to open the site with a trusted https address.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.6.7.
+
 ### 1.6.7
 
 - **Fix:** on a new installation the Vault screens (the first question, the setup, the recovery kit and the unlock) could be taller than the window with no way to scroll, so the buttons could not be reached and the Vault could not be set up. They now fit the window and their buttons always stay in view.

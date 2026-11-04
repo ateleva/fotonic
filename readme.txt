@@ -4,7 +4,7 @@ Tags: crm, photography, photographer, client-management, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.7
+Stable tag: 1.6.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,6 +162,13 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.6.8 =
+* Change: the CRM is easier to use on a phone or a small screen. The side menu is narrower, page titles and their buttons wrap onto their own rows, the calendar shows small coloured squares and opens an event as a card at the bottom of the screen, and floating cards stay inside the screen. A screen of 13 inches or more is still the most comfortable.
+* Change: the Dashboard cards fit their numbers better, with each title on one line, and the card Payment types used is now called Payment types.
+* Change: in Settings, under Vault, the box Unlock with fingerprint is always listed. When the browser does not treat the page as secure (for example a site address that starts with http), it says so and asks you to open the site with a trusted https address.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* Compatibility: works with Eleva CRM Pro 1.6.7.
 
 = 1.6.7 =
 * Fix: on a new installation the Vault screens (the first question, the setup, the recovery kit and the unlock) could be taller than the window with no way to scroll, so the buttons could not be reached and the Vault could not be set up. They now fit the window and their buttons always stay in view.
@@ -367,6 +374,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.8 =
+Makes the CRM easier to use on a phone or a small screen and explains why the fingerprint option is off when the site address is not secure. Update Eleva CRM Pro to 1.6.7 too.
 
 = 1.6.7 =
 Fixes the Vault screens on a new installation, which could be cut off with no way to reach their buttons. Recommended if you have not set up the Vault yet.
