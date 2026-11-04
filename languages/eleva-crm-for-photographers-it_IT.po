@@ -1230,9 +1230,6 @@ msgstr "Le password non coincidono"
 msgid "Payment Types"
 msgstr "Metodi di pagamento"
 
-msgid "Payment types used"
-msgstr "Metodi di pagamento utilizzati"
-
 msgid "Payments"
 msgstr "Pagamenti"
 
@@ -3059,3 +3056,6 @@ msgstr "Se il tuo computer o telefono ha un lettore di impronte o lo sblocco con
 
 msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code, then enter the 6-digit code it shows."
 msgstr "Apri la tua app di autenticazione (Google Authenticator, Authy, ecc.) e inquadra il codice QR, poi inserisci il codice a 6 cifre che mostra."
+
+msgid "Payment types"
+msgstr "Metodi di pagamento"

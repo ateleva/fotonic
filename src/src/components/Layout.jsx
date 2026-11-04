@@ -195,7 +195,7 @@ export default function Layout() {
         </div>
 
         {/* Nav */}
-        <nav id="ftnc-sidebar-nav" className="flex-1 px-3 py-1.5 space-y-0.5">
+        <nav id="ftnc-sidebar-nav" className="ftnc-sidebar__nav flex-1 px-3 py-1.5 space-y-0.5">
           {navItems.map(({ to, label, icon: Icon }) => (
             <div key={to} className="relative">
               <NavLink to={to} className={navLinkClass('text-gray-600')} {...tipProps(label)}>
@@ -224,7 +224,7 @@ export default function Layout() {
           )}
         </nav>
 
-        <div className="px-3 pt-2 pb-3 border-t border-gray-100 flex flex-col gap-1">
+        <div className="ftnc-sidebar__foot px-3 pt-2 pb-3 border-t border-gray-100 flex flex-col gap-1">
           <div className="relative">
             <NavLink to="/settings" className={navLinkClass('text-gray-500')} {...tipProps(settingsLabel)}>
               <Settings size={16} />
@@ -257,7 +257,7 @@ export default function Layout() {
           the label-clipping it does during the collapse animation, so anything meant to
           render outside its box has to live outside its box. Its `left` position in
           index.css is not measured: it is 4px past `.ftnc-sidebar[data-collapsed="true"]`'s
-          own hardcoded 64px width, kept in sync by hand rather than re-derived. */}
+          own hardcoded 64px width (48px under 768px), kept in sync by hand rather than re-derived. */}
       {collapsed && (
         <button
           type="button"
@@ -272,7 +272,7 @@ export default function Layout() {
       )}
 
       {/* Main content */}
-      <main className="flex-1 min-w-0 overflow-y-auto">
+      <main className="ftnc-main flex-1 min-w-0 overflow-y-auto">
         {/* The changes of the section being visited, laid over the top of the page until they are dismissed. */}
         <WhatsNewSectionBanner section={currentSection} entries={currentSection ? bySection[currentSection] ?? [] : []} />
         <Outlet />

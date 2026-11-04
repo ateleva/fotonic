@@ -323,6 +323,9 @@
 #fotonic-app-root .ftnc-sidebar[data-collapsed="true"] {
   width: 64px;
 }
+/* The narrow rail below 768px (48px, no side margins) is in the "Small screens" block at the
+   end of this file: on a large screen the rail keeps its 64px width and the rounded active
+   item, and the expand handle stays clear of the logo. */
 
 /* The collapse animation, in one property.
    `grid-template-columns` interpolates only between lists with the same number and type of
@@ -336,8 +339,16 @@
   gap: var(--ftnc-space-3);
   transition: grid-template-columns 200ms cubic-bezier(.2, 0, 0, 1),
               gap 200ms cubic-bezier(.2, 0, 0, 1),
+              padding 200ms cubic-bezier(.2, 0, 0, 1),
+              border-radius 200ms cubic-bezier(.2, 0, 0, 1),
               color 150ms cubic-bezier(.4, 0, .2, 1),
               background-color 150ms cubic-bezier(.4, 0, .2, 1);
+}
+/* The nav and footer side margins animate on the same curve as the width, so an icon slides
+   from x=24 to x=16 with the rail instead of jumping first. */
+#fotonic-app-root .ftnc-sidebar__nav,
+#fotonic-app-root .ftnc-sidebar__foot {
+  transition: padding 200ms cubic-bezier(.2, 0, 0, 1);
 }
 #fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-navlink {
   grid-template-columns: 16px minmax(0, 0fr);
@@ -437,7 +448,7 @@
    sits on the same element, and per the cascade, a `visible` value on one axis when the
    other is not `visible` computes to `auto` instead, so it would not even have produced a
    true un-clipped overflow. `left: 68px` is a deliberate 4px past `.ftnc-sidebar
-   [data-collapsed="true"]`'s own 64px width above — not the rail edge itself, so keep the
+   [data-collapsed="true"]`'s own 64px width above (48px and 52px under 768px, see the small screens block) — not the rail edge itself, so keep the
    two in sync by hand if either changes. `transform: translate(-50%,-50%)` centers the
    handle on that point, half inside the rail and half in the gap beside it. */
 #fotonic-app-root .ftnc-sidebar-toggle-handle {
@@ -528,6 +539,8 @@
   #fotonic-app-root .ftnc-navlink,
   #fotonic-app-root .ftnc-navlink > span,
   #fotonic-app-root .ftnc-sidebar__head,
+  #fotonic-app-root .ftnc-sidebar__nav,
+  #fotonic-app-root .ftnc-sidebar__foot,
   #fotonic-app-root .ftnc-sidebar__brand,
   #fotonic-app-root .ftnc-sidebar__brand > span,
   #fotonic-app-root .ftnc-sidebar__toggle,
@@ -582,6 +595,24 @@
   #fotonic-app-root .ftnc-grid-3,
   #fotonic-app-root .ftnc-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+
+/* Dashboard summary cards. Four columns from a 910px pane, which is what a laptop gives with BOTH
+   sidebars open (WP menu and the CRM rail) and more with one closed. Each minimum is the
+   measured width of the card's widest line plus ONE extra digit in the big value (a thousand
+   more in the revenue): Works 142px (+16px a digit, so room for three digits), Revenue
+   234px, to receive 203px, Payment types 211px (+9px a digit). Their sum with the gaps
+   is 909px, hence the threshold. The cards never wrap a title or a value (the card roots
+   are `whitespace-nowrap`); only the payment-type names wrap. Narrower than 910px and
+   down to 861px the cards go two by two; under 861px the generic grid rules apply. */
+@container ftnc-pane (min-width: 910px) {
+  #fotonic-app-root .ftnc-grid-stats {
+    grid-template-columns: minmax(165px, 0.9fr) minmax(252px, 1.1fr) minmax(222px, 1.1fr) minmax(222px, 1.1fr);
+  }
+}
+@container ftnc-pane (min-width: 861px) and (max-width: 909px) {
+  #fotonic-app-root .ftnc-grid-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 
 /* Table scroll affordance. `bg-white` used to sit on the <table> itself, which would
    have painted over the edge-shadow gradients below — the background moves to this
@@ -641,3 +672,208 @@
 #fotonic-app-root .ftnc-tint-border {
   border-color: color-mix(in srgb, var(--fotonic-primary) 22%, white);
 }
+
+
+/* --- Small screens (1.6.8): page headers, content margins, compact buttons ---------------
+   Below 768px the rail is already collapsed, so every pixel of the content counts. Free and
+   Pro share these classes (Pro ships no CSS): `.ftnc-head-col` is a header whose title and
+   actions stack (Pro lists), `.ftnc-head-wrap` a header whose items wrap (free PageHeader,
+   Pro forms), `.ftnc-head-actions` the group of buttons that goes on its own row under the
+   title. Pro sets its layout inline, so the rules that fight an inline value need `!important`;
+   this block is the only place where that is accepted, and only inside the media query. */
+@media (max-width: 767px) {
+  /* Narrow rail: only an icon wide, so it gives up its side margins. Nav, footer and each link
+     lose their horizontal padding and the active background fills the whole width. 48px is the
+     head's floor (32px logo + 2 x 6px padding = 44px). The 16px icon column stays centred by
+     `.ftnc-navlink`'s own `justify-content: center`. The expand handle moves with the edge. */
+  #fotonic-app-root .ftnc-sidebar[data-collapsed="true"] {
+    width: 48px;
+  }
+  #fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__nav,
+  #fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__foot {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-navlink {
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0;
+  }
+  #fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-whatsnew-btn {
+    right: 0;
+    top: -2px;
+  }
+  #fotonic-app-root .ftnc-sidebar-toggle-handle {
+    left: 52px;
+  }
+
+  /* Side margins of the page only: the top and bottom padding stays, the sidebar handle sits there. */
+  #fotonic-app-root .ftnc-main > :not(.sticky) {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* The header (title, buttons, tabs) is cut off from the content under it by a rule: on a
+     narrow screen the two used to run together. `.ftnc-head-nosep` is for a header that is
+     followed by its own separator (Storage: the tabs come after it). */
+  #fotonic-app-root .ftnc-head-col,
+  #fotonic-app-root .ftnc-head-wrap {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  #fotonic-app-root .ftnc-head-nosep {
+    padding-bottom: 0;
+    border-bottom: 0;
+  }
+  #fotonic-app-root .ftnc-head-col {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.75rem;
+  }
+  #fotonic-app-root .ftnc-head-wrap {
+    flex-wrap: wrap !important;
+    row-gap: 0.75rem;
+  }
+  #fotonic-app-root .ftnc-head-wrap > h1,
+  #fotonic-app-root .ftnc-head-wrap > h2 {
+    flex: 1 1 auto !important;
+    min-width: 0;
+  }
+  #fotonic-app-root .ftnc-head-wrap > .ftnc-head-actions {
+    flex: 1 1 100%;
+  }
+  #fotonic-app-root .ftnc-head-actions {
+    margin-left: 0 !important;
+    max-width: 100%;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+  }
+  #fotonic-app-root .ftnc-head-actions > div {
+    justify-content: flex-start !important;
+  }
+  /* Each button keeps its text on one line; the row wraps, the label never does. */
+  #fotonic-app-root .ftnc-head-col button,
+  #fotonic-app-root .ftnc-head-col a,
+  #fotonic-app-root .ftnc-head-wrap button,
+  #fotonic-app-root .ftnc-head-wrap a {
+    white-space: nowrap;
+  }
+
+  /* Floating cards (Vault fingerprint invite, progress bar): never wider than the screen. */
+  #fotonic-app-root .ftnc-float-card {
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+    max-width: min(320px, calc(100vw - 16px));
+    padding: 0.75rem;
+  }
+
+  /* Analytics (Pro): every card one under the other, full width, in the order of the
+     desktop grid read row by row. The grid places cards with explicit column and row
+     numbers inline, hence the !important. */
+  #fotonic-app-root .ftnc-an-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto !important;
+  }
+  #fotonic-app-root .ftnc-an-grid > * {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+    min-width: 0;
+  }
+  #fotonic-app-root .ftnc-an-1 { order: 1; }
+  #fotonic-app-root .ftnc-an-2 { order: 2; flex-direction: column !important; }
+  #fotonic-app-root .ftnc-an-3 { order: 3; }
+  #fotonic-app-root .ftnc-an-4 { order: 4; }
+  #fotonic-app-root .ftnc-an-5 { order: 5; }
+  #fotonic-app-root .ftnc-an-6 { order: 6; }
+  #fotonic-app-root .ftnc-an-7 { order: 7; }
+  #fotonic-app-root .ftnc-an-rows { grid-template-columns: minmax(0, 1fr) !important; }
+
+  /* Analytics, compare periods (Pro): Period A, Period B and the trend one under the other
+     (the blue and yellow panels keep their colours). The "Trend" label next to the title is
+     redundant once the trend sits under the panels, so it goes. The sticky bar with the two
+     periods uses the whole width: one chip per row, two rows in all. */
+  #fotonic-app-root .ftnc-cmp-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 10px !important; }
+  #fotonic-app-root .ftnc-cmp-trendlabel { display: none; }
+  /* The trend uses the whole width of its card and reads from the left (the pieces say text-align: right inline). */
+  #fotonic-app-root .ftnc-cmp-trend { align-items: stretch !important; width: 100%; }
+  #fotonic-app-root .ftnc-cmp-trend,
+  #fotonic-app-root .ftnc-cmp-trend * { text-align: left !important; }
+  #fotonic-app-root .ftnc-cmp-trend > * { width: 100%; max-width: none !important; }
+  #fotonic-app-root .ftnc-cmp-sticky {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 6px !important;
+    padding: 6px 0 !important;
+  }
+  #fotonic-app-root .ftnc-cmp-spacer { display: none; }
+  /* The two period pickers: each one the full width, the two dates side by side. */
+  #fotonic-app-root .ftnc-cmp-period { width: 100%; box-sizing: border-box; }
+  #fotonic-app-root .ftnc-cmp-dates > div { flex: 1 1 0; min-width: 0; }
+  #fotonic-app-root .ftnc-cmp-dates input { width: 100% !important; min-width: 0; box-sizing: border-box; }
+  #fotonic-app-root .ftnc-cmp-chip {
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+  }
+
+  /* Kanban (Pro): the three columns one under the other. */
+  #fotonic-app-root .ftnc-kb-cols { flex-direction: column; align-items: stretch !important; }
+  #fotonic-app-root .ftnc-kb-col { flex: none !important; width: 100%; min-height: 120px !important; box-sizing: border-box; }
+
+  /* Task modals (Kanban): never taller than 80% of the screen so the close and save buttons
+     are always in reach; the body scrolls inside. Inline sizes need !important. */
+  #fotonic-app-root .ftnc-task-modal {
+    box-sizing: border-box;
+    width: 100% !important;
+    max-width: calc(100vw - 16px) !important;
+    max-height: 80vh !important;
+    max-height: 80dvh !important;
+    padding: 1rem !important;
+    overflow-y: auto;
+  }
+
+  /* Quote list: Convert to work / Open work shrink to their icon (the text is in the aria-label). */
+  #fotonic-app-root .ftnc-compact-label {
+    display: none;
+  }
+
+  /* Editor toolbar (TinyMCE): every tool on ONE row. The default 36px buttons add up to more
+     than a phone card is wide, so the last group (clear formatting) wrapped. Tighter buttons
+     and no wrapping. */
+  #fotonic-app-root .mce-toolbar .mce-btn button {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+  #fotonic-app-root .mce-toolbar .mce-btn-group {
+    margin: 0 !important;
+    white-space: nowrap;
+  }
+  #fotonic-app-root .mce-toolbar .mce-container-body {
+    white-space: nowrap;
+  }
+}
+
+
+/* --- Settings: sticky bar of shortcuts (Pro fills it) --------------------------------------
+   Stays at the top of the scrolling page. Never wraps: when the buttons do not fit it scrolls
+   sideways, with a soft shadow on the side that has more (the "scroll shadows" background trick:
+   the white covers are `local`, the shadows `scroll`). The sections it points to keep a 72px scroll margin
+   (inline, see SectionCard), so a jump does not hide their title under the bar. */
+#fotonic-app-root .ftnc-settings-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  margin: 0 0 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  background:
+    linear-gradient(to right, #f9fafb 30%, rgba(249, 250, 251, 0)) left center / 28px 100% no-repeat local,
+    linear-gradient(to left, #f9fafb 30%, rgba(249, 250, 251, 0)) right center / 28px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(15, 23, 42, 0.18), rgba(15, 23, 42, 0)) left center / 10px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(15, 23, 42, 0.18), rgba(15, 23, 42, 0)) right center / 10px 100% no-repeat scroll,
+    #f9fafb;
+}
+#fotonic-app-root .ftnc-settings-bar:empty { display: none; }
+#fotonic-app-root .ftnc-settings-bar button { white-space: nowrap; flex: none; }

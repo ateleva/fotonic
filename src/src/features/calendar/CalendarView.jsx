@@ -55,6 +55,21 @@ function dayLabel(key) {
 
 const wpLocale = (window.FotonicApp?.locale ?? 'en-US').replace('_', '-')
 
+// Below 768px the month shows only a coloured square per event (no title): the text did not fit
+// seven columns, and a day cell can stay low. A tap opens the details as a large card.
+const NARROW_QUERY = '(max-width: 767px)'
+function useIsNarrow() {
+  const [narrow, setNarrow] = useState(() => (typeof window !== 'undefined' && window.matchMedia ? window.matchMedia(NARROW_QUERY).matches : false))
+  useEffect(() => {
+    if (!window.matchMedia) return undefined
+    const mq = window.matchMedia(NARROW_QUERY)
+    const onChange = () => setNarrow(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
+  return narrow
+}
+
 function padTwo(n) { return String(n).padStart(2, '0') }
 function getDaysInMonth(year, month) { return new Date(year, month + 1, 0).getDate() }
 function dayOfWeek(year, month, day) {
@@ -83,7 +98,7 @@ function formatDateLong(dateStr) {
 // Event popup
 // ---------------------------------------------------------------------------
 
-function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
+function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled, narrow }) {
   const popupRef = useRef(null)
   const isTask   = event.type === 'task'
   const kanban   = !isTask ? KANBAN_COLORS[event.kanban_status] : null
@@ -104,13 +119,17 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
       }
     }
     document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
+    document.addEventListener('touchstart', handleClick)
+    return () => {
+      document.removeEventListener('mousedown', handleClick)
+      document.removeEventListener('touchstart', handleClick)
+    }
   }, [onClose, anchorRef])
 
   // Position popup below the pill using fixed (viewport-relative) coords
   const [pos, setPos] = useState({ top: -9999, left: -9999 })
   useEffect(() => {
-    if (!anchorRef.current || !popupRef.current) return
+    if (narrow || !anchorRef.current || !popupRef.current) return
     const anchor = anchorRef.current.getBoundingClientRect()
     const popup  = popupRef.current.getBoundingClientRect()
     let top  = anchor.bottom + 6
@@ -121,7 +140,7 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
     if (top + popup.height > window.innerHeight - 12)
       top = anchor.top - popup.height - 6
     setPos({ top, left })
-  }, [anchorRef])
+  }, [anchorRef, narrow])
 
   async function handleUnlink() {
     try {
@@ -138,9 +157,10 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled }) {
       style={{
         position: 'fixed',
         zIndex: 99999,
-        top: pos.top,
-        left: pos.left,
-        width: 280,
+        // Narrow screen: the card takes the width of the screen and sits at the bottom, as large as it can be.
+        ...(narrow
+          ? { left: 8, right: 8, bottom: 8, maxHeight: '75vh', overflowY: 'auto', boxSizing: 'border-box' }
+          : { top: pos.top, left: pos.left, width: 280 }),
         background: '#fff',
         border: '1px solid #e5e7eb',
         borderRadius: 10,
@@ -255,6 +275,7 @@ export function CalendarView() {
   const [month, setMonth]     = useState(now.getMonth())
   const [syncMsg, setSyncMsg] = useState('')
   const [popup, setPopup]     = useState(null) // { event, anchorRef }
+  const narrow = useIsNarrow()
 
   const from = `${year}-${padTwo(month + 1)}-01`
   const to   = `${year}-${padTwo(month + 1)}-${padTwo(getDaysInMonth(year, month))}`
@@ -307,9 +328,9 @@ export function CalendarView() {
     <div style={{ padding: '1.5rem', fontFamily: 'inherit' }} onClick={() => setPopup(null)}>
 
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
+      <div className="ftnc-head-col" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
         <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#111827' }}>{__('Calendar', 'eleva-crm-for-photographers')}</h2>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="ftnc-head-actions" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {OpenGoogleCalendarButton && gcalEnabled && <OpenGoogleCalendarButton />}
           {gcalEnabled && (
             <Button
@@ -363,8 +384,8 @@ export function CalendarView() {
                   onClick={e => e.stopPropagation()}
                   style={{
                     minWidth: 0,
-                    minHeight: 80,
-                    padding: '6px 6px 4px',
+                    minHeight: narrow ? 52 : 80,
+                    padding: narrow ? '4px 2px 2px' : '6px 6px 4px',
                     borderRight:  (idx + 1) % 7 !== 0 ? '1px solid #f3f4f6' : 'none',
                     borderBottom: idx < grid.length - 7 ? '1px solid #f3f4f6' : 'none',
                     background:   day ? '#fff' : '#f9fafb',
@@ -387,7 +408,25 @@ export function CalendarView() {
                       }}>
                         {day}
                       </div>
-                      {dayEvents.map(ev => (
+                      <div style={narrow ? { display: 'flex', flexWrap: 'wrap', gap: 3, justifyContent: 'center' } : undefined}>
+                      {dayEvents.map(ev => (narrow ? (
+                        <button
+                          key={`${ev.type}-${ev.id}`}
+                          onClick={e => handlePillClick(e, ev)}
+                          aria-label={ev.title + (ev.event_time_from ? ' · ' + formatTime(ev.event_time_from) : '')}
+                          style={{
+                            width: 16,
+                            height: 16,
+                            padding: 0,
+                            background: ev.color || '#9ca3af',
+                            border: (popup?.event.id === ev.id && popup?.event.type === ev.type) ? '2px solid rgba(0,0,0,0.45)' : '2px solid transparent',
+                            borderRadius: 3,
+                            cursor: 'pointer',
+                            opacity: ev.type === 'task' ? 0.88 : 1,
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      ) : (
                         <button
                           key={`${ev.type}-${ev.id}`}
                           onClick={e => handlePillClick(e, ev)}
@@ -417,7 +456,8 @@ export function CalendarView() {
                             </div>
                           )}
                         </button>
-                      ))}
+                      )))}
+                      </div>
                     </>
                   )}
                 </div>
@@ -435,6 +475,7 @@ export function CalendarView() {
           onClose={() => setPopup(null)}
           onOpen={id => navigate('/works/' + id)}
           gcalEnabled={gcalEnabled}
+          narrow={narrow}
         />
       )}
     </div>

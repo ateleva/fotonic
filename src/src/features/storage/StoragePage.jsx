@@ -41,10 +41,10 @@ export default function StoragePage() {
 
   return (
     <div className="p-6">
-      <PageHeader title={__('Storage', 'eleva-crm-for-photographers')} action={addButton} />
+      <PageHeader title={__('Storage', 'eleva-crm-for-photographers')} action={addButton} separator={false} />
 
       {/* Same buttons as the rest of the app: the chosen one is the primary button, the others the secondary. */}
-      <nav aria-label={__('Storage sections', 'eleva-crm-for-photographers')} className="flex flex-wrap gap-2 mb-5">
+      <nav aria-label={__('Storage sections', 'eleva-crm-for-photographers')} className="flex flex-wrap gap-2 mb-4">
         {TABS.map(({ key, label, Icon }) => (
           <NavLink
             key={key}
@@ -61,6 +61,9 @@ export default function StoragePage() {
           </NavLink>
         ))}
       </nav>
+
+      {/* Full-width rule: the three tabs above are the page, the filters and the list below are the content. */}
+      <div role="separator" className="h-px w-full bg-gray-200 mb-4" />
 
       <Panel />
     </div>

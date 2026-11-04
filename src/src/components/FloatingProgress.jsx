@@ -11,7 +11,7 @@ export default function FloatingProgress({ title, detail, percent = 0, actionLab
     <div
       role="status"
       aria-live="polite"
-      className="fixed bottom-6 right-6 z-[9999] w-80 rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
+      className="ftnc-float-card fixed bottom-6 right-6 z-[9999] w-80 max-w-full rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
     >
       <div className="flex items-start justify-between gap-3">
         <p className="text-sm font-semibold text-gray-900">{title}</p>

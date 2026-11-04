@@ -24,9 +24,9 @@ import BackupSettingsSection from './BackupSettingsSection'
 
 function SectionCard({ id, title, icon: Icon, children }) {
   // `id` is an anchor target for extensions (e.g. a header shortcut that scrolls to a section).
-  // The scroll margin (style attribute) keeps the card clear of the pane edge when scrolled into view.
+  // The scroll margin (style attribute) keeps the card clear of the sticky shortcuts bar (about 56px high) when scrolled into view.
   return (
-    <div className="ftnc-panel" id={id} style={id ? { scrollMarginTop: '24px' } : undefined}>
+    <div className="ftnc-panel" id={id} style={id ? { scrollMarginTop: '72px' } : undefined}>
       <div className="ftnc-panel__head">
         <Icon size={16} className="text-indigo-500 shrink-0" />
         <h2 className="text-sm font-bold text-gray-800">{title}</h2>
@@ -428,10 +428,14 @@ export default function SettingsPage() {
         header→first-card distance would grow instead of tightening. Same
         structure WorkForm and CustomerForm already use. */}
     <div className="p-6 ftnc-pane">
-      <PageHeader
-        title={__('Settings', 'eleva-crm-for-photographers')}
-        action={SettingsHeaderActions ? <SettingsHeaderActions /> : null}
-      />
+      <PageHeader title={__('Settings', 'eleva-crm-for-photographers')} separator={false} />
+
+      {/* Pro: the shortcuts to the sections and the quote settings button. A bar of its own (not in the
+          header's action slot) so it can stay stuck to the top of the scrolling page; it scrolls
+          sideways when the buttons do not fit, and `:empty` hides it when Pro renders nothing. */}
+      <div className="ftnc-settings-bar">
+        {SettingsHeaderActions ? <SettingsHeaderActions /> : null}
+      </div>
 
       <div className="ftnc-stack">
         {LicenseSettingsSection && (

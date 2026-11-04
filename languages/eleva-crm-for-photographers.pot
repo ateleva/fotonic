@@ -1446,10 +1446,6 @@ msgstr ""
 msgid "Payments to receive"
 msgstr ""
 
-#: src/src/features/dashboard/Dashboard.jsx:141
-msgid "Payment types used"
-msgstr ""
-
 #: src/src/features/dashboard/Dashboard.jsx:143
 msgid "No data"
 msgstr ""
@@ -3602,4 +3598,8 @@ msgstr ""
 
 #: src/src/features/vault/TotpEnroll.jsx:61
 msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code, then enter the 6-digit code it shows."
+msgstr ""
+
+#: src/src/features/dashboard/Dashboard.jsx:146
+msgid "Payment types"
 msgstr ""

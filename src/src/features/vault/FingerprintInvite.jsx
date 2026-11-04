@@ -45,7 +45,7 @@ export default function FingerprintInvite() {
   }
 
   return (
-    <div role="status" className="fixed bottom-6 right-6 z-[9999] w-80 rounded-xl border border-gray-200 bg-white p-4 shadow-lg">
+    <div role="status" className="ftnc-float-card fixed bottom-6 right-6 z-[9999] w-80 max-w-full rounded-xl border border-gray-200 bg-white p-4 shadow-lg">
       <div className="flex items-start gap-3">
         <Fingerprint size={20} className="mt-0.5 shrink-0 text-indigo-500" />
         <div>

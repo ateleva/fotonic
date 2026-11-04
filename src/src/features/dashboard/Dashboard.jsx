@@ -26,8 +26,8 @@ function workRevenue(work) {
 // Stat card: title on top, main value (big+bold) + main label (small right), then sub-rows
 function StatCard({ title, mainValue, mainLabel, rows, children }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-2">
-      <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">{title}</span>
+    <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-2 whitespace-nowrap">
+      <span className="ftnc-stat-title text-xs font-semibold uppercase tracking-wide text-gray-400">{title}</span>
       <div className="flex items-baseline gap-2">
         <span className="text-2xl font-bold text-gray-900 leading-none">{mainValue}</span>
         {mainLabel && <span className="text-xs text-gray-400">{mainLabel}</span>}
@@ -105,7 +105,7 @@ export default function Dashboard() {
       <h1 className="text-xl font-semibold text-gray-900">{__('Dashboard', 'eleva-crm-for-photographers')}</h1>
 
       {/* Summary Cards */}
-      <div className="ftnc-grid-4">
+      <div className="ftnc-grid-4 ftnc-grid-stats">
 
         {/* Works */}
         <StatCard
@@ -141,18 +141,17 @@ export default function Dashboard() {
           }
         />
 
-        {/* Payment types used */}
-        <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-gray-400">{__('Payment types used', 'eleva-crm-for-photographers')}</span>
+        {/* Payment types */}
+        <div className="bg-white rounded-lg border border-gray-200 p-5 flex flex-col gap-2 whitespace-nowrap">
+          <span className="ftnc-stat-title text-xs font-semibold uppercase tracking-wide text-gray-400">{__('Payment types', 'eleva-crm-for-photographers')}</span>
           {paymentTypes.length === 0 ? (
             <span className="text-sm text-gray-400">{__('No data', 'eleva-crm-for-photographers')}</span>
           ) : (
             <div className="flex flex-col gap-1">
               {paymentTypes.map((t) => (
                 <div key={t.slug} className="flex items-center gap-2 text-sm">
-                  <span className="font-medium text-gray-700 flex-1 truncate">{t.label}</span>
-                  <span className="text-gray-600 font-semibold">{formatEuro(t.subtotal)}</span>
-                  <span className="text-gray-400 text-xs w-10 text-right">{t.pct}%</span>
+                  <span className="font-medium text-gray-700 flex-1 min-w-0 whitespace-normal break-words">{t.label}</span>
+                  <span className="text-gray-600 font-semibold text-right">{formatEuro(t.subtotal)}</span>
                 </div>
               ))}
               {totalPT > 0 && (
