@@ -11,6 +11,7 @@ import Spinner from '../../components/Spinner'
 import VaultRecoveryPanel from './VaultRecoveryPanel'
 import { useFingerprintUnlock } from './useFingerprintUnlock'
 import { __ } from '../../utils/i18n'
+import GateScreen, { GateCard } from '../../components/GateScreen'
 
 /**
  * VaultLock — shown only when silentReopen() returned false.
@@ -89,119 +90,116 @@ export default function VaultLock() {
     await queryClient.invalidateQueries({ queryKey: ['vault-status'] })
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-md w-full max-w-md p-8">
+  const footer = showRecovery ? null : (
+    <Button
+      type="submit"
+      form="vault-unlock-form"
+      variant={fingerprint.available ? 'secondary' : 'primary'}
+      className="w-full"
+      disabled={isSubmitting}
+    >
+      {isSubmitting ? <Spinner size="sm" /> : __('Unlock Vault', 'eleva-crm-for-photographers')}
+    </Button>
+  )
 
-        {showRecovery ? (
+  return (
+    <GateScreen>
+      {showRecovery ? (
+        <GateCard size="sm">
           <VaultRecoveryPanel
             onBack={() => setShowRecovery(false)}
             onUnlocked={handleRecoveryUnlocked}
           />
-        ) : (
-          <>
-            <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-indigo-50 mb-3">
-                <Lock size={28} className="text-indigo-600" />
-              </div>
-              <h1 className="text-xl font-bold text-gray-900">{__('Vault Locked', 'eleva-crm-for-photographers')}</h1>
-              <p className="text-sm text-gray-500 mt-1">
-                {__('Enter your vault password and authenticator code to access your data.', 'eleva-crm-for-photographers')}
-              </p>
-            </div>
-
-            {fingerprint.available && (
-              <div className="mb-5 space-y-2">
-                <Button
-                  type="button"
-                  variant="primary"
-                  className="w-full"
-                  onClick={fingerprint.start}
-                  disabled={fingerprint.busy}
-                >
-                  {fingerprint.busy
-                    ? <Spinner size="sm" />
-                    : <><Fingerprint size={16} className="mr-2 inline" />{__('Unlock with fingerprint', 'eleva-crm-for-photographers')}</>}
-                </Button>
-                {fingerprint.error && <p className="text-sm text-red-600 text-center">{fingerprint.error}</p>}
-                <p className="text-xs text-gray-400 text-center">{__('Or use your password and code', 'eleva-crm-for-photographers')}</p>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              {/* Must be inside <form> — browser only links username hint to password fields in the same form */}
-              <input
-                type="text"
-                name="username"
-                autoComplete="username"
-                value="crm-vault"
-                readOnly
-                tabIndex={-1}
-                aria-hidden="true"
-                style={{ position: 'absolute', opacity: 0, width: '1px', height: '1px', pointerEvents: 'none' }}
-              />
-              <FormField
-                label={__('Vault Password', 'eleva-crm-for-photographers')}
-                required
-                htmlFor="password"
-                error={errors.password?.message}
-              >
-                <PasswordInput
-                  id="password"
-                  autoComplete="current-password"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  {...register('password', { required: __('Password is required', 'eleva-crm-for-photographers') })}
-                />
-              </FormField>
-
-              <FormField
-                label={__('Authenticator Code', 'eleva-crm-for-photographers')}
-                required
-                htmlFor="otp"
-                error={errors.otp?.message}
-              >
-                <input
-                  id="otp"
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  autoComplete="one-time-code"
-                  placeholder="000000"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  {...register('otp', {
-                    required: __('Code is required', 'eleva-crm-for-photographers'),
-                    pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code', 'eleva-crm-for-photographers') },
-                  })}
-                />
-              </FormField>
-
-              {errors.root && (
-                <p className="text-sm text-red-600 text-center">{errors.root.message}</p>
-              )}
-
-              <Button
-                type="submit"
-                variant="primary"
-                className="w-full mt-2"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? <Spinner size="sm" /> : __('Unlock Vault', 'eleva-crm-for-photographers')}
-              </Button>
-            </form>
-
-            <div className="mt-5 text-center">
-              <button
-                type="button"
-                onClick={() => setShowRecovery(true)}
-                className="text-xs text-indigo-500 hover:text-indigo-700 underline cursor-pointer"
-              >
-                {__('Lost your password or authenticator?', 'eleva-crm-for-photographers')}
-              </button>
-            </div>
-          </>
+        </GateCard>
+      ) : (
+        <GateCard
+          size="sm"
+          icon={Lock}
+          title={__('Vault Locked', 'eleva-crm-for-photographers')}
+          subtitle={__('Enter your vault password and authenticator code to access your data.', 'eleva-crm-for-photographers')}
+          footer={footer}
+        >
+        {fingerprint.available && (
+          <div className="mb-5 space-y-2">
+            <Button
+              type="button"
+              variant="primary"
+              className="w-full"
+              onClick={fingerprint.start}
+              disabled={fingerprint.busy}
+            >
+              {fingerprint.busy
+                ? <Spinner size="sm" />
+                : <><Fingerprint size={16} className="mr-2 inline" />{__('Unlock with fingerprint', 'eleva-crm-for-photographers')}</>}
+            </Button>
+            {fingerprint.error && <p className="text-sm text-red-600 text-center">{fingerprint.error}</p>}
+            <p className="text-xs text-gray-400 text-center">{__('Or use your password and code', 'eleva-crm-for-photographers')}</p>
+          </div>
         )}
 
-      </div>
-    </div>
+        <form id="vault-unlock-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          {/* Must be inside <form> — browser only links username hint to password fields in the same form */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            value="crm-vault"
+            readOnly
+            tabIndex={-1}
+            aria-hidden="true"
+            style={{ position: 'absolute', opacity: 0, width: '1px', height: '1px', pointerEvents: 'none' }}
+          />
+          <FormField
+            label={__('Vault Password', 'eleva-crm-for-photographers')}
+            required
+            htmlFor="password"
+            error={errors.password?.message}
+          >
+            <PasswordInput
+              id="password"
+              autoComplete="current-password"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              {...register('password', { required: __('Password is required', 'eleva-crm-for-photographers') })}
+            />
+          </FormField>
+
+          <FormField
+            label={__('Authenticator Code', 'eleva-crm-for-photographers')}
+            required
+            htmlFor="otp"
+            error={errors.otp?.message}
+          >
+            <input
+              id="otp"
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              autoComplete="one-time-code"
+              placeholder="000000"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              {...register('otp', {
+                required: __('Code is required', 'eleva-crm-for-photographers'),
+                pattern: { value: /^\d{6}$/, message: __('Enter a 6-digit code', 'eleva-crm-for-photographers') },
+              })}
+            />
+          </FormField>
+
+          {errors.root && (
+            <p className="text-sm text-red-600 text-center">{errors.root.message}</p>
+          )}
+        </form>
+
+        <div className="mt-5 text-center">
+          <button
+            type="button"
+            onClick={() => setShowRecovery(true)}
+            className="text-xs text-fotonic-primary hover:opacity-80 underline cursor-pointer"
+          >
+            {__('Lost your password or authenticator?', 'eleva-crm-for-photographers')}
+          </button>
+        </div>
+        </GateCard>
+      )}
+    </GateScreen>
   )
 }

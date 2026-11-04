@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { RouterProvider } from 'react-router-dom'
+import { Smartphone } from 'lucide-react'
 import { useVault } from '../../context/VaultContext'
 import { fetchVaultStatus, vaultTotpPending, vaultTotpConfirm } from '../../api/vault'
 import Spinner from '../../components/Spinner'
@@ -14,13 +15,14 @@ import FingerprintInvite from './FingerprintInvite'
 import { showChoice, encryptView, readDismissed, writeDismissed } from '../../utils/vaultFlow'
 import TotpEnroll from './TotpEnroll'
 import { __ } from '../../utils/i18n'
+import GateScreen, { GateCard } from '../../components/GateScreen'
 
 // ---------------------------------------------------------------------------
 // PendingTotpScreen - shown after a recovery until the new authenticator is
 // confirmed. The pending secret is (re)staged once on mount.
 // ---------------------------------------------------------------------------
 
-function PendingTotpScreen() {
+export function PendingTotpScreen() {
   const queryClient = useQueryClient()
   const [qrUri, setQrUri] = useState(null)
   const [error, setError] = useState(null)
@@ -46,26 +48,19 @@ function PendingTotpScreen() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-md w-full max-w-md p-8">
-        <div className="text-center mb-6">
-          <h1 className="text-xl font-bold text-gray-900">{__('Set up your new authenticator', 'eleva-crm-for-photographers')}</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            {__('Your password was reset. Add the vault to your authenticator app again to finish recovery.', 'eleva-crm-for-photographers')}
-          </p>
-        </div>
-
-        {error && (
-          <div className="space-y-4">
-            <p className="text-sm text-red-600">{error}</p>
-            <Button
-              variant="secondary"
-              onClick={() => { setError(null); setAttempt((a) => a + 1) }}
-            >
-              {__('Try again', 'eleva-crm-for-photographers')}
-            </Button>
-          </div>
-        )}
+    <GateScreen>
+      <GateCard
+        size="md"
+        icon={Smartphone}
+        title={__('Set up your new authenticator', 'eleva-crm-for-photographers')}
+        subtitle={__('Your password was reset. Add the vault to your authenticator app again to finish recovery.', 'eleva-crm-for-photographers')}
+        footer={error ? (
+          <Button variant="secondary" onClick={() => { setError(null); setAttempt((a) => a + 1) }}>
+            {__('Try again', 'eleva-crm-for-photographers')}
+          </Button>
+        ) : null}
+      >
+        {error && <p className="text-sm text-red-600">{error}</p>}
 
         {!error && !qrUri && (
           <div className="flex justify-center py-8"><Spinner size="lg" /></div>
@@ -74,8 +69,8 @@ function PendingTotpScreen() {
         {!error && qrUri && (
           <TotpEnroll qrUri={qrUri} onConfirm={handleConfirm} />
         )}
-      </div>
-    </div>
+      </GateCard>
+    </GateScreen>
   )
 }
 

@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { Shield, ShieldOff, KeyRound, EyeOff } from 'lucide-react'
+import { ShieldCheck, ShieldOff, KeyRound, EyeOff } from 'lucide-react'
 import { setVaultChoice } from '../../api/vault'
 import Button from '../../components/Button'
+import GateScreen, { GateCard, GateNote } from '../../components/GateScreen'
 import VaultSetup from './VaultSetup'
 import { __ } from '../../utils/i18n'
 
@@ -31,71 +32,47 @@ export default function VaultChoiceScreen() {
   }
 
   if (settingUp) {
-    return (
-      <div className="relative">
-        <div className="absolute top-4 left-4 z-10">
-          <Button variant="secondary" size="sm" onClick={() => setSettingUp(false)}>
-            {__('Back', 'eleva-crm-for-photographers')}
-          </Button>
-        </div>
-        <VaultSetup />
-      </div>
-    )
+    return <VaultSetup onBack={() => setSettingUp(false)} />
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-md w-full max-w-2xl p-8 space-y-5">
-        <div className="text-center">
-          <span className="text-3xl">&#x1F510;</span>
-          <h1 className="mt-2 text-xl font-bold text-gray-900">
-            {__('Do you want to protect personal data with the Vault?', 'eleva-crm-for-photographers')}
-          </h1>
-          <p className="mt-2 text-sm text-gray-600">
-            {__('The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both. That is the only cost: one more password to enter.', 'eleva-crm-for-photographers')}
-          </p>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="rounded-md border border-green-200 bg-green-50 p-4 space-y-1">
-            <p className="flex items-center gap-2 text-sm font-semibold text-green-900"><Shield size={15} />{__('What the Vault protects', 'eleva-crm-for-photographers')}</p>
-            <p className="text-sm text-green-800">
-              {__('Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes and your service catalog (titles, prices and notes). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes.', 'eleva-crm-for-photographers')}
-            </p>
-          </div>
-          <div className="rounded-md border border-gray-200 bg-gray-50 p-4 space-y-1">
-            <p className="flex items-center gap-2 text-sm font-semibold text-gray-800"><EyeOff size={15} />{__('What stays readable', 'eleva-crm-for-photographers')}</p>
-            <p className="text-sm text-gray-700">
-              {__('Dates, work prices and payments, statistics, and the titles of your clients, works and quotes.', 'eleva-crm-for-photographers')}
-            </p>
-          </div>
-        </div>
-
-        <div className="rounded-md border border-amber-200 bg-amber-50 p-4 space-y-1">
-          <p className="flex items-center gap-2 text-sm font-semibold text-amber-900"><ShieldOff size={15} />{__('If you choose Not now', 'eleva-crm-for-photographers')}</p>
-          <p className="text-sm text-amber-800">
+    <GateScreen>
+      <GateCard
+        size="full"
+        icon={ShieldCheck}
+        title={__('Do you want to protect personal data with the Vault?', 'eleva-crm-for-photographers')}
+        subtitle={[
+          __('The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both.', 'eleva-crm-for-photographers'),
+          __('That is the only cost: one more password to enter.', 'eleva-crm-for-photographers'),
+          __('If your computer or phone has a fingerprint reader or face unlock, you can then turn on unlocking with a touch from Settings, under Vault.', 'eleva-crm-for-photographers'),
+        ]}
+        footer={(
+          <>
+            <Button variant="secondary" disabled={busy} onClick={handleNotNow}>
+              {__('Not now', 'eleva-crm-for-photographers')}
+            </Button>
+            <Button disabled={busy} onClick={() => setSettingUp(true)}>
+              {__('Protect personal data with the Vault (recommended)', 'eleva-crm-for-photographers')}
+            </Button>
+          </>
+        )}
+      >
+        <div className="grid gap-3 md:grid-cols-2">
+          <GateNote accent icon={ShieldCheck} title={__('What the Vault protects', 'eleva-crm-for-photographers')}>
+            {__('Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes and your service catalog (titles, prices and notes). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes.', 'eleva-crm-for-photographers')}
+          </GateNote>
+          <GateNote icon={EyeOff} title={__('What stays readable', 'eleva-crm-for-photographers')}>
+            {__('Dates, work prices and payments, statistics, and the titles of your clients, works and quotes.', 'eleva-crm-for-photographers')}
+          </GateNote>
+          <GateNote icon={ShieldOff} title={__('If you choose Not now', 'eleva-crm-for-photographers')}>
             {__('Your personal data is stored as plain text in the database, and entering it without the Vault does not make it safer. Encrypted backups, including the ones sent to Google Drive with Eleva CRM Pro, are not available. You can turn the Vault on later from Settings: the data you already entered is encrypted at that moment.', 'eleva-crm-for-photographers')}
-          </p>
-        </div>
-
-        <div className="rounded-md border border-blue-200 bg-blue-50 p-4 space-y-1">
-          <p className="flex items-center gap-2 text-sm font-semibold text-blue-900"><KeyRound size={15} />{__('Your responsibility', 'eleva-crm-for-photographers')}</p>
-          <p className="text-sm text-blue-800">
+          </GateNote>
+          <GateNote icon={KeyRound} title={__('Your responsibility', 'eleva-crm-for-photographers')}>
             {__('The Vault is a security extra, and keeping its keys safe is up to you, like the keys of a crypto wallet. Store your password, your recovery code and your recovery phrase in a safe place. If you lose all of them and reset the Vault, the encrypted data is lost for good, while the data that stays readable is kept. With the recovery code or the recovery phrase you lose nothing: recovering is not resetting.', 'eleva-crm-for-photographers')}
-          </p>
+          </GateNote>
         </div>
-
-        {error && <p className="text-sm text-red-600">{error}</p>}
-
-        <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button size="lg" disabled={busy} onClick={() => setSettingUp(true)}>
-            {__('Protect personal data with the Vault (recommended)', 'eleva-crm-for-photographers')}
-          </Button>
-          <Button size="lg" variant="secondary" disabled={busy} onClick={handleNotNow}>
-            {__('Not now', 'eleva-crm-for-photographers')}
-          </Button>
-        </div>
-      </div>
-    </div>
+        {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+      </GateCard>
+    </GateScreen>
   )
 }

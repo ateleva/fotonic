@@ -6,27 +6,29 @@
  */
 import { useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { AlertTriangle, Mail } from 'lucide-react'
+import { AlertTriangle, LifeBuoy, Mail, ShieldAlert } from 'lucide-react'
 import { vaultIssueKit, vaultAckKit } from '../../api/vault'
 import Button from '../../components/Button'
 import CopyButton from '../../components/CopyButton'
 import Spinner from '../../components/Spinner'
 import { __, sprintf } from '../../utils/i18n'
 import { lastGroup, matchesLastGroup, kitText } from '../../utils/recoveryKit'
+import GateScreen, { GateCard, GateCallout } from '../../components/GateScreen'
 
 const STEPS = { INTRO: 'intro', PHRASE: 'phrase', CODE: 'code', EMAIL: 'email' }
 
-function SecretStep({ title, intro, secret, count, typed, onTyped, onNext }) {
-  const ok = matchesLastGroup(secret, typed)
+function SecretStep({ title, intro, secret, count, typed, onTyped }) {
   const tail = lastGroup(secret)
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
-      <p className="text-sm text-gray-500">{intro}</p>
+      <div>
+        <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
+        <p className="mt-1 text-sm text-gray-500">{intro}</p>
+      </div>
 
-      <div className="rounded-md bg-amber-50 border border-amber-200 p-4">
-        <p className="text-sm font-mono font-semibold text-amber-900 break-all tracking-widest text-center select-all">
+      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
+        <p className="text-sm font-mono font-semibold text-gray-900 break-all tracking-widest text-center select-all">
           {secret}
         </p>
       </div>
@@ -48,10 +50,6 @@ function SecretStep({ title, intro, secret, count, typed, onTyped, onNext }) {
           onChange={(e) => onTyped(e.target.value)}
         />
       </div>
-
-      <Button variant="primary" className="w-full" disabled={!ok} onClick={onNext}>
-        {__('Next', 'eleva-crm-for-photographers')}
-      </Button>
     </div>
   )
 }
@@ -100,35 +98,59 @@ export default function RecoveryKitWizard() {
     }
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-md w-full max-w-md p-8">
-        <div className="text-center mb-6">
-          <span className="text-3xl">&#x1F510;</span>
-          <h1 className="mt-2 text-xl font-bold text-gray-900">{__('Recovery kit', 'eleva-crm-for-photographers')}</h1>
-        </div>
+  const stepNo = { [STEPS.PHRASE]: 1, [STEPS.CODE]: 2, [STEPS.EMAIL]: 3 }[step]
 
+  let footer = null
+  if (step === STEPS.INTRO) {
+    footer = (
+      <Button onClick={handleGenerate} disabled={loading}>
+        {loading
+          ? <Spinner size="sm" />
+          : (error
+            ? __('Try again', 'eleva-crm-for-photographers')
+            : __('Generate and email my recovery kit', 'eleva-crm-for-photographers'))}
+      </Button>
+    )
+  } else if (step === STEPS.PHRASE && kit) {
+    footer = (
+      <Button disabled={!matchesLastGroup(kit.phrase, typedPhrase)} onClick={() => setStep(STEPS.CODE)}>
+        {__('Next', 'eleva-crm-for-photographers')}
+      </Button>
+    )
+  } else if (step === STEPS.CODE && kit) {
+    footer = (
+      <Button disabled={!matchesLastGroup(kit.code, typedCode)} onClick={() => setStep(STEPS.EMAIL)}>
+        {__('Next', 'eleva-crm-for-photographers')}
+      </Button>
+    )
+  } else if (step === STEPS.EMAIL && kit) {
+    footer = (
+      <Button disabled={!saved || loading} onClick={handleFinish}>
+        {loading ? <Spinner size="sm" /> : __('Finish', 'eleva-crm-for-photographers')}
+      </Button>
+    )
+  }
+
+  return (
+    <GateScreen>
+      <GateCard
+        size="md"
+        icon={LifeBuoy}
+        title={__('Recovery kit', 'eleva-crm-for-photographers')}
+        steps={stepNo ? { current: stepNo, total: 3 } : undefined}
+        footer={footer}
+      >
         {step === STEPS.INTRO && (
           <div className="space-y-4">
-            <div className="flex items-start gap-3 rounded-md border border-amber-200 bg-amber-50 px-4 py-3">
-              <AlertTriangle size={18} className="text-amber-500 shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-800">
-                {__('Without a recovery kit, forgetting your vault password or losing your authenticator app means your protected data cannot be recovered.', 'eleva-crm-for-photographers')}
-              </p>
-            </div>
+            <GateCallout icon={ShieldAlert}>
+              {__('Without a recovery kit, forgetting your vault password or losing your authenticator app means your protected data cannot be recovered.', 'eleva-crm-for-photographers')}
+            </GateCallout>
             <p className="text-sm text-gray-500">
               {__('We will generate a recovery phrase and a recovery code, show them here, and email them to the site administrator address. Either one lets you set a new password and a new authenticator without losing data. Any recovery secret you saw before stops working.', 'eleva-crm-for-photographers')}
             </p>
             {error && (
               <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
             )}
-            <Button variant="primary" className="w-full" onClick={handleGenerate} disabled={loading}>
-              {loading
-                ? <Spinner size="sm" />
-                : (error
-                  ? __('Try again', 'eleva-crm-for-photographers')
-                  : __('Generate and email my recovery kit', 'eleva-crm-for-photographers'))}
-            </Button>
           </div>
         )}
 
@@ -140,7 +162,6 @@ export default function RecoveryKitWizard() {
             count={lastGroup(kit.phrase).length}
             typed={typedPhrase}
             onTyped={setTypedPhrase}
-            onNext={() => setStep(STEPS.CODE)}
           />
         )}
 
@@ -152,7 +173,6 @@ export default function RecoveryKitWizard() {
             count={lastGroup(kit.code).length}
             typed={typedCode}
             onTyped={setTypedCode}
-            onNext={() => setStep(STEPS.EMAIL)}
           />
         )}
 
@@ -161,19 +181,13 @@ export default function RecoveryKitWizard() {
             <h2 className="text-lg font-semibold text-gray-800">{__('Keep a copy outside this site', 'eleva-crm-for-photographers')}</h2>
 
             {kit.emailSent ? (
-              <div className="flex items-start gap-3 rounded-md border border-green-200 bg-green-50 px-4 py-3">
-                <Mail size={18} className="text-green-600 shrink-0 mt-0.5" />
-                <p className="text-sm text-green-800">
-                  {sprintf(__('Sent to %s', 'eleva-crm-for-photographers'), kit.emailHint)}
-                </p>
-              </div>
+              <GateCallout icon={Mail}>
+                {sprintf(__('Sent to %s', 'eleva-crm-for-photographers'), kit.emailHint)}
+              </GateCallout>
             ) : (
-              <div className="flex items-start gap-3 rounded-md border border-red-200 bg-red-50 px-4 py-3">
-                <AlertTriangle size={18} className="text-red-500 shrink-0 mt-0.5" />
-                <p className="text-sm text-red-700">
-                  {__('Email could not be sent. Copy the kit now and keep it outside this site.', 'eleva-crm-for-photographers')}
-                </p>
-              </div>
+              <GateCallout error icon={AlertTriangle}>
+                {__('Email could not be sent. Copy the kit now and keep it outside this site.', 'eleva-crm-for-photographers')}
+              </GateCallout>
             )}
 
             <p className="text-xs text-gray-500">
@@ -200,13 +214,9 @@ export default function RecoveryKitWizard() {
             {error && (
               <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error}</p>
             )}
-
-            <Button variant="primary" className="w-full" disabled={!saved || loading} onClick={handleFinish}>
-              {loading ? <Spinner size="sm" /> : __('Finish', 'eleva-crm-for-photographers')}
-            </Button>
           </div>
         )}
-      </div>
-    </div>
+      </GateCard>
+    </GateScreen>
   )
 }

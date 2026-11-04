@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
+import { Lock, UserRound } from 'lucide-react'
 import { vaultSetup, vaultSetupConfirm } from '../../api/vault'
 import { useVault } from '../../context/VaultContext'
 import Button from '../../components/Button'
@@ -9,43 +10,9 @@ import PasswordInput from '../../components/PasswordInput'
 import CopyButton from '../../components/CopyButton'
 import Spinner from '../../components/Spinner'
 import TotpEnroll from './TotpEnroll'
-import { __, sprintf } from '../../utils/i18n'
+import { __ } from '../../utils/i18n'
 import { MIN_VAULT_PASSWORD } from '../../utils/recoveryKit'
-
-// ---------------------------------------------------------------------------
-// Step indicator
-// ---------------------------------------------------------------------------
-
-function StepIndicator({ current, total }) {
-  return (
-    <div className="flex items-center justify-center gap-2 mb-6">
-      {Array.from({ length: total }, (_, i) => i + 1).map((step) => (
-        <div key={step} className="flex items-center gap-2">
-          <div
-            className={[
-              'w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold',
-              step === current
-                ? 'bg-indigo-600 text-white'
-                : step < current
-                ? 'bg-indigo-200 text-indigo-700'
-                : 'bg-gray-200 text-gray-500',
-            ].join(' ')}
-          >
-            {step}
-          </div>
-          {step < total && (
-            <div
-              className={[
-                'w-8 h-0.5',
-                step < current ? 'bg-indigo-400' : 'bg-gray-200',
-              ].join(' ')}
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
+import GateScreen, { GateCard, GateNote } from '../../components/GateScreen'
 
 // ---------------------------------------------------------------------------
 // Step 1: Set password
@@ -64,7 +31,7 @@ function StepPassword({ onNext }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id="vault-password-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <h2 className="text-lg font-semibold text-gray-800">{__('Set Vault Password', 'eleva-crm-for-photographers')}</h2>
       <p className="text-sm text-gray-500">
         {__('Choose a strong password to protect your encrypted data. You will need it each time you unlock the vault.', 'eleva-crm-for-photographers')}
@@ -117,10 +84,7 @@ function StepPassword({ onNext }) {
         />
       </FormField>
 
-      <div className="rounded-md bg-blue-50 border border-blue-100 p-3 space-y-1.5">
-        <p className="text-xs font-medium text-blue-700">
-          {__('Save this credential in your password manager', 'eleva-crm-for-photographers')}
-        </p>
+      <GateNote accent icon={UserRound} title={__('Save this credential in your password manager', 'eleva-crm-for-photographers')}>
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xs text-gray-500">{__('Username', 'eleva-crm-for-photographers')}</span>
@@ -128,16 +92,10 @@ function StepPassword({ onNext }) {
           </div>
           <CopyButton variant="link" text="crm-vault" />
         </div>
-        <p className="text-xs text-gray-400">
+        <p className="mt-2 text-xs text-gray-500">
           {__('Using a separate username prevents your browser from confusing the vault password with your WordPress login.', 'eleva-crm-for-photographers')}
         </p>
-      </div>
-
-      <div className="pt-2">
-        <Button type="submit" variant="primary" className="w-full">
-          {__('Next', 'eleva-crm-for-photographers')}
-        </Button>
-      </div>
+      </GateNote>
     </form>
   )
 }
@@ -197,7 +155,7 @@ function StepStage({ password, onNext }) {
 
 const TOTAL_STEPS = 3
 
-export default function VaultSetup() {
+export default function VaultSetup({ onBack }) {
   const queryClient = useQueryClient()
   const { markUnlocked } = useVault()
   const [step, setStep]         = useState(1)
@@ -225,21 +183,28 @@ export default function VaultSetup() {
     return {}
   }
 
+  const footer = step === 1 ? (
+    <>
+      {onBack && (
+        <Button variant="secondary" onClick={onBack}>
+          {__('Back', 'eleva-crm-for-photographers')}
+        </Button>
+      )}
+      <Button type="submit" form="vault-password-form">
+        {__('Next', 'eleva-crm-for-photographers')}
+      </Button>
+    </>
+  ) : null
+
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-md w-full max-w-md p-8">
-        <div className="text-center mb-6">
-          <span className="text-3xl">&#x1F510;</span>
-          <h1 className="mt-2 text-xl font-bold text-gray-900">{__('Vault Setup', 'eleva-crm-for-photographers')}</h1>
-          <p className="text-xs text-gray-400 mt-1">
-            {sprintf(__('Step %1$d of %2$d', 'eleva-crm-for-photographers'), step, TOTAL_STEPS)}
-          </p>
-        </div>
-
-        {step > 1 && (
-          <StepIndicator current={step} total={TOTAL_STEPS} />
-        )}
-
+    <GateScreen>
+      <GateCard
+        size="md"
+        icon={Lock}
+        title={__('Vault Setup', 'eleva-crm-for-photographers')}
+        steps={{ current: step, total: TOTAL_STEPS }}
+        footer={footer}
+      >
         {step === 1 && <StepPassword onNext={handlePasswordNext} />}
 
         {step === 2 && <StepStage password={password} onNext={handleStaged} />}
@@ -251,7 +216,7 @@ export default function VaultSetup() {
             submitLabel={__('Verify & Unlock', 'eleva-crm-for-photographers')}
           />
         )}
-      </div>
-    </div>
+      </GateCard>
+    </GateScreen>
   )
 }

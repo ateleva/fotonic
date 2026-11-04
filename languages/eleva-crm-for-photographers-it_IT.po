@@ -2202,9 +2202,6 @@ msgstr "Codice di reimpostazione"
 msgid "Use password and authenticator code instead"
 msgstr "Usa invece password e codice dell'autenticatore"
 
-msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below, then enter the 6-digit code it shows."
-msgstr "Apri la tua app di autenticazione (Google Authenticator, Authy, ecc.) e inquadra il codice QR qui sotto, poi inserisci il codice a 6 cifre che mostra."
-
 msgid "Verify code"
 msgstr "Verifica codice"
 
@@ -2306,9 +2303,6 @@ msgstr "Il Vault è disattivato: i tuoi dati personali sono salvati in chiaro e 
 
 msgid "Do you want to protect personal data with the Vault?"
 msgstr "Vuoi proteggere i dati personali con il Vault?"
-
-msgid "The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both. That is the only cost: one more password to enter."
-msgstr "Il Vault è un livello di sicurezza in più. Scegli una password e aggiungi un codice di un'app di autenticazione, e ogni volta che apri Eleva CRM dopo averlo bloccato lo sblocchi con entrambi. È l'unico costo: una password in più da inserire."
 
 msgid "What the Vault protects"
 msgstr "Cosa protegge il Vault"
@@ -3053,3 +3047,15 @@ msgstr "Rate successive"
 
 msgid "%1$s added for the INPS surcharge (%2$s%%)"
 msgstr "%1$s aggiunti per la rivalsa INPS (%2$s%%)"
+
+msgid "The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both."
+msgstr "Il Vault è un livello di sicurezza in più. Scegli una password e aggiungi un codice di un'app di autenticazione, e ogni volta che apri Eleva CRM dopo averlo bloccato lo sblocchi con entrambi."
+
+msgid "That is the only cost: one more password to enter."
+msgstr "È l'unico costo: una password in più da inserire."
+
+msgid "If your computer or phone has a fingerprint reader or face unlock, you can then turn on unlocking with a touch from Settings, under Vault."
+msgstr "Se il tuo computer o telefono ha un lettore di impronte o lo sblocco con il volto, puoi poi attivare lo sblocco con un tocco da Impostazioni, sotto Vault."
+
+msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code, then enter the 6-digit code it shows."
+msgstr "Apri la tua app di autenticazione (Google Authenticator, Authy, ecc.) e inquadra il codice QR, poi inserisci il codice a 6 cifre che mostra."

@@ -2460,10 +2460,6 @@ msgstr ""
 msgid "Use password and authenticator code instead"
 msgstr ""
 
-#: src/src/features/vault/TotpEnroll.jsx:50
-msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code below, then enter the 6-digit code it shows."
-msgstr ""
-
 #: src/src/features/vault/TotpEnroll.jsx:87
 msgid "Verify code"
 msgstr ""
@@ -2598,10 +2594,6 @@ msgstr ""
 
 #: src/src/features/vault/VaultChoiceScreen.jsx:52
 msgid "Do you want to protect personal data with the Vault?"
-msgstr ""
-
-#: src/src/features/vault/VaultChoiceScreen.jsx:55
-msgid "The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both. That is the only cost: one more password to enter."
 msgstr ""
 
 #: src/src/features/vault/VaultChoiceScreen.jsx:61
@@ -3594,4 +3586,20 @@ msgstr ""
 
 #: src/src/features/works/InstallmentsRepeater.jsx:214
 msgid "%1$s added for the INPS surcharge (%2$s%%)"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:45
+msgid "The Vault is an extra layer of security. You choose a password and add a code from an authenticator app, and every time you open Eleva CRM after locking it you unlock it with both."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:46
+msgid "That is the only cost: one more password to enter."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:47
+msgid "If your computer or phone has a fingerprint reader or face unlock, you can then turn on unlocking with a touch from Settings, under Vault."
+msgstr ""
+
+#: src/src/features/vault/TotpEnroll.jsx:61
+msgid "Open your authenticator app (Google Authenticator, Authy, etc.) and scan the QR code, then enter the 6-digit code it shows."
 msgstr ""

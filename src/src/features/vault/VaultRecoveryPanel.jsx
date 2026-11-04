@@ -195,9 +195,9 @@ export default function VaultRecoveryPanel({ onBack, onUnlocked }) {
           <button
             type="button"
             onClick={() => setMode(MODES.HAVE_SECRET)}
-            className="w-full flex items-start gap-3 rounded-lg border border-gray-200 p-4 text-left hover:border-indigo-300 hover:bg-indigo-50 transition-colors"
+            className="w-full flex items-start gap-3 rounded-lg border border-gray-200 p-4 text-left hover:border-gray-300 hover:bg-gray-50 transition-colors"
           >
-            <KeyRound size={20} className="text-indigo-500 shrink-0 mt-0.5" />
+            <KeyRound size={20} className="text-fotonic-primary shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-gray-800">
                 {__('I have my recovery phrase or code', 'eleva-crm-for-photographers')}
@@ -211,9 +211,9 @@ export default function VaultRecoveryPanel({ onBack, onUnlocked }) {
           <button
             type="button"
             onClick={() => setMode(MODES.LOST_ALL)}
-            className="w-full flex items-start gap-3 rounded-lg border border-gray-200 p-4 text-left hover:border-indigo-300 hover:bg-indigo-50 transition-colors"
+            className="w-full flex items-start gap-3 rounded-lg border border-gray-200 p-4 text-left hover:border-gray-300 hover:bg-gray-50 transition-colors"
           >
-            <ShieldAlert size={20} className="text-amber-500 shrink-0 mt-0.5" />
+            <ShieldAlert size={20} className="text-fotonic-primary shrink-0 mt-0.5" />
             <div>
               <p className="text-sm font-medium text-gray-800">
                 {__('I lost everything', 'eleva-crm-for-photographers')}

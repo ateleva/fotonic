@@ -632,3 +632,12 @@
 @media (prefers-reduced-motion: reduce) {
   #fotonic-app-root .ftnc-attention { animation: none; }
 }
+
+/* Tints of the WP admin theme colour, for the pre-app screens (GateScreen.jsx): a light wash and its border.
+   Same colour as every button of the app, never a colour of its own. */
+#fotonic-app-root .ftnc-tint {
+  background-color: color-mix(in srgb, var(--fotonic-primary) 7%, white);
+}
+#fotonic-app-root .ftnc-tint-border {
+  border-color: color-mix(in srgb, var(--fotonic-primary) 22%, white);
+}
