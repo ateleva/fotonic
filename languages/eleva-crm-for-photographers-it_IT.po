@@ -3059,3 +3059,6 @@ msgstr "Apri la tua app di autenticazione (Google Authenticator, Authy, ecc.) e 
 
 msgid "Payment types"
 msgstr "Metodi di pagamento"
+
+msgid "Fingerprint unlock needs a secure page, and the browser does not treat this one as secure. Open the site with a trusted https address, then reload. You can still remove devices here."
+msgstr "Lo sblocco con l'impronta richiede una pagina sicura, e il browser non considera sicura questa. Apri il sito con un indirizzo https attendibile e ricarica la pagina. Qui puoi comunque rimuovere i dispositivi."

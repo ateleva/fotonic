@@ -21,16 +21,21 @@ export function b64uDecode(str) {
   return bytes
 }
 
-/** Fingerprint unlock needs HTTPS, WebAuthn and the PRF extension. Anything else hides the feature. */
-export async function prfSupported() {
+/** Fingerprint unlock needs a secure page (HTTPS), WebAuthn and the PRF extension. `reason` says which one is missing. */
+export async function prfSupport() {
   try {
-    if (!window.isSecureContext || !window.PublicKeyCredential || !window.crypto?.subtle) return false
-    if (typeof PublicKeyCredential.getClientCapabilities !== 'function') return false
+    if (!window.isSecureContext) return { supported: false, reason: 'insecure' }
+    if (!window.PublicKeyCredential || !window.crypto?.subtle) return { supported: false, reason: 'no_webauthn' }
+    if (typeof PublicKeyCredential.getClientCapabilities !== 'function') return { supported: false, reason: 'no_prf' }
     const caps = await PublicKeyCredential.getClientCapabilities()
-    return caps?.['extension:prf'] === true
+    return caps?.['extension:prf'] === true ? { supported: true, reason: '' } : { supported: false, reason: 'no_prf' }
   } catch {
-    return false
+    return { supported: false, reason: 'no_prf' }
   }
+}
+
+export async function prfSupported() {
+  return (await prfSupport()).supported
 }
 
 /** HKDF-SHA256 of the PRF output; the salt is the credential id. Returns 32 bytes. */

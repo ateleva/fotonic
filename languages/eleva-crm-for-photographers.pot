@@ -3603,3 +3603,7 @@ msgstr ""
 #: src/src/features/dashboard/Dashboard.jsx:146
 msgid "Payment types"
 msgstr ""
+
+#: src/src/features/vault/FingerprintPanel.jsx:171
+msgid "Fingerprint unlock needs a secure page, and the browser does not treat this one as secure. Open the site with a trusted https address, then reload. You can still remove devices here."
+msgstr ""

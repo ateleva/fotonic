@@ -14,7 +14,7 @@ import PageHeader from '../../components/PageHeader'
 import Modal from '../../components/Modal'
 import VaultSetup from '../vault/VaultSetup'
 import FingerprintPanel from '../vault/FingerprintPanel'
-import { useFingerprintSupported } from '../../lib/useFingerprintSupported'
+import { useFingerprintSupport } from '../../lib/useFingerprintSupported'
 import ResetVaultFlow from '../vault/ResetVaultFlow'
 import { QrCanvas } from '../vault/TotpEnroll'
 import ConfirmDialog from '../../components/ConfirmDialog'
@@ -394,7 +394,7 @@ export default function SettingsPage() {
   const [showSetup, setShowSetup] = useState(false)
   const [searchParams, setSearchParams] = useSearchParams()
   const { idleWarning } = useVault()
-  const fingerprintSupported = useFingerprintSupported()
+  const fingerprintSupport = useFingerprintSupport()
   // '#/settings?setup=1' (e.g. after a destructive reset) opens the setup wizard.
   const wantsSetup = searchParams.get('setup') === '1'
 
@@ -495,11 +495,9 @@ export default function SettingsPage() {
                   <Accordion label={__('Recovery kit', 'eleva-crm-for-photographers')}>
                     <NewRecoveryKitAction />
                   </Accordion>
-                  {(fingerprintSupported || vaultStatus.fingerprint_count > 0) && (
-                    <Accordion label={__('Unlock with fingerprint', 'eleva-crm-for-photographers')}>
-                      <FingerprintPanel supported={fingerprintSupported} />
-                    </Accordion>
-                  )}
+                  <Accordion label={__('Unlock with fingerprint', 'eleva-crm-for-photographers')}>
+                    <FingerprintPanel supported={fingerprintSupport.supported} reason={fingerprintSupport.reason} />
+                  </Accordion>
                   <Accordion label={__('Reset Vault', 'eleva-crm-for-photographers')}>
                     <ResetVaultAction />
                   </Accordion>

@@ -41,8 +41,9 @@ function errorText(err) {
 /**
  * @param {boolean} supported This browser can turn the fingerprint on. The list and "Remove" show either way,
  *   so a device enrolled elsewhere can still be removed from a browser that cannot enrol.
+ * @param {string} reason Why it cannot: 'insecure' (page not secure), 'no_webauthn', 'no_prf'; '' while the browser is still being asked.
  */
-export default function FingerprintPanel({ supported = true }) {
+export default function FingerprintPanel({ supported = true, reason = '' }) {
   const queryClient = useQueryClient()
   const { isUnlocked } = useVault()
   const [form, setForm] = useState({ password: '', otp: '', label: guessDeviceName() })
@@ -166,7 +167,11 @@ export default function FingerprintPanel({ supported = true }) {
       />
 
       {!supported ? (
-        <p className="text-xs text-gray-400">{__('This browser cannot turn on fingerprint unlock. You can still remove devices here.', 'eleva-crm-for-photographers')}</p>
+        reason === 'insecure' ? (
+          <p className="text-xs text-gray-400">{__('Fingerprint unlock needs a secure page, and the browser does not treat this one as secure. Open the site with a trusted https address, then reload. You can still remove devices here.', 'eleva-crm-for-photographers')}</p>
+        ) : reason === '' ? null : (
+          <p className="text-xs text-gray-400">{__('This browser cannot turn on fingerprint unlock. You can still remove devices here.', 'eleva-crm-for-photographers')}</p>
+        )
       ) : !isUnlocked ? (
         <p className="text-xs text-gray-400">{__('Unlock the vault to turn this on.', 'eleva-crm-for-photographers')}</p>
       ) : (

@@ -1,13 +1,16 @@
 import { useEffect, useState } from 'react'
-import { prfSupported } from './prf'
+import { prfSupport } from './prf'
 
-/** True once the browser says it can do fingerprint unlock; false while checking or when it cannot. */
-export function useFingerprintSupported() {
-  const [supported, setSupported] = useState(false)
+/**
+ * What the browser says about fingerprint unlock. `reason` is '' while checking or when supported, else
+ * 'insecure' (page not treated as secure), 'no_webauthn' or 'no_prf'.
+ */
+export function useFingerprintSupport() {
+  const [state, setState] = useState({ supported: false, reason: '', checking: true })
   useEffect(() => {
     let alive = true
-    prfSupported().then((ok) => { if (alive) setSupported(ok) })
+    prfSupport().then((r) => { if (alive) setState({ ...r, checking: false }) })
     return () => { alive = false }
   }, [])
-  return supported
+  return state
 }
