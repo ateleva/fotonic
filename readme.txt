@@ -4,7 +4,7 @@ Tags: crm, photography, photographer, client-management, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.8
+Stable tag: 1.6.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,6 +162,12 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.6.9 =
+* Fix: after an update, a page of the CRM could fail to open with the message Failed to fetch dynamically imported module, and clearing the cache did not always help. The CRM was loading a second, older copy of itself. It now loads one current copy, so an update takes effect at the first reload.
+* Change: if a page of the CRM is missing right after an update, for example in a tab that was left open, the page now reloads by itself once instead of showing an error.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* Compatibility: works with Eleva CRM Pro 1.6.7.
 
 = 1.6.8 =
 * Change: the CRM is easier to use on a phone or a small screen. The side menu is narrower, page titles and their buttons wrap onto their own rows, the calendar shows small coloured squares and opens an event as a card at the bottom of the screen, and floating cards stay inside the screen. A screen of 13 inches or more is still the most comfortable.
@@ -374,6 +380,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.9 =
+Fixes an error that could appear when opening a page of the CRM after an update, and makes updates take effect at the first reload. Recommended for everyone.
 
 = 1.6.8 =
 Makes the CRM easier to use on a phone or a small screen and explains why the fingerprint option is off when the site address is not secure. Update Eleva CRM Pro to 1.6.7 too.

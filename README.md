@@ -101,6 +101,13 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.6.9
+
+- **Fix:** after an update, a page of the CRM could fail to open with the message Failed to fetch dynamically imported module, and clearing the cache did not always help. The CRM was loading a second, older copy of itself. It now loads one current copy, so an update takes effect at the first reload.
+- **Change:** if a page of the CRM is missing right after an update, for example in a tab that was left open, the page now reloads by itself once instead of showing an error.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.6.7.
+
 ### 1.6.8
 
 - **Change:** the CRM is easier to use on a phone or a small screen. The side menu is narrower, page titles and their buttons wrap onto their own rows, the calendar shows small coloured squares and opens an event as a card at the bottom of the screen, and floating cards stay inside the screen. A screen of 13 inches or more is still the most comfortable.
