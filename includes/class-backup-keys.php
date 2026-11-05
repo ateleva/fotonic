@@ -244,8 +244,12 @@ class Fotonic_Backup_Keys {
      */
     private static function memzero( string &$secret ): void {
         if ( function_exists( 'sodium_memzero' ) ) {
-            sodium_memzero( $secret );
-            return;
+            try {
+                sodium_memzero( $secret );
+                return;
+            } catch ( \Throwable $e ) {
+                unset( $e ); // WordPress's sodium_compat (no libsodium extension on the server) cannot wipe memory and throws.
+            }
         }
         $secret = str_repeat( "\0", strlen( $secret ) );
     }
