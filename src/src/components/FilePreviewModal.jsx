@@ -1,10 +1,11 @@
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Modal from './Modal'
 import Spinner from './Spinner'
 import { fetchFileBlob } from '../api/files'
 import { __ } from '../utils/i18n'
+import { lazyPage } from '../utils/lazyImport'
 
-const PdfViewer = lazy(() => import('./PdfViewer'))
+const PdfViewer = lazyPage(() => import('./PdfViewer'))
 
 const IDLE = { forFile: null, status: 'loading', url: null, data: null, error: null }
 

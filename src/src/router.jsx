@@ -3,25 +3,26 @@
    object, and Fallback/Lazy are internal helpers, never exported. Splitting
    them into a separate file only to satisfy Fast Refresh isn't worth the risk
    on the app's single most load-bearing file for a DX-only concern. */
-import { lazy, Suspense } from 'react'
+import { Suspense } from 'react'
+import { lazyPage } from './utils/lazyImport'
 import { createHashRouter, Navigate, useParams } from 'react-router-dom'
 import Layout from './components/Layout'
 import Spinner from './components/Spinner'
 import { __ } from './utils/i18n'
 
-const Dashboard      = lazy(() => import('./features/dashboard/Dashboard'))
-const CustomerList   = lazy(() => import('./features/customers/CustomerList'))
-const CustomerForm   = lazy(() => import('./features/customers/CustomerForm'))
-const ServiceList    = lazy(() => import('./features/services/ServiceList'))
-const ServiceForm    = lazy(() => import('./features/services/ServiceForm'))
-const WorkList       = lazy(() => import('./features/works/WorkList'))
-const WorkForm       = lazy(() => import('./features/works/WorkForm'))
-const MemoryCardForm = lazy(() => import('./features/memory-cards/MemoryCardForm'))
-const StoragePage = lazy(() => import('./features/storage/StoragePage'))
-const BackupLocationForm = lazy(() => import('./features/storage/BackupLocationForm'))
-const SettingsPage   = lazy(() => import('./features/settings/SettingsPage'))
-const ChangelogPage  = lazy(() => import('./features/changelog/ChangelogPage'))
-const CalendarView   = lazy(() => import('./features/calendar/CalendarView').then(m => ({ default: m.CalendarView })))
+const Dashboard      = lazyPage(() => import('./features/dashboard/Dashboard'))
+const CustomerList   = lazyPage(() => import('./features/customers/CustomerList'))
+const CustomerForm   = lazyPage(() => import('./features/customers/CustomerForm'))
+const ServiceList    = lazyPage(() => import('./features/services/ServiceList'))
+const ServiceForm    = lazyPage(() => import('./features/services/ServiceForm'))
+const WorkList       = lazyPage(() => import('./features/works/WorkList'))
+const WorkForm       = lazyPage(() => import('./features/works/WorkForm'))
+const MemoryCardForm = lazyPage(() => import('./features/memory-cards/MemoryCardForm'))
+const StoragePage = lazyPage(() => import('./features/storage/StoragePage'))
+const BackupLocationForm = lazyPage(() => import('./features/storage/BackupLocationForm'))
+const SettingsPage   = lazyPage(() => import('./features/settings/SettingsPage'))
+const ChangelogPage  = lazyPage(() => import('./features/changelog/ChangelogPage'))
+const CalendarView   = lazyPage(() => import('./features/calendar/CalendarView').then(m => ({ default: m.CalendarView })))
 
 function Fallback() {
   return (
