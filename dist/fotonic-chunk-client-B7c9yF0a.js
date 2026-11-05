@@ -1,1 +1,0 @@
-var e=window.FotonicApp?.restUrl??`/wp-json/fotonic/v1/`,t=window.FotonicApp?.nonce??``;async function n(n,r={}){let i=await fetch(e+n,{headers:{"Content-Type":`application/json`,"X-WP-Nonce":t,...r.headers},...r});if(!i.ok){let e=await i.json().catch(()=>({})),t=Error(e.message??`HTTP ${i.status}`);throw t.status=i.status,t.code=e.code,t}return i.json()}export{n as t};
