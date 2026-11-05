@@ -101,6 +101,12 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.6.10
+
+- **Fix:** on some hosting plans, turning on the Vault, creating the backup keys or making a backup ended in a critical error. These steps now work on every hosting plan.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.6.7.
+
 ### 1.6.9
 
 - **Fix:** after an update, a page of the CRM could fail to open with the message Failed to fetch dynamically imported module, and clearing the cache did not always help. The CRM was loading a second, older copy of itself. It now loads one current copy, so an update takes effect at the first reload.

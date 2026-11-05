@@ -4,7 +4,7 @@ Tags: crm, photography, photographer, client-management, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.9
+Stable tag: 1.6.10
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,6 +162,11 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.6.10 =
+* Fix: on some hosting plans, turning on the Vault, creating the backup keys or making a backup ended in a critical error. These steps now work on every hosting plan.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* Compatibility: works with Eleva CRM Pro 1.6.7.
 
 = 1.6.9 =
 * Fix: after an update, a page of the CRM could fail to open with the message Failed to fetch dynamically imported module, and clearing the cache did not always help. The CRM was loading a second, older copy of itself. It now loads one current copy, so an update takes effect at the first reload.
@@ -380,6 +385,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.6.10 =
+Fixes a critical error that could appear when turning on the Vault, creating the backup keys or making a backup on some hosting plans. Recommended for everyone.
 
 = 1.6.9 =
 Fixes an error that could appear when opening a page of the CRM after an update, and makes updates take effect at the first reload. Recommended for everyone.
