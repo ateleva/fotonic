@@ -3,8 +3,8 @@
 **Your computer is gone. You have a backup file and you remember your vault password.
 This page opens the file and gives you your data as readable files.**
 
-Note: this tool reads a backup. It does not load it back into the plugin, because importing
-a backup into Eleva CRM is not available yet.
+Note: this tool reads a backup and gives you your data as files. To put a backup back into
+Eleva CRM, use Restore in the plugin (Settings, Backup tab): no tool is needed for that.
 
 You do not need WordPress. You do not need the plugin. You do not need your old
 computer, your old website, or an internet connection. You need the backup file,
@@ -107,16 +107,16 @@ That's it. Your data is in `out`.
 | File | What it is |
 |---|---|
 | `out/data.json` | Every record: customers, works, services, memory cards, settings. A text file: open it with any text editor, or give it to whoever rebuilds your site. |
-| `out/files/` | Your attachments (contracts, invoices, PDFs, photos), decrypted and byte-for-byte identical to the originals. |
+| `out/files/` | Your attachments (contracts, invoices, PDFs, photos), decrypted and byte-for-byte identical to the originals. A document of a work is named after its real name (the plugin keeps that name protected; the tool opens it with your master key). |
 | `out/manifest.json` | A copy of the archive's inventory: what was in it, how big, and the checksums. |
 
 Personal details inside `data.json` (names, emails, phone numbers, addresses) and the
 free-text notes (work notes, notes on a memory card or a service inside a work, delivery notes,
-backup location notes, service titles, prices and notes; with Eleva CRM Pro also collaborators, suppliers, products, expense
+backup location notes, the labels of a work's documents, service titles, prices and notes; with Eleva CRM Pro also collaborators, suppliers, products, expense
 notes and quote notes) stay encrypted exactly as the plugin stored them in the database
 (the ones that start with `f1:` are the notes, titles and other free-text fields). That is deliberate: your
-customers' details never sit in a plain text file. Work titles, prices, dates and payment
-status are readable.
+customers' details never sit in a plain text file. Prices, dates and payment
+status are readable. The one exception is the titles of customers, works and quotes (and the name of a new customer on a quote): the tool opens those with the credential you give it, so the decrypted `data.json` shows the names again.
 
 ---
 

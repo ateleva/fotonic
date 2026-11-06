@@ -23,6 +23,25 @@
  * includes/class-backup-archive.php docblocks), never by calling plugin code.
  * If this tool and the plugin ever disagree, the documented format is wrong.
  *
+ * The name of a work document (folder fotonic/work-files, 1.7.0) is the attachment's post_title in the
+ * 'f1:' format (AES-256-GCM, key HKDF-SHA256(master key, 'ftnc-field-v1'), see
+ * eleva_bd_open_field()); its file is named at random inside the archive, so this tool names the output
+ * file after the decrypted title.
+ *
+ * The titles of customers, works and quotes (phase 15) are 'f1:' texts too: after the files are written the tool opens them
+ * in data.json ("post_title" and "_ftnc_quote_customer_title"), so a decrypted archive shows the names. Notes and personal
+ * details stay as stored. See eleva_bd_open_titles().
+ *
+ * CONTRACT with the in-plugin restore (1.7.0): Fotonic_Restore_Reader
+ * (includes/class-restore-reader.php) opens the same archives with the plugin's
+ * own classes. The two must agree on: the manifest "format" (1) and member
+ * names, the key.json "scheme" (2) and its fields, the PBKDF2 salt used as the
+ * stored base64 text, the 'w1:' wraps, the sealed archive key, and the FTNCBK01
+ * and FTNCFIL1 layouts. Change any of them and both this tool and the reader
+ * (and the reader's unit test) change in the same commit. One
+ * difference is deliberate: this tool also checks the 6-digit code; the reader
+ * does not, because the code is not part of any key.
+ *
  * WHAT IT CANNOT DO
  * -----------------
  * Nothing here can recover an archive if the vault password, the recovery code
@@ -227,7 +246,7 @@ function eleva_bd_run( array $options ) {
 			eleva_bd_say( '--data-only given: skipped ' . count( $file_members ) . ' attachment(s).' );
 		}
 	} elseif ( ! empty( $file_members ) ) {
-		$names = eleva_bd_attachment_names( $data_json_path );
+		$names = eleva_bd_attachment_names( $data_json_path, $mk );
 		$files_dir = $out_dir . DIRECTORY_SEPARATOR . 'files';
 		eleva_bd_make_dir( $files_dir );
 
@@ -261,6 +280,13 @@ function eleva_bd_run( array $options ) {
 			eleva_bd_say( '[ok] files/' . basename( $target ) . '  (' . eleva_bd_human_bytes( filesize( $target ) ) . ', SHA-256 matches the original' . ( null !== $opened ? ', Vault layer removed' : '' ) . ')' );
 		}
 		eleva_bd_say( '[ok] ' . $done . ' file(s) restored, all byte-identical to the originals.' );
+	}
+
+	// The titles of customers, works and quotes (and the name of a new customer on a quote) are 'f1:' texts: open them, so the
+	// archive shows the names again. Last, because the document names above are read from the original values.
+	$opened_titles = eleva_bd_open_titles( $data_json_path, $mk );
+	if ( $opened_titles > 0 ) {
+		eleva_bd_say( '[ok] ' . $opened_titles . ' title(s) of customers, works and quotes opened in data.json (notes and personal details stay as stored).' );
 	}
 
 	eleva_bd_say( '' );
@@ -1218,10 +1244,11 @@ function eleva_bd_write_file( $path, $contents ) {
  * contain customer names). Falls back to an empty map for very large payloads
  * so a huge data.json is never loaded into memory just for nicer names.
  *
- * @param string $data_json_path Path to the decrypted data.json.
+ * @param string      $data_json_path Path to the decrypted data.json.
+ * @param string|null $mk             Raw master key: opens the protected name of a work document.
  * @return array
  */
-function eleva_bd_attachment_names( $data_json_path ) {
+function eleva_bd_attachment_names( $data_json_path, $mk = null ) {
 	$names = array();
 
 	$size = filesize( $data_json_path );
@@ -1239,7 +1266,22 @@ function eleva_bd_attachment_names( $data_json_path ) {
 			continue;
 		}
 		$source = '';
-		if ( ! empty( $attachment['attached_file'] ) ) {
+		$is_work_doc = ! empty( $attachment['attached_file'] ) && 0 === strpos( (string) $attachment['attached_file'], 'fotonic/work-files/' );
+		if ( $is_work_doc && ! empty( $attachment['post_title'] ) ) {
+			// A document of a work: the real name is the title. Protected ('f1:') with the master key; without it
+			// (or when it cannot be opened) the random file name stays.
+			$title = (string) $attachment['post_title'];
+			$name  = 0 === strpos( $title, 'f1:' ) ? ( null !== $mk ? eleva_bd_open_field( $title, $mk ) : null ) : ( 0 === strpos( $title, 'f0:' ) ? substr( $title, 3 ) : $title );
+			if ( null !== $name && '' !== $name ) {
+				$source = $name;
+				if ( '' === pathinfo( $name, PATHINFO_EXTENSION ) ) {
+					$source .= '.' . pathinfo( eleva_bd_plain_name( (string) $attachment['attached_file'] ), PATHINFO_EXTENSION );
+				}
+			}
+		}
+		if ( '' !== $source ) {
+			// The protected name was opened above.
+		} elseif ( ! empty( $attachment['attached_file'] ) ) {
 			$source = (string) $attachment['attached_file'];
 		} elseif ( ! empty( $attachment['post_title'] ) ) {
 			$source = (string) $attachment['post_title'];
@@ -1250,6 +1292,97 @@ function eleva_bd_attachment_names( $data_json_path ) {
 		}
 	}
 	return $names;
+}
+
+/**
+ * Open an 'f1:' protected text (names and labels of the work documents).
+ *
+ *   value : "f1:" . base64( iv[12] | tag[16] | ciphertext )
+ *   key   : HKDF-SHA256(master key, info "ftnc-field-v1", 32 bytes)
+ *   aad   : the string "ftnc-field-v1"
+ *
+ * @param string $value Stored text with the f1: prefix.
+ * @param string $mk    Raw 32-byte master key.
+ * @return string|null The text, or null when it cannot be opened.
+ */
+function eleva_bd_open_field( $value, $mk ) {
+	$raw = base64_decode( substr( $value, 3 ), true );
+	if ( false === $raw || strlen( $raw ) < 28 || 32 !== strlen( $mk ) ) {
+		return null;
+	}
+	$key   = hash_hkdf( 'sha256', $mk, 32, 'ftnc-field-v1' );
+	$plain = openssl_decrypt( substr( $raw, 28 ), ELEVA_BD_GCM, $key, OPENSSL_RAW_DATA, substr( $raw, 0, 12 ), substr( $raw, 12, 16 ), 'ftnc-field-v1' );
+	return false === $plain ? null : $plain;
+}
+
+/**
+ * Open the 'f1:' titles in data.json in place: the "post_title" of any record and the "_ftnc_quote_customer_title" meta. The file is
+ * rewritten in blocks (a backup can be large) through a temporary file; a value that cannot be opened stays as stored.
+ *
+ * @param string $path Path to the decrypted data.json.
+ * @param string $mk   Raw 32-byte master key.
+ * @return int Number of titles opened.
+ */
+function eleva_bd_open_titles( $path, $mk ) {
+	$in = fopen( $path, 'rb' );
+	if ( false === $in ) {
+		return 0;
+	}
+	$tmp = $path . '.titles';
+	$out = fopen( $tmp, 'wb' );
+	if ( false === $out ) {
+		fclose( $in );
+		return 0;
+	}
+	$pattern = '~"(post_title|_ftnc_quote_customer_title)"(\s*:\s*)"(f1:[A-Za-z0-9+\\\\/=]*)"~'; // The JSON text of a value: base64 with \/ for a slash.
+	$count   = 0;
+	$opener  = function ( array $m ) use ( $mk, &$count ) {
+		$value = json_decode( '"' . $m[3] . '"' );
+		$plain = is_string( $value ) ? eleva_bd_open_field( $value, $mk ) : null;
+		if ( null === $plain ) {
+			return $m[0];
+		}
+		$count++;
+		return '"' . $m[1] . '"' . $m[2] . json_encode( $plain, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE );
+	};
+	$carry = '';
+	while ( ! feof( $in ) ) {
+		$chunk = fread( $in, 1048576 );
+		if ( false === $chunk ) {
+			break;
+		}
+		$buf = $carry . $chunk;
+		$cut = strlen( $buf );
+		if ( ! feof( $in ) ) {
+			// Keep the end for the next block: a title (at most a few KB once encrypted) or its key may be cut there. A match that
+			// straddles the cut moves the cut before it.
+			$cut = max( 0, $cut - 4096 );
+			if ( preg_match_all( $pattern, $buf, $found, PREG_OFFSET_CAPTURE ) ) {
+				foreach ( $found[0] as $hit ) {
+					if ( $hit[1] < $cut && $hit[1] + strlen( $hit[0] ) > $cut ) {
+						$cut = $hit[1];
+					}
+				}
+			}
+		}
+		$head  = substr( $buf, 0, $cut );
+		$carry = substr( $buf, $cut );
+		fwrite( $out, (string) preg_replace_callback( $pattern, $opener, $head ) );
+	}
+	fwrite( $out, (string) preg_replace_callback( $pattern, $opener, $carry ) );
+	fclose( $in );
+	fclose( $out );
+	if ( $count > 0 ) {
+		rename( $tmp, $path );
+	} else {
+		unlink( $tmp );
+	}
+	return $count;
+}
+
+/** "name.pdf.enc" -> "name.pdf". */
+function eleva_bd_plain_name( $name ) {
+	return '.enc' === substr( $name, -4 ) ? substr( $name, 0, -4 ) : $name;
 }
 
 /**
