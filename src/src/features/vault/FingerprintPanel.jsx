@@ -119,34 +119,35 @@ export default function FingerprintPanel({ supported = true, reason = '' }) {
       {devices.length > 0 ? (
         <div className="rounded-md border border-gray-200 divide-y divide-gray-100">
           {devices.map((d) => (
-            <div key={d.cred_id} className="px-3 py-2 text-sm text-gray-700">
-              <div className="flex items-center gap-2 min-w-0">
-                <Fingerprint size={14} className="text-indigo-500 shrink-0" />
-                <span className="font-medium min-w-0 break-words">{d.label}</span>
-              </div>
-              <p className="mt-1 text-xs text-gray-400 break-all">{d.host}</p>
-              <p className="mt-1 text-xs text-gray-400">
-                {d.last_used
-                  ? sprintf(__('Last used: %s', 'eleva-crm-for-photographers'), new Date(d.last_used * 1000).toLocaleString())
-                  : __('Not used yet', 'eleva-crm-for-photographers')}
-              </p>
-              {d.host !== here && (
-                <p className="mt-1 text-xs text-amber-700">
-                  {sprintf(__('Turned on for %s. It will not work on this address: turn it on again here, or remove it.', 'eleva-crm-for-photographers'), d.host)}
+            <div key={d.cred_id} className="px-3 py-2 text-sm text-gray-700 flex items-center gap-3">
+              {/* Texts on the left, the Remove button on the right and centred, so a row stays as low as its texts. */}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 min-w-0">
+                  <Fingerprint size={14} className="text-indigo-500 shrink-0" />
+                  <span className="font-medium min-w-0 break-words">{d.label}</span>
+                </div>
+                <p className="mt-1 text-xs text-gray-400 break-all">{d.host}</p>
+                <p className="mt-1 text-xs text-gray-400">
+                  {d.last_used
+                    ? sprintf(__('Last used: %s', 'eleva-crm-for-photographers'), new Date(d.last_used * 1000).toLocaleString())
+                    : __('Not used yet', 'eleva-crm-for-photographers')}
                 </p>
-              )}
-              <div className="mt-2 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setToRemove(d)}
-                  disabled={!isUnlocked}
-                  title={isUnlocked ? undefined : __('Unlock the vault to remove a device.', 'eleva-crm-for-photographers')}
-                  className="inline-flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-50"
-                >
-                  <Trash2 size={12} />
-                  {__('Remove', 'eleva-crm-for-photographers')}
-                </button>
+                {d.host !== here && (
+                  <p className="mt-1 text-xs text-amber-700">
+                    {sprintf(__('Turned on for %s. It will not work on this address: turn it on again here, or remove it.', 'eleva-crm-for-photographers'), d.host)}
+                  </p>
+                )}
               </div>
+              <button
+                type="button"
+                onClick={() => setToRemove(d)}
+                disabled={!isUnlocked}
+                title={isUnlocked ? undefined : __('Unlock the vault to remove a device.', 'eleva-crm-for-photographers')}
+                className="shrink-0 inline-flex items-center gap-1 rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+              >
+                <Trash2 size={12} />
+                {__('Remove', 'eleva-crm-for-photographers')}
+              </button>
             </div>
           ))}
         </div>

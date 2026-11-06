@@ -41,7 +41,7 @@ export default function StoragePage() {
 
   return (
     <div className="p-6">
-      <PageHeader title={__('Storage', 'eleva-crm-for-photographers')} action={addButton} separator={false} />
+      <PageHeader title={__('Storage', 'eleva-crm-for-photographers')} action={addButton} separator={false} trashType={{ cards: 'ftnc_memory_card', backups: 'ftnc_backup_loc' }[current.key]} />
 
       {/* Same buttons as the rest of the app: the chosen one is the primary button, the others the secondary. */}
       <nav aria-label={__('Storage sections', 'eleva-crm-for-photographers')} className="flex flex-wrap gap-2 mb-4">

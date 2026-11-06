@@ -877,3 +877,18 @@
 }
 #fotonic-app-root .ftnc-settings-bar:empty { display: none; }
 #fotonic-app-root .ftnc-settings-bar button { white-space: nowrap; flex: none; }
+
+/* Checkbox of a list (the Bin): WordPress admin makes every checkbox 25px on a narrow screen (and shrinks it in a flex row),
+   which looks huge in a list. This one is the desktop size, 1rem, everywhere, and keeps its size in a row. The tick of the
+   checked state is WP's own drawing, so it gets WP's desktop box for it. */
+#fotonic-app-root input.ftnc-check[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  min-width: 1rem;
+  flex: none;
+}
+#fotonic-app-root input.ftnc-check[type="checkbox"]:checked::before {
+  margin: -0.1875rem 0 0 -0.25rem;
+  width: 1.3125rem;
+  height: 1.3125rem;
+}

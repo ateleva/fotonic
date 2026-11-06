@@ -185,6 +185,18 @@ class Fotonic_REST_API {
 			'permission_callback' => [ __CLASS__, 'vault_download_permission' ],
 		] );
 
+		register_rest_route( self::NAMESPACE, '/work-files/skipped', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'skipped_work_files' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
+		register_rest_route( self::NAMESPACE, '/work-files', [
+			'methods'             => \WP_REST_Server::CREATABLE,
+			'callback'            => [ __CLASS__, 'upload_work_file' ],
+			'permission_callback' => [ __CLASS__, 'admin_permission' ],
+		] );
+
 		// ------------------------------------------------------------------
 		// Backup: manual encrypted archive, no destination.
 		// ------------------------------------------------------------------
@@ -740,6 +752,55 @@ class Fotonic_REST_API {
 	}
 
 	/**
+	 * POST /work-files (multipart, field `file`)
+	 * Stores one document of a work in the private folder, under the Vault layer when a Vault is set up.
+	 * Vault set up and locked: 423 (the name could not be protected). A cipher job or a restore running: 423.
+	 */
+	public static function upload_work_file( \WP_REST_Request $req ): \WP_REST_Response {
+		wp_raise_memory_limit( 'admin' ); // The document is encrypted in memory: ask for the room WordPress allows the admin.
+		$job = self::encrypt_job_response();
+		if ( $job ) {
+			return $job;
+		}
+		$key = Fotonic_Vault::get_session_key();
+		if ( null === $key && Fotonic_Vault::is_setup() ) {
+			return self::vault_locked_response();
+		}
+		$files = $req->get_file_params();
+		if ( empty( $files['file'] ) || ! is_array( $files['file'] ) ) {
+			return new \WP_REST_Response( [ 'code' => 'ftnc_file_upload', 'message' => __( 'The file could not be uploaded.', 'eleva-crm-for-photographers' ) ], 400 );
+		}
+		$out = Fotonic_Work_Files::store_upload( $files['file'], $key, get_current_user_id() );
+		if ( is_wp_error( $out ) ) {
+			$data = $out->get_error_data();
+			return new \WP_REST_Response( [ 'code' => $out->get_error_code(), 'message' => $out->get_error_message() ], is_array( $data ) && isset( $data['status'] ) ? (int) $data['status'] : 400 );
+		}
+		return new \WP_REST_Response( array_merge( [ 'type' => 'attachment', 'label' => '' ], $out ), 201 );
+	}
+
+	/**
+	 * GET /work-files/skipped
+	 * The documents the last "encrypt existing data" job left in the media library, with the reason and a name
+	 * (their own: a library file has a plain name). `uses` says where else a shared file is used.
+	 */
+	public static function skipped_work_files(): \WP_REST_Response {
+		$out = [];
+		foreach ( Fotonic_Work_Files::skipped_list() as $row ) {
+			$id = (int) $row['id'];
+			if ( null === get_post( $id ) ) {
+				continue; // Gone since.
+			}
+			$out[] = [
+				'id'       => $id,
+				'filename' => wp_basename( (string) get_attached_file( $id ) ),
+				'why'      => (string) $row['why'],
+				'uses'     => array_values( (array) ( $row['uses'] ?? [] ) ),
+			];
+		}
+		return new \WP_REST_Response( [ 'files' => $out ], 200 );
+	}
+
+	/**
 	 * GET /vault-download/{id}
 	 * Streams WP attachment file. Permission callback already checks vault + capability.
 	 *
@@ -778,37 +839,11 @@ class Fotonic_REST_API {
 			);
 		}
 
-		global $wpdb;
-		// Narrow candidates with LIKE (catches all positions: [10], [10,...], [...,10], [...,10,...]),
-		// then decode JSON and confirm exact integer membership server-side. Avoids substring false-positives
-		// (ID 1 vs [10,11]) and works regardless of array position/whitespace.
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Ownership check must be real-time; caching stale results would allow IDOR. Prepared query, no user-controlled table name.
-		$candidates = $wpdb->get_col( $wpdb->prepare(
-			"SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_ftnc_work_files' AND meta_value LIKE %s",
-			'%' . $wpdb->esc_like( (string) $id ) . '%'
-		) );
-		$linked = false;
-		foreach ( $candidates as $raw ) {
-			$decoded = json_decode( $raw, true );
-			if ( ! is_array( $decoded ) ) {
-				continue;
-			}
-			foreach ( $decoded as $entry ) {
-				if ( is_numeric( $entry ) ) {
-					$maybe_id = (int) $entry;
-				} elseif ( is_array( $entry ) && ( $entry['type'] ?? 'attachment' ) !== 'link' ) {
-					// Link entries have no local attachment ID to protect here.
-					$maybe_id = (int) ( $entry['id'] ?? 0 );
-				} else {
-					continue;
-				}
-				if ( $maybe_id === (int) $id ) {
-					$linked = true;
-					break 2;
-				}
-			}
-		}
-		if ( ! $linked ) {
+		wp_raise_memory_limit( 'admin' ); // A document under the Vault layer is decrypted in memory.
+
+		// Ownership: a work lists the file, or it is the caller's own upload that no work lists yet
+		// (a person who just added it in a form must be able to preview it before saving).
+		if ( ! Fotonic_Work_Files::can_open( $id, get_current_user_id() ) ) {
 			return new \WP_REST_Response( array( 'code' => 'forbidden', 'message' => __( 'Access denied.', 'eleva-crm-for-photographers' ) ), 403 );
 		}
 
@@ -827,7 +862,19 @@ class Fotonic_REST_API {
 
 		// Sanitize headers before output.
 		$mime     = sanitize_mime_type( $post->post_mime_type );
-		$filename = sanitize_file_name( self::attachment_download_name( $id, $real_file ) );
+		if ( Fotonic_Work_Files::is_work_file( $id ) ) {
+			// The name of one of our files is stored under the Vault layer: the real name, or a refusal.
+			$real_name = Fotonic_Work_Files::name_of( $id, Fotonic_Vault::get_session_key() );
+			if ( null === $real_name ) {
+				return new \WP_REST_Response(
+					[ 'code' => 'file_unreadable', 'message' => __( 'This file is encrypted and cannot be opened with the current Vault key.', 'eleva-crm-for-photographers' ) ],
+					422
+				);
+			}
+			$filename = sanitize_file_name( $real_name );
+		} else {
+			$filename = sanitize_file_name( self::attachment_download_name( $id, $real_file ) );
+		}
 		// Strip any CRLF that could cause header injection.
 		$filename = str_replace( [ "\r", "\n" ], '', $filename );
 
@@ -1966,11 +2013,13 @@ class Fotonic_REST_API {
 		if ( null !== Fotonic_Vault::get_session_key() || ! Fotonic_Vault::is_setup() ) {
 			return null;
 		}
-		$plain = ( isset( $body['people'] ) && is_array( $body['people'] ) && self::rows_have_plain_text( $body['people'], array_merge( self::PEOPLE_RANDOM_FIELDS, self::PEOPLE_DETERMINISTIC_FIELDS ) ) )
+		$plain = ( Fotonic_Titles::enabled() && isset( $body['title'] ) && is_string( $body['title'] ) && '' !== trim( $body['title'] ) ) // The title of a customer or a work (a title that is an ordinary field while the gate is closed).
+			|| ( isset( $body['people'] ) && is_array( $body['people'] ) && self::rows_have_plain_text( $body['people'], array_merge( self::PEOPLE_RANDOM_FIELDS, self::PEOPLE_DETERMINISTIC_FIELDS ) ) )
 			|| ( isset( $body['event_addresses'] ) && is_array( $body['event_addresses'] ) && self::rows_have_plain_text( $body['event_addresses'], [ 'street' ] ) )
 			|| ( isset( $body['notes'] ) && is_string( $body['notes'] ) && '' !== $body['notes'] )
 			|| ( isset( $body['memory_cards'] ) && is_array( $body['memory_cards'] ) && self::rows_have_plain_text( $body['memory_cards'], [ 'notes' ] ) )
 			|| ( isset( $body['services'] ) && is_array( $body['services'] ) && self::rows_have_plain_text( $body['services'], [ 'notes_override' ] ) )
+			|| ( isset( $body['files'] ) && is_array( $body['files'] ) && self::rows_have_plain_text( $body['files'], [ 'label' ] ) )
 			|| ( isset( $body['delivery']['notes'] ) && is_string( $body['delivery']['notes'] ) && '' !== $body['delivery']['notes'] )
 			|| ( isset( $body['delivery']['password'] ) && is_string( $body['delivery']['password'] ) && '' !== $body['delivery']['password'] );
 		return self::locked_response_if( $plain );
@@ -1981,8 +2030,14 @@ class Fotonic_REST_API {
 		if ( ! Fotonic_Vault_Encrypt_Existing::is_blocking() ) {
 			return null;
 		}
+		$restoring = class_exists( 'Fotonic_Restore_Job' ) && Fotonic_Restore_Job::is_blocking();
 		return new \WP_REST_Response(
-			[ 'code' => 'encrypt_in_progress', 'message' => __( 'Your data is being encrypted. Wait until it has finished, then save again.', 'eleva-crm-for-photographers' ) ],
+			[
+				'code'    => 'encrypt_in_progress',
+				'message' => $restoring
+					? __( 'A backup is being restored. Wait until it has finished, then save again.', 'eleva-crm-for-photographers' )
+					: __( 'Your data is being encrypted. Wait until it has finished, then save again.', 'eleva-crm-for-photographers' ),
+			],
 			423
 		);
 	}
@@ -2032,33 +2087,35 @@ class Fotonic_REST_API {
 
 	public static function get_customers( \WP_REST_Request $req ): \WP_REST_Response {
 		$search   = (string) $req->get_param( 'search' );
-		$page     = (int) $req->get_param( 'page' );
-		$per_page = (int) $req->get_param( 'per_page' );
+		$page     = max( 1, (int) $req->get_param( 'page' ) );
+		$per_page = max( 1, (int) $req->get_param( 'per_page' ) );
 
-		$args = [
-			'post_type'      => 'ftnc_customer',
-			'post_status'    => 'publish',
-			'posts_per_page' => $per_page,
-			'paged'          => $page,
-			// The ID breaks ties between equal names, so paging never repeats or skips a customer.
-			'orderby'        => [ 'title' => 'ASC', 'ID' => 'ASC' ],
-		];
-
-		if ( ! empty( $search ) ) {
-			$args['s'] = $search;
-		}
-
-		$query = new \WP_Query( $args );
+		// A title may be ciphertext, so the database can neither sort nor search it: the order (natural, case and accent insensitive,
+		// the ID breaks ties so paging never repeats or skips a customer) and the search (every word, also in the name, email and phone
+		// of the people) are done in PHP over all customers, and only the page asked for is loaded.
+		$ids   = Fotonic_Titles::sorted_ids( 'ftnc_customer', Fotonic_Vault::get_session_key(), $search );
+		$total = count( $ids );
+		$slice = array_slice( $ids, ( $page - 1 ) * $per_page, $per_page );
 		$data  = [];
 
-		foreach ( $query->posts as $post ) {
-			$data[] = self::format_customer( $post );
+		if ( ! empty( $slice ) ) {
+			$query = new \WP_Query( [
+				'post_type'      => 'ftnc_customer',
+				'post_status'    => 'publish',
+				'post__in'       => $slice,
+				'orderby'        => 'post__in',
+				'posts_per_page' => count( $slice ),
+				'no_found_rows'  => true,
+			] );
+			foreach ( $query->posts as $post ) {
+				$data[] = self::format_customer( $post );
+			}
 		}
 
 		return new \WP_REST_Response( [
 			'data'  => $data,
-			'total' => (int) $query->found_posts,
-			'pages' => (int) $query->max_num_pages,
+			'total' => $total,
+			'pages' => (int) ceil( $total / $per_page ),
 		], 200 );
 	}
 
@@ -2101,13 +2158,12 @@ class Fotonic_REST_API {
 			);
 		}
 
-		// wp_insert_post() and update_post_meta() unslash their input: wp_slash() keeps
-		// backslashes and the \u00e8 escapes of wp_json_encode() intact.
-		$post_id = wp_insert_post( wp_slash( [
+		// The title is encrypted when the Vault has a key; Fotonic_Titles::insert() gives the post a slug that says nothing about it
+		// and wp_slash()es the arguments (wp_insert_post() unslashes its input: backslashes and the \u00e8 escapes survive).
+		$post_id = Fotonic_Titles::insert( [
 			'post_type'   => 'ftnc_customer',
 			'post_status' => 'publish',
-			'post_title'  => $title,
-		] ), true );
+		], $title, Fotonic_Vault::get_session_key() );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_REST_Response(
@@ -2147,7 +2203,10 @@ class Fotonic_REST_API {
 		if ( isset( $body['title'] ) ) {
 			$title = sanitize_text_field( $body['title'] );
 			if ( ! empty( $title ) ) {
-				wp_update_post( wp_slash( [ 'ID' => $id, 'post_title' => $title ] ) );
+				$renamed = Fotonic_Titles::rename( $id, $title, Fotonic_Vault::get_session_key() );
+				if ( is_wp_error( $renamed ) ) {
+					return new \WP_REST_Response( [ 'code' => 'update_failed', 'message' => $renamed->get_error_message() ], 500 );
+				}
 			}
 		}
 
@@ -2331,8 +2390,10 @@ class Fotonic_REST_API {
 			'meta_key'       => '_ftnc_event_date', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
 		];
 
-		if ( ! empty( $search ) ) {
-			$args['s'] = $search;
+		// The search is done in PHP over the (possibly encrypted) titles; the matching IDs go into the query below, so the order, the
+		// paging and the other filters work as before. The notes of a work are no longer searched (they are under the Vault too).
+		if ( '' !== trim( $search ) ) {
+			$args['post__in'] = Fotonic_Titles::search_ids( 'ftnc_work', $search, Fotonic_Vault::get_session_key() ) ?: [ 0 ];
 		}
 
 		if ( $customer_id > 0 ) {
@@ -2357,7 +2418,8 @@ class Fotonic_REST_API {
 
 		$alert_ids = Fotonic_Backup_Loc_CPT::alert_work_ids();
 		if ( rest_sanitize_boolean( $req->get_param( 'storage_alert' ) ) ) {
-			$args['post__in'] = $alert_ids ?: [ 0 ];
+			$wanted           = $alert_ids ?: [ 0 ];
+			$args['post__in'] = isset( $args['post__in'] ) ? ( array_values( array_intersect( $args['post__in'], $wanted ) ) ?: [ 0 ] ) : $wanted;
 		}
 
 		$query = new \WP_Query( $args );
@@ -2415,12 +2477,11 @@ class Fotonic_REST_API {
 			return $payments_error;
 		}
 
-		$post_id = wp_insert_post( wp_slash( [
+		$post_id = Fotonic_Titles::insert( [
 			'post_type'    => 'ftnc_work',
 			'post_status'  => 'publish',
-			'post_title'   => $title,
 			'post_content' => self::field_to_store( isset( $body['notes'] ) ? wp_kses_post( $body['notes'] ) : '', '', Fotonic_Vault::get_session_key() ),
-		] ), true );
+		], $title, Fotonic_Vault::get_session_key() );
 
 		if ( is_wp_error( $post_id ) ) {
 			return new \WP_REST_Response(
@@ -2467,11 +2528,18 @@ class Fotonic_REST_API {
 			return $payments_error;
 		}
 
-		$update = [ 'ID' => $id ];
+		$update       = [ 'ID' => $id ];
+		$neutral_slug = false;
 		if ( isset( $body['title'] ) ) {
 			$title = sanitize_text_field( $body['title'] );
 			if ( ! empty( $title ) ) {
-				$update['post_title'] = $title;
+				try {
+					$targs = Fotonic_Titles::save_args( $title, (string) $post->post_title, Fotonic_Vault::get_session_key(), 'ftnc_work', $id );
+				} catch ( \RuntimeException $e ) {
+					return new \WP_REST_Response( [ 'code' => 'update_failed', 'message' => $e->getMessage() ], 500 );
+				}
+				$update['post_title'] = $targs['post_title'];
+				$neutral_slug         = isset( $targs['post_name'] ) && $targs['post_name'] !== (string) $post->post_name;
 			}
 		}
 		if ( isset( $body['notes'] ) ) {
@@ -2479,6 +2547,9 @@ class Fotonic_REST_API {
 		}
 		if ( count( $update ) > 1 ) {
 			wp_update_post( wp_slash( $update ) );
+		}
+		if ( $neutral_slug ) {
+			Fotonic_Titles::set_neutral_slug( $id, 'ftnc_work' ); // Not through wp_update_post(): it would keep the old slug, in plain text, as `_wp_old_slug`.
 		}
 
 		// Capture previous card list before save_work_meta overwrites it (for removed-card detection in sync).
@@ -2535,6 +2606,27 @@ class Fotonic_REST_API {
 	// Can-delete checks
 	// ---------------------------------------------------------------------------
 
+	/**
+	 * One list of what still uses a record, for the "Cannot delete" window: a heading and the records, each with what the
+	 * window needs to open it (`type` 'work' or 'quote' and the id). Titles are read through the Titles layer (null-safe).
+	 *
+	 * @param string $kind 'work' (more kinds are added by Pro through ftnc_can_delete_groups).
+	 * @param int[]  $ids  Post IDs.
+	 * @return array{heading:string, items:array<int, array{type:string, id:int, title:string}>}
+	 */
+	public static function block_group( string $kind, array $ids ): array {
+		$key   = Fotonic_Vault::get_session_key();
+		$items = [];
+		foreach ( $ids as $post_id ) {
+			$items[] = [ 'type' => $kind, 'id' => (int) $post_id, 'title' => Fotonic_Titles::label( (int) $post_id, $key ) ];
+		}
+		return [
+			/* translators: %d: number of works */
+			'heading' => sprintf( __( 'Linked to works (%d)', 'eleva-crm-for-photographers' ), count( $items ) ),
+			'items'   => $items,
+		];
+	}
+
 	public static function can_delete_customer( \WP_REST_Request $req ): \WP_REST_Response {
 		$id   = (int) $req->get_param( 'id' );
 		$post = get_post( $id );
@@ -2546,28 +2638,26 @@ class Fotonic_REST_API {
 			);
 		}
 
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
-		$linked = get_posts( [
-			'post_type'      => 'ftnc_work',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'meta_key'       => '_ftnc_customer_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
-			'meta_value'     => $id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
-			'fields'         => 'ids',
-		] );
+		// One rule with the Bin: a work counts unless it is in the Bin (drafts count too).
+		$linked = Fotonic_Trash::live_work_ids_for_customer( $id );
 
+		// Every reason is shown, not only the first: a customer used by works AND quotes says both. `groups` carries the same
+		// thing as clickable lists (the window opens the work or the quote); `reason` is the plain text for everything else.
+		$reasons = [];
+		$groups  = [];
 		if ( ! empty( $linked ) ) {
-			$titles = array_map( 'get_the_title', $linked );
+			$groups[] = self::block_group( 'work', $linked );
+			$vkey   = Fotonic_Vault::get_session_key();
+			$titles = array_map( function ( $work_id ) use ( $vkey ) {
+				return Fotonic_Titles::label( (int) $work_id, $vkey );
+			}, $linked );
 			$count  = count( $linked );
-			return new \WP_REST_Response( [
-				'can_delete' => false,
-				'reason'     => sprintf(
-					/* translators: 1: number of linked works, 2: comma-separated work titles */
-					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'eleva-crm-for-photographers' ),
-					$count,
-					implode( ', ', $titles )
-				),
-			], 200 );
+			$reasons[] = sprintf(
+				/* translators: 1: number of linked works, 2: comma-separated work titles */
+				_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'eleva-crm-for-photographers' ),
+				$count,
+				implode( ', ', $titles )
+			);
 		}
 
 		/**
@@ -2579,7 +2669,20 @@ class Fotonic_REST_API {
 		 */
 		$reason = apply_filters( 'ftnc_can_delete_customer', null, $id );
 		if ( is_string( $reason ) && '' !== $reason ) {
-			return new \WP_REST_Response( [ 'can_delete' => false, 'reason' => $reason ], 200 );
+			$reasons[] = $reason;
+		}
+
+		/**
+		 * Lets Pro add its own lists of what still uses the record (quotes): groups as made by block_group().
+		 *
+		 * @param array  $groups Groups so far.
+		 * @param string $type   'ftnc_customer' or 'ftnc_service'.
+		 * @param int    $id     Record ID.
+		 */
+		$groups = apply_filters( 'ftnc_can_delete_groups', $groups, 'ftnc_customer', $id );
+
+		if ( $reasons ) {
+			return new \WP_REST_Response( [ 'can_delete' => false, 'reason' => implode( "\n", $reasons ), 'groups' => array_values( $groups ) ], 200 );
 		}
 
 		return new \WP_REST_Response( [ 'can_delete' => true ], 200 );
@@ -2596,44 +2699,19 @@ class Fotonic_REST_API {
 			);
 		}
 
-		// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key,WordPress.DB.SlowDBQuery.slow_db_query_meta_value,WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Meta key indexed; necessary for postmeta-based filtering.
-		$candidate_works = get_posts( [
-			'post_type'      => 'ftnc_work',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'meta_query'     => [ [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				'key'     => '_ftnc_work_services',
-				'compare' => 'EXISTS',
-			] ],
-		] );
-
-		$linked_titles = [];
-		foreach ( $candidate_works as $work_id ) {
-			$raw      = get_post_meta( $work_id, '_ftnc_work_services', true );
-			$services = json_decode( $raw, true );
-			if ( ! is_array( $services ) ) {
-				continue;
-			}
-			foreach ( $services as $svc ) {
-				if ( isset( $svc['service_id'] ) && (int) $svc['service_id'] === $id ) {
-					$linked_titles[] = get_the_title( $work_id );
-					break;
-				}
-			}
+		// One rule with the Bin: a work counts unless it is in the Bin (drafts count too). Works first, then what Pro adds (quotes).
+		$groups = [];
+		$works  = Fotonic_Trash::live_work_ids_for_service( $id );
+		if ( ! empty( $works ) ) {
+			$groups[] = self::block_group( 'work', $works );
 		}
+		$groups = array_values( apply_filters( 'ftnc_can_delete_groups', $groups, 'ftnc_service', $id ) );
 
-		if ( ! empty( $linked_titles ) ) {
-			$count = count( $linked_titles );
-			return new \WP_REST_Response( [
-				'can_delete' => false,
-				'reason'     => sprintf(
-					/* translators: 1: number of linked works, 2: comma-separated work titles */
-					_n( 'Linked to %1$d work: %2$s', 'Linked to %1$d works: %2$s', $count, 'eleva-crm-for-photographers' ),
-					$count,
-					implode( ', ', $linked_titles )
-				),
-			], 200 );
+		if ( ! empty( $groups ) ) {
+			$lines = array_map( function ( $g ) {
+				return $g['heading'] . ': ' . implode( ', ', wp_list_pluck( $g['items'], 'title' ) );
+			}, $groups );
+			return new \WP_REST_Response( [ 'can_delete' => false, 'reason' => implode( "\n", $lines ), 'groups' => $groups ], 200 );
 		}
 
 		return new \WP_REST_Response( [ 'can_delete' => true ], 200 );
@@ -2680,19 +2758,21 @@ class Fotonic_REST_API {
 		] );
 
 		$events = [];
+		$vkey   = Fotonic_Vault::get_session_key();
 		foreach ( $query->posts as $post ) {
 			$customer_id    = (int) get_post_meta( $post->ID, '_ftnc_customer_id', true );
 			$customer_post  = $customer_id > 0 ? get_post( $customer_id ) : null;
-			$customer_title = $customer_post ? $customer_post->post_title : null;
+			$customer_title = $customer_post ? Fotonic_Titles::read( $customer_post, $vkey ) : null;
 			$ps_terms       = wp_get_object_terms( $post->ID, 'ftnc_work_payment_status', [ 'fields' => 'slugs' ] );
 			$payment_status = ( ! is_wp_error( $ps_terms ) && ! empty( $ps_terms ) ) ? $ps_terms[0] : 'unpaid';
 			$events[]       = [
 				'type'            => 'work',
 				'id'              => $post->ID,
-				'title'           => $post->post_title,
+				'title'           => Fotonic_Titles::read( $post, $vkey ),
 				'event_date'      => (string) get_post_meta( $post->ID, '_ftnc_event_date', true ),
 				'event_time_from' => (string) get_post_meta( $post->ID, '_ftnc_event_time_from', true ),
 				'event_time_to'   => (string) get_post_meta( $post->ID, '_ftnc_event_time_to', true ),
+				'customer_id'     => $customer_id,
 				'customer_title'  => $customer_title,
 				'payment_status'  => $payment_status,
 				'kanban_status'   => (string) get_post_meta( $post->ID, '_ftnc_kanban_status', true ),
@@ -2999,8 +3079,23 @@ class Fotonic_REST_API {
 		}
 
 		// Files. Each entry is either an uploaded attachment or an external link,
-		// optionally with an admin-set display label overriding the filename/URL.
+		// optionally with an admin-set display label overriding the filename/URL. The label is a protected
+		// field (f1): an unreadable one (null from the screen) keeps what is stored. Rows are matched to the stored
+		// ones by attachment id, links by address (they have no id).
 		if ( isset( $body['files'] ) && is_array( $body['files'] ) ) {
+			$old_raw     = (string) get_post_meta( $post_id, '_ftnc_work_files', true );
+			$old_rows    = json_decode( $old_raw, true );
+			$stored_att  = [];
+			$stored_link = [];
+			foreach ( is_array( $old_rows ) ? $old_rows : [] as $old ) {
+				if ( is_numeric( $old ) ) {
+					$stored_att[ (int) $old ] = [];
+				} elseif ( is_array( $old ) && ( $old['type'] ?? 'attachment' ) === 'link' ) {
+					$stored_link[ (string) ( $old['url'] ?? '' ) ] = $old;
+				} elseif ( is_array( $old ) ) {
+					$stored_att[ (int) ( $old['id'] ?? 0 ) ] = $old;
+				}
+			}
 			$clean = [];
 			foreach ( $body['files'] as $f ) {
 				if ( is_numeric( $f ) ) {
@@ -3014,22 +3109,30 @@ class Fotonic_REST_API {
 				if ( ! is_array( $f ) ) {
 					continue;
 				}
-				$type  = ( $f['type'] ?? 'attachment' ) === 'link' ? 'link' : 'attachment';
-				$label = sanitize_text_field( $f['label'] ?? '' );
+				$type      = ( $f['type'] ?? 'attachment' ) === 'link' ? 'link' : 'attachment';
+				$new_label = array_key_exists( 'label', $f ) && null === $f['label'] ? null : sanitize_text_field( $f['label'] ?? '' );
 				if ( 'link' === $type ) {
 					$url = esc_url_raw( $f['url'] ?? '' );
 					if ( ! $url || ! preg_match( '#^https?://#i', $url ) ) {
 						continue;
 					}
+					$label   = self::field_to_store( $new_label, (string) ( $stored_link[ $url ]['label'] ?? '' ), $vault_key );
 					$clean[] = [ 'type' => 'link', 'url' => $url, 'label' => $label ];
 				} else {
 					$id = (int) ( $f['id'] ?? 0 );
 					if ( $id > 0 ) {
+						$label   = self::field_to_store( $new_label, (string) ( $stored_att[ $id ]['label'] ?? '' ), $vault_key );
 						$clean[] = [ 'type' => 'attachment', 'id' => $id, 'label' => $label ];
 					}
 				}
 			}
 			update_post_meta( $post_id, '_ftnc_work_files', wp_slash( wp_json_encode( array_values( $clean ) ) ) );
+			// What the work lists now is no longer "waiting"; what it dropped goes from the disk when no other work lists it.
+			$kept = Fotonic_Work_Files::ids_in( (string) wp_json_encode( $clean ) );
+			Fotonic_Work_Files::claim( $kept );
+			foreach ( array_diff( Fotonic_Work_Files::ids_in( $old_raw ), $kept ) as $dropped ) {
+				Fotonic_Work_Files::release( (int) $dropped );
+			}
 		}
 
 		// Payments. The rows are stored first: from the model 2 on they decide the total.
@@ -3195,7 +3298,7 @@ class Fotonic_REST_API {
 
 		return [
 			'id'     => $post->ID,
-			'title'  => $post->post_title,
+			'title'  => Fotonic_Titles::read( $post, Fotonic_Vault::get_session_key() ), // Null when it cannot be read (a reset Vault), never ciphertext.
 			'people' => $people,
 		];
 	}
@@ -3236,10 +3339,17 @@ class Fotonic_REST_API {
 	private static function format_work( \WP_Post $post, bool $include_reminders = false ): array {
 		$customer_id    = (int) get_post_meta( $post->ID, '_ftnc_customer_id', true );
 		$customer_title = '';
+		$customer_state = ''; // '' = none or fine, 'trash' = the customer is in the Bin, 'missing' = it no longer exists.
+		$title_key      = Fotonic_Vault::get_session_key();
 		if ( $customer_id ) {
 			$cust = get_post( $customer_id );
-			if ( $cust ) {
-				$customer_title = $cust->post_title;
+			if ( $cust && 'ftnc_customer' === $cust->post_type ) {
+				$customer_title = Fotonic_Titles::read( $cust, $title_key ); // Null when it cannot be read.
+				if ( 'trash' === $cust->post_status ) {
+					$customer_state = 'trash';
+				}
+			} else {
+				$customer_state = 'missing';
 			}
 		}
 
@@ -3276,7 +3386,8 @@ class Fotonic_REST_API {
 					if ( ! is_array( $entry ) ) {
 						continue;
 					}
-					$label = (string) ( $entry['label'] ?? '' );
+					// The label is a protected field: null when it cannot be read now (never '').
+					$label = self::field_for_screen( (string) ( $entry['label'] ?? '' ), $field_key );
 
 					if ( ( $entry['type'] ?? 'attachment' ) === 'link' ) {
 						$url = esc_url( $entry['url'] ?? '' );
@@ -3292,8 +3403,21 @@ class Fotonic_REST_API {
 					}
 
 					$attach_id   = (int) ( $entry['id'] ?? 0 );
-					$url         = wp_get_attachment_url( $attach_id );
 					$post_attach = get_post( $attach_id );
+					if ( $post_attach && Fotonic_Work_Files::is_work_file( $attach_id ) ) {
+						// One of our private files: no address at all (the file is opened through vault-download), and
+						// a name that is null when the Vault cannot open it now.
+						$files[] = [
+							'type'     => 'attachment',
+							'id'       => $attach_id,
+							'url'      => '',
+							'filename' => Fotonic_Work_Files::name_of( $attach_id, $field_key ),
+							'mime'     => $post_attach->post_mime_type,
+							'label'    => $label,
+						];
+						continue;
+					}
+					$url         = wp_get_attachment_url( $attach_id );
 					if ( ! $url || ! $post_attach ) {
 						continue;
 					}
@@ -3466,13 +3590,14 @@ class Fotonic_REST_API {
 
 		$data = [
 			'id'              => $post->ID,
-			'title'           => $post->post_title,
+			'title'           => Fotonic_Titles::read( $post, $title_key ),
 			'event_date'      => (string) get_post_meta( $post->ID, '_ftnc_event_date', true ),
 			'event_time_from' => (string) get_post_meta( $post->ID, '_ftnc_event_time_from', true ),
 			'event_time_to'   => (string) get_post_meta( $post->ID, '_ftnc_event_time_to', true ),
 			'event_addresses' => $event_addresses,
 			'customer_id'     => $customer_id,
 			'customer_title'  => $customer_title,
+			'customer_state'  => $customer_state,
 			'owner_type'      => $owner_type,
 			'owner_id'        => $owner_id,
 			'owner_label'     => $owner_label,
@@ -3837,8 +3962,20 @@ class Fotonic_REST_API {
 			];
 		}
 
+		// With Eleva CRM Pro switched off its records stay in the database, but they are not in the registry: a backup made now
+		// leaves them out. The card says so (the undeclared Pro fields would otherwise look like a missing-fields problem).
+		$pro_left_out = 0;
+		if ( ! defined( 'FOTO_PRO_VERSION' ) ) {
+			global $wpdb;
+			$pro_types    = array( 'ftnc_collaborator', 'ftnc_product', 'ftnc_supplier', 'ftnc_expense', 'ftnc_task', 'ftnc_quote' );
+			$placeholders = implode( ',', array_fill( 0, count( $pro_types ), '%s' ) );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- a count of the plugin's own records; the placeholders are built from a fixed list.
+			$pro_left_out = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type IN ($placeholders) AND post_status NOT IN ('auto-draft','trash')", $pro_types ) );
+		}
+
 		return new \WP_REST_Response( [
 			'vault_setup'        => $vault_setup,
+			'pro_data_left_out'  => $pro_left_out,
 			'sodium_available'   => $sodium_available,
 			'zip_available'      => $zip_available,
 			'keys_ready'         => $keys_ready,

@@ -64,6 +64,34 @@ class Fotonic_Vault_Fields_Repo {
 		return false !== $ok;
 	}
 
+	/** The documents of a work (see Fotonic_Work_Files::secure_record()): how many need work, or were handled. */
+	public function work_files( int $post_id, string $key, bool $write ): int {
+		return Fotonic_Work_Files::secure_record( $post_id, $key, $write );
+	}
+
+	/**
+	 * Remove the readable slugs WordPress keeps elsewhere, for the records of one type: `_wp_old_slug` (every earlier slug of a
+	 * record, written when its slug changes) is deleted, and the slug a record in the Bin will get back on restore
+	 * (`_wp_desired_post_slug`) becomes the neutral one. One query each, not one per record.
+	 */
+	public function neutralize_slug_meta( string $post_type, ?array $scope = null ): void {
+		global $wpdb;
+		$ids = $this->scope_sql( $scope ); // ' AND ID IN (...)' or ''.
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared -- our own post types; the scope is intval()'d.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key = '_wp_old_slug' AND post_id IN ( SELECT ID FROM {$wpdb->posts} WHERE post_type = %s{$ids} )", $post_type ) );
+		$trash = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = 'trash'{$ids}", $post_type ) );
+		foreach ( (array) $trash as $id ) {
+			$id = (int) $id;
+			if ( '' !== (string) get_post_meta( $id, '_wp_desired_post_slug', true ) ) {
+				update_post_meta( $id, '_wp_desired_post_slug', Fotonic_Vault_Fields::neutral_slug( $post_type, $id ) );
+			}
+		}
+		// phpcs:enable
+		if ( function_exists( 'wp_cache_flush_group' ) ) {
+			wp_cache_flush_group( 'post_meta' ); // WordPress 6.1+; best effort: an object cache without group flush keeps the old read until it expires.
+		}
+	}
+
 	public function get_meta( int $post_id, string $key ): string {
 		$value = get_post_meta( $post_id, $key, true );
 		return is_scalar( $value ) ? (string) $value : '';

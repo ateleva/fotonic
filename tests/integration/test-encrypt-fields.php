@@ -11,6 +11,9 @@
  */
 ob_start(); // the simulated session sets a cookie
 require __DIR__ . '/../lib/wp-bootstrap.php';
+// This test is about the plain title of a service and a work. With Pro active the titles gate is open (Pro reads encrypted
+// titles), a locked save would answer 423 and the stored title would be `f1:`; titles under the Vault have their own test.
+add_filter( 'ftnc_titles_encryptable', '__return_false' );
 t_preserve_options( [ 'fotonic_vault_encrypt_job', 'fotonic_vault_encrypt_version', 'fotonic_vault_encrypt_lock' ] );
 
 $_SERVER['HTTP_X_WP_NONCE'] = wp_create_nonce( 'wp_rest' );

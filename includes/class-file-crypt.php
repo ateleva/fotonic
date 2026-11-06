@@ -78,7 +78,9 @@ class Fotonic_File_Crypt {
         if ( false === $plain ) {
             return false;
         }
-        $blob = self::encrypt( $plain, $master_key );
+        $digest = hash( 'sha256', $plain );
+        $blob   = self::encrypt( $plain, $master_key );
+        unset( $plain ); // The file is held in memory: let go of each copy as soon as it is not needed (peak = two copies, not four).
         if ( false === $blob ) {
             return false;
         }
@@ -88,8 +90,9 @@ class Fotonic_File_Crypt {
             wp_delete_file( $tmp );
             return false;
         }
+        unset( $blob );
         $check = self::decrypt_file( $tmp, $master_key );
-        if ( ! is_string( $check ) || ! hash_equals( hash( 'sha256', $plain ), hash( 'sha256', $check ) ) || ! rename( $tmp, $target ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- same folder.
+        if ( ! is_string( $check ) || ! hash_equals( $digest, hash( 'sha256', $check ) ) || ! rename( $tmp, $target ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename -- same folder.
             wp_delete_file( $tmp );
             return false;
         }

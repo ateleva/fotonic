@@ -4,7 +4,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import * as ReactQuery from '@tanstack/react-query'
 import * as ReactRouter from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider, MutationCache } from '@tanstack/react-query'
 import { createRouter } from './router'
 import VaultGate from './features/vault/VaultGate'
 import { VaultProvider } from './context/VaultContext'
@@ -16,8 +16,14 @@ window.React = React
 window.ReactDOM = ReactDOMFull
 window.FotonicVendors = { ReactQuery, ReactRouter }
 
+// Any write may have put something in the Bin (a delete) or taken it out: the small Bin buttons of the lists read
+// ['trash-summary'], so it is refreshed after every successful write. Only mounted observers refetch, so it costs
+// one tiny request on a page that shows a Bin button and nothing elsewhere.
 const queryClient = new QueryClient({
-  defaultOptions: { queries: { staleTime: 30_000, retry: 1 } }
+  defaultOptions: { queries: { staleTime: 30_000, retry: 1 } },
+  mutationCache: new MutationCache({
+    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['trash-summary'] }) },
+  }),
 })
 
 // Defer mount to next macrotask so all sibling module scripts (fotonic-pro.js) run first

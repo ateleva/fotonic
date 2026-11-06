@@ -2,7 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Uploads {
-    const DEFAULT_MAX_BYTES = 10485760; // 10 MB
+    const DEFAULT_MAX_BYTES = 52428800; // 50 MB: a contract with scans and pictures easily passes 10 MB. Documents of the works are also held back by the memory of the server (Fotonic_Work_Files::max_bytes()).
 
     /**
      * Single source of truth for the max upload size shown and enforced in the UI.

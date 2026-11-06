@@ -142,6 +142,21 @@ foreach ( $ftnc_options as $ftnc_option ) {
 	delete_option( $ftnc_option );
 }
 
+// Restore sessions: one option per open restore (temporary keys) and the list of them, plus its cron event.
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+$wpdb->query(
+	$wpdb->prepare(
+		"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name = %s",
+		$wpdb->esc_like( 'fotonic_restore_s_' ) . '%',
+		'fotonic_restore_sessions'
+	)
+);
+delete_option( 'fotonic_restore_job' ); // The restore job (its undo journal lives in the post meta of the plugin's own records, removed with them).
+wp_clear_scheduled_hook( 'fotonic_restore_cleanup' );
+wp_clear_scheduled_hook( 'fotonic_work_files_purge' );
+delete_option( 'ftnc_work_files_skipped' );
+delete_option( 'ftnc_work_files_sweep' );
+
 // The "What's new" entries each admin has closed.
 delete_metadata( 'user', 0, 'fotonic_whats_new_dismissed', '', true );
 
@@ -214,6 +229,30 @@ if ( is_dir( $ftnc_backups_dir ) ) {
 	}
 	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
 	rmdir( $ftnc_backups_dir );
+}
+
+// ---------------------------------------------------------------------------
+// 6c. Remove the restore working folder (uploaded archives and working copies).
+// ---------------------------------------------------------------------------
+
+$ftnc_restore_dir = $ftnc_upload_dir['basedir'] . '/fotonic/restore';
+
+if ( is_dir( $ftnc_restore_dir ) ) {
+	$ftnc_restore_items = new RecursiveIteratorIterator(
+		new RecursiveDirectoryIterator( $ftnc_restore_dir, RecursiveDirectoryIterator::SKIP_DOTS ),
+		RecursiveIteratorIterator::CHILD_FIRST
+	);
+	foreach ( $ftnc_restore_items as $ftnc_restore_item ) {
+		if ( $ftnc_restore_item->isDir() ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+			rmdir( $ftnc_restore_item->getPathname() );
+		} else {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+			unlink( $ftnc_restore_item->getPathname() );
+		}
+	}
+	// phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+	rmdir( $ftnc_restore_dir );
 }
 
 // Remove the fotonic uploads parent directory only if now empty.

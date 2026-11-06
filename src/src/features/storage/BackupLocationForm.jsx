@@ -11,6 +11,7 @@ import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import { formatDate } from '../../utils/date'
 import { __ } from '../../utils/i18n'
+import { titleOr } from '../../utils/titles'
 
 const STATUS_OPTIONS = [
   { value: 'active',  label: () => __('Active', 'eleva-crm-for-photographers') },
@@ -45,11 +46,11 @@ function LocationWorks({ works }) {
                 <tr key={w.id} className="border-b border-gray-100">
                   <td className="px-3.5 py-2.5 font-medium">
                     <Link to={`/works/${w.id}`} className="text-fotonic-primary underline hover:opacity-80">
-                      {w.title || __('(no title)', 'eleva-crm-for-photographers')}
+                      {titleOr(w.title, 'work', w.id)}
                     </Link>
                   </td>
                   <td className="px-3.5 py-2.5 text-gray-500 whitespace-nowrap">{formatDate(w.event_date)}</td>
-                  <td className="px-3.5 py-2.5 text-gray-700">{w.customer_title || '-'}</td>
+                  <td className="px-3.5 py-2.5 text-gray-700">{w.customer_title === null ? titleOr(null, 'customer', w.customer_id) : w.customer_title || '-'}</td>
                 </tr>
               ))
             )}

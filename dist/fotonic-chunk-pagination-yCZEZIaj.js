@@ -1,0 +1,1 @@
+import{r as e}from"./fotonic-chunk-rolldown-runtime-DV_O1YnO.js";import{on as t}from"./fotonic-chunk-app-HXGfpNcO.js";var n=e(t(),1);function r(e,t=24){let[r,i]=(0,n.useState)(1),a=e.length,o=Math.max(1,Math.ceil(a/t)),s=Math.min(r,o);return{pageItems:e.slice((s-1)*t,s*t),page:s,pages:o,total:a,size:t,setPage:i}}export{r as t};

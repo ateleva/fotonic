@@ -4,7 +4,7 @@ Tags: crm, photography, photographer, client-management, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.6.10
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,9 +31,10 @@ You already have enough to think about on shoot day. Eleva CRM for Photographers
 * Storage: one page for your memory cards, the backup locations where you keep your files (hard drives, NAS, cloud) and a history of the shots you took and delivered. In each work you choose where its backups are saved, and a warning appears if a location is deleted.
 * Delivery: write how you delivered the photos to the client: gallery link, transfer or USB stick, with the date the link expires and the gallery password. One button copies a ready message for your client, to paste into WhatsApp, a social app or an email.
 * Quick Notes: a short rich-text field on every booking for the one-line reminder you need at a glance, kept separate from your full notes.
-* Vault: an optional dedicated encryption layer, protected by its own password and a TOTP authenticator app, that keeps client names, contact details, addresses, notes and your service catalog unreadable in the database, even to someone with direct database access.
+* Vault: an optional dedicated encryption layer, protected by its own password and a TOTP authenticator app, that keeps client names, contact details, addresses, notes and your service catalog unreadable in the database, and the documents attached to your bookings unreadable on the server, even to someone with direct access.
 * Fingerprint unlock: open the Vault with a touch (fingerprint, face or device PIN) on browsers that support it, with your password and code always available as the fallback.
 * Encrypted backup: download one encrypted archive of your entire CRM (customers, bookings, services, and files) whenever you want, protected by your Vault credentials and opened by no one but you.
+* Restore a backup: bring a backup back into Eleva CRM, from your computer or, with Eleva CRM Pro, from Google Drive, on the same site or on a new one. You see what is already there, choose what to keep, and can undo it.
 
 = No dependencies, nothing leaves your server =
 
@@ -84,7 +85,7 @@ You set a Vault master password, independent of your WordPress login, and pair i
 
 The Vault is optional. The first time you open the CRM it asks whether you want it. If you choose "Not now", you can turn it on later from Settings, and everything you have already entered is encrypted at that moment. Without the Vault the same data is stored as plain text in your database, and encrypted backups are not available.
 
-Besides the personal details above, the Vault protects your notes, the notes inside a booking, the notes of your backup locations, the notes and the password of your deliveries, and the titles, prices and notes of your service catalog. With Eleva CRM Pro it also protects collaborators, suppliers, products, expense notes and quote notes. Dates, prices, payments, statistics and the titles of clients, bookings and quotes sit outside the Vault and stay readable.
+Besides the personal details above, the Vault protects the titles of your clients, bookings and quotes, your notes, the notes inside a booking, the notes of your backup locations, the notes and the password of your deliveries, the titles, prices and notes of your service catalog, and the documents attached to a booking (the file and its name). With Eleva CRM Pro it also protects collaborators, suppliers, products, expense notes and quote notes. Dates, prices, payments, statistics and the titles of tasks and expenses sit outside the Vault and stay readable, and so do the title and the addresses of a booking you send to Google Calendar (Google has to read them).
 
 = Can I unlock the Vault with my fingerprint? =
 
@@ -110,7 +111,7 @@ No. The plugin only loads on its own admin screen inside WP Admin; it adds nothi
 
 = Can I get my data out if I stop using the plugin? =
 
-Yes, any time, from the Settings page: download a complete encrypted backup of every customer, booking, service, and file. It is your data in a portable archive, not locked to the plugin. A standalone command-line tool that ships with the plugin opens the archive on any computer and gives you your data as readable files. Importing a backup back into the plugin is not available yet.
+Yes, any time, from the Settings page: download a complete encrypted backup of every customer, booking, service, and file. It is your data in a portable archive, not locked to the plugin. A standalone command-line tool that ships with the plugin opens the archive on any computer and gives you your data as readable files. You can also bring a backup back into the plugin: see How do I restore a backup?
 
 = Does the plugin back up my data? =
 
@@ -121,6 +122,22 @@ That archive is encrypted with a key protected by your Vault password before it 
 This backs up your CRM data, not your whole WordPress site. Themes, other plugins, and unrelated content are not included.
 
 Automatic, scheduled backups that push this same archive to your own Google Drive are an **Eleva CRM Pro** feature. The free plugin's backup is always manual: on demand, whenever you choose to download one.
+
+= How do I restore a backup? =
+
+In Settings, find the Backups section and its box Restore from a backup. Choose a backup made on this site, a backup saved on Google Drive (with Eleva CRM Pro), or upload the .zip file you downloaded. Eleva CRM then compares it with what is already on your site and shows what is new, what is already there and what is different. By default it only adds what is missing and leaves everything you have alone. For each difference you choose whether to keep your version, use the one from the backup, or add the backup one as a separate copy.
+
+Before anything is written, a safety copy of your current data is saved, and you can undo the restore until you choose to keep the result. Replace everything is also there: it removes your current data and puts the backup in its place, exactly as it was on the day of the backup. It cannot be undone with a button, so you confirm it by typing a word. To go back, restore the safety copy.
+
+= Which password do I need to restore a backup? =
+
+A backup made by this site opens without a password while the Vault is unlocked. Any other backup, from another site or from a Vault you have since reset, opens only with the Vault password, the recovery code or the recovery phrase that were valid on the day the backup was made: if you changed your password since, use the old one. Without one of them nobody can open it, not even us. After several wrong tries the attempts pause for a while.
+
+On a new site, turn the Vault on first: the personal details you restore are then protected with that site's own key. If the site has no Vault you can still restore after confirming, and the details are kept as plain text until you turn the Vault on.
+
+= What is not restored? =
+
+The connection with Google Calendar (connect it again in Settings; events already on your calendar stay as they are), the license key, and in Eleva CRM Pro the look of your quote PDFs and your signature (set them up again). With Eleva CRM Pro active, quotes with their PDF, expenses, suppliers, collaborators, products and tasks come back too. Without Pro, the Pro data in a backup is listed as left out, and nothing is lost from the backup file.
 
 == Eleva CRM Pro ==
 
@@ -162,6 +179,27 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
 
 == Changelog ==
+
+= 1.7.0 =
+* New: restore a backup. In Settings, under Backups, choose a backup made on this site, saved on Google Drive (with Eleva CRM Pro) or uploaded as a .zip file, and bring your data back into Eleva CRM, on the same site or on a new one.
+* New: before anything is written you see what is already on the site, what is missing and what is different, and you choose what to do with each difference. By default only what is missing is added. A safety copy of your data is saved first, and you can undo the restore until you choose to keep the result.
+* New: Replace everything puts the backup in place of your current data, as it was on the day of the backup. It cannot be undone with a button: to go back, restore the safety copy.
+* New: a backup opens only with the Vault password, recovery code or recovery phrase that were valid on the day it was made. A backup made by this site opens without one while the Vault is unlocked. After several wrong tries the attempts pause for a while.
+* New: with Eleva CRM Pro active and its license valid, quotes with their PDF, expenses, suppliers, collaborators, products and tasks are restored too. Without Pro, or without a valid license, they are not offered, they are listed as left out and nothing is lost from the backup.
+* Not restored: the connection with Google Calendar (connect it again) and, in Pro, the look of the quote PDFs and the signature.
+* New: the contracts and other documents you attach to a work are now kept in a private folder and encrypted by the Vault, file names included. Documents you had already uploaded are moved there, and taken out of the media library, when the Vault encrypts your existing data after the update. A document that is also used somewhere else (for example a quote logo) stays where it is and is listed in Settings, under Vault.
+* New: the titles of your clients, works and quotes are now encrypted by the Vault, like your notes. You see them and search them as always, accents and capitals ignored. Searching clients also finds the name, email and phone number of their people.
+* New: a work whose customer is in the Bin, or no longer exists, shows a red sign in the Works list and a notice under the customer field, so you can restore that customer or choose another one.
+* Change: when a customer or a service cannot be deleted, the window now lists every work (and, with Eleva CRM Pro, every quote) that still uses it, and each one opens with a click.
+* Change: the search of works looks at titles only, not at the notes inside a work (they are encrypted).
+* Change: for each work with Google sync on, Google Calendar now gets the title and all the addresses (one line each, in the description), plus date, time and colour. The location field and the quick notes are no longer sent. Addresses appear on each event the next time you save the work.
+* New: the Bin. Each list (customers, works, quotes and so on) shows a small Bin button as soon as something of that kind is waiting there, and Settings has a Bin card too. The Bin page lists what is in it and in how many days each item disappears by itself, and lets you restore items or delete them for good, one by one or all together (deleting several asks you to type a word). An item still used by another record, such as a customer with works, cannot be deleted until that changes.
+* Fix: in the notes of a work, the cursor no longer jumps while you type.
+* Fix: the PDF preview of a document did not open on some hosting plans (the CRM showed Unable to render this PDF). It now opens everywhere; downloading always worked.
+* Change: while Eleva CRM Pro is switched off, the backup card now warns that a backup made at that moment leaves out your Pro data (quotes, suppliers, collaborators, expenses and tasks), instead of the vague warning about missing fields.
+* Change: restoring a backup from Google Drive now says that the CRM is asking Drive for the file, instead of looking frozen for a few seconds.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* Compatibility: works with Eleva CRM Pro 1.7.0.
 
 = 1.6.10 =
 * Fix: on some hosting plans, turning on the Vault, creating the backup keys or making a backup ended in a critical error. These steps now work on every hosting plan.
@@ -385,6 +423,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 * Initial public release.
 
 == Upgrade Notice ==
+
+= 1.7.0 =
+You can now restore a backup from Settings, with a safety copy first and an undo. Documents you attach to a work are now kept private, and so are the titles of clients, works and quotes: after updating, unlock the Vault and let the short encryption finish. Update Eleva CRM Pro to 1.7.0 too.
 
 = 1.6.10 =
 Fixes a critical error that could appear when turning on the Vault, creating the backup keys or making a backup on some hosting plans. Recommended for everyone.

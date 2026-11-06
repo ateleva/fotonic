@@ -100,6 +100,7 @@ require __DIR__ . '/../../includes/class-backup-keys.php';
 require __DIR__ . '/../../includes/class-vault.php';
 require __DIR__ . '/../../includes/class-rest-api.php';
 require __DIR__ . '/../../includes/class-vault-fields.php';
+require __DIR__ . '/../../includes/class-work-files.php';
 require __DIR__ . '/../../includes/class-vault-encrypt-existing.php';
 
 $K  = random_bytes( 32 );
@@ -220,7 +221,7 @@ t_equals( array( 'analyze', 'prepare', 'encrypt', 'finish' ), array_values( arra
 t_equals( null, Fotonic_Vault_Encrypt_Existing::job(), 'a finished job is forgotten' );
 t_equals( false, Fotonic_Vault_Encrypt_Existing::is_blocking(), 'nothing blocks after the job' );
 t_equals( Fotonic_Vault_Fields::signatures(), Fotonic_Vault_Encrypt_Existing::covered(), 'the covered field signatures are recorded' );
-t_equals( array( 'ftnc_vault_encrypt_finished' ), $GLOBALS['t_actions'], 'Pro is told once' );
+t_equals( array( 'ftnc_vault_encrypt_finished' ), array_values( array_diff( $GLOBALS['t_actions'], array( 'ftnc_vault_before_encrypt_record' ) ) ), 'Pro is told once' );
 t_equals( false, array_key_exists( Fotonic_Vault_Encrypt_Existing::OPTION_LOCK, $GLOBALS['t_rows'] ), 'the lock is released' );
 for ( $i = 1; $i <= 5; $i++ ) {
 	t_equals( "Nota $i", Fotonic_Field_Crypt::read( $repo->posts[ 200 + $i ]['post_content'], $K ), "work $i: note encrypted and readable" );

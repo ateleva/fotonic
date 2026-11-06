@@ -21,7 +21,11 @@ class Fotonic_Backup_Registry {
      * Shape: post_type, label, supports (post fields to capture), meta_keys
      * (exact keys owned by this dataset), taxonomies (taxonomy => options —
      * `[ 'derived' => true ]` means recorded but never restored), ref_fields
-     * (meta key => reference kind, for v2's ID-remapping importer).
+     * (meta key => reference kind, for v2's ID-remapping importer), identity (how the restore
+     * recognises the same record on another site, see Fotonic_Restore_Matcher: `strong` and `weak`
+     * key rules, `ignore` = fields that are not content, `refs` = meta key => [ dataset key,
+     * column of a JSON row or '' for a scalar ], `row_ignore` = columns dropped from JSON rows).
+     * Never written to the archive: the manifest only carries the counts.
      *
      * @return array<string, array>
      */
@@ -34,6 +38,10 @@ class Fotonic_Backup_Registry {
                 'meta_keys'  => [ '_ftnc_people', '_ftnc_uid' ],
                 'taxonomies' => [],
                 'ref_fields' => [],
+                'identity'   => [
+                    'strong' => [ 'emails', 'phones' ],
+                    'weak'   => [ 'title_main_person' ],
+                ],
             ],
             'ftnc_service' => [
                 'post_type'  => 'ftnc_service',
@@ -42,6 +50,9 @@ class Fotonic_Backup_Registry {
                 'meta_keys'  => [ '_ftnc_base_price', '_ftnc_notes', '_ftnc_uid' ],
                 'taxonomies' => [],
                 'ref_fields' => [],
+                'identity'   => [
+                    'strong' => [ 'title' ],
+                ],
             ],
             'ftnc_work' => [
                 'post_type'  => 'ftnc_work',
@@ -100,6 +111,20 @@ class Fotonic_Backup_Registry {
                     '_ftnc_memory_cards'  => 'json:[].card_id|post',
                     '_ftnc_storage_locations' => 'json:[].location_id|post',
                 ],
+                'identity'   => [
+                    'strong'     => [ 'date_title_customer' ],
+                    // Ids that mean nothing on another site (the owner is a WP user id for admin
+                    // works) or state written by Pro's own sync.
+                    'ignore'     => [ '_ftnc_owner_id', '_ftnc_gcal_event_id' ],
+                    'refs'       => [
+                        '_ftnc_customer_id'       => [ 'ftnc_customer', '' ],
+                        '_ftnc_work_services'     => [ 'ftnc_service', 'service_id' ],
+                        '_ftnc_memory_cards'      => [ 'ftnc_memory_card', 'card_id' ],
+                        '_ftnc_storage_locations' => [ 'ftnc_backup_loc', 'location_id' ],
+                    ],
+                    // An attachment id differs on every site; its label stays.
+                    'row_ignore' => [ '_ftnc_work_files' => [ 'id' ] ],
+                ],
             ],
             'ftnc_memory_card' => [
                 'post_type'  => 'ftnc_memory_card',
@@ -112,6 +137,9 @@ class Fotonic_Backup_Registry {
                     'ftnc_card_status' => [ 'derived' => false ],
                 ],
                 'ref_fields' => [],
+                'identity'   => [
+                    'strong' => [ 'title' ],
+                ],
             ],
             'ftnc_backup_loc' => [
                 'post_type'  => 'ftnc_backup_loc',
@@ -121,6 +149,9 @@ class Fotonic_Backup_Registry {
                 'meta_keys'  => [ '_ftnc_uid', '_ftnc_loc_type', '_ftnc_loc_capacity', '_ftnc_loc_status', '_ftnc_loc_notes' ],
                 'taxonomies' => [],
                 'ref_fields' => [],
+                'identity'   => [
+                    'strong' => [ 'title' ],
+                ],
             ],
         ];
 
@@ -218,6 +249,14 @@ class Fotonic_Backup_Registry {
 
         $stale = [];
 
+        /**
+         * Meta keys that are derived from other data and rebuilt on demand, so they are neither backed up nor reported as undeclared
+         * (Pro's readable copy for Google Calendar, `_ftnc_gcal_copy`).
+         *
+         * @param string[] $keys Meta keys.
+         */
+        $derived = (array) apply_filters( 'ftnc_backup_derived_meta', [] );
+
         foreach ( self::datasets() as $dataset ) {
             $post_type = $dataset['post_type'];
             $known     = $dataset['meta_keys'];
@@ -232,6 +271,13 @@ class Fotonic_Backup_Registry {
             ) );
 
             foreach ( $found as $meta_key ) {
+                // The restore's own bookkeeping (batch label, source, undo journal) is never data.
+                if ( class_exists( 'Fotonic_Restore_Writer' ) && in_array( $meta_key, Fotonic_Restore_Writer::own_meta_keys(), true ) ) {
+                    continue;
+                }
+                if ( in_array( $meta_key, $derived, true ) ) {
+                    continue;
+                }
                 if ( ! in_array( $meta_key, $known, true ) ) {
                     $stale[] = $post_type . '::' . $meta_key;
                 }

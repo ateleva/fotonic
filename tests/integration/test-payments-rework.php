@@ -3,6 +3,10 @@ require __DIR__ . '/../lib/wp-bootstrap.php';
 
 // Payments model 2: the installment rows decide the total. Real site DB: every post created is removed even
 // if the script dies, and the payment types option is restored.
+// Titles are under the Vault since phase 15 (Pro opens the gate): creating a work with a title needs the key, which a CLI run
+// never has. Simulate "Vault never set up" in memory (no DB write), as the other REST tests do.
+add_filter( 'pre_option_' . Fotonic_Vault::OPTION_SETUP, '__return_zero' );
+unset( $_COOKIE[ Fotonic_Vault::COOKIE_NAME ] );
 $GLOBALS['ftnc_inserted'] = [];
 add_action( 'save_post_ftnc_work', function ( $post_id, $post, $update ) {
     if ( ! $update ) {

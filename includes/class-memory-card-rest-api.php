@@ -199,7 +199,7 @@ class Fotonic_Memory_Card_REST_API {
 			foreach ( $cards as $mc ) {
 				$card_id = (int) ( $mc['card_id'] ?? 0 );
 				if ( $card_id > 0 && ! isset( $map[ $card_id ] ) ) {
-					$map[ $card_id ] = [ 'id' => $work->ID, 'title' => $work->post_title ];
+					$map[ $card_id ] = [ 'id' => $work->ID, 'title' => Fotonic_Titles::read( $work, Fotonic_Vault::get_session_key() ) ];
 				}
 			}
 		}

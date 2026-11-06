@@ -40,6 +40,12 @@ class Fotonic_Activator {
 
     public static function deactivate(): void {
         wp_clear_scheduled_hook( 'fotonic_backup_run' );
+        // A restore in progress ends here: its temporary keys and working copy are not kept while the plugin is off.
+        if ( class_exists( 'Fotonic_Restore_Reader' ) ) {
+            Fotonic_Restore_Reader::purge_all();
+        }
+        wp_clear_scheduled_hook( 'fotonic_restore_cleanup' );
+        wp_clear_scheduled_hook( 'fotonic_work_files_purge' );
         flush_rewrite_rules();
     }
 }

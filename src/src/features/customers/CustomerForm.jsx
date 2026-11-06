@@ -10,10 +10,12 @@ import Button from '../../components/Button'
 import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
+import BlockedReason from '../../components/BlockedReason'
 import PeopleRepeater from './PeopleRepeater'
 import SectionHeading from '../../components/SectionHeading'
 import { __, sprintf } from '../../utils/i18n'
 import { firstInvalidEmail, invalidEmailIndexes } from '../../utils/email'
+import { titleOr } from '../../utils/titles'
 
 const CustomerQuotesSection = window.FotonicProComponents?.CustomerQuotesSection ?? null
 
@@ -85,7 +87,7 @@ function CustomerWorksSection({ customerId }) {
                 works.map((w, i) => (
                   <tr key={w.id} style={{ borderBottom: i < works.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
                     <td style={{ padding: '0.625rem 0.875rem', fontWeight: 500 }}>
-                      <Link to={`/works/${w.id}`} style={{ color: '#4f46e5', textDecoration: 'none' }}>{w.title || __('(no title)', 'eleva-crm-for-photographers')}</Link>
+                      <Link to={`/works/${w.id}`} style={{ color: '#4f46e5', textDecoration: 'none' }}>{titleOr(w.title, 'work', w.id)}</Link>
                     </td>
                     <td style={{ padding: '0.625rem 0.875rem', color: '#6b7280', whiteSpace: 'nowrap' }}>{fmtDate(w.event_date)}</td>
                     <td style={{ padding: '0.625rem 0.875rem', color: '#374151' }}>
@@ -127,6 +129,7 @@ export default function CustomerForm() {
 
   const [showConfirm, setShowConfirm] = useState(false)
   const [blockReason, setBlockReason] = useState(null)
+  const [blockGroups, setBlockGroups] = useState(null)
   const [checkingDelete, setCheckingDelete] = useState(false)
   const [emailError, setEmailError] = useState(null)
   // Red outlines on the email fields appear after a failed save and follow the typing.
@@ -145,6 +148,7 @@ export default function CustomerForm() {
       if (res.can_delete) {
         setShowConfirm(true)
       } else {
+        setBlockGroups(res.groups ?? null)
         setBlockReason(res.reason)
       }
     } catch {
@@ -333,10 +337,10 @@ export default function CustomerForm() {
       onConfirm={() => deleteCustomer.mutate(id, { onSuccess: () => navigate('/customers') })}
       message={__('Delete this customer? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
-    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
-      <p className="text-sm text-gray-600 mb-6">{blockReason}</p>
+    <Modal open={blockReason !== null} onClose={() => { setBlockReason(null); setBlockGroups(null) }} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
+      <BlockedReason reason={blockReason} groups={blockGroups} onGo={(route) => { setBlockReason(null); navigate(route) }} />
       <div className="flex justify-end">
-        <Button onClick={() => setBlockReason(null)}>{__('OK', 'eleva-crm-for-photographers')}</Button>
+        <Button onClick={() => { setBlockReason(null); setBlockGroups(null) }}>{__('OK', 'eleva-crm-for-photographers')}</Button>
       </div>
     </Modal>
     </>

@@ -41,7 +41,7 @@ class Fotonic_Vault_Fields {
 	 * @return array<string, array> group id => { label, post_type, fields[] }
 	 */
 	public static function base_groups(): array {
-		return array(
+		$groups = array(
 			'customers' => array(
 				'label'     => __( 'Customers', 'eleva-crm-for-photographers' ),
 				'post_type' => 'ftnc_customer',
@@ -60,8 +60,13 @@ class Fotonic_Vault_Fields {
 					array( 'kind' => 'rows', 'meta' => '_ftnc_event_addresses', 'cols' => array( 'street' => 'v1' ) ),
 					array( 'kind' => 'rows', 'meta' => '_ftnc_memory_cards', 'cols' => array( 'notes' => 'f1' ) ),
 					array( 'kind' => 'rows', 'meta' => '_ftnc_work_services', 'cols' => array( 'notes_override' => 'f1' ) ),
+					// The label of each document or link of the work (a name typed by the owner).
+					array( 'kind' => 'rows', 'meta' => '_ftnc_work_files', 'cols' => array( 'label' => 'f1' ) ),
 					array( 'kind' => 'meta', 'meta' => '_ftnc_delivery_notes', 'format' => 'f1' ),
 					array( 'kind' => 'meta', 'meta' => '_ftnc_delivery_password', 'format' => 'f1' ),
+					// The documents themselves (contents and names): after the label column above, so the file step reads
+					// the row as it was just written. Done by Fotonic_Work_Files, not by a field format.
+					array( 'kind' => 'work_files' ),
 				),
 			),
 			'backup_locations' => array(
@@ -81,6 +86,23 @@ class Fotonic_Vault_Fields {
 				),
 			),
 		);
+		// The title of a customer or a work (phase 15), only while titles may be encrypted (see Fotonic_Titles::enabled()). Added at the
+		// END of the fields: Pro's quotes take the people field by its meta name, never by position.
+		if ( self::titles_on() ) {
+			$groups['customers']['fields'][] = self::title_field();
+			$groups['works']['fields'][]     = self::title_field();
+		}
+		return $groups;
+	}
+
+	/** True while the titles of customers, works and quotes may be encrypted (the gate of Fotonic_Titles). */
+	public static function titles_on(): bool {
+		return class_exists( 'Fotonic_Titles' ) && Fotonic_Titles::enabled();
+	}
+
+	/** The field that describes the title of a record: ciphertext, and a slug that says nothing about it. */
+	public static function title_field(): array {
+		return array( 'kind' => 'post', 'field' => 'post_title', 'format' => 'f1', 'neutral_slug' => true );
 	}
 
 	/**
@@ -198,6 +220,18 @@ class Fotonic_Vault_Fields {
 		$changed = 0;
 		$post_up = array();
 
+		if ( $write ) {
+			/**
+			 * About to encrypt a record: Pro keeps the readable copy that Google Calendar needs (it can only be made while the title is
+			 * still readable or the key is at hand, and it must exist before the title turns into ciphertext).
+			 *
+			 * @param int    $post_id   Record ID.
+			 * @param string $post_type Post type.
+			 * @param string $key       Master Key.
+			 */
+			do_action( 'ftnc_vault_before_encrypt_record', $post_id, (string) $group['post_type'], $key );
+		}
+
 		foreach ( $group['fields'] as $field ) {
 			$kind = $field['kind'] ?? '';
 			if ( 'post' === $kind ) {
@@ -263,6 +297,17 @@ class Fotonic_Vault_Fields {
 				if ( $write && $row_changes > 0 ) {
 					$repo->set_meta( $post_id, $name, wp_json_encode( $rows ) );
 				}
+			}
+		}
+
+		// The documents of a work: moved into the private folder and encrypted (the in-memory repo of the tests has no files).
+		foreach ( $group['fields'] as $field ) {
+			if ( 'work_files' === ( $field['kind'] ?? '' ) && method_exists( $repo, 'work_files' ) ) {
+				if ( $write && ! empty( $post_up ) ) { // Titles first, so a stop between the two leaves nothing half done.
+					$repo->set_post_fields( $post_id, $post_up );
+					$post_up = array();
+				}
+				$changed += $repo->work_files( $post_id, $key, $write );
 			}
 		}
 

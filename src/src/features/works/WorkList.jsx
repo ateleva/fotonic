@@ -13,6 +13,7 @@ import Pagination from '../../components/Pagination'
 import { WORKS_PAGE_SIZE } from '../../utils/pagination'
 import PaymentTypeManager from './PaymentTypeManager'
 import { __ } from '../../utils/i18n'
+import { titleOr } from '../../utils/titles'
 
 // The reminders overview is a Pro page: its button (with the due count) comes from Pro, behind the
 // same two guards as the route in router.jsx.
@@ -66,7 +67,7 @@ export default function WorkList() {
             className="border-0 bg-transparent p-0 text-left font-medium text-fotonic-primary underline cursor-pointer hover:opacity-80"
             onClick={() => navigate(`/works/${row.id}`)}
           >
-            {row.title}
+            {titleOr(row.title, 'work', row.id)}
           </button>
           {row.storage_alert && (
             <span
@@ -74,6 +75,23 @@ export default function WorkList() {
               style={{ width: 22, height: 22 }}
               title={__('A backup location of this work was deleted. Open the work to choose another one.', 'eleva-crm-for-photographers')}
               aria-label={__('A backup location of this work was deleted. Open the work to choose another one.', 'eleva-crm-for-photographers')}
+              role="img"
+            >
+              <AlertTriangle size={13} />
+            </span>
+          )}
+          {row.customer_state && (
+            // Same red sign as the backup location alert: the customer of this work is in the Bin (or gone), so the work
+            // needs a look. Opening it shows the field with the reason.
+            <span
+              className="inline-flex items-center justify-center rounded-full bg-red-600 text-white"
+              style={{ width: 22, height: 22 }}
+              title={row.customer_state === 'trash'
+                ? __('The customer of this work is in the Bin. Open the work to choose another customer, or restore this one from the Bin.', 'eleva-crm-for-photographers')
+                : __('The customer of this work no longer exists. Open the work to choose another customer.', 'eleva-crm-for-photographers')}
+              aria-label={row.customer_state === 'trash'
+                ? __('The customer of this work is in the Bin. Open the work to choose another customer, or restore this one from the Bin.', 'eleva-crm-for-photographers')
+                : __('The customer of this work no longer exists. Open the work to choose another customer.', 'eleva-crm-for-photographers')}
               role="img"
             >
               <AlertTriangle size={13} />
@@ -90,7 +108,7 @@ export default function WorkList() {
     {
       key: 'customer',
       label: __('Customer', 'eleva-crm-for-photographers'),
-      render: (row) => row.customer_title ?? <span className="text-gray-400">—</span>,
+      render: (row) => (row.customer_title === null ? titleOr(null, 'customer', row.customer_id) : row.customer_title ?? <span className="text-gray-400">—</span>),
     },
     {
       key: 'payment_status',
@@ -124,6 +142,7 @@ export default function WorkList() {
     <div className="p-6">
       <PageHeader
         title={__('Works', 'eleva-crm-for-photographers')}
+        trashType="ftnc_work"
         action={
           <div className="flex flex-wrap items-center justify-end gap-2">
             {RemindersButton && <RemindersButton />}

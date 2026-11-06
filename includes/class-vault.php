@@ -432,6 +432,11 @@ class Fotonic_Vault {
 	public static function lock_everywhere(): void {
 		self::rotate_epoch();
 		self::lock();
+		// A backup opened for restoring holds the old Master Key (wrapped under a key in a cookie) for up to two hours:
+		// locking everywhere ends the ones nothing is writing from. A restore that is running keeps its session.
+		if ( class_exists( 'Fotonic_Restore_Reader' ) && class_exists( 'Fotonic_Restore_Job' ) ) {
+			Fotonic_Restore_Reader::close_unused();
+		}
 	}
 
 	/** Replace the epoch: every session cookie issued so far stops working. */

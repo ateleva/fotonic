@@ -5,6 +5,9 @@
  * unlocked or changed. Every post, attachment and option this creates is removed at the end.
  */
 require __DIR__ . '/../lib/wp-bootstrap.php';
+// These tests check other behaviour with plain titles. Since phase 15 Pro opens the titles gate on this site, so the gate is
+// closed here for the run (the titles themselves are covered by test-titles-wp.php and test-pro-titles.php).
+add_filter( 'ftnc_titles_encryptable', '__return_false' );
 t_preserve_options( [ 'fotonic_vault_choice', 'fotonic_uid_backfill_done', 'fotonic_vault_encrypt_job', 'fotonic_vault_encrypt_version' ] );
 
 $_SERVER['HTTP_X_WP_NONCE'] = wp_create_nonce( 'wp_rest' );

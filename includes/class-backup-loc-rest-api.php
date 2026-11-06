@@ -208,7 +208,7 @@ class Fotonic_Backup_Loc_REST_API {
 			}
 			$rows[] = [
 				'id'               => $work->ID,
-				'title'            => $work->post_title,
+				'title'            => Fotonic_Titles::read( $work, Fotonic_Vault::get_session_key() ),
 				'event_date'       => $date,
 				'shots_taken'      => $taken,
 				'shots_delivered'  => $delivered,
@@ -315,7 +315,7 @@ class Fotonic_Backup_Loc_REST_API {
 				$seen[ $loc_id ]  = true;
 				$map[ $loc_id ][] = [
 					'id'          => $work->ID,
-					'title'       => $work->post_title,
+					'title'       => Fotonic_Titles::read( $work, Fotonic_Vault::get_session_key() ),
 					'event_date'  => (string) get_post_meta( $work->ID, '_ftnc_event_date', true ),
 					'customer_id' => (int) get_post_meta( $work->ID, '_ftnc_customer_id', true ),
 				];
@@ -355,7 +355,7 @@ class Fotonic_Backup_Loc_REST_API {
 					'title'          => $w['title'],
 					'event_date'     => $w['event_date'],
 					'customer_id'    => $w['customer_id'],
-					'customer_title' => $customer ? $customer->post_title : '',
+					'customer_title' => $customer ? Fotonic_Titles::read( $customer, Fotonic_Vault::get_session_key() ) : '',
 				];
 			}, $works );
 		}

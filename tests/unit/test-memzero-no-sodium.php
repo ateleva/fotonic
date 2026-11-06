@@ -1,5 +1,5 @@
 <?php
-// Unit test: the private memzero() helpers must not break on a server with no libsodium extension.
+// Unit test: the three private memzero() helpers (backup keys, backup archive, restore reader) must not break on a server with no libsodium extension.
 // There, WordPress's sodium_compat defines sodium_memzero() but it throws, which used to turn creating a
 // Vault and making a backup into a critical error. No WordPress, no database.
 //
@@ -57,8 +57,9 @@ if ( $compat ) {
 
 require __DIR__ . '/../../includes/class-backup-keys.php';
 require __DIR__ . '/../../includes/class-backup-archive.php';
+require __DIR__ . '/../../includes/class-restore-reader.php';
 
-foreach ( array( 'Fotonic_Backup_Keys', 'Fotonic_Backup_Archive' ) as $class ) {
+foreach ( array( 'Fotonic_Backup_Keys', 'Fotonic_Backup_Archive', 'Fotonic_Restore_Reader' ) as $class ) {
 	$m = new ReflectionMethod( $class, 'memzero' );
 	$m->setAccessible( true );
 	$secret = random_bytes( 32 );

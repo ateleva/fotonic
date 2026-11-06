@@ -3,6 +3,7 @@ import { useCustomers, useCustomer } from '../../api/customers'
 import SearchSelect from '../../components/SearchSelect'
 import useDebounce from '../../hooks/useDebounce'
 import { __, sprintf } from '../../utils/i18n'
+import { titleOr } from '../../utils/titles'
 
 const SHOWN = 20
 
@@ -25,8 +26,8 @@ export default function CustomerPicker({ id, value, onChange, selectedTitle, inv
       value={value ? String(value) : ''}
       onChange={onChange}
       onSearch={setQuery}
-      options={rows.map((c) => ({ value: String(c.id), label: c.title || __('(no title)', 'eleva-crm-for-photographers') }))}
-      selectedLabel={chosen?.title ?? selectedTitle}
+      options={rows.map((c) => ({ value: String(c.id), label: titleOr(c.title, 'customer', c.id) }))}
+      selectedLabel={chosen ? titleOr(chosen.title, 'customer', chosen.id) : selectedTitle}
       placeholder={__('Select customer', 'eleva-crm-for-photographers')}
       allowClear={allowClear}
       invalid={invalid}

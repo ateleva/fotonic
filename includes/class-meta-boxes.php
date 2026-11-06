@@ -959,22 +959,25 @@ class Fotonic_Meta_Boxes {
 				$dec = [];
 			}
 
-			$attachments = [];
-			foreach ( $dec as $entry ) {
-				$id = is_numeric( $entry ) ? (int) $entry : (int) ( is_array( $entry ) ? ( $entry['id'] ?? 0 ) : 0 );
-				if ( $id > 0 ) {
-					$attachments[] = [ 'type' => 'attachment', 'id' => $id ];
-				}
-			}
-
 			$existing_raw = get_post_meta( $post_id, '_ftnc_work_files', true );
 			$existing_dec = ! empty( $existing_raw ) ? json_decode( $existing_raw, true ) : [];
 			$links        = [];
+			$kept_rows    = [];
 			if ( is_array( $existing_dec ) ) {
 				foreach ( $existing_dec as $entry ) {
 					if ( is_array( $entry ) && ( $entry['type'] ?? '' ) === 'link' ) {
 						$links[] = $entry;
+					} elseif ( is_array( $entry ) && (int) ( $entry['id'] ?? 0 ) > 0 ) {
+						$kept_rows[ (int) $entry['id'] ] = $entry; // Keeps the (protected) label of a file that stays.
 					}
+				}
+			}
+
+			$attachments = [];
+			foreach ( $dec as $entry ) {
+				$id = is_numeric( $entry ) ? (int) $entry : (int) ( is_array( $entry ) ? ( $entry['id'] ?? 0 ) : 0 );
+				if ( $id > 0 ) {
+					$attachments[] = isset( $kept_rows[ $id ] ) ? $kept_rows[ $id ] : [ 'type' => 'attachment', 'id' => $id ];
 				}
 			}
 
@@ -1140,78 +1143,8 @@ class Fotonic_Meta_Boxes {
 	}
 
 	// ---------------------------------------------------------------------------
-	// Customer search hooks
-	// ---------------------------------------------------------------------------
-
-	/**
-	 * Extend wp_query search to also search postmeta values for ftnc_customer.
-	 *
-	 * @param string   $search   Current SQL search clause.
-	 * @param WP_Query $wp_query WP_Query instance.
-	 * @return string Modified search clause.
-	 */
-	public static function extend_customer_search( string $search, WP_Query $wp_query ): string {
-		global $wpdb;
-
-		if (
-			! $wp_query->is_search() ||
-			! isset( $wp_query->query_vars['post_type'] ) ||
-			$wp_query->query_vars['post_type'] !== 'ftnc_customer' ||
-			empty( $wp_query->query_vars['s'] )
-		) {
-			return $search;
-		}
-
-		$term = '%' . $wpdb->esc_like( $wp_query->query_vars['s'] ) . '%';
-
-		// Scoped to the `_ftnc_people` meta key only (set in extend_customer_search_join).
-		$meta_match = $wpdb->prepare(
-			'(ftnc_people_pm.meta_value LIKE %s)',
-			$term
-		);
-
-		// WP_Query appends the post_type, post_status and permission predicates after $search
-		// with AND. A bare " OR (...)" on the end would let this branch escape all of them
-		// (AND binds tighter than OR), so both branches go inside one parenthesised group.
-		return ' AND ( ( 1=1 ' . $search . ' ) OR ' . $meta_match . ' )';
-	}
-
-	/**
-	 * Add LEFT JOIN on postmeta for customer search queries.
-	 *
-	 * @param string   $join     Current JOIN clause.
-	 * @param WP_Query $wp_query WP_Query instance.
-	 * @return string Modified JOIN clause.
-	 */
-	public static function extend_customer_search_join( string $join, WP_Query $wp_query ): string {
-		global $wpdb;
-
-		if (
-			! $wp_query->is_search() ||
-			! isset( $wp_query->query_vars['post_type'] ) ||
-			$wp_query->query_vars['post_type'] !== 'ftnc_customer' ||
-			empty( $wp_query->query_vars['s'] )
-		) {
-			return $join;
-		}
-
-		// Scope the JOIN to the `_ftnc_people` meta key only so it does not span unrelated postmeta rows.
-		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Table names from WP core globals, not user input.
-		$join .= " LEFT JOIN {$wpdb->postmeta} AS ftnc_people_pm ON ({$wpdb->posts}.ID = ftnc_people_pm.post_id AND ftnc_people_pm.meta_key = '_ftnc_people')";
-
-		return $join;
-	}
-
-	// ---------------------------------------------------------------------------
 	// Helpers
 	// ---------------------------------------------------------------------------
-
-	public static function extend_customer_search_distinct( string $distinct, WP_Query $wp_query ): string {
-		if ( ! $wp_query->is_search() || ( $wp_query->query_vars['post_type'] ?? '' ) !== 'ftnc_customer' ) {
-			return $distinct;
-		}
-		return 'DISTINCT';
-	}
 
 	/**
 	 * Common save-guard: nonce check, autosave check, capability check.

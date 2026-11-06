@@ -21,6 +21,8 @@ const MemoryCardForm = lazyPage(() => import('./features/memory-cards/MemoryCard
 const StoragePage = lazyPage(() => import('./features/storage/StoragePage'))
 const BackupLocationForm = lazyPage(() => import('./features/storage/BackupLocationForm'))
 const SettingsPage   = lazyPage(() => import('./features/settings/SettingsPage'))
+const RestoreWizard  = lazyPage(() => import('./features/restore/RestoreWizard'))
+const TrashPage      = lazyPage(() => import('./features/trash/TrashPage'))
 const ChangelogPage  = lazyPage(() => import('./features/changelog/ChangelogPage'))
 const CalendarView   = lazyPage(() => import('./features/calendar/CalendarView').then(m => ({ default: m.CalendarView })))
 
@@ -64,7 +66,7 @@ const ROUTE_TITLES = {
   'storage/:tab': ({ tab }) => `${(STORAGE_TABS[tab] ?? STORAGE_TABS.cards)()} · ${__('Storage', 'eleva-crm-for-photographers')}`,
   'storage/cards/new': () => __('New Card', 'eleva-crm-for-photographers'), 'storage/cards/:id': () => __('Edit Card', 'eleva-crm-for-photographers'),
   'storage/backups/new': () => __('New Backup Location', 'eleva-crm-for-photographers'), 'storage/backups/:id': () => __('Edit Backup Location', 'eleva-crm-for-photographers'),
-  'calendar': () => __('Calendar', 'eleva-crm-for-photographers'), 'changelog': () => __('Changelog', 'eleva-crm-for-photographers'), 'settings': () => __('Settings', 'eleva-crm-for-photographers'),
+  'calendar': () => __('Calendar', 'eleva-crm-for-photographers'), 'changelog': () => __('Changelog', 'eleva-crm-for-photographers'), 'settings': () => __('Settings', 'eleva-crm-for-photographers'), 'restore': () => __('Restore from a backup', 'eleva-crm-for-photographers'), 'trash': () => __('Bin', 'eleva-crm-for-photographers'),
   'quotes': () => __('Quotes', 'eleva-crm-for-photographers'), 'quotes/new': () => __('New Quote', 'eleva-crm-for-photographers'), 'quotes/:id': () => __('Edit Quote', 'eleva-crm-for-photographers'), 'quote-settings': () => __('Quote Settings', 'eleva-crm-for-photographers'),
   'kanban': () => __('Kanban', 'eleva-crm-for-photographers'), 'reminders': () => __('Reminders', 'eleva-crm-for-photographers'),
   'analytics': () => __('Analytics', 'eleva-crm-for-photographers'), 'analytics-compare': () => __('Compare Periods', 'eleva-crm-for-photographers'),
@@ -108,6 +110,8 @@ export function createRouter() { return createHashRouter([
       { path: 'calendar',          element: <Lazy component={CalendarView} /> },
       { path: 'changelog',         element: <Lazy component={ChangelogPage} /> },
       { path: 'settings',          element: <Lazy component={SettingsPage} /> },
+      { path: 'restore',           element: <Lazy component={RestoreWizard} /> },
+      { path: 'trash',             element: <Lazy component={TrashPage} /> },
       // Pro routes — only active when FotonicPro bundle is loaded
       ...(window.FotonicApp?.features?.quotes && window.FotonicProComponents?.QuoteList ? [
         {

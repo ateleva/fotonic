@@ -59,10 +59,10 @@ export default function VaultChoiceScreen() {
       >
         <div className="grid gap-3 md:grid-cols-2">
           <GateNote accent icon={ShieldCheck} title={__('What the Vault protects', 'eleva-crm-for-photographers')}>
-            {__('Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes and your service catalog (titles, prices and notes). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes.', 'eleva-crm-for-photographers')}
+            {__('Personal details of your clients (names, emails, phone numbers, addresses, tax codes), the titles of your clients, works and quotes, event addresses, your notes, your service catalog (titles, prices and notes) and the documents attached to your works (contracts, invoices). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes.', 'eleva-crm-for-photographers')}
           </GateNote>
           <GateNote icon={EyeOff} title={__('What stays readable', 'eleva-crm-for-photographers')}>
-            {__('Dates, work prices and payments, statistics, and the titles of your clients, works and quotes.', 'eleva-crm-for-photographers')}
+            {__('Dates, work prices and payments, statistics, the titles of your tasks and expenses, and the title and addresses of the works you send to Google Calendar.', 'eleva-crm-for-photographers')}
           </GateNote>
           <GateNote icon={ShieldOff} title={__('If you choose Not now', 'eleva-crm-for-photographers')}>
             {__('Your personal data is stored as plain text in the database, and entering it without the Vault does not make it safer. Encrypted backups, including the ones sent to Google Drive with Eleva CRM Pro, are not available. You can turn the Vault on later from Settings: the data you already entered is encrypted at that moment.', 'eleva-crm-for-photographers')}

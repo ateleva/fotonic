@@ -29,7 +29,7 @@ class Fotonic_Site_Health {
      * @return string[]
      */
     public static function protected_folders(): array {
-        $folders = apply_filters( 'ftnc_protected_folders', [ 'backups', 'vault' ] );
+        $folders = apply_filters( 'ftnc_protected_folders', [ 'backups', 'vault', 'restore', 'work-files' ] );
         $clean   = [];
         foreach ( (array) $folders as $folder ) {
             $folder = is_string( $folder ) ? trim( $folder, '/' ) : '';

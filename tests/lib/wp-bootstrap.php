@@ -12,3 +12,12 @@ require __DIR__ . '/assert.php';
 
 $ftnc_admin = get_users( [ 'role' => 'administrator', 'number' => 1, 'fields' => 'ID' ] );
 wp_set_current_user( (int) ( $ftnc_admin[0] ?? 0 ) );
+
+// Safety net: Local is wired to a real Google account. No test may reach Google's servers. Runs last (priority 99),
+// so a test that installs its own counting filter still sees every request first.
+add_filter( 'pre_http_request', function ( $pre, $args, $url ) {
+	if ( false === $pre && false !== stripos( (string) $url, 'googleapis.com' ) ) {
+		return new WP_Error( 'ftnc_test_blocked', 'Google is blocked in tests.' );
+	}
+	return $pre;
+}, 99, 3 );

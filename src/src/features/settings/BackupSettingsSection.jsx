@@ -1,24 +1,9 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Download, Clock, CheckCircle, XCircle, AlertTriangle, Loader, Info } from 'lucide-react'
-import { __, sprintf } from '../../utils/i18n'
+import { Download, CheckCircle, XCircle, AlertTriangle, Loader, Info } from 'lucide-react'
+import { __ } from '../../utils/i18n'
 import { fetchBackupStatus, createBackup, fetchBackupBlob } from '../../api/backup'
 import Button from '../../components/Button'
-
-function formatBytes(bytes) {
-  const mb = Math.round((bytes / (1024 * 1024)) * 10) / 10
-  if (mb >= 1) return `${mb} MB`
-  return `${Math.max(1, Math.round(bytes / 1024))} KB`
-}
-
-function formatDate(iso) {
-  if (!iso) return ''
-  try {
-    return new Date(iso).toLocaleString()
-  } catch {
-    return iso
-  }
-}
 
 function triggerDownload(blob, filename) {
   const url = URL.createObjectURL(blob)
@@ -35,6 +20,7 @@ export default function BackupSettingsSection({ onSetupVault }) {
   const queryClient = useQueryClient()
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [showDetails, setShowDetails] = useState(false)
 
   const { data: status, isLoading } = useQuery({
     queryKey: ['backup-status'],
@@ -119,31 +105,44 @@ export default function BackupSettingsSection({ onSetupVault }) {
 
   return (
     <div className="ftnc-fields">
-      {window.FotonicApp?.isLocalWp && (
-        <p className="text-xs text-gray-500 flex items-start gap-1.5">
-          <Info size={12} className="shrink-0 mt-0.5" />
-          {__('This site runs on Local by Flywheel and exists only on this computer. Local\'s own Cloud Backups are manual.', 'eleva-crm-for-photographers')}
-        </p>
-      )}
-      <p className="text-sm text-gray-500">
+      {/* Reading order: what this does (the one sentence that matters), the button, the result, then the small print. */}
+      <p className="text-sm text-gray-900">
         {__('Download a single encrypted archive of all your CRM data: customers, works, services, memory cards, and every attached file.', 'eleva-crm-for-photographers')}
       </p>
 
-      {status.last_backup ? (
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <Clock size={12} className="shrink-0" />
-          <span>
-            {/* translators: 1: date the last backup was created, 2: file size e.g. "1.2 MB" */}
-            {sprintf(
-              __('Last backup: %s (%s)', 'eleva-crm-for-photographers'),
-              formatDate(status.last_backup.created_at),
-              formatBytes(status.last_backup.size)
-            )}
-          </span>
+      <div>
+        <p className="text-xs text-gray-900 flex items-center gap-1.5">
+          <span>{__('This backs up your CRM data, not your whole WordPress site.', 'eleva-crm-for-photographers')}</span>
+          <button
+            type="button"
+            onClick={() => setShowDetails((v) => !v)}
+            aria-expanded={showDetails}
+            aria-controls="ftnc-backup-details"
+            aria-label={__('How this backup is protected', 'eleva-crm-for-photographers')}
+            title={__('How this backup is protected', 'eleva-crm-for-photographers')}
+            className="inline-flex shrink-0 cursor-pointer items-center rounded-full border-0 bg-transparent p-0.5 text-gray-500 hover:text-fotonic-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-fotonic-primary"
+          >
+            <Info size={14} aria-hidden="true" />
+          </button>
+        </p>
+        {/* Opens and closes smoothly: the row grows from 0 to its own height. */}
+        <div
+          id="ftnc-backup-details"
+          aria-hidden={!showDetails}
+          className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${showDetails ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+        >
+          <div className="overflow-hidden">
+            <div className="mt-3 rounded-md bg-gray-50 border border-gray-200 p-3 space-y-2">
+              <p className="text-xs text-gray-900">
+                {__('This archive can only be opened with your vault password or your recovery code. A strong vault password (minimum 8 characters, longer is safer) is what keeps it safe if the file is ever copied, so keep the file private. Nobody else can read it.', 'eleva-crm-for-photographers')}
+              </p>
+              <p className="text-xs text-gray-900">
+                {__('If you lose your vault password and your recovery code and your recovery phrase, this archive can never be opened.', 'eleva-crm-for-photographers')}
+              </p>
+            </div>
+          </div>
         </div>
-      ) : (
-        <p className="text-xs text-gray-400">{__('No backup has been downloaded yet.', 'eleva-crm-for-photographers')}</p>
-      )}
+      </div>
 
       <Button
         type="button"
@@ -168,24 +167,25 @@ export default function BackupSettingsSection({ onSetupVault }) {
         </p>
       )}
 
-      {status.drift_count > 0 && (
+      {status.pro_data_left_out > 0 && (
+        <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-3 py-2 flex items-start gap-1.5">
+          <AlertTriangle size={12} className="shrink-0 mt-0.5" />
+          {__('Eleva CRM Pro is switched off, so a backup made now leaves out your Pro data (quotes, suppliers, collaborators, expenses and tasks). Switch Pro on before you make a backup.', 'eleva-crm-for-photographers')}
+        </p>
+      )}
+
+      {status.drift_count > 0 && !(status.pro_data_left_out > 0) && (
         <p className="text-xs text-amber-600 flex items-start gap-1.5">
           <AlertTriangle size={12} className="shrink-0 mt-0.5" />
           {__('This backup may be missing recently added fields. Contact support if a backup ever looks incomplete.', 'eleva-crm-for-photographers')}
         </p>
       )}
 
-      <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
-        <p className="text-xs text-blue-900">
-          {__('This archive can only be opened with your vault password or your recovery code. A strong vault password (minimum 8 characters, longer is safer) is what keeps it safe if the file is ever copied, so keep the file private. Nobody else can read it.', 'eleva-crm-for-photographers')}
+      {window.FotonicApp?.isLocalWp && (
+        <p className="text-xs text-gray-600">
+          {__('This site runs on Local by Flywheel and exists only on this computer. Local\'s own Cloud Backups are manual.', 'eleva-crm-for-photographers')}
         </p>
-        <p className="text-xs text-blue-900">
-          {__('If you lose your vault password and your recovery code and your recovery phrase, this archive can never be opened.', 'eleva-crm-for-photographers')}
-        </p>
-        <p className="text-xs text-blue-900">
-          {__('This backs up your CRM data, not your whole WordPress site.', 'eleva-crm-for-photographers')}
-        </p>
-      </div>
+      )}
     </div>
   )
 }

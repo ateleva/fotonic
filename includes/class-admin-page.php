@@ -155,8 +155,8 @@ class Fotonic_Admin_Page {
             'locale'         => get_locale(),
             'dateFormat'     => get_option( 'date_format', 'd/m/Y' ),
             'timeFormat'     => get_option( 'time_format', 'H:i' ),
-            'features'       => apply_filters( 'ftnc_app_features', array( 'calendar' => true ) ),
-            'maxUploadBytes' => Fotonic_Uploads::max_file_bytes(),
+            'features'       => apply_filters( 'ftnc_app_features', array( 'calendar' => true, 'restore' => true ) ),
+            'maxUploadBytes' => Fotonic_Work_Files::max_bytes(), // Never above what a restore can take.
             'isLocalWp'      => self::is_local_wp(),
         ] );
     }

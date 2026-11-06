@@ -9,6 +9,7 @@ import { __ } from '../utils/i18n'
 import { useWhatsNew } from '../api/whatsNew'
 import { WhatsNewIcon, WhatsNewSectionBanner } from './WhatsNew'
 import WhatsNewHost from './WhatsNewHost'
+import RestoreHost from '../features/restore/RestoreHost'
 import { groupBySection } from '../utils/whatsNew'
 
 const features = window.FotonicApp?.features ?? {}
@@ -293,6 +294,9 @@ export default function Layout() {
 
       {/* What's new: the overview once after an update, and the window of one section. */}
       <WhatsNewHost openSection={openSection} setOpenSection={setOpenSection} />
+
+      {/* Drives a backup restore (and its undo) while the person moves around, and shows its floating bar. */}
+      <RestoreHost />
     </div>
   )
 }

@@ -55,6 +55,9 @@ class Fotonic_Vault_Encrypt_Existing {
 
 	/** Writes of protected data are refused only while the job is running or paused. */
 	public static function is_blocking(): bool {
+		if ( class_exists( 'Fotonic_Restore_Job' ) && Fotonic_Restore_Job::is_blocking() ) {
+			return true; // A backup restore is writing: nothing is edited meanwhile (same 423 as the encrypt job).
+		}
 		$job = self::job();
 		return null !== $job && in_array( $job['status'], array( 'running', 'paused' ), true );
 	}
@@ -83,6 +86,7 @@ class Fotonic_Vault_Encrypt_Existing {
 			'error'   => '',
 		);
 		update_option( self::OPTION_JOB, $job, false );
+		Fotonic_Work_Files::clear_skipped(); // The list of files left in the library belongs to one job.
 		return true;
 	}
 
@@ -168,7 +172,7 @@ class Fotonic_Vault_Encrypt_Existing {
 	public static function status(): array {
 		$job = self::job();
 		if ( null === $job ) {
-			return array( 'status' => 'none', 'phase' => '', 'percent' => 100, 'eta_seconds' => 0, 'to_encrypt' => 0, 'records' => 0, 'done' => 0, 'error' => '' );
+			return array( 'status' => 'none', 'phase' => '', 'percent' => 100, 'eta_seconds' => 0, 'to_encrypt' => 0, 'records' => 0, 'done' => 0, 'error' => '', 'skipped_files' => Fotonic_Work_Files::skipped_list() );
 		}
 		$records = 0;
 		$todo    = 0;
@@ -206,6 +210,8 @@ class Fotonic_Vault_Encrypt_Existing {
 			'records'     => $records,
 			'done'        => $done,
 			'error'       => (string) $job['error'],
+			// Documents the job left in the media library (used elsewhere, too big...): ids and reasons only.
+			'skipped_files' => Fotonic_Work_Files::skipped_list(),
 		);
 	}
 
@@ -242,6 +248,11 @@ class Fotonic_Vault_Encrypt_Existing {
 		}
 		if ( 'paused' === $job['status'] ) {
 			return self::status();
+		}
+		if ( class_exists( 'Fotonic_Restore_Job' ) && Fotonic_Restore_Job::is_blocking() ) {
+			$status         = self::status(); // A backup restore is writing the same records: wait for it (the screen retries).
+			$status['busy'] = true;
+			return $status;
 		}
 		if ( 32 !== strlen( $key ) ) {
 			return self::fail( $job, 'no_key' );
@@ -316,6 +327,7 @@ class Fotonic_Vault_Encrypt_Existing {
 	 */
 	private static function step_walk( array $job, array $groups, ?array $scope, string $key, int $size, bool $write ): array {
 		$repo = Fotonic_Vault_Fields::repo();
+		Fotonic_Work_Files::reset_budget(); // Files are heavy: a call handles a few, so it ends inside the 60 s lock.
 		while ( $job['gi'] < count( $job['groups'] ) ) {
 			$gid = $job['groups'][ $job['gi'] ];
 			if ( ! isset( $groups[ $gid ] ) ) { // A group that is gone (a Pro plugin switched off): skip it.
@@ -342,6 +354,14 @@ class Fotonic_Vault_Encrypt_Existing {
 					}
 				}
 				$job['last_id'] = $post_id;
+				if ( $write && Fotonic_Work_Files::budget_exhausted() ) {
+					// The file budget of this call is spent. If this work still has files to handle, stay on it:
+					// the cursor goes one step back so the next call starts with the same record.
+					if ( Fotonic_Vault_Fields::process_record( $post_id, $groups[ $gid ], $key, false ) > 0 ) {
+						$job['last_id'] = $post_id - 1;
+					}
+					return $job;
+				}
 			}
 			return $job; // One batch per call.
 		}
@@ -402,6 +422,18 @@ class Fotonic_Vault_Encrypt_Existing {
 				}
 			}
 		}
+		// Titles became ciphertext and the slug neutral: WordPress also keeps earlier slugs (`_wp_old_slug`) and the slug a record
+		// in the Bin gets back, both written from the plain title. One pass per group that has a neutral slug.
+		if ( method_exists( $repo, 'neutralize_slug_meta' ) ) {
+			foreach ( $groups as $group ) {
+				foreach ( (array) $group['fields'] as $field ) {
+					if ( ! empty( $field['neutral_slug'] ) ) {
+						$repo->neutralize_slug_meta( (string) $group['post_type'], $scope );
+						break;
+					}
+				}
+			}
+		}
 		/**
 		 * The job is done: Pro refreshes whatever depends on the stored (now encrypted) values.
 		 *
@@ -410,7 +442,7 @@ class Fotonic_Vault_Encrypt_Existing {
 		do_action( 'ftnc_vault_encrypt_finished', $scope );
 		update_option( self::OPTION_VERSION, array_values( array_unique( array_merge( self::covered(), Fotonic_Vault_Fields::signatures( $groups ) ) ) ), false );
 		delete_option( self::OPTION_JOB );
-		return array( 'status' => 'done', 'phase' => 'finish', 'percent' => 100, 'eta_seconds' => 0, 'to_encrypt' => 0, 'records' => 0, 'done' => 0, 'error' => '' );
+		return array( 'status' => 'done', 'phase' => 'finish', 'percent' => 100, 'eta_seconds' => 0, 'to_encrypt' => 0, 'records' => 0, 'done' => 0, 'error' => '', 'skipped_files' => Fotonic_Work_Files::skipped_list() );
 	}
 
 	private static function fail( array $job, string $code ): array {

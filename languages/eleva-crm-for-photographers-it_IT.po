@@ -3062,3 +3062,1137 @@ msgstr "Metodi di pagamento"
 
 msgid "Fingerprint unlock needs a secure page, and the browser does not treat this one as secure. Open the site with a trusted https address, then reload. You can still remove devices here."
 msgstr "Lo sblocco con l'impronta richiede una pagina sicura, e il browser non considera sicura questa. Apri il sito con un indirizzo https attendibile e ricarica la pagina. Qui puoi comunque rimuovere i dispositivi."
+
+msgid "The backup could not be read. It may be damaged."
+msgstr "Non riesco a leggere il backup. Potrebbe essere danneggiato."
+
+msgid "The file is empty."
+msgstr "Il file è vuoto."
+
+msgid "The file checksum is not valid."
+msgstr "Il codice di controllo del file non è valido."
+
+msgid "Other uploads are still waiting. Finish or cancel them first, or wait a couple of hours."
+msgstr "Ci sono altri caricamenti in attesa. Completali o annullali prima, oppure aspetta un paio d'ore."
+
+msgid "There is not enough free space on the server to receive this backup."
+msgstr "Sul server non c'è abbastanza spazio libero per ricevere questo backup."
+
+msgid "The server could not store the backup file."
+msgstr "Il server non è riuscito a salvare il file del backup."
+
+msgid "This upload is already complete."
+msgstr "Questo caricamento è già completo."
+
+msgid "A piece of the file arrived out of range."
+msgstr "Un pezzo del file è arrivato fuori posto."
+
+msgid "A piece of the file has the wrong size."
+msgstr "Un pezzo del file ha la dimensione sbagliata."
+
+msgid "The server could not store the backup file. The disk may be full."
+msgstr "Il server non è riuscito a salvare il file del backup. Il disco potrebbe essere pieno."
+
+msgid "Some pieces of the file are missing."
+msgstr "Mancano alcuni pezzi del file."
+
+msgid "The file that arrived has a different size than the one that was sent. Try again."
+msgstr "Il file arrivato ha una dimensione diversa da quello inviato. Riprova."
+
+msgid "The file was damaged on the way. Try again."
+msgstr "Il file si è danneggiato durante l'invio. Riprova."
+
+msgid "This is not a backup file. Pick the .zip file that Eleva CRM created."
+msgstr "Questo non è un file di backup. Scegli il file .zip creato da Eleva CRM."
+
+msgid "This upload was not found. It may have expired. Start again."
+msgstr "Non trovo questo caricamento. Potrebbe essere scaduto. Ricomincia."
+
+msgid "This file is not a readable backup. If it came from a cloud drive, make sure the download finished."
+msgstr "Questo file non è un backup leggibile. Se arriva da un cloud, controlla che lo scaricamento sia finito."
+
+msgid "This backup has no such data."
+msgstr "Questo backup non contiene questi dati."
+
+msgid "The backup file is no longer there. Upload it again."
+msgstr "Il file del backup non c'è più. Caricalo di nuovo."
+
+msgid "This file is not an Eleva CRM backup, or it is incomplete."
+msgstr "Questo file non è un backup di Eleva CRM, oppure è incompleto."
+
+msgid "This backup was made by a newer version of Eleva CRM. Update the plugin, then try again."
+msgstr "Questo backup è stato creato da una versione più recente di Eleva CRM. Aggiorna il plugin e riprova."
+
+msgid "The backup is damaged: a part of it does not match its checksum."
+msgstr "Il backup è danneggiato: una sua parte non corrisponde al codice di controllo."
+
+msgid "To open this backup, enter the password, the recovery code or the recovery phrase of the Vault that made it."
+msgstr "Per aprire questo backup inserisci la password, il codice di recupero o la frase di recupero del Vault che lo ha creato."
+
+msgid "Another attempt is in progress. Wait a few seconds and try again."
+msgstr "È già in corso un altro tentativo. Aspetta qualche secondo e riprova."
+
+msgid "Too many wrong attempts. Try again in 15 minutes."
+msgstr "Troppi tentativi sbagliati. Riprova tra 15 minuti."
+
+msgid "That password, recovery code or recovery phrase does not open this backup."
+msgstr "Questa password, codice di recupero o frase di recupero non apre questo backup."
+
+msgid "This restore can no longer continue. Open the backup again."
+msgstr "Questo ripristino non può più continuare. Apri di nuovo il backup."
+
+msgid "This restore has expired. Open the backup again."
+msgstr "Questo ripristino è scaduto. Apri di nuovo il backup."
+
+msgid "Choose a backup file first."
+msgstr "Scegli prima un file di backup."
+
+msgid "That backup file was not found."
+msgstr "Non trovo quel file di backup."
+
+msgid "Unlock the Vault of this site first: the backup is compared with the records you have now."
+msgstr "Sblocca prima il Vault di questo sito: il backup viene confrontato con i dati che hai ora."
+
+msgid "The preview is already running. Wait a moment."
+msgstr "L'anteprima è già in corso. Attendi un momento."
+
+msgid "This restore session has ended. Open the backup again."
+msgstr "Questo ripristino è terminato. Apri di nuovo il backup."
+
+msgid "A backup is being restored. Wait until it has finished, then save again."
+msgstr "Sto ripristinando un backup. Aspetta che finisca, poi salva di nuovo."
+
+msgid "Your data is being encrypted. Wait until it has finished, then restore."
+msgstr "I tuoi dati sono in fase di cifratura. Aspetta che finisca, poi ripristina."
+
+msgid "Another restore is not finished. Finish it, undo it or dismiss it first."
+msgstr "Un altro ripristino non è finito. Completalo, annullalo o chiudilo prima."
+
+msgid "Unlock the Vault of this site first: the restored data is encrypted with its key."
+msgstr "Sblocca prima il Vault di questo sito: i dati ripristinati vengono cifrati con la sua chiave."
+
+msgid "This site has data but no Vault. Turn the Vault on first, so a safety backup can be made and personal details stay protected, then restore."
+msgstr "Questo sito ha dei dati ma non ha il Vault. Attiva prima il Vault, così si può fare un backup di sicurezza e i dati personali restano protetti, poi ripristina."
+
+msgid "Run the preview to the end before restoring."
+msgstr "Completa l'anteprima prima di ripristinare."
+
+msgid "The data of this site changed since the preview. Run the preview again."
+msgstr "I dati di questo sito sono cambiati dopo l'anteprima. Rifai l'anteprima."
+
+msgid "One of the choices does not fit that record."
+msgstr "Una delle scelte non è adatta a quel record."
+
+msgid "Two records of the backup would end up on the same record of this site. Change one choice."
+msgstr "Due record del backup finirebbero sullo stesso record di questo sito. Cambia una scelta."
+
+msgid "Some records may be duplicates. Choose what to do with each one."
+msgstr "Alcuni record potrebbero essere doppioni. Scegli cosa fare con ognuno."
+
+msgid "There is no restore running."
+msgstr "Non c'è nessun ripristino in corso."
+
+msgid "The restore is paused."
+msgstr "Il ripristino è in pausa."
+
+msgid "The restore session ended before the restore was finished. Undo it, or open the backup again."
+msgstr "La sessione di ripristino è finita prima della fine del ripristino. Annullalo, oppure apri di nuovo il backup."
+
+msgid "The Vault of this site changed during the restore. Undo it and start again."
+msgstr "Il Vault di questo sito è cambiato durante il ripristino. Annullalo e ricomincia."
+
+msgid "The Vault is locked. Unlock it and the restore goes on from where it stopped."
+msgstr "Il Vault è bloccato. Sbloccalo e il ripristino riprende da dove si era fermato."
+
+msgid "The safety backup could not be made, so nothing was changed. %s"
+msgstr "Non è stato possibile fare il backup di sicurezza, quindi non è stato cambiato nulla. %s"
+
+msgid "A backup is running. Wait a moment."
+msgstr "Un backup è in corso. Aspetta un momento."
+
+msgid "The preview no longer matches the backup. Run the preview again."
+msgstr "L'anteprima non corrisponde più al backup. Rifai l'anteprima."
+
+msgid "The restore is not running."
+msgstr "Il ripristino non è in corso."
+
+msgid "The restore is not paused."
+msgstr "Il ripristino non è in pausa."
+
+msgid "The restore is running. Pause it first."
+msgstr "Il ripristino è in corso. Mettilo prima in pausa."
+
+msgid "There is no restore to undo."
+msgstr "Non c'è nessun ripristino da annullare."
+
+msgid "The restore is running. Wait a moment."
+msgstr "Il ripristino è in corso. Aspetta un momento."
+
+msgid "The restore is already running. Wait a moment."
+msgstr "Il ripristino è già in corso. Aspetta un momento."
+
+msgid "This backup has data this site cannot restore."
+msgstr "Questo backup contiene dati che questo sito non può ripristinare."
+
+msgid "A record of this site changed or was removed since the preview. Run the preview again."
+msgstr "Un record di questo sito è cambiato o è stato rimosso dopo l'anteprima. Rifai l'anteprima."
+
+msgid "A record could not be written."
+msgstr "Non è stato possibile scrivere un record."
+
+msgid "A value could not be encrypted. Nothing else was written."
+msgstr "Non è stato possibile cifrare un valore. Non è stato scritto altro."
+
+msgid "This site has no Vault. Turn the Vault on first (recommended: the restored data is then encrypted with your own key), or confirm that you want to restore without it and keep the data readable in plain text."
+msgstr "Questo sito non ha un Vault. Attiva prima il Vault (consigliato: i dati ripristinati vengono cifrati con la tua chiave), oppure conferma di voler ripristinare senza Vault e lasciare i dati leggibili in chiaro."
+
+msgid "Type the confirmation word exactly to replace everything."
+msgstr "Scrivi esattamente la parola di conferma per sostituire tutto."
+
+msgid "This site has data of Eleva CRM Pro that a full restore cannot replace yet, and removing only part of the data would leave it pointing at nothing. Restore without replacing, or remove that data first."
+msgstr "Questo sito ha dati di Eleva CRM Pro che un ripristino totale non può ancora sostituire, e togliere solo una parte dei dati lascerebbe il resto senza riferimenti. Ripristina senza sostituire, oppure rimuovi prima quei dati."
+
+msgid "A full restore replaces your data and cannot be undone. To go back, restore the safety backup made before it: %s."
+msgstr "Un ripristino totale sostituisce i tuoi dati e non si può annullare. Per tornare indietro, ripristina il backup di sicurezza fatto prima: %s."
+
+msgid "A full restore replaces your data and cannot be undone."
+msgstr "Un ripristino totale sostituisce i tuoi dati e non si può annullare."
+
+msgid "A file could not be saved in the uploads folder."
+msgstr "Non è stato possibile salvare un file nella cartella degli upload."
+
+msgid "Other data of Eleva CRM"
+msgstr "Altri dati di Eleva CRM"
+
+msgid "Some records could not be removed, so nothing was written. Try again."
+msgstr "Alcuni record non si sono potuti rimuovere, quindi non è stato scritto nulla. Riprova."
+
+msgid "Some records could not be removed."
+msgstr "Alcuni record non si sono potuti rimuovere."
+
+msgid "Restore from a backup"
+msgstr "Ripristina da un backup"
+
+msgid "The file could not be sent. Check your connection and try again."
+msgstr "Non sono riuscito a inviare il file. Controlla la connessione e riprova."
+
+msgid "Choose the backup file you downloaded from Eleva CRM. It is a .zip file. Nothing in your CRM changes until you confirm, at the end."
+msgstr "Scegli il file di backup che hai scaricato da Eleva CRM. È un file .zip. Nel tuo CRM non cambia nulla finché non confermi, alla fine."
+
+msgid "Drop the backup file here, or"
+msgstr "Trascina qui il file di backup, oppure"
+
+msgid "Choose a file"
+msgstr "Scegli un file"
+
+msgid "Sending the file to your site: %d%%. Keep this page open."
+msgstr "Invio del file al tuo sito: %d%%. Tieni aperta questa pagina."
+
+msgid "Try again from where it stopped"
+msgstr "Riprova da dove si era fermato"
+
+msgid "Opening the backup…"
+msgstr "Apertura del backup…"
+
+msgid "Backups already saved on this site"
+msgstr "Backup già salvati su questo sito"
+
+msgid "No need to send a file: these were made by this site. The safety copy made before a restore is here too."
+msgstr "Non serve inviare un file: sono stati fatti da questo sito. Qui c'è anche la copia di sicurezza fatta prima di un ripristino."
+
+msgid "Use this backup"
+msgstr "Usa questo backup"
+
+msgid "The backup could not be checked."
+msgstr "Non sono riuscito a controllare il backup."
+
+msgid "Choose another backup"
+msgstr "Scegli un altro backup"
+
+msgid "Checking your backup against the data on this site…"
+msgstr "Confronto del backup con i dati di questo sito…"
+
+msgid "%1$s: %2$d of %3$d"
+msgstr "%1$s: %2$d di %3$d"
+
+msgid "Nothing is changed yet."
+msgstr "Per ora non cambia nulla."
+
+msgid "Something went wrong. Try again."
+msgstr "Qualcosa è andato storto. Riprova."
+
+msgid "The restore was undone. Your data is as it was before."
+msgstr "Il ripristino è stato annullato. I tuoi dati sono come prima."
+
+msgid "The restore stopped before the end."
+msgstr "Il ripristino si è fermato prima della fine."
+
+msgid "What was already restored can be kept or undone."
+msgstr "Quello che è già stato ripristinato si può tenere o annullare."
+
+msgid "The restore is finished."
+msgstr "Il ripristino è finito."
+
+msgid "%d records added."
+msgstr "%d elementi aggiunti."
+
+msgid "%d records added as separate copies."
+msgstr "%d elementi aggiunti come copie separate."
+
+msgid "%d records replaced by the version in the backup."
+msgstr "%d elementi sostituiti con la versione del backup."
+
+msgid "%d records left as they were."
+msgstr "%d elementi lasciati com'erano."
+
+msgid "%d records left out, as you chose."
+msgstr "%d elementi lasciati fuori, come hai scelto."
+
+msgid "%d records removed to make room for the backup."
+msgstr "%d elementi rimossi per fare posto al backup."
+
+msgid "%d files brought back."
+msgstr "%d file recuperati."
+
+msgid "%d files were already on this site and were used again."
+msgstr "%d file erano già su questo sito e sono stati riutilizzati."
+
+msgid "Not everything could be restored"
+msgstr "Non tutto è stato ripristinato"
+
+msgid "%d files could not be restored because they were missing or damaged in the backup."
+msgstr "%d file non sono stati ripristinati perché mancavano o erano rovinati nel backup."
+
+msgid "%d file entries were left out of their works because the file was not in the backup."
+msgstr "%d file sono stati tolti dai loro lavori perché non erano nel backup."
+
+msgid "%d details could not be read and were left empty."
+msgstr "%d dati non si sono potuti leggere e sono stati lasciati vuoti."
+
+msgid "%d links to other records could not be rebuilt."
+msgstr "%d collegamenti ad altri elementi non si sono potuti ricostruire."
+
+msgid "Not restored by this version: %s."
+msgstr "Non ripristinati da questa versione: %s."
+
+msgid "Some links from your works to Eleva CRM Pro data were left out."
+msgstr "Alcuni collegamenti dai tuoi lavori ai dati di Eleva CRM Pro sono stati lasciati fuori."
+
+msgid "Some Eleva CRM Pro settings were not restored."
+msgstr "Alcune impostazioni di Eleva CRM Pro non sono state ripristinate."
+
+msgid "The connection with Google Calendar is not restored. Events already on your calendar were left as they are."
+msgstr "Il collegamento con Google Calendar non viene ripristinato. Gli eventi già nel tuo calendario sono rimasti come erano."
+
+msgid "Your data from before the restore was saved in the safety copy %s. It is in the list of backups saved on this site: choose it in \"Restore from a backup\" to go back."
+msgstr "I tuoi dati di prima del ripristino sono nella copia di sicurezza %s. La trovi nell'elenco dei backup salvati su questo sito: sceglila in \"Ripristina da un backup\" per tornare indietro."
+
+msgid "A safety copy of your data from before the restore was saved: %s."
+msgstr "È stata salvata una copia di sicurezza dei tuoi dati di prima del ripristino: %s."
+
+msgid "A restore that replaces everything cannot be undone with a button."
+msgstr "Un ripristino che sostituisce tutto non si può annullare con un pulsante."
+
+msgid "Keep the result and close"
+msgstr "Tieni il risultato e chiudi"
+
+msgid "Undo this restore"
+msgstr "Annulla questo ripristino"
+
+msgid "Once you keep the result, the restore can no longer be undone."
+msgstr "Dopo che hai tenuto il risultato, il ripristino non si può più annullare."
+
+msgid "Undo this restore?"
+msgstr "Annullare questo ripristino?"
+
+msgid "The records added by the restore are removed, and the ones it replaced go back to how they were. Everything else stays."
+msgstr "Gli elementi aggiunti dal ripristino vengono tolti e quelli che ha sostituito tornano com'erano. Tutto il resto resta."
+
+msgid "Undo the restore"
+msgstr "Annulla il ripristino"
+
+msgid "This backup was made on %s."
+msgstr "Questo backup è stato fatto il %s."
+
+msgid "The backup is locked. To open it, enter the Vault password, the recovery code or the recovery phrase that were valid on the day the backup was made. Without one of them the backup cannot be opened by anyone."
+msgstr "Il backup è protetto. Per aprirlo, inserisci la password del Vault, il codice di recupero o la frase di recupero che valevano nel giorno in cui è stato fatto il backup. Senza uno di questi, il backup non si può aprire."
+
+msgid "If you changed your password or made a new recovery kit after this backup was created, the new ones do not open it. Use the ones you had then."
+msgstr "Se dopo aver creato questo backup hai cambiato la password o fatto un nuovo kit di recupero, quelli nuovi non lo aprono. Usa quelli che avevi allora."
+
+msgid "Password, recovery code or recovery phrase"
+msgstr "Password, codice di recupero o frase di recupero"
+
+msgid "Opening…"
+msgstr "Apertura…"
+
+msgid "Open the backup"
+msgstr "Apri il backup"
+
+msgid "Something went wrong while restoring. Try again."
+msgstr "Qualcosa è andato storto durante il ripristino. Riprova."
+
+msgid "Restoring your backup"
+msgstr "Ripristino del backup"
+
+msgid "Keep working if you like. You can read your data, but saving is switched off until the restore has finished."
+msgstr "Puoi continuare a lavorare. Puoi leggere i tuoi dati, ma il salvataggio resta disattivato finché il ripristino non è finito."
+
+msgid "Restore paused"
+msgstr "Ripristino in pausa"
+
+msgid "You can read your data. Saving is switched off until the restore has finished."
+msgstr "Puoi leggere i tuoi dati. Il salvataggio resta disattivato finché il ripristino non è finito."
+
+msgid "Undoing the restore"
+msgstr "Annullamento del ripristino"
+
+msgid "Please wait. Your data is being put back as it was."
+msgstr "Attendi. I tuoi dati stanno tornando com'erano."
+
+msgid "The restore needs your attention"
+msgstr "Il ripristino ha bisogno di te"
+
+msgid "It stopped before the end. Open it to see what to do."
+msgstr "Si è fermato prima della fine. Aprilo per vedere cosa fare."
+
+msgid "Open"
+msgstr "Apri"
+
+msgid "Restore finished"
+msgstr "Ripristino finito"
+
+msgid "Open the report to see what was restored."
+msgstr "Apri il resoconto per vedere cosa è stato ripristinato."
+
+msgid "See the report"
+msgstr "Vedi il resoconto"
+
+msgid "This backup was made by this site, so it opened without a password."
+msgstr "Questo backup è stato fatto da questo sito, quindi si è aperto senza password."
+
+msgid "Backup made on %s."
+msgstr "Backup fatto il %s."
+
+msgid "What the backup holds, compared with this site"
+msgstr "Cosa contiene il backup, rispetto a questo sito"
+
+msgid "Not on this site"
+msgstr "Non presenti su questo sito"
+
+msgid "Already here, the same"
+msgstr "Già qui, uguali"
+
+msgid "Already here, different"
+msgstr "Già qui, diversi"
+
+msgid "Maybe the same"
+msgstr "Forse sono gli stessi"
+
+msgid "This version cannot restore everything in this backup yet. These are left out:"
+msgstr "Questa versione non riesce ancora a ripristinare tutto il contenuto di questo backup. Restano fuori:"
+
+msgid "%1$s (%2$d)"
+msgstr "%1$s (%2$d)"
+
+msgid "How do you want to restore?"
+msgstr "Come vuoi ripristinare?"
+
+msgid "Add to what I have (recommended)"
+msgstr "Aggiungi a quello che ho (consigliato)"
+
+msgid "Your current data stays. Anything missing is added, and what is already here is left alone unless you choose otherwise. You can undo it afterwards."
+msgstr "I tuoi dati attuali restano. Quello che manca viene aggiunto, e quello che c'è già non viene toccato, a meno che tu scelga diversamente. Potrai annullare dopo."
+
+msgid "Replace everything"
+msgstr "Sostituisci tutto"
+
+msgid "Your current Eleva CRM data is removed and replaced with the backup, so the site ends up exactly like it was when the backup was made."
+msgstr "I dati attuali di Eleva CRM vengono tolti e sostituiti con il backup, così il sito torna esattamente com'era quando è stato fatto il backup."
+
+msgid "This version cannot replace everything on this site yet, because you have data it cannot bring back:"
+msgstr "Questa versione non può ancora sostituire tutto su questo sito, perché hai dei dati che non riesce a rimettere:"
+
+msgid "Use \"Add to what I have\" instead."
+msgstr "Usa invece \"Aggiungi a quello che ho\"."
+
+msgid "This cannot be undone with a button. Before anything is removed, the site saves a safety copy of your current data. If you change your mind, restore that safety copy."
+msgstr "Questo non si può annullare con un pulsante. Prima di togliere qualsiasi cosa, il sito salva una copia di sicurezza dei tuoi dati attuali. Se cambi idea, ripristina quella copia."
+
+msgid "To confirm, type %s"
+msgstr "Per confermare, scrivi %s"
+
+msgid "Keep the one on this site"
+msgstr "Tieni quello di questo sito"
+
+msgid "Use the version from the backup"
+msgstr "Usa la versione del backup"
+
+msgid "Add the backup version as a separate one"
+msgstr "Aggiungi la versione del backup come elemento separato"
+
+msgid "Leave it out"
+msgstr "Lascialo fuori"
+
+msgid "Add it"
+msgstr "Aggiungilo"
+
+msgid "It is \"%s\": keep the one on this site"
+msgstr "È \"%s\": tieni quello di questo sito"
+
+msgid "It is \"%s\": use the version from the backup"
+msgstr "È \"%s\": usa la versione del backup"
+
+msgid "It is a different one: add it"
+msgstr "È un altro: aggiungilo"
+
+msgid "You are about to replace everything in Eleva CRM with this backup."
+msgstr "Stai per sostituire tutto in Eleva CRM con questo backup."
+
+msgid "You are about to add this backup to your data."
+msgstr "Stai per aggiungere questo backup ai tuoi dati."
+
+msgid "The site first saves a safety copy of your current data."
+msgstr "Il sito salva prima una copia di sicurezza dei tuoi dati attuali."
+
+msgid "Then your current Eleva CRM data is removed and the backup is put in its place."
+msgstr "Poi i dati attuali di Eleva CRM vengono tolti e al loro posto va il backup."
+
+msgid "There is no Undo button afterwards. To go back, restore the safety copy."
+msgstr "Dopo non c'è un pulsante Annulla. Per tornare indietro, ripristina la copia di sicurezza."
+
+msgid "If your site already has data, it first saves a safety copy of it."
+msgstr "Se il tuo sito ha già dei dati, prima ne salva una copia di sicurezza."
+
+msgid "%d records will be added."
+msgstr "Verranno aggiunti %d elementi."
+
+msgid "%d records here will be replaced by the version in the backup."
+msgstr "%d elementi presenti qui verranno sostituiti con la versione del backup."
+
+msgid "You can undo it afterwards, until you choose to keep the result."
+msgstr "Potrai annullare dopo, finché non scegli di tenere il risultato."
+
+msgid "While it runs you can read your data, but saving is switched off. It goes on if you open other pages."
+msgstr "Mentre procede puoi leggere i tuoi dati, ma il salvataggio è disattivato. Va avanti anche se apri altre pagine."
+
+msgid "The connection with Google Calendar is not restored. Events already on your calendar are left as they are."
+msgstr "Il collegamento con Google Calendar non viene ripristinato. Gli eventi già nel tuo calendario restano come sono."
+
+msgid "Personal details in the backup are protected again with your own Vault key on this site."
+msgstr "I dati personali del backup vengono protetti di nuovo con la chiave del tuo Vault su questo sito."
+
+msgid "This site has no Vault. We recommend turning the Vault on first: your restored client details are then protected with your own key. Without it, they are stored as plain text on this site."
+msgstr "Questo sito non ha il Vault. Ti consigliamo di attivare prima il Vault: i dati dei clienti ripristinati saranno così protetti con la tua chiave. Senza, restano salvati in chiaro su questo sito."
+
+msgid "Set up the Vault first"
+msgstr "Prima attiva il Vault"
+
+msgid "I understand, restore without the Vault. The restored details will not be protected until I turn the Vault on."
+msgstr "Ho capito, ripristina senza il Vault. I dati ripristinati non saranno protetti finché non attivo il Vault."
+
+msgid "Check the backup again"
+msgstr "Controlla di nuovo il backup"
+
+msgid "Starting…"
+msgstr "Avvio…"
+
+msgid "Start the restore"
+msgstr "Avvia il ripristino"
+
+msgid "Putting your data back as it was…"
+msgstr "Sto rimettendo i tuoi dati com'erano…"
+
+msgid "Saving a safety copy of your current data…"
+msgstr "Salvataggio di una copia di sicurezza dei tuoi dati attuali…"
+
+msgid "Removing the current data…"
+msgstr "Rimozione dei dati attuali…"
+
+msgid "Finishing…"
+msgstr "Conclusione…"
+
+msgid "Restoring your data…"
+msgstr "Ripristino dei tuoi dati…"
+
+msgid "You can read your data, but saving is switched off until this has finished. You can leave this page: it keeps going, and a bar shows how far it is."
+msgstr "Puoi leggere i tuoi dati, ma il salvataggio resta disattivato finché non è finito. Puoi lasciare questa pagina: il ripristino va avanti e una barra mostra a che punto è."
+
+msgid "Step 1: choose the backup"
+msgstr "Passo 1: scegli il backup"
+
+msgid "Step 2: open the backup"
+msgstr "Passo 2: apri il backup"
+
+msgid "Step 3: checking the backup"
+msgstr "Passo 3: controllo del backup"
+
+msgid "Step 4: how to restore"
+msgstr "Passo 4: come ripristinare"
+
+msgid "Step 5: what to do with the differences"
+msgstr "Passo 5: cosa fare con le differenze"
+
+msgid "Step 6: last look"
+msgstr "Passo 6: ultimo controllo"
+
+msgid "The opened backup is no longer available. Choose it again."
+msgstr "Il backup aperto non è più disponibile. Sceglilo di nuovo."
+
+msgid "Restore report"
+msgstr "Resoconto del ripristino"
+
+msgid "It points to something that may be a duplicate, so it needs your decision too."
+msgstr "Si riferisce a qualcosa che potrebbe essere un doppione, quindi serve anche una tua decisione."
+
+msgid "This site has something similar: %s"
+msgstr "Questo sito ha qualcosa di simile: %s"
+
+msgid "one of the two cannot be read"
+msgstr "uno dei due non si può leggere"
+
+msgid "(no name)"
+msgstr "(senza nome)"
+
+msgid "What to do with this record"
+msgstr "Cosa fare con questo elemento"
+
+msgid "Choose…"
+msgstr "Scegli…"
+
+msgid "Previous"
+msgstr "Precedente"
+
+msgid "Page %1$d of %2$d"
+msgstr "Pagina %1$d di %2$d"
+
+msgid "Keep the ones on this site"
+msgstr "Tieni quelli di questo sito"
+
+msgid "Use the versions from the backup"
+msgstr "Usa le versioni del backup"
+
+msgid "Add the backup versions as separate ones"
+msgstr "Aggiungi le versioni del backup come elementi separati"
+
+msgid "Leave them all out"
+msgstr "Lasciali tutti fuori"
+
+msgid "Same one: keep the ones on this site"
+msgstr "Sono gli stessi: tieni quelli di questo sito"
+
+msgid "Same one: use the versions from the backup"
+msgstr "Sono gli stessi: usa le versioni del backup"
+
+msgid "Different ones: add them"
+msgstr "Sono diversi: aggiungili"
+
+msgid "Anything that is the same on both sides is left alone and is not listed here. For the rest, decide what to do. If you are not sure, keep the ones on this site: nothing of yours is touched."
+msgstr "Quello che è uguale da entrambe le parti non viene toccato e qui non è elencato. Per il resto, decidi cosa fare. Se non sei sicuro, tieni quelli di questo sito: niente di tuo viene toccato."
+
+msgid "Nothing to decide: everything in the backup is already on this site."
+msgstr "Niente da decidere: tutto quello che c'è nel backup è già su questo sito."
+
+msgid "%d not on this site yet"
+msgstr "%d non ancora presenti su questo sito"
+
+msgid "What to do with the ones that are not on this site yet"
+msgstr "Cosa fare con quelli non ancora presenti su questo sito"
+
+msgid "Add them"
+msgstr "Aggiungili"
+
+msgid "Leave them out"
+msgstr "Lasciali fuori"
+
+msgid "%d may be the same as something you already have"
+msgstr "%d potrebbero essere uguali a qualcosa che hai già"
+
+msgid "Do this for all of them:"
+msgstr "Fai questo per tutti:"
+
+msgid "%d already here, but different"
+msgstr "%d già presenti, ma diversi"
+
+msgid "%d still need a choice."
+msgstr "Per %d serve ancora una scelta."
+
+msgid "Data of Eleva CRM Pro"
+msgstr "Dati di Eleva CRM Pro"
+
+msgid "People and contact details"
+msgstr "Persone e contatti"
+
+msgid "Price"
+msgstr "Prezzo"
+
+msgid "Event date"
+msgstr "Data dell'evento"
+
+msgid "Start time"
+msgstr "Ora di inizio"
+
+msgid "End time"
+msgstr "Ora di fine"
+
+msgid "Total price"
+msgstr "Prezzo totale"
+
+msgid "Colour"
+msgstr "Colore"
+
+msgid "Quick notes"
+msgstr "Note rapide"
+
+msgid "Backup done"
+msgstr "Backup fatto"
+
+msgid "Cards formatted"
+msgstr "Schede formattate"
+
+msgid "Photos taken"
+msgstr "Foto scattate"
+
+msgid "Other details"
+msgstr "Altri dettagli"
+
+msgid "Put the data of a backup back into Eleva CRM: after a move to a new site, or to bring back something you lost. You choose what happens to anything that is already here, and nothing changes until you confirm."
+msgstr "Rimetti in Eleva CRM i dati di un backup: dopo il trasloco su un sito nuovo, o per recuperare qualcosa che hai perso. Scegli tu cosa succede a ciò che è già qui, e non cambia nulla finché non confermi."
+
+msgid "A restore is in progress or waiting for you to finish it."
+msgstr "C'è un ripristino in corso o in attesa che tu lo concluda."
+
+msgid "Open the restore"
+msgstr "Apri il ripristino"
+
+msgid "This place for backups is not available."
+msgstr "Questo posto per i backup non è disponibile."
+
+msgid "Restore this backup"
+msgstr "Ripristina questo backup"
+
+msgid "The backup could not be brought to your site. Try again."
+msgstr "Non sono riuscito a portare il backup sul tuo sito. Riprova."
+
+msgid "Your backup"
+msgstr "Il tuo backup"
+
+msgid "Bringing the backup to your site: %d%%. Keep this page open."
+msgstr "Sto portando il backup sul tuo sito: %d%%. Tieni aperta questa pagina."
+
+msgid "Backups on %s"
+msgstr "Backup su %s"
+
+msgid "Backup"
+msgstr "Backup"
+
+msgid "Check"
+msgstr "Controllo"
+
+msgid "Your choices"
+msgstr "Le tue scelte"
+
+msgid "Last look"
+msgstr "Ultimo controllo"
+
+msgid "Restore"
+msgstr "Ripristino"
+
+msgid "Restore steps"
+msgstr "Passi del ripristino"
+
+msgid "All steps done"
+msgstr "Tutti i passi completati"
+
+msgid "Step %1$d of %2$d: %3$s"
+msgstr "Passo %1$d di %2$d: %3$s"
+
+msgid "Choose the backup"
+msgstr "Scegli il backup"
+
+msgid "Checking the backup"
+msgstr "Controllo del backup"
+
+msgid "How to restore"
+msgstr "Come ripristinare"
+
+msgid "What to do with the differences"
+msgstr "Cosa fare con le differenze"
+
+msgid "Backup: %s"
+msgstr "Backup: %s"
+
+msgid "Backup chosen"
+msgstr "Backup scelto"
+
+msgid "No differences to go through: everything is replaced."
+msgstr "Nessuna differenza da esaminare: viene sostituito tutto."
+
+msgid "No differences to go through: everything in the backup is new or already the same."
+msgstr "Nessuna differenza da esaminare: tutto quello che c'è nel backup è nuovo oppure già uguale."
+
+msgid "Backups saved on this site"
+msgstr "Backup salvati su questo sito"
+
+msgid "How this backup is protected"
+msgstr "Come è protetto questo backup"
+
+msgid "Choose the backup file you downloaded from Eleva CRM (a .zip file). If something in the backup clashes with data already on this site, you will be asked what to do, only for those items."
+msgstr "Scegli il file di backup che hai scaricato da Eleva CRM (un file .zip). Se qualcosa nel backup è in conflitto con i dati già presenti su questo sito, ti verrà chiesto cosa fare, solo per quegli elementi."
+
+msgid "Below you will find the backups already made on this site and, if Google Drive is connected (Eleva CRM Pro), the ones saved on Drive. Check the dates carefully: choose the backup from the day you want to go back to."
+msgstr "Qui sotto trovi i backup già fatti su questo sito e, se Google Drive è collegato (Eleva CRM Pro), anche quelli salvati su Drive. Controlla bene le date: scegli il backup del giorno a cui vuoi tornare."
+
+msgid "Choose a backup made on this site or on Google Drive, checking the date carefully, or upload a .zip file."
+msgstr "Scegli un backup creato su questo sito o su Google Drive, controllando bene la data, oppure carica un file .zip."
+
+msgid "Choose one of the backups made on this site, checking the date carefully, or upload a .zip file."
+msgstr "Scegli uno dei backup creati su questo sito, controllando bene la data, oppure carica un file .zip."
+
+msgid "Upload the .zip backup file you downloaded from Eleva CRM."
+msgstr "Carica il file .zip di backup che hai scaricato da Eleva CRM."
+
+msgid "If the backup clashes with data already on this site, you will be asked what to do, only for those items."
+msgstr "Se il backup è in conflitto con dati già presenti su questo sito, ti verrà chiesto cosa fare, solo per quegli elementi."
+
+msgid "Some data in this backup belongs to Eleva CRM Pro, which is not active on this site. These are left out:"
+msgstr "Alcuni dati di questo backup appartengono a Eleva CRM Pro, che non è attivo su questo sito. Questi vengono lasciati fuori:"
+
+msgid "Replacing everything is not possible right now, because you have data that cannot be replaced while Eleva CRM Pro is switched off:"
+msgstr "Sostituire tutto non è possibile in questo momento, perché hai dati che non si possono sostituire finché Eleva CRM Pro è disattivato:"
+
+msgid "Some details of Eleva CRM Pro (such as collaborators or suppliers on your works) were not restored, because Eleva CRM Pro is not active on this site."
+msgstr "Alcuni dettagli di Eleva CRM Pro (come collaboratori o fornitori nei tuoi lavori) non sono stati ripristinati, perché Eleva CRM Pro non è attivo su questo sito."
+
+msgid "Restore a backup"
+msgstr "Ripristina un backup"
+
+msgid "You can now put a backup back into Eleva CRM, from your computer or, with Eleva CRM Pro, from Google Drive. You see what is already there and what is missing, you choose what to keep, and you can undo it. Find it in Settings, under Backups."
+msgstr "Ora puoi riportare un backup in Eleva CRM, dal tuo computer o, con Eleva CRM Pro, da Google Drive. Vedi che cosa c'è già e che cosa manca, scegli che cosa tenere e puoi annullare. Lo trovi in Impostazioni, sotto Backup."
+
+msgid "On this site: %s"
+msgstr "Su questo sito: %s"
+
+msgid "In the backup: %s"
+msgstr "Nel backup: %s"
+
+msgid "empty"
+msgstr "vuoto"
+
+msgid "they are not the same (the details are not shown here)"
+msgstr "non sono uguali (i dettagli qui non si vedono)"
+
+msgid "The look of your quote PDFs could not be restored from the backup, because it uses images that a backup cannot bring back. What you have now stays as it is. To use the old look, set it up again in Settings."
+msgstr "L'aspetto dei tuoi PDF dei preventivi non si è potuto ripristinare dal backup, perché usa immagini che un backup non può riportare. Quello che hai adesso resta com'è. Per usare il vecchio aspetto, impostalo di nuovo in Impostazioni."
+
+msgid "Your signature could not be restored from the backup, because it is an image that a backup cannot bring back. What you have now stays as it is. To use it again, upload it in Settings."
+msgstr "La tua firma non si è potuta ripristinare dal backup, perché è un'immagine che un backup non può riportare. Quello che hai adesso resta com'è. Per usarla di nuovo, caricala in Impostazioni."
+
+msgid "Some settings of Eleva CRM Pro could not be restored. Check them in Settings."
+msgstr "Alcune impostazioni di Eleva CRM Pro non si sono potute ripristinare. Controllale in Impostazioni."
+
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes, your service catalog and the documents attached to your works (contracts, invoices). With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients, works and quotes stay readable."
+msgstr "Il Vault protegge i dati personali che conservi per ogni cliente (nomi, numeri di telefono, indirizzi email, indirizzi), le tue note, il tuo catalogo servizi e i documenti allegati ai tuoi lavori (contratti, fatture). Con Eleva CRM Pro protegge anche collaboratori, fornitori, prodotti, note delle spese e note dei preventivi. Quando è attivo, tutto questo è bloccato e nessun altro può leggerlo, nemmeno con accesso diretto al tuo sito o al database. Date, prezzi, pagamenti, statistiche e i titoli di clienti, lavori e preventivi restano leggibili."
+
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes, your service catalog (titles, prices and notes) and the documents attached to your works (contracts, invoices). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes."
+msgstr "I dati personali dei tuoi clienti (nomi, email, numeri di telefono, indirizzi, codici fiscali), gli indirizzi degli eventi, le tue note, il tuo catalogo servizi (titoli, prezzi e note) e i documenti allegati ai tuoi lavori (contratti, fatture). Con Eleva CRM Pro anche collaboratori, fornitori, prodotti, note delle spese e note dei preventivi."
+
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, event addresses, notes, the service catalog, the documents attached to your works and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
+msgstr "La password del Vault, il segreto TOTP e le credenziali di recupero verranno eliminati definitivamente. Tutti i dati crittografati diventeranno illeggibili: dati dei clienti, indirizzi degli eventi, note, catalogo servizi, documenti allegati ai lavori e, con Eleva CRM Pro, collaboratori, fornitori, prodotti, note delle spese, note dei preventivi e i PDF dei preventivi già generati."
+
+msgid "Name not readable"
+msgstr "Nome non leggibile"
+
+msgid "%s is not a PDF, a Word document or an image."
+msgstr "%s non è un PDF, un documento Word o un'immagine."
+
+msgid "%1$s is bigger than the %2$s limit."
+msgstr "%1$s supera il limite di %2$s."
+
+msgid "The file could not be uploaded."
+msgstr "Non è stato possibile caricare il file."
+
+msgid "Uploading…"
+msgstr "Caricamento in corso…"
+
+msgid "Upload a file"
+msgstr "Carica un file"
+
+msgid "Also used somewhere else on your site (for example a quote logo or a page image), so it was left where it is."
+msgstr "È usato anche altrove nel tuo sito (per esempio il logo di un preventivo o l'immagine di una pagina), quindi è stato lasciato dov'è."
+
+msgid "Too big to be protected."
+msgstr "Troppo grande per essere protetto."
+
+msgid "The file is no longer on the server."
+msgstr "Il file non è più sul server."
+
+msgid "Not a PDF, a Word document or an image."
+msgstr "Non è un PDF, un documento Word o un'immagine."
+
+msgid "Documents left in the media library"
+msgstr "Documenti rimasti nella libreria media"
+
+msgid "These documents are attached to your works, but they were not moved to the private folder. They are still in the WordPress media library, where anyone who knows their web address can open them."
+msgstr "Questi documenti sono allegati ai tuoi lavori, ma non sono stati spostati nella cartella privata. Sono ancora nella libreria media di WordPress, dove chiunque conosca il loro indirizzo web può aprirli."
+
+msgid "The uploads folder is not writable, so the file cannot be saved."
+msgstr "La cartella dei caricamenti non è scrivibile, quindi il file non può essere salvato."
+
+msgid "The file is too big."
+msgstr "Il file è troppo grande."
+
+msgid "This type of file is not accepted. Use a PDF, a Word document or an image."
+msgstr "Questo tipo di file non è accettato. Usa un PDF, un documento Word o un'immagine."
+
+msgid "The file could not be saved."
+msgstr "Non è stato possibile salvare il file."
+
+msgid "Contracts and documents are kept safe"
+msgstr "Contratti e documenti sono al sicuro"
+
+msgid "The contracts and other documents you attach to a work are now stored in a private place and open only with the Vault unlocked, file names included. The ones you had already uploaded are moved there for you when the Vault protects your data after the update."
+msgstr "I contratti e gli altri documenti che alleghi a un lavoro ora si conservano in un posto privato e si aprono solo con il Vault sbloccato, nomi dei file compresi. Quelli che avevi già caricato vengono spostati lì per te quando il Vault protegge i tuoi dati dopo l'aggiornamento."
+
+msgid "The file could not be copied safely, so it was left where it is."
+msgstr "Il file non ha potuto essere copiato in modo sicuro, quindi è stato lasciato dov'è."
+
+msgid "Renaming a file only changes the name shown in this list: the type of file (for example .pdf) stays the same."
+msgstr "Rinominare un file cambia solo il nome mostrato in questo elenco: il tipo di file (per esempio .pdf) resta lo stesso."
+
+msgid "Customer %d"
+msgstr "Cliente %d"
+
+msgid "Work %d"
+msgstr "Lavoro %d"
+
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), the titles of your clients, works and quotes, event addresses, your notes, your service catalog (titles, prices and notes) and the documents attached to your works (contracts, invoices). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes."
+msgstr "I dati personali dei tuoi clienti (nomi, email, numeri di telefono, indirizzi, codici fiscali), i titoli di clienti, lavori e preventivi, gli indirizzi degli eventi, le tue note, il tuo catalogo servizi (titoli, prezzi e note) e i documenti allegati ai tuoi lavori (contratti, fatture). Con Eleva CRM Pro anche collaboratori, fornitori, prodotti, note delle spese e note dei preventivi."
+
+msgid "Dates, work prices and payments, statistics, the titles of your tasks and expenses, and the title and addresses of the works you send to Google Calendar."
+msgstr "Date, prezzi e pagamenti dei lavori, statistiche, i titoli di attività e spese, e il titolo e gli indirizzi dei lavori che invii a Google Calendar."
+
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), the titles of your clients, works and quotes, your notes, your service catalog and the documents attached to your works (contracts, invoices). With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics, the titles of tasks and expenses, and the title and addresses of the works you send to Google Calendar stay readable."
+msgstr "Il Vault protegge i dati personali che memorizzi per ogni cliente (nomi, numeri di telefono, indirizzi email, indirizzi), i titoli di clienti, lavori e preventivi, le tue note, il tuo catalogo servizi e i documenti allegati ai tuoi lavori (contratti, fatture). Con Eleva CRM Pro protegge anche collaboratori, fornitori, prodotti, note delle spese e note dei preventivi. Una volta attivo, tutto ciò è bloccato in modo che nessun altro possa leggerlo, anche se accede direttamente al tuo sito o al database. Date, prezzi, pagamenti, statistiche, i titoli di attività e spese, e il titolo e gli indirizzi dei lavori che invii a Google Calendar restano leggibili."
+
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, the titles of clients, works and quotes, event addresses, notes, the service catalog, the documents attached to your works and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
+msgstr "La password del Vault, il segreto TOTP e le credenziali di recupero verranno eliminati definitivamente. Tutti i dati cifrati diventeranno illeggibili: dati dei clienti, titoli di clienti, lavori e preventivi, indirizzi degli eventi, note, catalogo servizi, documenti allegati ai tuoi lavori e, con Eleva CRM Pro, collaboratori, fornitori, prodotti, note delle spese, note dei preventivi e i PDF dei preventivi già generati."
+
+msgid "The names of clients, works and quotes are protected"
+msgstr "I nomi di clienti, lavori e preventivi sono protetti"
+
+msgid "The titles you give to clients, works and quotes are now locked by the Vault too, like your notes. You see them and search them as always. If you send a work to Google Calendar, Google gets its title and its addresses, one per line: the addresses appear on each event the next time you save the work."
+msgstr "I titoli che dai a clienti, lavori e preventivi sono ora bloccati anche dal Vault, come le tue note. Li vedi e li cerchi come sempre. Se invii un lavoro a Google Calendar, Google riceve il suo titolo e i suoi indirizzi, uno per riga: gli indirizzi compaiono su ogni evento al prossimo salvataggio del lavoro."
+
+msgid "The titles you give to clients, works and quotes are now locked by the Vault too, like your notes. You see them and search them as always, and the search of clients also finds the name, email or phone number of the people in them."
+msgstr "I titoli che dai a clienti, lavori e preventivi sono ora bloccati anche dal Vault, come le tue note. Li vedi e li cerchi come sempre, e la ricerca dei clienti trova anche nome, email o telefono delle persone che contengono."
+
+msgid "Bin"
+msgstr "Cestino"
+
+msgid "Disappears today"
+msgstr "Sparisce oggi"
+
+msgid "Disappears tomorrow"
+msgstr "Sparisce domani"
+
+msgid "Disappears in %s days"
+msgstr "Sparisce tra %s giorni"
+
+msgid "Disappears on %s"
+msgstr "Sparisce il %s"
+
+msgid "Protected item"
+msgstr "Elemento protetto"
+
+msgid "No title"
+msgstr "Senza titolo"
+
+msgid "Restored: %s."
+msgstr "Ripristinati: %s."
+
+msgid "Restored the %1$s \"%2$s\", but its customer no longer exists. Open the %1$s and choose another customer."
+msgstr "Ho ripristinato il %1$s \"%2$s\", ma il suo cliente non esiste più. Apri il %1$s e scegli un altro cliente."
+
+msgid "Restored the %1$s \"%2$s\", but its customer is still in the Bin. Restore the customer too, or open the %1$s and choose another customer."
+msgstr "Ho ripristinato il %1$s \"%2$s\", ma il suo cliente è ancora nel Cestino. Ripristina anche il cliente, oppure apri il %1$s e scegli un altro cliente."
+
+msgid "Could not restore: %s."
+msgstr "Non è stato possibile ripristinare: %s."
+
+msgid "Deleted for good: %s."
+msgstr "Eliminati per sempre: %s."
+
+msgid "Not deleted: %s."
+msgstr "Non eliminati: %s."
+
+msgid "Items you delete are not removed straight away. They wait here and disappear by themselves after %s days. You can bring them back, or delete them for good now."
+msgstr "Gli elementi che elimini non vengono rimossi subito. Restano qui e spariscono da soli dopo %s giorni. Puoi riprenderli, oppure eliminarli subito per sempre."
+
+msgid "Items you delete are not removed straight away. They wait here until you delete them for good. You can bring them back, or delete them for good now."
+msgstr "Gli elementi che elimini non vengono rimossi subito. Restano qui finché non li elimini per sempre. Puoi riprenderli, oppure eliminarli subito per sempre."
+
+msgid "Hide these messages"
+msgstr "Nascondi questi messaggi"
+
+msgid "Hide the list"
+msgstr "Nascondi l'elenco"
+
+msgid "Show what is in the Bin (%s)"
+msgstr "Mostra cosa c'è nel Cestino (%s)"
+
+msgid "Select all on this page"
+msgstr "Seleziona tutto in questa pagina"
+
+msgid "Select all %s items in the Bin"
+msgstr "Seleziona tutti i %s elementi del Cestino"
+
+msgid "All %s items are selected."
+msgstr "Tutti i %s elementi sono selezionati."
+
+msgid "Clear selection"
+msgstr "Annulla la selezione"
+
+msgid "Restore (%s)"
+msgstr "Ripristina (%s)"
+
+msgid "Delete for good (%s)"
+msgstr "Elimina per sempre (%s)"
+
+msgid "Select %s"
+msgstr "Seleziona %s"
+
+msgid "Deleted on %s"
+msgstr "Eliminato il %s"
+
+msgid "Delete for good"
+msgstr "Elimina per sempre"
+
+msgid "This item will be deleted for good. You cannot undo this."
+msgstr "Questo elemento verrà eliminato per sempre. Non puoi annullare."
+
+msgid "%s items will be deleted for good. You cannot undo this."
+msgstr "%s elementi verranno eliminati per sempre. Non puoi annullare."
+
+msgid "The documents attached to deleted works are deleted too. Backups you already made still contain them."
+msgstr "Anche i documenti allegati ai lavori eliminati vengono cancellati. I backup che hai già fatto li contengono ancora."
+
+msgid "Deleting... %s left"
+msgstr "Eliminazione in corso... ne restano %s"
+
+msgid "Deleting..."
+msgstr "Eliminazione in corso..."
+
+msgid "This customer is still used by works that are not in the Bin (%d). Change or delete them first."
+msgstr "Questo cliente è ancora usato da lavori che non sono nel Cestino (%d). Prima modifica o elimina quei lavori."
+
+msgid "This service is still used by works that are not in the Bin (%d). Change or delete them first."
+msgstr "Questo servizio è ancora usato da lavori che non sono nel Cestino (%d). Prima modifica o elimina quei lavori."
+
+msgid "This memory card is marked as in use. Mark it as free first."
+msgstr "Questa scheda di memoria è segnata come in uso. Prima segnala che è libera."
+
+msgid "A restore or the protection of your data is running. Try again when it has finished."
+msgstr "È in corso un ripristino o la protezione dei tuoi dati. Riprova quando è finito."
+
+msgid "It could not be deleted."
+msgstr "Non è stato possibile eliminarlo."
+
+msgid "Choose what to restore."
+msgstr "Scegli cosa ripristinare."
+
+msgid "Choose what to delete."
+msgstr "Scegli cosa eliminare."
+
+msgid "Type the word to confirm."
+msgstr "Scrivi la parola per confermare."
+
+msgid "The Bin is now visible and yours to manage"
+msgstr "Il Cestino ora si vede e lo gestisci tu"
+
+msgid "Restore item"
+msgstr "Ripristina"
+
+msgid "Everything you delete now waits in a Bin that you can see. Each list (customers, works, quotes and so on) shows a small Bin button as soon as something of that kind is waiting there, and Settings has a Bin card too. The Bin page tells you in how many days each item disappears by itself, and lets you bring items back or delete them for good, one by one or all together. Nothing is hidden from you."
+msgstr "Tutto ciò che elimini ora aspetta in un Cestino che puoi vedere. Ogni elenco (clienti, lavori, preventivi e così via) mostra un piccolo pulsante Cestino appena c'è qualcosa di quel tipo in attesa, e anche Impostazioni ha una scheda Cestino. La pagina del Cestino ti dice tra quanti giorni ogni elemento sparisce da solo e ti permette di riprenderlo o eliminarlo per sempre, uno alla volta o tutti insieme. Niente è nascosto."
+
+msgid "Deleted items"
+msgstr "Elementi eliminati"
+
+msgid "Deleted items: %s"
+msgstr "Elementi eliminati: %s"
+
+msgid "Show"
+msgstr "Mostra"
+
+msgid "Everything (%s)"
+msgstr "Tutto (%s)"
+
+msgid "Nothing of this kind is in the Bin."
+msgstr "Nessun elemento di questo tipo è nel Cestino."
+
+msgid "The Bin is empty. Nothing you deleted is waiting here."
+msgstr "Il Cestino è vuoto. Qui non c'è niente di ciò che hai eliminato."
+
+msgid "Show everything in the Bin"
+msgstr "Mostra tutto il Cestino"
+
+msgid "Select all %s items of this kind in the Bin"
+msgstr "Seleziona tutti i %s elementi di questo tipo nel Cestino"
+
+msgid "Items in the Bin: %s"
+msgstr "Elementi nel Cestino: %s"
+
+msgid "Bin (%s)"
+msgstr "Cestino (%s)"
+
+msgid "You have %s deleted items waiting in the Bin. See what is there, when each item disappears by itself, and bring items back or delete them for good."
+msgstr "Hai %s elementi eliminati in attesa nel Cestino. Guarda cosa c'è, quando ogni elemento sparisce da solo, e riprendi gli elementi o eliminali per sempre."
+
+msgid "Open the Bin (%s)"
+msgstr "Apri il Cestino (%s)"
+
+msgid "This kind of item is not in the Bin."
+msgstr "Questo tipo di elemento non è nel Cestino."
+
+msgid "Your selection was cleared because you changed what the list shows."
+msgstr "La selezione è stata annullata perché hai cambiato ciò che mostra l'elenco."
+
+msgid "This customer is in the Bin. Choose another customer, or restore this one from the Bin."
+msgstr "Questo cliente è nel Cestino. Scegli un altro cliente, oppure ripristina questo dal Cestino."
+
+msgid "This customer no longer exists. Choose another customer."
+msgstr "Questo cliente non esiste più. Scegli un altro cliente."
+
+msgid "Open the Bin"
+msgstr "Apri il Cestino"
+
+msgid "The customer of this work is in the Bin. Open the work to choose another customer, or restore this one from the Bin."
+msgstr "Il cliente di questo lavoro è nel Cestino. Apri il lavoro per scegliere un altro cliente, oppure ripristina questo dal Cestino."
+
+msgid "The customer of this work no longer exists. Open the work to choose another customer."
+msgstr "Il cliente di questo lavoro non esiste più. Apri il lavoro per scegliere un altro cliente."
+
+msgid "See in the Bin"
+msgstr "Vedi nel Cestino"
+
+msgid "Linked to works (%d)"
+msgstr "Collegato a lavori (%d)"
+
+msgid "Tasks"
+msgstr "Compiti"
+
+msgid "← Leave the restore"
+msgstr "← Esci dal ripristino"
+
+msgid "← Previous step"
+msgstr "← Passo precedente"
+
+msgid "Some data in this backup belongs to Eleva CRM Pro, which is not active on this site or has no valid license. It is not offered and not restored:"
+msgstr "Alcuni dati di questo backup appartengono a Eleva CRM Pro, che su questo sito non è attivo o non ha una licenza valida. Non vengono proposti né ripristinati:"
+
+msgid "Eleva CRM Pro is switched off, so a backup made now leaves out your Pro data (quotes, suppliers, collaborators, expenses and tasks). Switch Pro on before you make a backup."
+msgstr "Eleva CRM Pro è disattivato, quindi un backup fatto adesso lascia fuori i tuoi dati Pro (preventivi, fornitori, collaboratori, spese e compiti). Attiva Pro prima di fare un backup."
+
+msgid "Asking Google Drive for the backup. This can take a few seconds, keep this page open."
+msgstr "Sto chiedendo il backup a Google Drive. Può richiedere qualche secondo, tieni aperta questa pagina."

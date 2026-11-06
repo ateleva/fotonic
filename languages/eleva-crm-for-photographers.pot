@@ -3607,3 +3607,1527 @@ msgstr ""
 #: src/src/features/vault/FingerprintPanel.jsx:171
 msgid "Fingerprint unlock needs a secure page, and the browser does not treat this one as secure. Open the site with a trusted https address, then reload. You can still remove devices here."
 msgstr ""
+
+#: includes/class-restore-upload.php:69
+msgid "The file is empty."
+msgstr ""
+
+#: includes/class-restore-upload.php:73
+msgid "The file checksum is not valid."
+msgstr ""
+
+#: includes/class-restore-upload.php:79
+msgid "Other uploads are still waiting. Finish or cancel them first, or wait a couple of hours."
+msgstr ""
+
+#: includes/class-restore-upload.php:87
+msgid "There is not enough free space on the server to receive this backup."
+msgstr ""
+
+#: includes/class-restore-upload.php:110
+msgid "The server could not store the backup file."
+msgstr ""
+
+#: includes/class-restore-upload.php:131
+msgid "This upload is already complete."
+msgstr ""
+
+#: includes/class-restore-upload.php:134
+msgid "A piece of the file arrived out of range."
+msgstr ""
+
+#: includes/class-restore-upload.php:138
+msgid "A piece of the file has the wrong size."
+msgstr ""
+
+#: includes/class-restore-upload.php:148
+msgid "The server could not store the backup file. The disk may be full."
+msgstr ""
+
+#: includes/class-restore-upload.php:185
+msgid "Some pieces of the file are missing."
+msgstr ""
+
+#: includes/class-restore-upload.php:191
+msgid "The file that arrived has a different size than the one that was sent. Try again."
+msgstr ""
+
+#: includes/class-restore-upload.php:195
+msgid "The file was damaged on the way. Try again."
+msgstr ""
+
+#: includes/class-restore-upload.php:205
+msgid "This is not a backup file. Pick the .zip file that Eleva CRM created."
+msgstr ""
+
+#: includes/class-restore-upload.php:369
+msgid "This upload was not found. It may have expired. Start again."
+msgstr ""
+
+#: includes/class-restore-reader.php:77
+msgid "This file is not a readable backup. If it came from a cloud drive, make sure the download finished."
+msgstr ""
+
+#: includes/class-restore-reader.php:100
+msgid "The backup could not be read. It may be damaged."
+msgstr ""
+
+#: includes/class-restore-reader.php:260
+msgid "This backup has no such data."
+msgstr ""
+
+#: includes/class-restore-reader.php:348
+msgid "The backup file is no longer there. Upload it again."
+msgstr ""
+
+#: includes/class-restore-reader.php:459
+msgid "This file is not an Eleva CRM backup, or it is incomplete."
+msgstr ""
+
+#: includes/class-restore-reader.php:468
+msgid "This backup was made by a newer version of Eleva CRM. Update the plugin, then try again."
+msgstr ""
+
+#: includes/class-restore-reader.php:554
+msgid "The backup is damaged: a part of it does not match its checksum."
+msgstr ""
+
+#: includes/class-restore-reader.php:603
+msgid "To open this backup, enter the password, the recovery code or the recovery phrase of the Vault that made it."
+msgstr ""
+
+#: includes/class-restore-reader.php:611
+msgid "Another attempt is in progress. Wait a few seconds and try again."
+msgstr ""
+
+#: includes/class-restore-reader.php:614
+msgid "Too many wrong attempts. Try again in 15 minutes."
+msgstr ""
+
+#: includes/class-restore-reader.php:644
+msgid "That password, recovery code or recovery phrase does not open this backup."
+msgstr ""
+
+#: includes/class-restore-reader.php:674
+msgid "This restore can no longer continue. Open the backup again."
+msgstr ""
+
+#: includes/class-restore-reader.php:755
+msgid "This restore has expired. Open the backup again."
+msgstr ""
+
+#: includes/class-restore-rest-api.php:135
+msgid "Choose a backup file first."
+msgstr ""
+
+#: includes/class-restore-rest-api.php:164
+msgid "That backup file was not found."
+msgstr ""
+
+#: includes/class-restore-preview.php:64
+msgid "Unlock the Vault of this site first: the backup is compared with the records you have now."
+msgstr ""
+
+#: includes/class-restore-preview.php:73
+msgid "The preview is already running. Wait a moment."
+msgstr ""
+
+#: includes/class-restore-rest-api.php:156
+msgid "This restore session has ended. Open the backup again."
+msgstr ""
+
+#: includes/class-restore-job.php:146
+msgid "Your data is being encrypted. Wait until it has finished, then restore."
+msgstr ""
+
+#: includes/class-restore-job.php:150
+msgid "Another restore is not finished. Finish it, undo it or dismiss it first."
+msgstr ""
+
+#: includes/class-restore-job.php:161
+msgid "Unlock the Vault of this site first: the restored data is encrypted with its key."
+msgstr ""
+
+#: includes/class-restore-job.php:164
+msgid "This site has data but no Vault. Turn the Vault on first, so a safety backup can be made and personal details stay protected, then restore."
+msgstr ""
+
+#: includes/class-restore-job.php:182
+msgid "Run the preview to the end before restoring."
+msgstr ""
+
+#: includes/class-restore-job.php:187
+msgid "The data of this site changed since the preview. Run the preview again."
+msgstr ""
+
+#: includes/class-restore-job.php:264
+msgid "One of the choices does not fit that record."
+msgstr ""
+
+#: includes/class-restore-job.php:274
+msgid "Two records of the backup would end up on the same record of this site. Change one choice."
+msgstr ""
+
+#: includes/class-restore-job.php:285
+msgid "Some records may be duplicates. Choose what to do with each one."
+msgstr ""
+
+#: includes/class-restore-job.php:303
+msgid "There is no restore running."
+msgstr ""
+
+#: includes/class-restore-job.php:306
+msgid "The restore is paused."
+msgstr ""
+
+#: includes/class-restore-job.php:314
+msgid "The restore is already running. Wait a moment."
+msgstr ""
+
+#: includes/class-restore-job.php:331
+msgid "The restore session ended before the restore was finished. Undo it, or open the backup again."
+msgstr ""
+
+#: includes/class-restore-job.php:349
+msgid "The Vault is locked. Unlock it and the restore goes on from where it stopped."
+msgstr ""
+
+#: includes/class-restore-job.php:352
+msgid "The Vault of this site changed during the restore. Undo it and start again."
+msgstr ""
+
+#: includes/class-restore-job.php:367
+msgid "A backup is running. Wait a moment."
+msgstr ""
+
+#: includes/class-restore-job.php:371
+msgid "The safety backup could not be made, so nothing was changed. %s"
+msgstr ""
+
+#: includes/class-restore-job.php:424
+msgid "The preview no longer matches the backup. Run the preview again."
+msgstr ""
+
+#: includes/class-restore-job.php:557
+msgid "The restore is not running."
+msgstr ""
+
+#: includes/class-restore-job.php:571
+msgid "The restore is not paused."
+msgstr ""
+
+#: includes/class-restore-job.php:587
+msgid "The restore is running. Pause it first."
+msgstr ""
+
+#: includes/class-restore-job.php:610
+msgid "There is no restore to undo."
+msgstr ""
+
+#: includes/class-restore-job.php:619
+msgid "The restore is running. Wait a moment."
+msgstr ""
+
+#: includes/class-rest-api.php:1989
+msgid "A backup is being restored. Wait until it has finished, then save again."
+msgstr ""
+
+#: includes/class-restore-writer.php:79
+msgid "This backup has data this site cannot restore."
+msgstr ""
+
+#: includes/class-restore-writer.php:89
+msgid "A record of this site changed or was removed since the preview. Run the preview again."
+msgstr ""
+
+#: includes/class-restore-writer.php:101
+msgid "A record could not be written."
+msgstr ""
+
+#: includes/class-restore-writer.php:272
+msgid "A value could not be encrypted. Nothing else was written."
+msgstr ""
+
+#: includes/class-restore-job.php:191
+msgid "This site has no Vault. Turn the Vault on first (recommended: the restored data is then encrypted with your own key), or confirm that you want to restore without it and keep the data readable in plain text."
+msgstr ""
+
+#: includes/class-restore-job.php:197
+msgid "Type the confirmation word exactly to replace everything."
+msgstr ""
+
+#: includes/class-restore-job.php:201
+msgid "This site has data of Eleva CRM Pro that a full restore cannot replace yet, and removing only part of the data would leave it pointing at nothing. Restore without replacing, or remove that data first."
+msgstr ""
+
+#: includes/class-restore-job.php:763
+msgid "A full restore replaces your data and cannot be undone. To go back, restore the safety backup made before it: %s."
+msgstr ""
+
+#: includes/class-restore-job.php:766
+msgid "A full restore replaces your data and cannot be undone."
+msgstr ""
+
+#: includes/class-restore-files.php:186
+msgid "A file could not be saved in the uploads folder."
+msgstr ""
+
+#: includes/class-restore-job.php:472
+msgid "Some records could not be removed, so nothing was written. Try again."
+msgstr ""
+
+#: includes/class-restore-wipe.php:53
+msgid "Other data of Eleva CRM"
+msgstr ""
+
+#: includes/class-restore-wipe.php:81
+msgid "Some records could not be removed."
+msgstr ""
+
+#: src/src/router.jsx:68
+msgid "Restore from a backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:44
+msgid "The file could not be sent. Check your connection and try again."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:59
+msgid "Choose the backup file you downloaded from Eleva CRM. It is a .zip file. Nothing in your CRM changes until you confirm, at the end."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:69
+msgid "Drop the backup file here, or"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:72
+msgid "Choose a file"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:97
+msgid "Sending the file to your site: %d%%. Keep this page open."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:108
+msgid "Try again from where it stopped"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:117
+msgid "Opening the backup…"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:128
+msgid "Backups already saved on this site"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:130
+msgid "No need to send a file: these were made by this site. The safety copy made before a restore is here too."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:141
+msgid "Use this backup"
+msgstr ""
+
+#: src/src/features/restore/RestorePreview.jsx:72
+msgid "The backup could not be checked."
+msgstr ""
+
+#: src/src/features/restore/RestorePreview.jsx:79
+msgid "Choose another backup"
+msgstr ""
+
+#: src/src/features/restore/RestorePreview.jsx:91
+msgid "Checking your backup against the data on this site…"
+msgstr ""
+
+#: src/src/features/restore/RestorePreview.jsx:98
+msgid "%1$s: %2$d of %3$d"
+msgstr ""
+
+#: src/src/features/restore/RestorePreview.jsx:101
+msgid "Nothing is changed yet."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:38
+msgid "Something went wrong. Try again."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:54
+msgid "The restore was undone. Your data is as it was before."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:69
+msgid "The restore stopped before the end."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:71
+msgid "What was already restored can be kept or undone."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:77
+msgid "The restore is finished."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:82
+msgid "%d records added."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:83
+msgid "%d records added as separate copies."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:84
+msgid "%d records replaced by the version in the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:85
+msgid "%d records left as they were."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:86
+msgid "%d records left out, as you chose."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:87
+msgid "%d records removed to make room for the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:88
+msgid "%d files brought back."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:89
+msgid "%d files were already on this site and were used again."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:97
+msgid "Not everything could be restored"
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:100
+msgid "%d files could not be restored because they were missing or damaged in the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:101
+msgid "%d file entries were left out of their works because the file was not in the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:102
+msgid "%d details could not be read and were left empty."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:103
+msgid "%d links to other records could not be rebuilt."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:104
+msgid "Not restored by this version: %s."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:105
+msgid "Some links from your works to Eleva CRM Pro data were left out."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:106
+msgid "Some Eleva CRM Pro settings were not restored."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:107
+msgid "The connection with Google Calendar is not restored. Events already on your calendar were left as they are."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:115
+msgid "Your data from before the restore was saved in the safety copy %s. It is in the list of backups saved on this site: choose it in \"Restore from a backup\" to go back."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:116
+msgid "A safety copy of your data from before the restore was saved: %s."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:120
+msgid "A restore that replaces everything cannot be undone with a button."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:127
+msgid "Keep the result and close"
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:131
+msgid "Undo this restore"
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:137
+msgid "Once you keep the result, the restore can no longer be undone."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:145
+msgid "Undo this restore?"
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:146
+msgid "The records added by the restore are removed, and the ones it replaced go back to how they were. Everything else stays."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:147
+msgid "Undo the restore"
+msgstr ""
+
+#: src/src/features/restore/RestoreCredentials.jsx:24
+msgid "This backup was made on %s."
+msgstr ""
+
+#: src/src/features/restore/RestoreCredentials.jsx:28
+msgid "The backup is locked. To open it, enter the Vault password, the recovery code or the recovery phrase that were valid on the day the backup was made. Without one of them the backup cannot be opened by anyone."
+msgstr ""
+
+#: src/src/features/restore/RestoreCredentials.jsx:33
+msgid "If you changed your password or made a new recovery kit after this backup was created, the new ones do not open it. Use the ones you had then."
+msgstr ""
+
+#: src/src/features/restore/RestoreCredentials.jsx:38
+msgid "Password, recovery code or recovery phrase"
+msgstr ""
+
+#: src/src/features/restore/RestoreCredentials.jsx:56
+msgid "Opening…"
+msgstr ""
+
+#: src/src/features/restore/RestoreCredentials.jsx:56
+msgid "Open the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:56
+msgid "Something went wrong while restoring. Try again."
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:93
+msgid "Restoring your backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:94
+msgid "Keep working if you like. You can read your data, but saving is switched off until the restore has finished."
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:105
+msgid "Restore paused"
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:106
+msgid "You can read your data. Saving is switched off until the restore has finished."
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:117
+msgid "Undoing the restore"
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:118
+msgid "Please wait. Your data is being put back as it was."
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:126
+msgid "The restore needs your attention"
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:127
+msgid "It stopped before the end. Open it to see what to do."
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:129
+msgid "Open"
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:137
+msgid "Restore finished"
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:138
+msgid "Open the report to see what was restored."
+msgstr ""
+
+#: src/src/features/restore/RestoreHost.jsx:140
+msgid "See the report"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:33
+msgid "This backup was made by this site, so it opened without a password."
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:37
+msgid "Backup made on %s."
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:41
+msgid "What the backup holds, compared with this site"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:43
+msgid "Not on this site"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:44
+msgid "Already here, the same"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:45
+msgid "Already here, different"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:46
+msgid "Maybe the same"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:54
+msgid "This version cannot restore everything in this backup yet. These are left out:"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:57
+msgid "%1$s (%2$d)"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:65
+msgid "How do you want to restore?"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:71
+msgid "Add to what I have (recommended)"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:73
+msgid "Your current data stays. Anything missing is added, and what is already here is left alone unless you choose otherwise. You can undo it afterwards."
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:83
+msgid "Replace everything"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:85
+msgid "Your current Eleva CRM data is removed and replaced with the backup, so the site ends up exactly like it was when the backup was made."
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:89
+msgid "This version cannot replace everything on this site yet, because you have data it cannot bring back:"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:93
+msgid "Use \"Add to what I have\" instead."
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:104
+msgid "This cannot be undone with a button. Before anything is removed, the site saves a safety copy of your current data. If you change your mind, restore that safety copy."
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:108
+msgid "To confirm, type %s"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:33
+msgid "Keep the one on this site"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:34
+msgid "Use the version from the backup"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:35
+msgid "Add the backup version as a separate one"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:36
+msgid "Leave it out"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:42
+msgid "Add it"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:48
+msgid "It is \"%s\": keep the one on this site"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:49
+msgid "It is \"%s\": use the version from the backup"
+msgstr ""
+
+#: src/src/features/restore/restoreChoices.js:51
+msgid "It is a different one: add it"
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:23
+msgid "You are about to replace everything in Eleva CRM with this backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:24
+msgid "You are about to add this backup to your data."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:30
+msgid "The site first saves a safety copy of your current data."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:31
+msgid "Then your current Eleva CRM data is removed and the backup is put in its place."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:32
+msgid "There is no Undo button afterwards. To go back, restore the safety copy."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:36
+msgid "If your site already has data, it first saves a safety copy of it."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:37
+msgid "%d records will be added."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:38
+msgid "%d records here will be replaced by the version in the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:39
+msgid "You can undo it afterwards, until you choose to keep the result."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:42
+msgid "While it runs you can read your data, but saving is switched off. It goes on if you open other pages."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:43
+msgid "The connection with Google Calendar is not restored. Events already on your calendar are left as they are."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:58
+msgid "Personal details in the backup are protected again with your own Vault key on this site."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:66
+msgid "This site has no Vault. We recommend turning the Vault on first: your restored client details are then protected with your own key. Without it, they are stored as plain text on this site."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:69
+msgid "Set up the Vault first"
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:73
+msgid "I understand, restore without the Vault. The restored details will not be protected until I turn the Vault on."
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:82
+msgid "Check the backup again"
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:90
+msgid "Starting…"
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:91
+msgid "Start the restore"
+msgstr ""
+
+#: src/src/features/restore/RestoreProgress.jsx:8
+msgid "Putting your data back as it was…"
+msgstr ""
+
+#: src/src/features/restore/RestoreProgress.jsx:10
+msgid "Saving a safety copy of your current data…"
+msgstr ""
+
+#: src/src/features/restore/RestoreProgress.jsx:11
+msgid "Removing the current data…"
+msgstr ""
+
+#: src/src/features/restore/RestoreProgress.jsx:12
+msgid "Finishing…"
+msgstr ""
+
+#: src/src/features/restore/RestoreProgress.jsx:13
+msgid "Restoring your data…"
+msgstr ""
+
+#: src/src/features/restore/RestoreProgress.jsx:53
+msgid "You can read your data, but saving is switched off until this has finished. You can leave this page: it keeps going, and a bar shows how far it is."
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:22
+msgid "Step 1: choose the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:23
+msgid "Step 2: open the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:24
+msgid "Step 3: checking the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:25
+msgid "Step 4: how to restore"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:26
+msgid "Step 5: what to do with the differences"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:27
+msgid "Step 6: last look"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:164
+msgid "The opened backup is no longer available. Choose it again."
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:195
+msgid "Restore report"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:14
+msgid "It points to something that may be a duplicate, so it needs your decision too."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:18
+msgid "This site has something similar: %s"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:29
+msgid "one of the two cannot be read"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:43
+msgid "(no name)"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:47
+msgid "What to do with this record"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:49
+msgid "Choose…"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:84
+msgid "Previous"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:85
+msgid "Page %1$d of %2$d"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:112
+msgid "Keep the ones on this site"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:113
+msgid "Use the versions from the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:114
+msgid "Add the backup versions as separate ones"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:115
+msgid "Leave them all out"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:118
+msgid "Same one: keep the ones on this site"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:119
+msgid "Same one: use the versions from the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:120
+msgid "Different ones: add them"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:127
+msgid "Anything that is the same on both sides is left alone and is not listed here. For the rest, decide what to do. If you are not sure, keep the ones on this site: nothing of yours is touched."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:131
+msgid "Nothing to decide: everything in the backup is already on this site."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:141
+msgid "%d not on this site yet"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:144
+msgid "What to do with the ones that are not on this site yet"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:149
+msgid "Add them"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:150
+msgid "Leave them out"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:157
+msgid "%d may be the same as something you already have"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:163
+msgid "Do this for all of them:"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:169
+msgid "%d already here, but different"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:183
+msgid "%d still need a choice."
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:12
+msgid "Data of Eleva CRM Pro"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:22
+msgid "People and contact details"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:23
+msgid "Price"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:25
+msgid "Event date"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:26
+msgid "Start time"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:27
+msgid "End time"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:32
+msgid "Total price"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:34
+msgid "Colour"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:35
+msgid "Quick notes"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:37
+msgid "Backup done"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:38
+msgid "Cards formatted"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:40
+msgid "Photos taken"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:51
+msgid "Other details"
+msgstr ""
+
+#: src/src/features/restore/RestoreLauncher.jsx:20
+msgid "Put the data of a backup back into Eleva CRM: after a move to a new site, or to bring back something you lost. You choose what happens to anything that is already here, and nothing changes until you confirm."
+msgstr ""
+
+#: src/src/features/restore/RestoreLauncher.jsx:24
+msgid "A restore is in progress or waiting for you to finish it."
+msgstr ""
+
+#: src/src/features/restore/RestoreLauncher.jsx:29
+msgid "Open the restore"
+msgstr ""
+
+#: includes/class-restore-rest-api.php:187
+msgid "This place for backups is not available."
+msgstr ""
+
+#: src/src/features/settings/BackupSettingsSection.jsx:151
+msgid "Restore this backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:87
+msgid "The backup could not be brought to your site. Try again."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:142
+msgid "Your backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:152
+msgid "Bringing the backup to your site: %d%%. Keep this page open."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:184
+msgid "Backups on %s"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:8
+msgid "Backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:9
+msgid "Check"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:10
+msgid "Your choices"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:11
+msgid "Last look"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:12
+msgid "Restore"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:27
+msgid "Restore steps"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:31
+msgid "All steps done"
+msgstr ""
+
+#: src/src/features/restore/RestoreStepper.jsx:32
+msgid "Step %1$d of %2$d: %3$s"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:26
+msgid "Choose the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:28
+msgid "Checking the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:29
+msgid "How to restore"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:30
+msgid "What to do with the differences"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:318
+msgid "Backup: %s"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:319
+msgid "Backup chosen"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:329
+msgid "No differences to go through: everything is replaced."
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:330
+msgid "No differences to go through: everything in the backup is new or already the same."
+msgstr ""
+
+#: src/src/features/restore/RestoreLauncher.jsx:43
+msgid "Backups saved on this site"
+msgstr ""
+
+#: src/src/features/settings/BackupSettingsSection.jsx:121
+msgid "How this backup is protected"
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:126
+msgid "Choose the backup file you downloaded from Eleva CRM (a .zip file). If something in the backup clashes with data already on this site, you will be asked what to do, only for those items."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:129
+msgid "Below you will find the backups already made on this site and, if Google Drive is connected (Eleva CRM Pro), the ones saved on Drive. Check the dates carefully: choose the backup from the day you want to go back to."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:128
+msgid "Choose a backup made on this site or on Google Drive, checking the date carefully, or upload a .zip file."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:130
+msgid "Choose one of the backups made on this site, checking the date carefully, or upload a .zip file."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:131
+msgid "Upload the .zip backup file you downloaded from Eleva CRM."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:134
+msgid "If the backup clashes with data already on this site, you will be asked what to do, only for those items."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:107
+msgid "Some details of Eleva CRM Pro (such as collaborators or suppliers on your works) were not restored, because Eleva CRM Pro is not active on this site."
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:66
+msgid "Some data in this backup belongs to Eleva CRM Pro, which is not active on this site. These are left out:"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:99
+msgid "Replacing everything is not possible right now, because you have data that cannot be replaced while Eleva CRM Pro is switched off:"
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Restore a backup"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "You can now put a backup back into Eleva CRM, from your computer or, with Eleva CRM Pro, from Google Drive. You see what is already there and what is missing, you choose what to keep, and you can undo it. Find it in Settings, under Backups."
+msgstr ""
+
+#: includes/class-restore-job.php:107
+msgid "This restore is running in another browser or for another person. It goes on there."
+msgstr ""
+
+#: includes/class-restore-reader.php:79
+msgid "A restore is still going on. Finish it or undo it before you open another backup."
+msgstr ""
+
+#: includes/class-restore-preview.php:56
+msgid "A restore is still going on. Finish it or undo it before you check another backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:106
+msgid "The look of your quote PDFs could not be restored from the backup, because it uses images that a backup cannot bring back. What you have now stays as it is. To use the old look, set it up again in Settings."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:107
+msgid "Your signature could not be restored from the backup, because it is an image that a backup cannot bring back. What you have now stays as it is. To use it again, upload it in Settings."
+msgstr ""
+
+#: src/src/features/restore/RestoreReport.jsx:108
+msgid "Some settings of Eleva CRM Pro could not be restored. Check them in Settings."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:32
+msgid "they are not the same (the details are not shown here)"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:35
+msgid "On this site: %s"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:35
+msgid "empty"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:36
+msgid "In the backup: %s"
+msgstr ""
+
+#: includes/class-rest-api.php:770
+msgid "The file could not be uploaded."
+msgstr ""
+
+#: includes/class-work-files.php:61
+msgid "The uploads folder is not writable, so the file cannot be saved."
+msgstr ""
+
+#: includes/class-work-files.php:232
+msgid "The file is too big."
+msgstr ""
+
+#: includes/class-work-files.php:237
+msgid "This type of file is not accepted. Use a PDF, a Word document or an image."
+msgstr ""
+
+#: includes/class-work-files.php:241
+msgid "The file could not be saved."
+msgstr ""
+
+#: src/src/features/settings/SkippedFilesCard.jsx:9
+msgid "Also used somewhere else on your site (for example a quote logo or a page image), so it was left where it is."
+msgstr ""
+
+#: src/src/features/settings/SkippedFilesCard.jsx:11
+msgid "Too big to be protected."
+msgstr ""
+
+#: src/src/features/settings/SkippedFilesCard.jsx:13
+msgid "The file is no longer on the server."
+msgstr ""
+
+#: src/src/features/settings/SkippedFilesCard.jsx:15
+msgid "Not a PDF, a Word document or an image."
+msgstr ""
+
+#: src/src/features/settings/SkippedFilesCard.jsx:31
+msgid "Documents left in the media library"
+msgstr ""
+
+#: src/src/features/settings/SkippedFilesCard.jsx:34
+msgid "These documents are attached to your works, but they were not moved to the private folder. They are still in the WordPress media library, where anyone who knows their web address can open them."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:458
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes, your service catalog and the documents attached to your works (contracts, invoices). With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients, works and quotes stay readable."
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:21
+msgid "Name not readable"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:125
+msgid "%s is not a PDF, a Word document or an image."
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:128
+msgid "%1$s is bigger than the %2$s limit."
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:278
+msgid "Upload a file"
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:298
+msgid "Uploading…"
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:62
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), event addresses, your notes, your service catalog (titles, prices and notes) and the documents attached to your works (contracts, invoices). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:115
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, event addresses, notes, the service catalog, the documents attached to your works and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Contracts and documents are kept safe"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "The contracts and other documents you attach to a work are now stored in a private place and open only with the Vault unlocked, file names included. The ones you had already uploaded are moved there for you when the Vault protects your data after the update."
+msgstr ""
+
+#: src/src/features/settings/SkippedFilesCard.jsx:15
+msgid "The file could not be copied safely, so it was left where it is."
+msgstr ""
+
+#: src/src/features/works/FilesSection.jsx:334
+msgid "Renaming a file only changes the name shown in this list: the type of file (for example .pdf) stays the same."
+msgstr ""
+
+#: src/src/utils/titles.js:10
+msgid "Work %d"
+msgstr ""
+
+#: src/src/utils/titles.js:10
+msgid "Customer %d"
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "The names of clients, works and quotes are protected"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "The titles you give to clients, works and quotes are now locked by the Vault too, like your notes. You see them and search them as always. If you send a work to Google Calendar, Google gets its title and its addresses, one per line: the addresses appear on each event the next time you save the work."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:458
+msgid "The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), the titles of your clients, works and quotes, your notes, your service catalog and the documents attached to your works (contracts, invoices). With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics, the titles of tasks and expenses, and the title and addresses of the works you send to Google Calendar stay readable."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:62
+msgid "Personal details of your clients (names, emails, phone numbers, addresses, tax codes), the titles of your clients, works and quotes, event addresses, your notes, your service catalog (titles, prices and notes) and the documents attached to your works (contracts, invoices). With Eleva CRM Pro, also your collaborators, suppliers, products, expense notes and quote notes."
+msgstr ""
+
+#: src/src/features/vault/VaultChoiceScreen.jsx:65
+msgid "Dates, work prices and payments, statistics, the titles of your tasks and expenses, and the title and addresses of the works you send to Google Calendar."
+msgstr ""
+
+#: src/src/features/vault/ResetVaultFlow.jsx:115
+msgid "The vault password, TOTP secret, and recovery credentials will be permanently deleted. All encrypted data will become unreadable: client details, the titles of clients, works and quotes, event addresses, notes, the service catalog, the documents attached to your works and, with Eleva CRM Pro, collaborators, suppliers, products, expense notes, quote notes and the quote PDFs already generated."
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "The titles you give to clients, works and quotes are now locked by the Vault too, like your notes. You see them and search them as always, and the search of clients also finds the name, email or phone number of the people in them."
+msgstr ""
+
+#: includes/class-trash-rest-api.php:80
+msgid "Choose what to restore."
+msgstr ""
+
+#: includes/class-trash-rest-api.php:97
+msgid "Choose what to delete."
+msgstr ""
+
+#: includes/class-trash-rest-api.php:104
+msgid "Type the word to confirm."
+msgstr ""
+
+#: includes/class-trash.php:256
+msgid "This customer is still used by works that are not in the Bin (%d). Change or delete them first."
+msgstr ""
+
+#: includes/class-trash.php:262
+msgid "This service is still used by works that are not in the Bin (%d). Change or delete them first."
+msgstr ""
+
+#: includes/class-trash.php:265
+msgid "This memory card is marked as in use. Mark it as free first."
+msgstr ""
+
+#: includes/class-trash.php:351
+msgid "A restore or the protection of your data is running. Try again when it has finished."
+msgstr ""
+
+#: includes/class-trash.php:397
+msgid "It could not be deleted."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:25
+msgid "Disappears today"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:26
+msgid "Disappears tomorrow"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:27
+msgid "Disappears in %s days"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:28
+msgid "Disappears on %s"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:32
+msgid "Protected item"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:33
+msgid "No title"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:120
+msgid "Restored: %s."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:131
+msgid "Restored the %1$s \"%2$s\", but its customer no longer exists. Open the %1$s and choose another customer."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:132
+msgid "Restored the %1$s \"%2$s\", but its customer is still in the Bin. Restore the customer too, or open the %1$s and choose another customer."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:141
+msgid "Could not restore: %s."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:177
+msgid "Deleted for good: %s."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:181
+msgid "Not deleted: %s."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:203
+msgid "Items you delete are not removed straight away. They wait here and disappear by themselves after %s days. You can bring them back, or delete them for good now."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:204
+msgid "Items you delete are not removed straight away. They wait here until you delete them for good. You can bring them back, or delete them for good now."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:222
+msgid "Hide these messages"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:230
+msgid "Hide the list"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:231
+msgid "Show what is in the Bin (%s)"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:241
+msgid "Select all on this page"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:245
+msgid "Select all %s items in the Bin"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:250
+msgid "All %s items are selected."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:251
+msgid "Clear selection"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:261
+msgid "Restore (%s)"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:266
+msgid "Delete for good (%s)"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:281
+msgid "Select %s"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:289
+msgid "Deleted on %s"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:302
+msgid "Delete for good"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:323
+msgid "This item will be deleted for good. You cannot undo this."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:324
+msgid "%s items will be deleted for good. You cannot undo this."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:327
+msgid "The documents attached to deleted works are deleted too. Backups you already made still contain them."
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:346
+msgid "Deleting... %s left"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:351
+msgid "Deleting..."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:534
+msgid "Bin"
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "The Bin is now visible and yours to manage"
+msgstr ""
+
+#: src/src/features/settings/TrashCard.jsx:297
+msgid "Restore item"
+msgstr ""
+
+#: includes/class-trash-rest-api.php:82
+msgid "This kind of item is not in the Bin."
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "Everything you delete now waits in a Bin that you can see. Each list (customers, works, quotes and so on) shows a small Bin button as soon as something of that kind is waiting there, and Settings has a Bin card too. The Bin page tells you in how many days each item disappears by itself, and lets you bring items back or delete them for good, one by one or all together. Nothing is hidden from you."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:559
+msgid "You have %s deleted items waiting in the Bin. See what is there, when each item disappears by itself, and bring items back or delete them for good."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:567
+msgid "Open the Bin (%s)"
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:220
+msgid "Deleted items: %s"
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:220
+msgid "Deleted items"
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:251
+msgid "Show"
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:258
+msgid "Everything (%s)"
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:269
+msgid "Nothing of this kind is in the Bin."
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:269
+msgid "The Bin is empty. Nothing you deleted is waiting here."
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:271
+msgid "Show everything in the Bin"
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:288
+msgid "Select all %s items of this kind in the Bin"
+msgstr ""
+
+#: src/src/components/TrashShortcut.jsx:17
+msgid "Items in the Bin: %s"
+msgstr ""
+
+#: src/src/components/TrashShortcut.jsx:27
+msgid "Bin (%s)"
+msgstr ""
+
+#: src/src/features/trash/TrashPage.jsx:68
+msgid "Your selection was cleared because you changed what the list shows."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:469
+msgid "This customer is in the Bin. Choose another customer, or restore this one from the Bin."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:470
+msgid "This customer no longer exists. Choose another customer."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:475
+msgid "Open the Bin"
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:90
+msgid "The customer of this work is in the Bin. Open the work to choose another customer, or restore this one from the Bin."
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:91
+msgid "The customer of this work no longer exists. Open the work to choose another customer."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:481
+msgid "See in the Bin"
+msgstr ""
+
+#: includes/class-rest-api.php:2625
+msgid "Linked to works (%d)"
+msgstr ""
+
+#: src/src/features/restore/restoreUtils.js:18
+msgid "Tasks"
+msgstr ""
+
+#: src/src/features/restore/RestoreMode.jsx:66
+msgid "Some data in this backup belongs to Eleva CRM Pro, which is not active on this site or has no valid license. It is not offered and not restored:"
+msgstr ""
+
+#: src/src/features/restore/RestoreConfirm.jsx:88
+msgid "← Previous step"
+msgstr ""
+
+#: src/src/features/restore/RestoreWizard.jsx:308
+msgid "← Leave the restore"
+msgstr ""
+
+#: src/src/features/settings/BackupSettingsSection.jsx:173
+msgid "Eleva CRM Pro is switched off, so a backup made now leaves out your Pro data (quotes, suppliers, collaborators, expenses and tasks). Switch Pro on before you make a backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreUpload.jsx:174
+msgid "Asking Google Drive for the backup. This can take a few seconds, keep this page open."
+msgstr ""

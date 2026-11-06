@@ -80,6 +80,7 @@ export default function ServiceList() {
     <div className="p-6">
       <PageHeader
         title={__('Services', 'eleva-crm-for-photographers')}
+        trashType="ftnc_service"
         action={
           <Button onClick={() => navigate('/services/new')}>
             <PlusCircle size={15} />

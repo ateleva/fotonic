@@ -9,6 +9,7 @@ import Button from '../../components/Button'
 import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
+import BlockedReason from '../../components/BlockedReason'
 import { __ } from '../../utils/i18n'
 
 export default function ServiceForm() {
@@ -18,6 +19,7 @@ export default function ServiceForm() {
 
   const [showConfirm, setShowConfirm] = useState(false)
   const [blockReason, setBlockReason] = useState(null)
+  const [blockGroups, setBlockGroups] = useState(null)
   const [checkingDelete, setCheckingDelete] = useState(false)
 
   const { data: service, isLoading } = useService(id)
@@ -33,6 +35,7 @@ export default function ServiceForm() {
       if (res.can_delete) {
         setShowConfirm(true)
       } else {
+        setBlockGroups(res.groups ?? null)
         setBlockReason(res.reason)
       }
     } catch {
@@ -179,10 +182,10 @@ export default function ServiceForm() {
       onConfirm={() => deleteService.mutate(id, { onSuccess: () => navigate('/services') })}
       message={__('Delete this service? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
-    <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
-      <p className="text-sm text-gray-600 mb-6">{blockReason}</p>
+    <Modal open={blockReason !== null} onClose={() => { setBlockReason(null); setBlockGroups(null) }} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
+      <BlockedReason reason={blockReason} groups={blockGroups} onGo={(route) => { setBlockReason(null); navigate(route) }} />
       <div className="flex justify-end">
-        <Button onClick={() => setBlockReason(null)}>{__('OK', 'eleva-crm-for-photographers')}</Button>
+        <Button onClick={() => { setBlockReason(null); setBlockGroups(null) }}>{__('OK', 'eleva-crm-for-photographers')}</Button>
       </div>
     </Modal>
     </>

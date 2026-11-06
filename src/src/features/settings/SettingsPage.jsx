@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Shield, Key, Archive, UploadCloud, ChevronDown, ChevronUp, CheckCircle, XCircle, RefreshCw, Trash2, AlertTriangle, Building2 } from 'lucide-react'
-import { __ } from '../../utils/i18n'
+import { __, sprintf } from '../../utils/i18n'
 import { apiFetch } from '../../api/client'
 import { useVault } from '../../context/VaultContext'
 import {
@@ -14,6 +14,8 @@ import PageHeader from '../../components/PageHeader'
 import Modal from '../../components/Modal'
 import VaultSetup from '../vault/VaultSetup'
 import FingerprintPanel from '../vault/FingerprintPanel'
+import SkippedFilesCard from './SkippedFilesCard'
+import { fetchTrashSummary } from '../../api/trash'
 import { useFingerprintSupport } from '../../lib/useFingerprintSupported'
 import ResetVaultFlow from '../vault/ResetVaultFlow'
 import { QrCanvas } from '../vault/TotpEnroll'
@@ -21,34 +23,42 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import PasswordInput from '../../components/PasswordInput'
 import { MIN_VAULT_PASSWORD } from '../../utils/recoveryKit'
 import BackupSettingsSection from './BackupSettingsSection'
+import RestoreLauncher from '../restore/RestoreLauncher'
 
-function SectionCard({ id, title, icon: Icon, children }) {
+// `danger`: the "danger zone" look (red outline, red title and icon) for a card about things that cannot be undone.
+function SectionCard({ id, title, icon: Icon, children, danger = false }) {
   // `id` is an anchor target for extensions (e.g. a header shortcut that scrolls to a section).
   // The scroll margin (style attribute) keeps the card clear of the sticky shortcuts bar (about 56px high) when scrolled into view.
   return (
-    <div className="ftnc-panel" id={id} style={id ? { scrollMarginTop: '72px' } : undefined}>
+    <div className={['ftnc-panel', danger ? 'border-red-300' : ''].join(' ').trim()} id={id} style={id ? { scrollMarginTop: '72px' } : undefined}>
       <div className="ftnc-panel__head">
-        <Icon size={16} className="text-indigo-500 shrink-0" />
-        <h2 className="text-sm font-bold text-gray-800">{title}</h2>
+        <Icon size={16} className={[danger ? 'text-red-600' : 'text-indigo-500', 'shrink-0'].join(' ')} />
+        <h2 className={['text-sm font-bold', danger ? 'text-red-700' : 'text-gray-800'].join(' ')}>{title}</h2>
       </div>
       <div className="ftnc-panel__body">{children}</div>
     </div>
   )
 }
 
-function Accordion({ label, children }) {
+// `danger`: the "danger zone" look (red border and red title) for an action that cannot be undone.
+function Accordion({ label, children, danger = false }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="border border-gray-200 rounded-md overflow-hidden bg-white">
+    <div className={['border rounded-md overflow-hidden bg-white', danger ? 'border-red-300' : 'border-gray-200'].join(' ')}>
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center justify-between w-full px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
+        className={[
+          'flex items-center justify-between w-full px-4 py-3 text-sm transition-colors cursor-pointer',
+          danger ? 'font-semibold text-red-700 hover:bg-red-50' : 'font-medium text-gray-700 hover:bg-gray-50',
+        ].join(' ')}
       >
         {label}
-        {open ? <ChevronUp size={14} className="text-gray-400" /> : <ChevronDown size={14} className="text-gray-400" />}
+        {open
+          ? <ChevronUp size={14} className={danger ? 'text-red-400' : 'text-gray-400'} />
+          : <ChevronDown size={14} className={danger ? 'text-red-400' : 'text-gray-400'} />}
       </button>
-      {open && <div className="px-4 pb-4 pt-2 border-t border-gray-100">{children}</div>}
+      {open && <div className={['px-4 pb-4 pt-2 border-t', danger ? 'border-red-200' : 'border-gray-100'].join(' ')}>{children}</div>}
     </div>
   )
 }
@@ -403,6 +413,39 @@ export default function SettingsPage() {
     queryFn: () => apiFetch('vault/status'),
   })
 
+  // The Bin card shows only while the Bin holds something. `staleTime: 0`: it appears after something was deleted elsewhere.
+  const { data: trashSummary } = useQuery({
+    queryKey: ['trash-summary'],
+    queryFn: fetchTrashSummary,
+    staleTime: 0,
+  })
+  const trashCount = trashSummary?.count ?? 0
+  const navigate = useNavigate()
+
+  // '#/settings?section=ftnc-sec-company' (a link from another page, e.g. the quote settings) scrolls to that card. The Pro
+  // cards arrive late, so wait for the element, scroll once, then drop only `section` from the address (not `setup`).
+  const wantedSection = searchParams.get('section')
+  useEffect(() => {
+    if (!wantedSection) return undefined
+    let tries = 0
+    let frame = 0
+    const look = () => {
+      const el = document.getElementById(wantedSection)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        setSearchParams((prev) => {
+          const next = new URLSearchParams(prev)
+          next.delete('section')
+          return next
+        }, { replace: true })
+        return
+      }
+      if (tries++ < 120) frame = requestAnimationFrame(look)
+    }
+    frame = requestAnimationFrame(look)
+    return () => cancelAnimationFrame(frame)
+  }, [wantedSection, setSearchParams])
+
   // Drop the param once the vault exists so a later reset does not reopen the wizard unasked.
   useEffect(() => {
     if (wantsSetup && vaultStatus?.setup) setSearchParams({}, { replace: true })
@@ -453,7 +496,7 @@ export default function SettingsPage() {
                 <div className="rounded-md bg-blue-50 border border-blue-100 p-4 space-y-2">
                   <p className="text-sm font-medium text-blue-900">{__('Keep your client data safe', 'eleva-crm-for-photographers')}</p>
                   <p className="ftnc-prose text-sm text-blue-800">
-                    {__('The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), your notes and your service catalog. With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics and the titles of clients, works and quotes stay readable.', 'eleva-crm-for-photographers')}
+                    {__('The Vault protects the personal details you store for each client (names, phone numbers, email addresses, addresses), the titles of your clients, works and quotes, your notes, your service catalog and the documents attached to your works (contracts, invoices). With Eleva CRM Pro it also protects your collaborators, suppliers, products, expense notes and quote notes. Once active, all of this is locked so nobody else can read it, even if they get direct access to your website or database. Dates, prices, payments, statistics, the titles of tasks and expenses, and the title and addresses of the works you send to Google Calendar stay readable.', 'eleva-crm-for-photographers')}
                   </p>
                   <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
                     <li>{__('Pick a strong master password (at least 8 characters) and store it somewhere safe.', 'eleva-crm-for-photographers')}</li>
@@ -485,6 +528,7 @@ export default function SettingsPage() {
                 <p className="text-xs text-gray-400">
                   {__('Vault auto-locks after 15 minutes of inactivity.', 'eleva-crm-for-photographers')}
                 </p>
+                <SkippedFilesCard />
                 <div className="space-y-2 pt-1">
                   <Accordion label={__('Change Vault Password', 'eleva-crm-for-photographers')}>
                     <ChangePasswordForm />
@@ -498,7 +542,7 @@ export default function SettingsPage() {
                   <Accordion label={__('Unlock with fingerprint', 'eleva-crm-for-photographers')}>
                     <FingerprintPanel supported={fingerprintSupport.supported} reason={fingerprintSupport.reason} />
                   </Accordion>
-                  <Accordion label={__('Reset Vault', 'eleva-crm-for-photographers')}>
+                  <Accordion danger label={__('Reset Vault', 'eleva-crm-for-photographers')}>
                     <ResetVaultAction />
                   </Accordion>
                 </div>
@@ -507,10 +551,38 @@ export default function SettingsPage() {
           </div>
         </SectionCard>
 
+        {/* The Bin has its own page (#/trash). Here only a short card, and only while the Bin holds something. */}
+        {trashCount > 0 && (
+          <SectionCard id="ftnc-sec-trash" danger title={__('Bin', 'eleva-crm-for-photographers')} icon={Trash2}>
+            <div className="ftnc-fields">
+              <p className="text-sm text-gray-600">
+                {sprintf(__('You have %s deleted items waiting in the Bin. See what is there, when each item disappears by itself, and bring items back or delete them for good.', 'eleva-crm-for-photographers'), trashCount)}
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate('/trash')}
+                className="inline-flex items-center gap-2 rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50 transition-colors"
+              >
+                <Trash2 size={14} aria-hidden="true" />
+                {sprintf(__('Open the Bin (%s)', 'eleva-crm-for-photographers'), trashCount)}
+              </button>
+            </div>
+          </SectionCard>
+        )}
+
         {/* Placed directly below Vault, and above Pro's Drive panel slot:
             the free manual download reads as the baseline, Drive as the upgrade. */}
         <SectionCard id="ftnc-sec-backups" title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
-          <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />
+          {/* Two halves side by side (one under the other on a narrow screen): the backup, and the restore. The restore
+              half is outside every check of the backup half, so it is there on a site with no Vault too. */}
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="min-w-0">
+              <BackupSettingsSection onSetupVault={() => setShowSetup(true)} />
+            </div>
+            <div className="min-w-0 md:border-l md:border-gray-200 md:pl-6">
+              <RestoreLauncher />
+            </div>
+          </div>
         </SectionCard>
 
         {ProBackupSettingsSection && window.FotonicApp?.features?.backup && (

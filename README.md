@@ -17,7 +17,7 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Works / Projects** — the central hub linking customers, services, files, and payment installments; Total Price tracked per project
 - **Payment Tracking** — track deposits and balances; paid/partial/unpaid status assigned automatically
 - **File Vault** — attach contracts and files to any project; protected storage with REST-gated downloads
-- **Vault Security**: optional AES-256 encryption behind a master password and TOTP two-factor authentication; client details, event addresses, notes and the service catalog are encrypted at rest
+- **Vault Security**: optional AES-256 encryption behind a master password and TOTP two-factor authentication; client details, event addresses, notes, the service catalog and the documents attached to your works are encrypted at rest
 - **Dashboard** — annual revenue, upcoming events, unpaid balances, and the next five scheduled works
 - **Quick Notes** — a WYSIWYG notes field on each Work for short reminders visible at a glance
 - **Calendar Color** — assign an event color (12-color palette) to each Work
@@ -25,7 +25,8 @@ A standalone WordPress plugin with a modern React-powered dashboard — no month
 - **Memory Cards** — keep an inventory of your SD/CF cards with an auto-advancing status (Ready, In Use, Backed Up, Damaged); manage them from the sidebar or assign cards to a shoot inside the Work editor
 - **Storage**: one page with three tabs: Memory Cards, Backup Locations (hard drives, NAS and cloud spaces where you keep your files) and Shots History. Each work records where its backups are saved, how many shots you took and delivered, and how the photos were delivered (link, expiry date, notes)
 - **Fingerprint unlock**: optional, open the Vault with a touch (WebAuthn PRF, tested on Safari and Chrome on macOS); password and TOTP code stay as the fallback and the recovery path
-- **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password (minimum 8 characters, use a strong one: the archive is only as safe as that password); a standalone command-line decrypt tool ships with the plugin to open the archive on any machine and read your data and files (importing a backup back into the plugin is not available yet)
+- **Encrypted Backup** — download a single encrypted archive of all your CRM data and attached files from Settings, protected by your Vault password (minimum 8 characters, use a strong one: the archive is only as safe as that password); a standalone command-line decrypt tool ships with the plugin to open the archive on any machine and read your data and files
+- **Restore a Backup**: bring a backup back from your computer, from a backup saved on this site or from Google Drive (with Pro), on the same site or a new one. The restore compares the backup with the site, adds what is missing, asks only about real differences, saves a safety copy first and can be undone; Replace everything is available too (no undo button, restore the safety copy to go back). A backup opens only with the Vault credentials of the day it was made (a backup made by this site opens without while the Vault is unlocked)
 
 ---
 
@@ -70,7 +71,7 @@ No. Eleva CRM for Photographers is fully standalone and has no third-party plugi
 All data is stored in your own WordPress database. The plugin makes no external HTTP requests — your data never leaves your server.
 
 **What is the Vault?**
-The Vault is optional (you choose the first time, or later from Settings: what you already entered is encrypted then). It encrypts the personally identifiable information (names, emails, phone numbers, addresses), your notes and your service catalog (with Eleva CRM Pro also collaborators, suppliers, products, expense notes and quote notes) with AES-256 before it is written to the database. You protect it with a master password and a TOTP authenticator app. The session key lives only in an HTTP-Only, SameSite=Strict cookie encrypted with AES-256-GCM, authenticated encryption that rejects any tampered cookie.
+The Vault is optional (you choose the first time, or later from Settings: what you already entered is encrypted then). It encrypts the personally identifiable information (names, emails, phone numbers, addresses), your notes, your service catalog and the documents attached to your works, file names included (with Eleva CRM Pro also collaborators, suppliers, products, expense notes and quote notes) with AES-256 before it is written to the database. You protect it with a master password and a TOTP authenticator app. The session key lives only in an HTTP-Only, SameSite=Strict cookie encrypted with AES-256-GCM, authenticated encryption that rejects any tampered cookie.
 
 **Does it work on shared hosting?**
 Yes, as long as the host meets the PHP 7.4+ and WordPress 6.0+ requirements.
@@ -100,6 +101,27 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 ---
 
 ## Changelog
+
+### 1.7.0
+
+- **New:** restore a backup. In Settings, under Backups, choose a backup made on this site, saved on Google Drive (with Eleva CRM Pro) or uploaded as a .zip file, and bring your data back into Eleva CRM, on the same site or on a new one.
+- **New:** before anything is written you see what is already on the site, what is missing and what is different, and you choose what to do with each difference. By default only what is missing is added. A safety copy of your data is saved first, and you can undo the restore until you choose to keep the result.
+- **New:** Replace everything puts the backup in place of your current data. It cannot be undone with a button: to go back, restore the safety copy.
+- **New:** a backup opens only with the Vault password, recovery code or recovery phrase that were valid on the day it was made. A backup made by this site opens without one while the Vault is unlocked.
+- **New:** with Eleva CRM Pro active and its license valid, quotes with their PDF, expenses, suppliers, collaborators, products and tasks are restored too. Without Pro, or without a valid license, they are not offered and are listed as left out.
+- **New:** the contracts and other documents you attach to a work are now kept in a private folder and encrypted by the Vault, file names included. Documents you had already uploaded are moved there when the Vault encrypts your existing data after the update; one that is used somewhere else (a quote logo, for example) stays where it is and is listed in Settings, under Vault.
+- **New:** the titles of your clients, works and quotes are now encrypted by the Vault, like your notes. You see them and search them as always, accents and capitals ignored. Searching clients also finds the name, email and phone number of their people.
+- **New:** a work whose customer is in the Bin, or no longer exists, shows a red sign in the Works list and a notice under the customer field, so you can restore that customer or choose another one.
+- **Change:** when a customer or a service cannot be deleted, the window now lists every work (and, with Eleva CRM Pro, every quote) that still uses it, and each one opens with a click.
+- **Change:** the search of works looks at titles only, not at the notes inside a work (they are encrypted).
+- **Change:** for each work with Google sync on, Google Calendar now gets the title and all the addresses (one line each, in the description), plus date, time and colour. The location field and the quick notes are no longer sent. Addresses appear on each event the next time you save the work.
+- **New:** the Bin. Each list (customers, works, quotes and so on) shows a small Bin button as soon as something of that kind is waiting there, and Settings has a Bin card too. The Bin page lists what is in it and in how many days each item disappears by itself, and lets you restore items or delete them for good, one by one or all together (deleting several asks you to type a word). An item still used by another record, such as a customer with works, cannot be deleted until that changes.
+- **Fix:** in the notes of a work, the cursor no longer jumps while you type.
+- **Fix:** the PDF preview of a document did not open on some hosting plans (the CRM showed Unable to render this PDF). It now opens everywhere; downloading always worked.
+- **Change:** while Eleva CRM Pro is switched off, the backup card now warns that a backup made at that moment leaves out your Pro data (quotes, suppliers, collaborators, expenses and tasks), instead of the vague warning about missing fields.
+- **Change:** restoring a backup from Google Drive now says that the CRM is asking Drive for the file, instead of looking frozen for a few seconds.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.7.0.
 
 ### 1.6.10
 

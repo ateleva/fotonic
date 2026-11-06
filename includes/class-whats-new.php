@@ -58,6 +58,42 @@ class Fotonic_Whats_New {
 	private static function free_entries(): array {
 		return [
 			[
+				'id'      => '1.7.0:settings-bin',
+				'plugin'  => 'free',
+				'since'   => '1.7.0',
+				'section' => 'settings',
+				'title'   => __( 'The Bin is now visible and yours to manage', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'Everything you delete now waits in a Bin that you can see. Each list (customers, works, quotes and so on) shows a small Bin button as soon as something of that kind is waiting there, and Settings has a Bin card too. The Bin page tells you in how many days each item disappears by itself, and lets you bring items back or delete them for good, one by one or all together. Nothing is hidden from you.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
+				'id'      => '1.7.0:titles-protected',
+				'plugin'  => 'free',
+				'since'   => '1.7.0',
+				'section' => 'works',
+				'title'   => __( 'The names of clients, works and quotes are protected', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'The titles you give to clients, works and quotes are now locked by the Vault too, like your notes. You see them and search them as always, and the search of clients also finds the name, email or phone number of the people in them.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
+				'id'      => '1.7.0:works-documents',
+				'plugin'  => 'free',
+				'since'   => '1.7.0',
+				'section' => 'works',
+				'title'   => __( 'Contracts and documents are kept safe', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'The contracts and other documents you attach to a work are now stored in a private place and open only with the Vault unlocked, file names included. The ones you had already uploaded are moved there for you when the Vault protects your data after the update.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
+				'id'      => '1.7.0:settings-restore',
+				'plugin'  => 'free',
+				'since'   => '1.7.0',
+				'section' => 'settings',
+				'title'   => __( 'Restore a backup', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'You can now put a backup back into Eleva CRM, from your computer or, with Eleva CRM Pro, from Google Drive. You see what is already there and what is missing, you choose what to keep, and you can undo it. Find it in Settings, under Backups.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
 				'id'      => '1.6.6:settings-fingerprint',
 				'plugin'  => 'free',
 				'since'   => '1.6.6',

@@ -9,6 +9,7 @@ import { apiFetch } from '../../api/client'
 import PageHeader from '../../components/PageHeader'
 import FormField from '../../components/FormField'
 import Button from '../../components/Button'
+import { Trash2 } from 'lucide-react'
 import Spinner from '../../components/Spinner'
 import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
@@ -188,6 +189,9 @@ export default function WorkForm() {
 
   // The message for the client: the main contact of the work's customer, the link, the password and the expiry.
   const { data: deliveryCustomer } = useCustomer(watchedCustomerId)
+  // The customer this work was saved with is in the Bin (or no longer exists): '' = nothing to say, 'trash' or 'missing'.
+  // Only while that customer is still the one chosen in the field.
+  const customerWarn = work?.customer_state && work?.customer_id && String(watchedCustomerId) === String(work.customer_id) ? work.customer_state : ''
   const deliveryMessage = buildDeliveryMessage({
     name: mainContactName(deliveryCustomer),
     url: deliveryUrl,
@@ -449,16 +453,36 @@ export default function WorkForm() {
                 name="customer_id"
                 control={control}
                 render={({ field }) => (
-                  <CustomerPicker
-                    id="customer_id"
-                    value={field.value}
-                    onChange={field.onChange}
-                    selectedTitle={work?.customer_title}
-                  />
+                  // Outlined in red while the customer this work was saved with is in the Bin (or gone): see the notice below.
+                  <div style={customerWarn ? { borderRadius: 6, boxShadow: '0 0 0 1.5px #fca5a5' } : undefined}>
+                    <CustomerPicker
+                      id="customer_id"
+                      value={field.value}
+                      onChange={field.onChange}
+                      selectedTitle={work?.customer_title}
+                    />
+                  </div>
                 )}
               />
             </FormField>
           </div>
+          {customerWarn && (
+            // A full row, not limited to the width of the field: the sentence, and next to it a small button that opens the Bin
+            // already filtered on customers. It goes away when another customer is chosen (or this one is restored).
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-red-700">
+              <span>
+                {customerWarn === 'trash'
+                  ? __('This customer is in the Bin. Choose another customer, or restore this one from the Bin.', 'eleva-crm-for-photographers')
+                  : __('This customer no longer exists. Choose another customer.', 'eleva-crm-for-photographers')}
+              </span>
+              {customerWarn === 'trash' && (
+                <Button type="button" variant="secondary" size="sm" onClick={() => navigate('/trash?type=ftnc_customer')}>
+                  <Trash2 size={12} aria-hidden="true" />
+                  {__('See in the Bin', 'eleva-crm-for-photographers')}
+                </Button>
+              )}
+            </div>
+          )}
         </section>
 
         {/* Section 3: Calendar Color */}

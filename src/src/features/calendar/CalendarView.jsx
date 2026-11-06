@@ -5,6 +5,10 @@ import { useSyncAll, useUnlinkWorkGCalEvent, useUnlinkTaskGCalEvent } from '../.
 import { __ } from '../../utils/i18n'
 import { formatTime } from '../../utils/date'
 import Button from '../../components/Button'
+import { titleOr } from '../../utils/titles'
+
+// A work whose title the server could not read comes with title null; tasks always have theirs.
+const eventTitle = (ev) => (ev.type === 'task' ? ev.title : titleOr(ev.title, 'work', ev.id))
 
 const OpenGoogleCalendarButton = window.FotonicProComponents?.OpenGoogleCalendarButton ?? null
 
@@ -188,7 +192,7 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled, narrow }) 
       )}
 
       {/* Title */}
-      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 10, paddingRight: 20 }}>{event.title}</div>
+      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 10, paddingRight: 20 }}>{eventTitle(event)}</div>
 
       {/* Date / time */}
       <div style={{ marginBottom: 6, color: '#374151' }}>
@@ -202,9 +206,9 @@ function EventPopup({ event, anchorRef, onClose, onOpen, gcalEnabled, narrow }) 
       </div>
 
       {/* Customer (works only) */}
-      {!isTask && event.customer_title && (
+      {!isTask && (event.customer_title || (event.customer_title === null && event.customer_id > 0)) && (
         <div style={{ marginBottom: 6, color: '#374151' }}>
-          <span style={{ fontSize: 12 }}>👤 </span>{event.customer_title}
+          <span style={{ fontSize: 12 }}>👤 </span>{titleOr(event.customer_title, 'customer', event.customer_id)}
         </div>
       )}
 
@@ -413,7 +417,7 @@ export function CalendarView() {
                         <button
                           key={`${ev.type}-${ev.id}`}
                           onClick={e => handlePillClick(e, ev)}
-                          aria-label={ev.title + (ev.event_time_from ? ' · ' + formatTime(ev.event_time_from) : '')}
+                          aria-label={eventTitle(ev) + (ev.event_time_from ? ' · ' + formatTime(ev.event_time_from) : '')}
                           style={{
                             width: 16,
                             height: 16,
@@ -430,7 +434,7 @@ export function CalendarView() {
                         <button
                           key={`${ev.type}-${ev.id}`}
                           onClick={e => handlePillClick(e, ev)}
-                          title={ev.title + (ev.event_time_from ? ' · ' + formatTime(ev.event_time_from) : '')}
+                          title={eventTitle(ev) + (ev.event_time_from ? ' · ' + formatTime(ev.event_time_from) : '')}
                           style={{
                             display: 'block',
                             width: '100%',
@@ -448,7 +452,7 @@ export function CalendarView() {
                           }}
                         >
                           <div style={{ overflow: 'hidden', wordBreak: 'break-word', whiteSpace: 'normal', fontWeight: 600 }}>
-                            {ev.type === 'task' ? '· ' : ''}{ev.title}
+                            {ev.type === 'task' ? '· ' : ''}{eventTitle(ev)}
                           </div>
                           {ev.event_time_from && (
                             <div style={{ opacity: 0.85, fontSize: 10, marginTop: 1 }}>

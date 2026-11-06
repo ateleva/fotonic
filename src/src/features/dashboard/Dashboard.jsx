@@ -7,6 +7,7 @@ import Badge from '../../components/Badge'
 import Spinner from '../../components/Spinner'
 import Table from '../../components/Table'
 import { apiFetch } from '../../api/client'
+import { titleOr } from '../../utils/titles'
 
 // Pro strip with the late / due-today reminders; renders nothing when there are none.
 const RemindersDashboardCard = window.FotonicApp?.features?.kanban
@@ -71,7 +72,7 @@ export default function Dashboard() {
           className="border-0 bg-transparent p-0 text-fotonic-primary underline font-medium text-left cursor-pointer hover:opacity-80"
           onClick={() => navigate(`/works/${row.id}`)}
         >
-          {row.title}
+          {titleOr(row.title, 'work', row.id)}
         </button>
       ),
     },
@@ -83,7 +84,7 @@ export default function Dashboard() {
     {
       key: 'customer',
       label: __('Customer', 'eleva-crm-for-photographers'),
-      render: (row) => row.customer_title ?? <span className="text-gray-400">—</span>,
+      render: (row) => (row.customer_title === null ? titleOr(null, 'customer', row.customer_id) : row.customer_title ?? <span className="text-gray-400">—</span>),
     },
     {
       key: 'revenue',

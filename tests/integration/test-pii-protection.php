@@ -1,5 +1,8 @@
 <?php
 require __DIR__ . '/../lib/wp-bootstrap.php';
+// These tests check other behaviour with plain titles. Since phase 15 Pro opens the titles gate on this site, so the gate is
+// closed here for the run (the titles themselves are covered by test-titles-wp.php and test-pro-titles.php).
+add_filter( 'ftnc_titles_encryptable', '__return_false' );
 
 // Saved personal details must never be blanked by a save made from a form that could not read
 // them (wrong or lost key, locked Vault), and a locked Vault must never store typed details in clear.

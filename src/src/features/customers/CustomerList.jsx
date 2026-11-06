@@ -9,6 +9,7 @@ import Spinner from '../../components/Spinner'
 import Pagination from '../../components/Pagination'
 import { PAGE_SIZE } from '../../utils/pagination'
 import { __ } from '../../utils/i18n'
+import { titleOr } from '../../utils/titles'
 
 function useDebounce(value, delay = 300) {
   const [debounced, setDebounced] = useState(value)
@@ -78,7 +79,7 @@ export default function CustomerList() {
           className="border-0 bg-transparent p-0 text-left font-medium text-fotonic-primary underline cursor-pointer hover:opacity-80"
           onClick={() => navigate(`/customers/${row.id}`)}
         >
-          {row.title}
+          {titleOr(row.title, 'customer', row.id)}
         </button>
       ),
     },
@@ -155,6 +156,7 @@ export default function CustomerList() {
     <div className="p-6">
       <PageHeader
         title={__('Customers', 'eleva-crm-for-photographers')}
+        trashType="ftnc_customer"
         action={
           <Button onClick={() => navigate('/customers/new')}>
             <UserPlus size={15} />

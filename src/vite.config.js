@@ -35,7 +35,14 @@ export default defineConfig({
       output: {
         entryFileNames: 'fotonic-app.js',
         chunkFileNames: 'fotonic-chunk-[name]-[hash].js',
-        assetFileNames: (info) => info.name?.endsWith('.css') ? 'fotonic-app.css' : (info.name ?? 'asset'),
+        // The PDF.js worker is a module script. Some hosts (Hostinger, found on the demo in Nov 2026) serve
+        // `.mjs` as `text/plain`, and a browser refuses a module script with that type: the PDF preview then
+        // failed with "Unable to render this PDF". Emitted as `.js`, every server sends a JavaScript type.
+        assetFileNames: (info) => {
+          const name = info.name ?? 'asset'
+          if (name.endsWith('.css')) return 'fotonic-app.css'
+          return name.endsWith('.mjs') ? name.replace(/\.mjs$/, '.js') : name
+        },
         // Pin the packages fotonic-pro.js externalizes (see its vite.config.js `external`/`globals`)
         // into one stable chunk. Without this, Rollup's automatic chunking can duplicate a module
         // like @tanstack/react-query across chunks whenever the async-import graph changes elsewhere

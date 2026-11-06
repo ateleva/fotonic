@@ -1,25 +1,40 @@
 import { useEffect, useRef, useState } from 'react'
-import { Download, Trash2, Upload, PlusCircle, Link as LinkIcon, Eye, ExternalLink, Pencil } from 'lucide-react'
+import { Download, Trash2, Upload, PlusCircle, Link as LinkIcon, Eye, ExternalLink, Pencil, Loader2 } from 'lucide-react'
 import Button from '../../components/Button'
 import RowReorder from '../../components/RowReorder'
 import { moveRow } from '../../utils/moveRow'
 import Modal from '../../components/Modal'
 import FilePreviewModal from '../../components/FilePreviewModal'
-import { fetchFileBlob } from '../../api/files'
+import { fetchFileBlob, uploadWorkFile } from '../../api/files'
 import { __, sprintf } from '../../utils/i18n'
 
-const ALLOWED_TYPES = [
-  'image',
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-]
+// What the file picker offers; the server checks the real content again.
+const ACCEPT = 'image/*,.pdf,.doc,.docx'
+const ALLOWED_EXT = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'jpe', 'png', 'gif', 'webp', 'heic', 'tif', 'tiff', 'bmp']
 const MAX_BYTES = window.FotonicApp?.maxUploadBytes ?? 10 * 1024 * 1024
 
 function displayNameOf(file) {
   const type = file.type ?? 'attachment'
   if (file.label) return file.label
-  return type === 'link' ? file.url : file.filename
+  if (type === 'link') return file.url
+  // null = the name is protected and cannot be read now (never an empty text).
+  return file.filename ?? __('Name not readable', 'eleva-crm-for-photographers')
+}
+
+// "contract.pdf" -> { stem: 'contract', ext: '.pdf' }. A name with no real extension has an empty ext.
+function splitExt(name) {
+  const dot = name.lastIndexOf('.')
+  return dot > 0 && dot < name.length - 1 ? { stem: name.slice(0, dot), ext: name.slice(dot) } : { stem: name, ext: '' }
+}
+
+// The type of an uploaded file (".pdf") stays when its name is changed: only the name part is editable.
+function lockedExtOf(file) {
+  return (file.type ?? 'attachment') === 'link' ? '' : splitExt(file.filename ?? '').ext
+}
+
+function extensionOf(name) {
+  const dot = name.lastIndexOf('.')
+  return dot < 0 ? '' : name.slice(dot + 1).toLowerCase()
 }
 
 function hostnameOf(url) {
@@ -45,7 +60,12 @@ export default function FilesSection({ value = [], onChange }) {
   const [linkLabel, setLinkLabel] = useState('')
   const [editingIdx, setEditingIdx] = useState(null)
   const [labelDraft, setLabelDraft] = useState('')
+  const [uploading, setUploading] = useState(0)
+  const [uploadError, setUploadError] = useState(null)
   const menuRef = useRef(null)
+  const inputRef = useRef(null)
+  const valueRef = useRef(value)
+  useEffect(() => { valueRef.current = value }, [value])
 
   useEffect(() => {
     if (!menuOpen) return undefined
@@ -69,12 +89,23 @@ export default function FilesSection({ value = [], onChange }) {
   }
 
   function startEditLabel(idx, file) {
-    setLabelDraft(file.label || '')
+    const ext = lockedExtOf(file)
+    const shown = displayNameOf(file)
+    const stem = ext && shown.toLowerCase().endsWith(ext.toLowerCase()) ? shown.slice(0, shown.length - ext.length) : shown
+    setLabelDraft(stem)
     setEditingIdx(idx)
   }
 
   function commitLabel(idx) {
-    updateLabelAt(idx, labelDraft.trim())
+    const file = value[idx]
+    const ext = file ? lockedExtOf(file) : ''
+    const draft = labelDraft.trim()
+    let label = ''
+    if (draft) {
+      label = ext && !draft.toLowerCase().endsWith(ext.toLowerCase()) ? draft + ext : draft
+    }
+    if (file && label === file.filename) label = '' // the real name again: no label needed
+    updateLabelAt(idx, label)
     setEditingIdx(null)
   }
 
@@ -97,47 +128,45 @@ export default function FilesSection({ value = [], onChange }) {
     }
   }
 
-  function openMediaFrame() {
+  function openFilePicker() {
     setMenuOpen(false)
-    if (!window.wp || !window.wp.media) return
+    setUploadError(null)
+    inputRef.current?.click()
+  }
 
-    const frame = window.wp.media({
-      title: __('Select Files', 'eleva-crm-for-photographers'),
-      button: { text: __('Add to Work', 'eleva-crm-for-photographers') },
-      multiple: true,
-      library: { type: ALLOWED_TYPES },
-    })
+  async function handleFilesChosen(e) {
+    const chosen = Array.from(e.target.files ?? [])
+    e.target.value = '' // the same file can be chosen again
+    if (chosen.length === 0) return
+    setUploadError(null)
 
-    frame.on('select', () => {
-      const selected = frame.state().get('selection').toJSON()
-
-      const oversized = selected.filter((a) => (a.filesizeInBytes ?? 0) > MAX_BYTES)
-      if (oversized.length > 0) {
-        const names = oversized.map((a) => a.filename).join(', ')
-        /* translators: %s is a file size, e.g. "50 MB". */
-        const limitMessage = sprintf(__('These files exceed the %s limit and were skipped:', 'eleva-crm-for-photographers'), formatBytes(MAX_BYTES))
-        window.alert(`${limitMessage}
-${names}`)
+    const problems = []
+    const toSend = []
+    for (const file of chosen) {
+      if (!ALLOWED_EXT.includes(extensionOf(file.name))) {
+        problems.push(sprintf(__('%s is not a PDF, a Word document or an image.', 'eleva-crm-for-photographers'), file.name))
+      } else if (file.size > MAX_BYTES) {
+        /* translators: 1: file name, 2: a file size, e.g. "10 MB". */
+        problems.push(sprintf(__('%1$s is bigger than the %2$s limit.', 'eleva-crm-for-photographers'), file.name, formatBytes(MAX_BYTES)))
+      } else {
+        toSend.push(file)
       }
+    }
 
-      const valid = selected.filter((a) => (a.filesizeInBytes ?? 0) <= MAX_BYTES)
-      const newFiles = valid.map((a) => ({
-        type: 'attachment',
-        id: a.id,
-        url: a.url,
-        filename: a.filename,
-        mime: a.mime,
-        label: '',
-      }))
-
-      const existingIds = new Set(
-        value.filter((f) => (f.type ?? 'attachment') === 'attachment').map((f) => f.id)
-      )
-      const merged = [...value, ...newFiles.filter((f) => !existingIds.has(f.id))]
-      onChange(merged)
-    })
-
-    frame.open()
+    const added = []
+    setUploading((n) => n + toSend.length)
+    for (const file of toSend) {
+      try {
+        const entry = await uploadWorkFile(file)
+        added.push({ type: 'attachment', id: entry.id, filename: entry.filename, mime: entry.mime, label: '' })
+      } catch (err) {
+        problems.push(`${file.name}: ${err.message || __('The file could not be uploaded.', 'eleva-crm-for-photographers')}`)
+      } finally {
+        setUploading((n) => n - 1)
+      }
+    }
+    if (added.length > 0) onChange([...valueRef.current, ...added])
+    if (problems.length > 0) setUploadError(problems.join('\n'))
   }
 
   function submitLink(e) {
@@ -173,21 +202,24 @@ ${names}`)
                   <tr key={index}>
                     <td className="px-4 py-2 text-gray-700">
                       {editingIdx === index ? (
-                        <input
-                          autoFocus
-                          type="text"
-                          value={labelDraft}
-                          onChange={(e) => setLabelDraft(e.target.value)}
-                          onBlur={() => commitLabel(index)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') e.currentTarget.blur()
-                            if (e.key === 'Escape') setEditingIdx(null)
-                          }}
-                          placeholder={name}
-                          className="w-full rounded border border-indigo-300 px-1.5 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
-                        />
+                        <div className="flex items-center gap-1">
+                          <input
+                            autoFocus
+                            type="text"
+                            value={labelDraft}
+                            onChange={(e) => setLabelDraft(e.target.value)}
+                            onBlur={() => commitLabel(index)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') e.currentTarget.blur()
+                              if (e.key === 'Escape') setEditingIdx(null)
+                            }}
+                            placeholder={splitExt(file.filename ?? name).stem}
+                            className="w-full rounded border border-indigo-300 px-1.5 py-0.5 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                          />
+                          {lockedExtOf(file) && <span className="text-sm text-gray-500 whitespace-nowrap">{lockedExtOf(file)}</span>}
+                        </div>
                       ) : (
-                        <div className="flex items-center gap-1.5 group">
+                        <div className="flex items-center gap-1 group">
                           {isPreviewable ? (
                             <button
                               type="button"
@@ -195,7 +227,9 @@ ${names}`)
                               className="font-bold text-gray-800 hover:underline inline-flex items-center gap-1"
                             >
                               {name}
-                              <Eye size={12} className="opacity-60" />
+                              <span className="ml-2 inline-flex items-center justify-center rounded bg-fotonic-primary p-1 text-white">
+                                <Eye size={13} />
+                              </span>
                             </button>
                           ) : isLink ? (
                             <button
@@ -212,10 +246,10 @@ ${names}`)
                           <button
                             type="button"
                             onClick={() => startEditLabel(index, file)}
-                            className="text-gray-300 hover:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                            className="inline-flex items-center justify-center rounded border border-gray-300 bg-gray-100 p-1 text-gray-900 hover:bg-gray-200 transition-colors"
                             aria-label={__('Rename', 'eleva-crm-for-photographers')}
                           >
-                            <Pencil size={11} />
+                            <Pencil size={13} />
                           </button>
                         </div>
                       )}
@@ -264,11 +298,11 @@ ${names}`)
             <div className="absolute z-10 mt-1 w-56 rounded-md border border-gray-200 bg-white shadow-lg py-1">
               <button
                 type="button"
-                onClick={openMediaFrame}
+                onClick={openFilePicker}
                 className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2 text-gray-700"
               >
                 <Upload size={14} />
-                {__('Upload from Media Library', 'eleva-crm-for-photographers')}
+                {__('Upload a file', 'eleva-crm-for-photographers')}
               </button>
               <button
                 type="button"
@@ -284,9 +318,22 @@ ${names}`)
             </div>
           )}
         </div>
-        <p className="text-xs text-gray-400 mt-1 ftnc-prose">
+        <input ref={inputRef} type="file" multiple accept={ACCEPT} className="hidden" onChange={handleFilesChosen} />
+        {uploading > 0 && (
+          <p className="text-xs text-gray-500 mt-1 inline-flex items-center gap-1">
+            <Loader2 size={12} className="animate-spin" />
+            {__('Uploading…', 'eleva-crm-for-photographers')}
+          </p>
+        )}
+        {uploadError && (
+          <p role="alert" className="text-xs text-red-600 mt-1 whitespace-pre-line">{uploadError}</p>
+        )}
+        <p className="text-xs text-gray-400 mt-1">
           {/* translators: %s is a file size, e.g. "50 MB". */}
           {sprintf(__('Images and PDF can be previewed after upload · DOC/DOCX and links open in a new tab · max %s per uploaded file.', 'eleva-crm-for-photographers'), formatBytes(MAX_BYTES))}
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          {__('Renaming a file only changes the name shown in this list: the type of file (for example .pdf) stays the same.', 'eleva-crm-for-photographers')}
         </p>
       </div>
 

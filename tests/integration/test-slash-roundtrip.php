@@ -1,5 +1,8 @@
 <?php
 require __DIR__ . '/../lib/wp-bootstrap.php';
+// These tests check other behaviour with plain titles. Since phase 15 Pro opens the titles gate on this site, so the gate is
+// closed here for the run (the titles themselves are covered by test-titles-wp.php and test-pro-titles.php).
+add_filter( 'ftnc_titles_encryptable', '__return_false' );
 
 // wp_insert_post(), wp_update_post() and update_post_meta() unslash their input. A writer that
 // skips wp_slash() therefore loses every backslash in the text and turns the \u00e8 escapes that
@@ -175,7 +178,7 @@ $scenario = function ( string $label, ?string $key ) use ( $rest, $meta_json, $T
         t_equals( $T[ $n ], Fotonic_Field_Crypt::read( (string) ( $meta_json( $id, '_ftnc_work_services' )[0]['notes_override'] ?? '' ), $key ), "{$label}: {$step} service notes_override stored" );
         t_equals( $T[ $n ], $meta_json( $id, '_ftnc_installments' )[0]['title'] ?? null, "{$label}: {$step} installment title stored" );
         $file = $meta_json( $id, '_ftnc_work_files' )[0] ?? [];
-        t_equals( [ $T[ $n ], 'https://example.com/a/b?x=1' ], [ $file['label'] ?? null, $file['url'] ?? null ], "{$label}: {$step} file label and link stored" );
+        t_equals( [ $T[ $n ], 'https://example.com/a/b?x=1' ], [ Fotonic_Field_Crypt::read( (string) ( $file['label'] ?? '' ), $key ), $file['url'] ?? null ], "{$label}: {$step} file label and link stored" );
         t_equals( $H[ $n ], get_post_meta( $id, '_ftnc_quick_notes', true ), "{$label}: {$step} quick notes stored" );
         t_equals( $T[ $n ], Fotonic_Field_Crypt::read( (string) ( $meta_json( $id, '_ftnc_memory_cards' )[0]['notes'] ?? '' ), $key ), "{$label}: {$step} memory card notes stored" );
 
@@ -233,7 +236,7 @@ $scenario = function ( string $label, ?string $key ) use ( $rest, $meta_json, $T
         $post_with( [ 'ftnc_work_files_json' => '[]' ] );
         Fotonic_Meta_Boxes::save_work( $wid, get_post( $wid ) );
         $file = $meta_json( $wid, '_ftnc_work_files' )[0] ?? [];
-        t_equals( [ $T[2], 'https://example.com/a/b?x=1' ], [ $file['label'] ?? null, $file['url'] ?? null ], "{$label}: meta box save_work keeps the link entry intact" );
+        t_equals( [ $T[2], 'https://example.com/a/b?x=1' ], [ Fotonic_Field_Crypt::read( (string) ( $file['label'] ?? '' ), $key ), $file['url'] ?? null ], "{$label}: meta box save_work keeps the link entry intact" );
     } finally {
         $_POST = [];
     }

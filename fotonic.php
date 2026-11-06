@@ -3,7 +3,7 @@
  * Plugin Name:       Eleva CRM for Photographers
  * Plugin URI:        https://eleva.alessandrobonacina.com/progetto/eleva-crm-per-fotografi/
  * Description:       CRM and workflow manager for photographers: clients, services, works, payments, encrypted vault for PII, and calendar view.
- * Version:           1.6.10
+ * Version:           1.7.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Tested up to:      7.1
@@ -17,7 +17,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'FOTONIC_VERSION', '1.6.10' );
+define( 'FOTONIC_VERSION', '1.7.0' );
 define( 'FOTONIC_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FOTONIC_URL', plugin_dir_url( __FILE__ ) );
 
@@ -35,7 +35,10 @@ require_once FOTONIC_DIR . 'includes/class-vault.php';
 require_once FOTONIC_DIR . 'includes/class-vault-attempts.php';
 require_once FOTONIC_DIR . 'includes/class-vault-fingerprint.php';
 require_once FOTONIC_DIR . 'includes/class-file-crypt.php';
+require_once FOTONIC_DIR . 'includes/class-work-files.php';
+require_once FOTONIC_DIR . 'includes/class-private-media.php';
 require_once FOTONIC_DIR . 'includes/class-field-crypt.php';
+require_once FOTONIC_DIR . 'includes/class-titles.php';
 require_once FOTONIC_DIR . 'includes/class-vault-fields.php';
 require_once FOTONIC_DIR . 'includes/class-vault-fields-repo.php';
 require_once FOTONIC_DIR . 'includes/class-vault-encrypt-existing.php';
@@ -43,6 +46,20 @@ require_once FOTONIC_DIR . 'includes/class-vault-mailer.php';
 require_once FOTONIC_DIR . 'includes/class-backup-keys.php';
 require_once FOTONIC_DIR . 'includes/class-backup-cipher.php';
 require_once FOTONIC_DIR . 'includes/class-backup-archive.php';
+require_once FOTONIC_DIR . 'includes/class-restore-splitter.php';
+require_once FOTONIC_DIR . 'includes/class-restore-upload.php';
+require_once FOTONIC_DIR . 'includes/class-restore-reader.php';
+require_once FOTONIC_DIR . 'includes/class-restore-matcher.php';
+require_once FOTONIC_DIR . 'includes/class-restore-preview.php';
+require_once FOTONIC_DIR . 'includes/class-restore-idmap.php';
+require_once FOTONIC_DIR . 'includes/class-restore-repo.php';
+require_once FOTONIC_DIR . 'includes/class-restore-files.php';
+require_once FOTONIC_DIR . 'includes/class-restore-wipe.php';
+require_once FOTONIC_DIR . 'includes/class-restore-writer.php';
+require_once FOTONIC_DIR . 'includes/class-restore-job.php';
+require_once FOTONIC_DIR . 'includes/class-restore-rest-api.php';
+require_once FOTONIC_DIR . 'includes/class-trash.php';
+require_once FOTONIC_DIR . 'includes/class-trash-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-payments.php';
 require_once FOTONIC_DIR . 'includes/class-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-whats-new.php';
@@ -64,11 +81,17 @@ add_action( 'init', [ 'Fotonic_Backup_Loc_CPT', 'register' ] );
 add_action( 'rest_api_init', [ 'Fotonic_REST_API', 'register_routes' ] );
 add_action( 'rest_api_init', [ 'Fotonic_Memory_Card_REST_API', 'register_routes' ] );
 add_action( 'rest_api_init', [ 'Fotonic_Backup_Loc_REST_API', 'register_routes' ] );
+add_action( 'rest_api_init', [ 'Fotonic_Restore_REST_API', 'register_routes' ] );
+add_action( 'rest_api_init', [ 'Fotonic_Trash_REST_API', 'register_routes' ] );
+// A record of the plugin leaves the Bin with the status it had, not as a draft (WordPress default).
+add_filter( 'wp_untrash_post_status', [ 'Fotonic_Trash', 'untrash_status' ], 10, 3 );
+add_action( 'fotonic_restore_cleanup', [ 'Fotonic_Restore_Reader', 'cleanup_all' ] );
 add_action( 'rest_api_init', [ 'Fotonic_Whats_New', 'register_routes' ] );
 add_action( 'admin_init', [ 'Fotonic_Backup_Registry', 'maybe_run_audit' ] );
 add_action( 'admin_init', [ 'Fotonic_Record_Uid', 'maybe_backfill' ] );
 add_action( 'wp_after_insert_post', [ 'Fotonic_Record_Uid', 'on_insert' ], 10, 2 );
 add_filter( 'site_status_tests', [ 'Fotonic_Site_Health', 'register_test' ] );
+Fotonic_Private_Media::init();
 add_action( 'admin_menu', [ 'Fotonic_Admin_Page', 'add_menu' ] );
 add_action( 'admin_enqueue_scripts', [ 'Fotonic_Admin_Page', 'enqueue_assets' ] );
 add_action( 'all_admin_notices', [ 'Fotonic_Admin_Page', 'suppress_notices' ], PHP_INT_MAX );
@@ -81,9 +104,7 @@ add_action( 'save_post_ftnc_service',  [ 'Fotonic_Meta_Boxes', 'save_service' ],
 add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'save_work' ],     10, 2 );
 add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'auto_assign_payment_status' ], 20, 1 );
 add_action( 'ftnc_after_save_work',    [ 'Fotonic_Meta_Boxes', 'sync_memory_card_statuses' ], 10, 2 );
-add_filter( 'posts_search', [ 'Fotonic_Meta_Boxes', 'extend_customer_search' ], 10, 2 );
-add_filter( 'posts_join',     [ 'Fotonic_Meta_Boxes', 'extend_customer_search_join' ], 10, 2 );
-add_filter( 'posts_distinct', [ 'Fotonic_Meta_Boxes', 'extend_customer_search_distinct' ], 10, 2 );
+// (The customer search filters on posts_search/posts_join/posts_distinct are gone: titles may be encrypted, so Fotonic_Titles searches in PHP.)
 
 // Force a vault re-unlock on each WP login session change: clear the session
 // cookie on login and logout so a fresh login always requires password + OTP.
