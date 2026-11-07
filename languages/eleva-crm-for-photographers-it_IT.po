@@ -4196,3 +4196,12 @@ msgstr "Eleva CRM Pro è disattivato, quindi un backup fatto adesso lascia fuori
 
 msgid "Asking Google Drive for the backup. This can take a few seconds, keep this page open."
 msgstr "Sto chiedendo il backup a Google Drive. Può richiedere qualche secondo, tieni aperta questa pagina."
+
+msgid "This restore is running in another browser or for another person. It goes on there."
+msgstr "Questo ripristino è in corso in un altro browser o per un'altra persona. Prosegue lì."
+
+msgid "A restore is still going on. Finish it or undo it before you open another backup."
+msgstr "Un ripristino è ancora in corso. Terminalo o annullalo prima di aprire un altro backup."
+
+msgid "A restore is still going on. Finish it or undo it before you check another backup."
+msgstr "Un ripristino è ancora in corso. Terminalo o annullalo prima di controllare un altro backup."
