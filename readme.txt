@@ -1,6 +1,6 @@
 === Eleva CRM for Photographers ===
 Contributors: eleva
-Tags: crm, photography, photographer, client-management, wedding
+Tags: crm, photographer, photography, gestionale, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
@@ -8,11 +8,11 @@ Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Free CRM for wedding and event photographers: clients, bookings, payments and memory cards, with an encrypted vault. No subscription.
+Free CRM and business manager (gestionale) for wedding and event photographers: clients, bookings, installments, calendar, memory cards, vault.
 
 == Description ==
 
-Eleva CRM for Photographers is a free business manager built for wedding and event photographers and video makers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
+Eleva CRM for Photographers is a free photographer CRM and business management software (a gestionale per fotografi) built for wedding and event photographers and video makers. It keeps every client, every shoot, and every payment in one place, right inside the WordPress admin you already use, with no monthly subscription and nothing sent to a server you don't control.
 
 You already have enough to think about on shoot day. Eleva CRM for Photographers handles the rest: who is getting married and when, what they owe and what they have paid, which memory card belongs to which shoot, and where every contract and file lives. The client details that matter most, names, contacts, home addresses, are protected by a dedicated encryption vault, so a leaked database never hands anyone a usable list of your clients.
 
@@ -165,18 +165,19 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Screenshots ==
 
-1. Dashboard with the sidebar collapsed to icon-only, so every panel gets the full width
-2. Dashboard: annual revenue, payments still to receive, payment type breakdown, and the next five upcoming works
-3. Customer list with search: name, main contact, email, and phone at a glance
-4. Service catalog with base prices: add, edit, and reuse services across bookings
-5. Works list with a payment status filter (All, Paid, Partial, Unpaid), a total price column, and the custom Payment Types manager open below it
-6. Work edit form: event date and time, customer selector, calendar color, and services with a per-booking price override
-7. Work edit form: attached files and the Memory Cards checklist, so you always know which card holds which shoot
-8. Work edit form: payment section with installments, paid or unpaid status per installment, and running totals
-9. Memory Cards: every card's status (Ready, In Use, Backed Up, Damaged) and which Work it is currently assigned to
-10. Monthly calendar view with every scheduled booking shown as a colored pill
-11. Vault unlock screen: master password and authenticator code required before any client data is shown
-12. Settings page: Vault controls (change password, reset authenticator, recovery phrase) and one-click encrypted backup download
+1. Photographer CRM dashboard: jobs and revenue of the year, payments still to receive, payment methods and recent works at a glance
+2. Client management: customer list with several contacts per client, quick search by name, email or phone, and full booking history
+3. Services catalog for photographers: packages and add-ons with a base price, reusable in every booking
+4. Bookings (works): list with payment status filter and total price, and the booking form with date, locations, services and files
+5. Payments and installments: deposit, balance and installments per booking, each with its own payment method, date and paid or unpaid status
+6. Memory cards inventory: status Ready, In Use, Backed Up or Damaged, and the work each card belongs to
+7. Backup locations: external drives, NAS and cloud with type, capacity, status and the number of works saved in each
+8. Shot history: photos shot and delivered for every work, with a year filter and totals
+9. Photography booking calendar: every job as a colored pill on a monthly calendar, with start and end time
+10. Settings with the encrypted vault: password, authenticator app, recovery kit and fingerprint unlock for client data
+11. Encrypted vault for client data: set up with a password, an authenticator app code, a recovery phrase and a recovery code, with optional fingerprint unlock
+12. Trash: restore a client or service deleted by mistake within 30 days, or delete it for good
+13. Restore a backup: guided five-step restore from your encrypted backup, on the same site or on a new one
 
 == Changelog ==
 
