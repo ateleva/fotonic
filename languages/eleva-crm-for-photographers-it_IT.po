@@ -4244,3 +4244,12 @@ msgstr "Segnalato da"
 
 msgid "Which source"
 msgstr "Quale fonte"
+
+msgid "Unsaved changes."
+msgstr "Modifiche non salvate."
+
+msgid "Stay"
+msgstr "Rimani"
+
+msgid "Leave anyway"
+msgstr "Esci comunque"

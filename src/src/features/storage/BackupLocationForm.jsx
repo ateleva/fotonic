@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import useLeaveGuard from '../../hooks/useLeaveGuard'
 import { useForm, Controller } from 'react-hook-form'
 import {
   useBackupLocation, useCreateBackupLocation, useUpdateBackupLocation, useDeleteBackupLocation,
@@ -72,9 +73,12 @@ export default function BackupLocationForm() {
   const updateLocation = useUpdateBackupLocation()
   const deleteLocation = useDeleteBackupLocation()
 
-  const { register, handleSubmit, reset, control, formState: { errors, isSubmitting } } = useForm({
+  const { register, handleSubmit, reset, control, formState: { errors, isSubmitting, isDirty } } = useForm({
     defaultValues: { title: '', type: '', capacity: '', status: 'active', notes: '' },
   })
+
+  // Leaving with changes that are not saved asks first (bar at the top); never after a save or a delete.
+  const guard = useLeaveGuard(isDirty)
 
   useEffect(() => {
     if (location) {
@@ -98,6 +102,7 @@ export default function BackupLocationForm() {
       } else {
         await createLocation.mutateAsync(data)
       }
+      guard.allowLeave()
       navigate('/storage/backups')
     } catch {
       // Error shown below
@@ -200,10 +205,11 @@ export default function BackupLocationForm() {
         {isEdit && <LocationWorks works={location?.works ?? []} />}
       </div>
 
+      {guard.bar}
       <ConfirmDialog
         open={showConfirm}
         onClose={() => setShowConfirm(false)}
-        onConfirm={() => deleteLocation.mutate(id, { onSuccess: () => navigate('/storage/backups') })}
+        onConfirm={() => deleteLocation.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/storage/backups') } })}
         message={__('Delete this backup location? The works that use it will show a warning, so you can choose another location for them.', 'eleva-crm-for-photographers')}
       />
     </>

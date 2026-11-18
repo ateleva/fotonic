@@ -9,12 +9,16 @@ import { createRouter } from './router'
 import VaultGate from './features/vault/VaultGate'
 import { VaultProvider } from './context/VaultContext'
 import './index.css'
+import useLeaveGuard from './hooks/useLeaveGuard'
+import { fingerprint } from './utils/leaveGuard'
 
 // Pin globals to THIS bundle's copies so fotonic-pro.js (which externalizes react/react-dom)
 // picks up the same instances and hooks work across the boundary.
 window.React = React
 window.ReactDOM = ReactDOMFull
 window.FotonicVendors = { ReactQuery, ReactRouter }
+// Shared with Eleva CRM Pro: the "unsaved changes" guard of the record forms (one bar, one set of strings).
+window.FotonicShared = { useLeaveGuard, fingerprint }
 
 // Any write may have put something in the Bin (a delete) or taken it out: the small Bin buttons of the lists read
 // ['trash-summary'], so it is refreshed after every successful write. Only mounted observers refetch, so it costs

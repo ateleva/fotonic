@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import useLeaveGuard from '../../hooks/useLeaveGuard'
 import { useForm, Controller } from 'react-hook-form'
 import { useWork, useCreateWork, useUpdateWork, useDeleteWork } from '../../api/works'
 import { useCustomer } from '../../api/customers'
@@ -166,7 +167,7 @@ export default function WorkForm() {
     control,
     setValue,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({ defaultValues })
 
   const [ownerType, ownerId, eventDate, watchedServices, watchedSuppliers, watchedInstallments, shotsTaken, shotsDelivered, watchedCustomerId, deliveryUrl, deliveryPassword, deliveryExpires] = watch([
@@ -198,6 +199,9 @@ export default function WorkForm() {
     password: deliveryPassword,
     expires: deliveryExpires,
   })
+
+  // Leaving with changes that are not saved asks first (bar at the top); never after a save or a delete.
+  const guard = useLeaveGuard(isDirty)
 
   useEffect(() => {
     if (work) {
@@ -350,6 +354,7 @@ export default function WorkForm() {
       } else {
         await createWork.mutateAsync(payload)
       }
+      guard.allowLeave()
       navigate('/works')
     } catch {
       // Error displayed below
@@ -838,10 +843,11 @@ export default function WorkForm() {
       </form>
     </div>
 
+    {guard.bar}
     <ConfirmDialog
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
-      onConfirm={() => deleteWork.mutate(id, { onSuccess: () => navigate('/works') })}
+      onConfirm={() => deleteWork.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/works') } })}
       message={__('Delete this work? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>

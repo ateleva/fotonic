@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import useLeaveGuard from '../../hooks/useLeaveGuard'
 import { useForm, useWatch, Controller } from 'react-hook-form'
 import { useCustomer, useCreateCustomer, useUpdateCustomer, useDeleteCustomer } from '../../api/customers'
 import { useWorks } from '../../api/works'
@@ -165,7 +166,7 @@ export default function CustomerForm() {
     handleSubmit,
     reset,
     control,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     defaultValues: {
       title: '',
@@ -189,6 +190,9 @@ export default function CustomerForm() {
   })
 
   const leadSource = useWatch({ control, name: 'lead_source' })
+
+  // Leaving with changes that are not saved asks first (bar at the top); never after a save or a delete.
+  const guard = useLeaveGuard(isDirty)
 
   useEffect(() => {
     if (customer) {
@@ -250,6 +254,7 @@ export default function CustomerForm() {
       } else {
         await createCustomer.mutateAsync(payload)
       }
+      guard.allowLeave()
       navigate('/customers')
     } catch {
       // Error displayed from mutation.error
@@ -350,10 +355,11 @@ export default function CustomerForm() {
       )}
     </div>
 
+    {guard.bar}
     <ConfirmDialog
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
-      onConfirm={() => deleteCustomer.mutate(id, { onSuccess: () => navigate('/customers') })}
+      onConfirm={() => deleteCustomer.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/customers') } })}
       message={__('Delete this customer? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => { setBlockReason(null); setBlockGroups(null) }} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>

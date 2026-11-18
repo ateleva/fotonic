@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import useLeaveGuard from '../../hooks/useLeaveGuard'
 import { useForm } from 'react-hook-form'
 import { useMemoryCard, useCreateMemoryCard, useUpdateMemoryCard, useDeleteMemoryCard } from '../../api/memory-cards'
 import PageHeader from '../../components/PageHeader'
@@ -35,10 +36,13 @@ export default function MemoryCardForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm({
     defaultValues: { title: '', status: 'free' },
   })
+
+  // Leaving with changes that are not saved asks first (bar at the top); never after a save or a delete.
+  const guard = useLeaveGuard(isDirty)
 
   useEffect(() => {
     if (card) {
@@ -63,6 +67,7 @@ export default function MemoryCardForm() {
       } else {
         await createCard.mutateAsync(data)
       }
+      guard.allowLeave()
       navigate('/storage/cards')
     } catch {
       // Error shown below
@@ -143,10 +148,11 @@ export default function MemoryCardForm() {
       </form>
     </div>
 
+    {guard.bar}
     <ConfirmDialog
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
-      onConfirm={() => deleteCard.mutate(id, { onSuccess: () => navigate('/storage/cards') })}
+      onConfirm={() => deleteCard.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/storage/cards') } })}
       message={__('Delete this card? This action cannot be undone.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>

@@ -5183,3 +5183,15 @@ msgstr ""
 #: src/src/features/customers/LeadSourceFields.jsx:42
 msgid "Optional"
 msgstr ""
+
+#: src/src/components/UnsavedChangesBar.jsx:19
+msgid "Unsaved changes."
+msgstr ""
+
+#: src/src/components/UnsavedChangesBar.jsx:28
+msgid "Stay"
+msgstr ""
+
+#: src/src/components/UnsavedChangesBar.jsx:29
+msgid "Leave anyway"
+msgstr ""
