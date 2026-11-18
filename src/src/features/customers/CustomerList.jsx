@@ -10,6 +10,7 @@ import Pagination from '../../components/Pagination'
 import { PAGE_SIZE } from '../../utils/pagination'
 import { __ } from '../../utils/i18n'
 import { titleOr } from '../../utils/titles'
+import { leadSourceText } from '../../utils/leadSources'
 
 function useDebounce(value, delay = 300) {
   const [debounced, setDebounced] = useState(value)
@@ -84,32 +85,6 @@ export default function CustomerList() {
       ),
     },
     {
-      key: 'main_contact',
-      label: __('Main Contact', 'eleva-crm-for-photographers'),
-      render: (row) => {
-        const main = (row.people ?? []).find((p) => p.is_main)
-        if (!main) return <span className="text-gray-400">-</span>
-        return (
-          <span>
-            {main.first_name} {main.last_name}
-          </span>
-        )
-      },
-    },
-    {
-      key: 'gender',
-      label: __('Gender', 'eleva-crm-for-photographers'),
-      render: (row) => {
-        const g = genderSummary(row.people)
-        if (!g) return <span className="text-gray-400">-</span>
-        return (
-          <span className="text-gray-600 whitespace-nowrap" title={genderTitle(g.parts)}>
-            {g.text}
-          </span>
-        )
-      },
-    },
-    {
       key: 'email',
       label: __('Email', 'eleva-crm-for-photographers'),
       render: (row) => {
@@ -131,6 +106,27 @@ export default function CustomerList() {
         ) : (
           <span className="text-gray-400">-</span>
         )
+      },
+    },
+    {
+      key: 'gender',
+      label: __('Gender', 'eleva-crm-for-photographers'),
+      render: (row) => {
+        const g = genderSummary(row.people)
+        if (!g) return <span className="text-gray-400">-</span>
+        return (
+          <span className="text-gray-600 whitespace-nowrap" title={genderTitle(g.parts)}>
+            {g.text}
+          </span>
+        )
+      },
+    },
+    {
+      key: 'lead_source',
+      label: __('Source', 'eleva-crm-for-photographers'),
+      render: (row) => {
+        const text = leadSourceText(row)
+        return text ? <span className="text-gray-600">{text}</span> : <span className="text-gray-400">-</span>
       },
     },
     {

@@ -2021,7 +2021,9 @@ class Fotonic_REST_API {
 			|| ( isset( $body['services'] ) && is_array( $body['services'] ) && self::rows_have_plain_text( $body['services'], [ 'notes_override' ] ) )
 			|| ( isset( $body['files'] ) && is_array( $body['files'] ) && self::rows_have_plain_text( $body['files'], [ 'label' ] ) )
 			|| ( isset( $body['delivery']['notes'] ) && is_string( $body['delivery']['notes'] ) && '' !== $body['delivery']['notes'] )
-			|| ( isset( $body['delivery']['password'] ) && is_string( $body['delivery']['password'] ) && '' !== $body['delivery']['password'] );
+			|| ( isset( $body['delivery']['password'] ) && is_string( $body['delivery']['password'] ) && '' !== $body['delivery']['password'] )
+			// The detail of a customer's lead source (who recommended, which supplier) is protected text; the slug itself is not.
+			|| ( isset( $body['lead_source_detail'] ) && is_string( $body['lead_source_detail'] ) && '' !== trim( $body['lead_source_detail'] ) );
 		return self::locked_response_if( $plain );
 	}
 
@@ -2797,6 +2799,12 @@ class Fotonic_REST_API {
 	 * @param array $body    Request body.
 	 */
 	private static function save_customer_meta( int $post_id, array $body ): void {
+		// The lead source is saved on its own: a body without people (only the source changed) must still store it.
+		if ( array_key_exists( 'lead_source', $body ) ) {
+			$detail = array_key_exists( 'lead_source_detail', $body ) && is_string( $body['lead_source_detail'] ) ? $body['lead_source_detail'] : null;
+			self::save_customer_lead_source( $post_id, Fotonic_Lead_Sources::slug( $body['lead_source'] ), $detail, Fotonic_Vault::get_session_key() );
+		}
+
 		if ( ! isset( $body['people'] ) || ! is_array( $body['people'] ) ) {
 			return;
 		}
@@ -2804,6 +2812,34 @@ class Fotonic_REST_API {
 		$stored = json_decode( (string) get_post_meta( $post_id, '_ftnc_people', true ), true );
 
 		update_post_meta( $post_id, '_ftnc_people', wp_slash( wp_json_encode( self::encrypt_people( $body['people'], Fotonic_Vault::get_session_key(), is_array( $stored ) ? $stored : null ) ) ) );
+	}
+
+	/**
+	 * Store where a customer came from. An empty or unknown slug removes the source and its detail.
+	 * The detail is kept only for the sources that take one; $detail null leaves the stored detail as it is
+	 * (a body that only changes the slug). It is encrypted like any protected free text.
+	 *
+	 * @param int         $post_id Customer ID.
+	 * @param string      $slug    A slug of Fotonic_Lead_Sources, or ''.
+	 * @param string|null $detail  The detail text, '' to clear it, null to keep it.
+	 * @param string|null $key     Master Key when the Vault is unlocked.
+	 */
+	public static function save_customer_lead_source( int $post_id, string $slug, ?string $detail, ?string $key ): void {
+		$slug = Fotonic_Lead_Sources::slug( $slug );
+		if ( '' === $slug ) {
+			delete_post_meta( $post_id, '_ftnc_lead_source' );
+			delete_post_meta( $post_id, '_ftnc_lead_source_detail' );
+			return;
+		}
+		$text   = ( Fotonic_Lead_Sources::takes_detail( $slug ) && null !== $detail ) ? Fotonic_Lead_Sources::detail( $detail ) : '';
+		// Encrypted before anything is written: a failure leaves the customer as it was.
+		$stored = '' === $text ? '' : self::field_to_store( $text, (string) get_post_meta( $post_id, '_ftnc_lead_source_detail', true ), $key );
+		update_post_meta( $post_id, '_ftnc_lead_source', $slug );
+		if ( ! Fotonic_Lead_Sources::takes_detail( $slug ) || ( null !== $detail && '' === $text ) ) {
+			delete_post_meta( $post_id, '_ftnc_lead_source_detail' );
+		} elseif ( '' !== $stored ) {
+			update_post_meta( $post_id, '_ftnc_lead_source_detail', wp_slash( $stored ) );
+		}
 	}
 
 	/**
@@ -3296,10 +3332,21 @@ class Fotonic_REST_API {
 		// Vault unlocked: decrypt each person's PII fields. Locked: encrypted fields become null.
 		$people = self::decrypt_people( $people, Fotonic_Vault::get_session_key() );
 
+		$lead   = Fotonic_Lead_Sources::slug( get_post_meta( $post->ID, '_ftnc_lead_source', true ) );
+		$detail = '';
+		if ( Fotonic_Lead_Sources::takes_detail( $lead ) ) {
+			$stored = (string) get_post_meta( $post->ID, '_ftnc_lead_source_detail', true );
+			// Null when it cannot be read (Vault locked or reset), never ciphertext.
+			$detail = '' === $stored ? '' : self::field_for_screen( $stored, Fotonic_Vault::get_session_key() );
+		}
+
 		return [
-			'id'     => $post->ID,
-			'title'  => Fotonic_Titles::read( $post, Fotonic_Vault::get_session_key() ), // Null when it cannot be read (a reset Vault), never ciphertext.
-			'people' => $people,
+			'id'                 => $post->ID,
+			'title'              => Fotonic_Titles::read( $post, Fotonic_Vault::get_session_key() ), // Null when it cannot be read (a reset Vault), never ciphertext.
+			'people'             => $people,
+			'lead_source'        => $lead,
+			'lead_source_label'  => Fotonic_Lead_Sources::label( $lead ),
+			'lead_source_detail' => $detail,
 		];
 	}
 

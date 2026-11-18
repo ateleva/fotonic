@@ -112,7 +112,7 @@ That's it. Your data is in `out`.
 
 Personal details inside `data.json` (names, emails, phone numbers, addresses) and the
 free-text notes (work notes, notes on a memory card or a service inside a work, delivery notes,
-backup location notes, the labels of a work's documents, service titles, prices and notes; with Eleva CRM Pro also collaborators, suppliers, products, expense
+the short text next to where a customer came from (who recommended them), backup location notes, the labels of a work's documents, service titles, prices and notes; with Eleva CRM Pro also collaborators, suppliers, products, expense
 notes and quote notes) stay encrypted exactly as the plugin stored them in the database
 (the ones that start with `f1:` are the notes, titles and other free-text fields). That is deliberate: your
 customers' details never sit in a plain text file. Prices, dates and payment

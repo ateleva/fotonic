@@ -50,6 +50,8 @@ class Fotonic_Vault_Fields {
 						'first_name' => 'v1', 'last_name' => 'v1', 'nationality' => 'v1', 'instagram_username' => 'v1',
 						'address' => 'v1', 'tin' => 'v1', 'email' => 'v1d', 'phone' => 'v1d',
 					) ),
+					// Where the customer came from: the slug is plain, the text next to it (who recommended) is protected.
+					array( 'kind' => 'meta', 'meta' => '_ftnc_lead_source_detail', 'format' => 'f1' ),
 				),
 			),
 			'works'     => array(

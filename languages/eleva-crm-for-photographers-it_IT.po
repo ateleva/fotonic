@@ -4205,3 +4205,42 @@ msgstr "Un ripristino è ancora in corso. Terminalo o annullalo prima di aprire 
 
 msgid "A restore is still going on. Finish it or undo it before you check another backup."
 msgstr "Un ripristino è ancora in corso. Terminalo o annullalo prima di controllare un altro backup."
+
+msgid "Facebook"
+msgstr "Facebook"
+
+msgid "Website"
+msgstr "Sito web"
+
+msgid "Word of mouth"
+msgstr "Passaparola"
+
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+msgid "Google"
+msgstr "Google"
+
+msgid "TikTok"
+msgstr "TikTok"
+
+msgid "Supplier"
+msgstr "Fornitore"
+
+msgid "Returning client"
+msgstr "Cliente che ritorna"
+
+msgid "Other"
+msgstr "Altro"
+
+msgid "Source"
+msgstr "Fonte"
+
+msgid "Optional"
+msgstr "Facoltativo"
+
+msgid "Referred by"
+msgstr "Segnalato da"
+
+msgid "Which source"
+msgstr "Quale fonte"

@@ -5131,3 +5131,55 @@ msgstr ""
 #: src/src/features/restore/RestoreUpload.jsx:174
 msgid "Asking Google Drive for the backup. This can take a few seconds, keep this page open."
 msgstr ""
+
+#: includes/class-lead-sources.php:30
+msgid "Facebook"
+msgstr ""
+
+#: includes/class-lead-sources.php:31
+msgid "Website"
+msgstr ""
+
+#: includes/class-lead-sources.php:32
+msgid "Word of mouth"
+msgstr ""
+
+#: includes/class-lead-sources.php:33
+msgid "WhatsApp"
+msgstr ""
+
+#: includes/class-lead-sources.php:35
+msgid "Google"
+msgstr ""
+
+#: includes/class-lead-sources.php:36
+msgid "TikTok"
+msgstr ""
+
+#: includes/class-lead-sources.php:37
+msgid "Supplier"
+msgstr ""
+
+#: includes/class-lead-sources.php:38
+msgid "Returning client"
+msgstr ""
+
+#: includes/class-lead-sources.php:41
+msgid "Other"
+msgstr ""
+
+#: src/src/features/customers/LeadSourceFields.jsx:11
+msgid "Referred by"
+msgstr ""
+
+#: src/src/features/customers/LeadSourceFields.jsx:12
+msgid "Which source"
+msgstr ""
+
+#: src/src/features/customers/LeadSourceFields.jsx:26
+msgid "Source"
+msgstr ""
+
+#: src/src/features/customers/LeadSourceFields.jsx:42
+msgid "Optional"
+msgstr ""

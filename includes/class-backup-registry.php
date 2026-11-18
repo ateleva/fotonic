@@ -35,7 +35,7 @@ class Fotonic_Backup_Registry {
                 'post_type'  => 'ftnc_customer',
                 'label'      => __( 'Customers', 'eleva-crm-for-photographers' ),
                 'supports'   => [ 'title' ],
-                'meta_keys'  => [ '_ftnc_people', '_ftnc_uid' ],
+                'meta_keys'  => [ '_ftnc_people', '_ftnc_uid', '_ftnc_lead_source', '_ftnc_lead_source_detail' ],
                 'taxonomies' => [],
                 'ref_fields' => [],
                 'identity'   => [

@@ -1,0 +1,1 @@
+var e=()=>Array.isArray(window.FotonicApp?.leadSources)?window.FotonicApp.leadSources:[],t=e=>(window.FotonicApp?.leadDetailSources??[]).includes(e);function n(e){let n=e?.lead_source_label||``,r=(e?.lead_source_detail||``).trim();return n?r&&t(e.lead_source)?`${n}: ${r}`:n:``}export{n,t as r,e as t};

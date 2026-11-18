@@ -158,6 +158,15 @@ class Fotonic_Admin_Page {
             'features'       => apply_filters( 'ftnc_app_features', array( 'calendar' => true, 'restore' => true ) ),
             'maxUploadBytes' => Fotonic_Work_Files::max_bytes(), // Never above what a restore can take.
             'isLocalWp'      => self::is_local_wp(),
+            // Where a customer came from: the options of the select and the sources that take a short text next to it.
+            'leadSources'       => array_map(
+                function ( $value, $label ) {
+                    return array( 'value' => $value, 'label' => $label );
+                },
+                array_keys( Fotonic_Lead_Sources::labels() ),
+                array_values( Fotonic_Lead_Sources::labels() )
+            ),
+            'leadDetailSources' => Fotonic_Lead_Sources::DETAIL_SOURCES,
         ] );
     }
 }

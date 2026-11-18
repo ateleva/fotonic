@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, useWatch, Controller } from 'react-hook-form'
 import { useCustomer, useCreateCustomer, useUpdateCustomer, useDeleteCustomer } from '../../api/customers'
 import { useWorks } from '../../api/works'
 import { apiFetch } from '../../api/client'
@@ -12,6 +12,8 @@ import ConfirmDialog from '../../components/ConfirmDialog'
 import Modal from '../../components/Modal'
 import BlockedReason from '../../components/BlockedReason'
 import PeopleRepeater from './PeopleRepeater'
+import LeadSourceFields from './LeadSourceFields'
+import { takesLeadDetail } from '../../utils/leadSources'
 import SectionHeading from '../../components/SectionHeading'
 import { __, sprintf } from '../../utils/i18n'
 import { firstInvalidEmail, invalidEmailIndexes } from '../../utils/email'
@@ -167,6 +169,8 @@ export default function CustomerForm() {
   } = useForm({
     defaultValues: {
       title: '',
+      lead_source: '',
+      lead_source_detail: '',
       people: [
         {
           first_name: '',
@@ -184,10 +188,15 @@ export default function CustomerForm() {
     },
   })
 
+  const leadSource = useWatch({ control, name: 'lead_source' })
+
   useEffect(() => {
     if (customer) {
       reset({
         title: customer.title ?? '',
+        lead_source: customer.lead_source ?? '',
+        // null = the Vault is locked and the text cannot be read.
+        lead_source_detail: customer.lead_source_detail ?? '',
         people:
           customer.people?.length > 0
             ? customer.people
@@ -229,11 +238,17 @@ export default function CustomerForm() {
     }
     setEmailError(null)
     setShowEmailErrors(false)
+    // The text next to the source only belongs to word of mouth, supplier and other.
+    // A text this key could not read comes back as null and the field shows empty: when nothing was typed and the
+    // source did not change, send null so the server keeps what is stored (never overwrite what could not be read).
+    const typed = (data.lead_source_detail ?? '').trim()
+    const keepUnreadable = isEdit && customer?.lead_source_detail === null && data.lead_source === customer.lead_source && typed === ''
+    const payload = { ...data, lead_source_detail: takesLeadDetail(data.lead_source) ? (keepUnreadable ? null : typed) : '' }
     try {
       if (isEdit) {
-        await updateCustomer.mutateAsync({ id, ...data })
+        await updateCustomer.mutateAsync({ id, ...payload })
       } else {
-        await createCustomer.mutateAsync(data)
+        await createCustomer.mutateAsync(payload)
       }
       navigate('/customers')
     } catch {
@@ -259,10 +274,12 @@ export default function CustomerForm() {
       />
 
       <form onSubmit={handleSubmit(onSubmit)} className="ftnc-stack" noValidate>
-        {/* No SectionHeading here: a heading over a single field is ceremony, not
+        {/* No SectionHeading here: a heading over a few fields is ceremony, not
             hierarchy — the same rule that leaves ServiceForm and MemoryCardForm
-            headingless. "People" below is a real group and keeps its heading. */}
-        <section>
+            headingless. "People" below is a real group and keeps its heading.
+            One row that never wraps: the title takes what the other fields leave. */}
+        <section style={{ display: 'flex', flexWrap: 'nowrap', alignItems: 'flex-start', gap: '1rem' }}>
+          <div style={{ flex: '1 1 8rem', minWidth: 0 }}>
           <FormField
             label={__('Title', 'eleva-crm-for-photographers')}
             htmlFor="title"
@@ -277,6 +294,8 @@ export default function CustomerForm() {
               {...register('title', { required: __('Title is required', 'eleva-crm-for-photographers') })}
             />
           </FormField>
+          </div>
+          <LeadSourceFields register={register} source={leadSource} />
         </section>
 
         <section>
