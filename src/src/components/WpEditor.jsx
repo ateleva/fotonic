@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
-import { shouldPushValue, shouldReport, pushKnown, ackKnown, receiveKnown } from './editorSync'
+import { shouldPushValue, shouldReport, pushKnown, ackKnown, receiveKnown, knownAfterSet } from './editorSync'
 
 const EDITOR_ID = 'ftnc_work_notes_mce'
 
@@ -68,8 +68,8 @@ export default function WpEditor({ value = '', onChange }) {
     knownRef.current = receiveKnown(ackKnown(knownRef.current, next), next, current)
     const focused = editorHasFocus(editor, focusedRef.current)
     if (!shouldPushValue({ value: next, current, known: knownRef.current, focused })) return
-    knownRef.current = [next]
     setEditorHtml(editor, next)
+    knownRef.current = knownAfterSet(next, editor.getContent())
   }, [])
 
   // A layout effect: its cleanup then runs while React removes the field but the iframe is still
@@ -93,8 +93,8 @@ export default function WpEditor({ value = '', onChange }) {
         knownRef.current = []
         editor.on('init', () => {
           const start = valueRef.current || ''
-          knownRef.current = [start]
           editor.setContent(start)
+          knownRef.current = knownAfterSet(start, editor.getContent())
         })
         editor.on('focus', () => {
           focusedRef.current = true

@@ -1,7 +1,7 @@
 // Run: node --test tests/js/editor-sync.test.mjs (from the plugin root). Decisions behind the notes editor: the caret must never jump.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { shouldPushValue, shouldReport, lastKnown, receiveKnown, pushKnown, ackKnown, KNOWN_HISTORY } from '../../src/src/components/editorSync.js'
+import { shouldPushValue, shouldReport, lastKnown, receiveKnown, pushKnown, ackKnown, knownAfterSet, KNOWN_HISTORY } from '../../src/src/components/editorSync.js'
 
 const base = { value: '<p>new</p>', current: '<p>old</p>', known: [], focused: false }
 
@@ -138,4 +138,12 @@ test('receiveKnown leaves the history alone when the editor does not hold the va
   assert.deepEqual(receiveKnown(['a', 'b'], 'a', 'b'), ['a', 'b'])
   assert.deepEqual(receiveKnown(['a'], 'a', 'a'), ['a'], 'not twice in a row')
   assert.deepEqual(receiveKnown(undefined, 'a', 'x'), [])
+})
+
+test("after the editor is given a text, its own normalised copy of it is not reported as an edit", () => {
+  const known = knownAfterSet("<p>a</p>", "<p>a</p>\n<p>&nbsp;</p>")
+  assert.equal(shouldReport({ html: "<p>a</p>\n<p>&nbsp;</p>", known }), false)
+  assert.equal(lastKnown(known), "<p>a</p>\n<p>&nbsp;</p>")
+  assert.equal(shouldReport({ html: "<p>ab</p>", known }), true)
+  assert.deepEqual(knownAfterSet("<p>a</p>", "<p>a</p>"), ["<p>a</p>"])
 })

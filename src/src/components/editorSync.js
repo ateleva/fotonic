@@ -83,3 +83,12 @@ export function receiveKnown(known, value, current) {
   const list = Array.isArray(known) ? known : []
   return value === current ? pushKnown(list, value) : list
 }
+
+/**
+ * The history right after the editor was given `text` with setContent(): TinyMCE may hand back its own
+ * normalised copy (`normalised`, from getContent()). Both are known, the copy last, so moving the caret
+ * or pressing an arrow key is not reported as an edit (that made a form look changed when nothing was typed).
+ */
+export function knownAfterSet(text, normalised) {
+  return pushKnown([text], normalised)
+}
