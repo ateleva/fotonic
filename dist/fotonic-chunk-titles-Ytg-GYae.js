@@ -1,1 +1,0 @@
-import{G as e,W as t}from"./fotonic-chunk-app-BAVW4tMD.js";function n(n,r,i){return typeof n==`string`&&n!==``?n:e(t(r===`work`?`Work %d`:`Customer %d`,`eleva-crm-for-photographers`),i||``).trim()}export{n as t};

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Sparkles, X, LayoutDashboard, Briefcase, Camera, FileText, Kanban, BarChart2, Store, Receipt, ArrowRight, HardDrive, Settings } from 'lucide-react'
+import { Sparkles, X, LayoutDashboard, Users, Briefcase, Camera, FileText, Kanban, BarChart2, Store, Receipt, ArrowRight, HardDrive, Settings } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Modal from './Modal'
 import Button from './Button'
@@ -15,6 +15,7 @@ const BAND = 'linear-gradient(135deg, color-mix(in srgb, var(--fotonic-primary) 
 // The icon of each section is the one of its sidebar item.
 const SECTION_ICON = {
   dashboard: LayoutDashboard,
+  customers: Users,
   services: Briefcase,
   works: Camera,
   storage: HardDrive,
