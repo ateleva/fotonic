@@ -50,13 +50,31 @@ class Fotonic_Whats_New {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Entries of this plugin. Section keys: dashboard, works, services, kanban, analytics, expenses,
+	 * Entries of this plugin. Section keys: dashboard, customers, works, services, kanban, analytics, expenses,
 	 * suppliers, quotes (the sidebar entry each one is shown next to).
 	 *
 	 * @return array<int, array{id:string,plugin:string,since:string,section:string,title:string,body:string,banner?:bool}>
 	 */
 	private static function free_entries(): array {
 		return [
+			[
+				'id'      => '1.7.1:customers-source',
+				'plugin'  => 'free',
+				'since'   => '1.7.1',
+				'section' => 'customers',
+				'title'   => __( 'Where each client came from', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'On each client you can now note how they found you: Instagram, word of mouth, a supplier and so on. For word of mouth, a supplier or Other you can also write a name, for example who recommended you. The client list shows it in the new Source column.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
+				'id'      => '1.7.1:works-unsaved',
+				'plugin'  => 'free',
+				'since'   => '1.7.1',
+				'section' => 'works',
+				'title'   => __( 'No more changes lost by mistake', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'If you leave a client, a work or another page you are editing without saving, a small bar at the top asks whether to stay or leave anyway. Stay, check your changes and save.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
 			[
 				'id'      => '1.7.0:settings-bin',
 				'plugin'  => 'free',

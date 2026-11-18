@@ -4,7 +4,7 @@ Tags: crm, photographer, photography, gestionale, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,6 +181,14 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Changelog ==
 
+= 1.7.1 =
+* New: on each client you can now note where they came from (Instagram, word of mouth, a supplier and so on), and for word of mouth, a supplier or Other also a name. The client list shows it in a new Source column, which replaces Main contact.
+* New: if you leave a client, a work, a service, a memory card or a backup location with changes you did not save, a bar at the top of the screen asks whether to stay or leave anyway. With Eleva CRM Pro the same happens on quotes, collaborators, products, suppliers and expenses.
+* Change: the name next to a client's source is encrypted by the Vault like your notes. After updating, unlock the Vault and let the short encryption finish.
+* Fix: clicking in the notes of a work and moving with the arrow keys no longer counts as a change.
+* Compatibility: tested with the latest WordPress (7.1.x).
+* Compatibility: works with Eleva CRM Pro 1.7.1.
+
 = 1.7.0 =
 * New: restore a backup. In Settings, under Backups, choose a backup made on this site, saved on Google Drive (with Eleva CRM Pro) or uploaded as a .zip file, and bring your data back into Eleva CRM, on the same site or on a new one.
 * New: before anything is written you see what is already on the site, what is missing and what is different, and you choose what to do with each difference. By default only what is missing is added. A safety copy of your data is saved first, and you can undo the restore until you choose to keep the result.
@@ -327,6 +335,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 Entries for versions older than 1.4.0 were removed from this list to keep it short.
 
 == Upgrade Notice ==
+
+= 1.7.1 =
+Note where each client came from, and get a warning before you leave a page with unsaved changes. After updating, unlock the Vault and let the short encryption finish.
 
 = 1.7.0 =
 You can now restore a backup from Settings, with a safety copy first and an undo. Documents you attach to a work are now kept private, and so are the titles of clients, works and quotes: after updating, unlock the Vault and let the short encryption finish. Update Eleva CRM Pro to 1.7.0 too.

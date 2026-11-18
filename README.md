@@ -102,6 +102,15 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 
 ## Changelog
 
+### 1.7.1
+
+- **New:** on each client you can now note where they came from (Instagram, word of mouth, a supplier and so on), and for word of mouth, a supplier or Other also a name. The client list shows it in a new Source column, which replaces Main contact.
+- **New:** if you leave a client, a work, a service, a memory card or a backup location with changes you did not save, a bar at the top of the screen asks whether to stay or leave anyway. With Eleva CRM Pro the same happens on quotes, collaborators, products, suppliers and expenses.
+- **Change:** the name next to a client's source is encrypted by the Vault like your notes. After updating, unlock the Vault and let the short encryption finish.
+- **Fix:** clicking in the notes of a work and moving with the arrow keys no longer counts as a change.
+- **Compatibility:** tested with the latest WordPress (7.1.x).
+- **Compatibility:** works with Eleva CRM Pro 1.7.1.
+
 ### 1.7.0
 
 - **New:** restore a backup. In Settings, under Backups, choose a backup made on this site, saved on Google Drive (with Eleva CRM Pro) or uploaded as a .zip file, and bring your data back into Eleva CRM, on the same site or on a new one.

@@ -5195,3 +5195,19 @@ msgstr ""
 #: src/src/components/UnsavedChangesBar.jsx:29
 msgid "Leave anyway"
 msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Where each client came from"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "On each client you can now note how they found you: Instagram, word of mouth, a supplier and so on. For word of mouth, a supplier or Other you can also write a name, for example who recommended you. The client list shows it in the new Source column."
+msgstr ""
+
+#: includes/class-whats-new.php:74
+msgid "No more changes lost by mistake"
+msgstr ""
+
+#: includes/class-whats-new.php:75
+msgid "If you leave a client, a work or another page you are editing without saving, a small bar at the top asks whether to stay or leave anyway. Stay, check your changes and save."
+msgstr ""

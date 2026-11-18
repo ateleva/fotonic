@@ -4253,3 +4253,15 @@ msgstr "Rimani"
 
 msgid "Leave anyway"
 msgstr "Esci comunque"
+
+msgid "Where each client came from"
+msgstr "Da dove arriva ogni cliente"
+
+msgid "On each client you can now note how they found you: Instagram, word of mouth, a supplier and so on. For word of mouth, a supplier or Other you can also write a name, for example who recommended you. The client list shows it in the new Source column."
+msgstr "Su ogni cliente ora puoi segnare come ti ha trovato: Instagram, passaparola, un fornitore e così via. Per passaparola, fornitore o Altro puoi scrivere anche un nome, per esempio chi ti ha consigliato. La lista clienti lo mostra nella nuova colonna Fonte."
+
+msgid "No more changes lost by mistake"
+msgstr "Niente più modifiche perse per sbaglio"
+
+msgid "If you leave a client, a work or another page you are editing without saving, a small bar at the top asks whether to stay or leave anyway. Stay, check your changes and save."
+msgstr "Se esci da un cliente, da un lavoro o da un'altra pagina che stai modificando senza salvare, una piccola barra in alto ti chiede se rimanere o uscire comunque. Rimani, controlla le modifiche e salva."
