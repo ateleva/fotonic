@@ -109,7 +109,7 @@ See [`src/README.md`](src/README.md) for the full build guide and source→outpu
 - **Change:** the name next to a client's source is encrypted by the Vault like your notes. After updating, unlock the Vault and let the short encryption finish.
 - **Fix:** clicking in the notes of a work and moving with the arrow keys no longer counts as a change.
 - **Compatibility:** tested with the latest WordPress (7.1.x).
-- **Compatibility:** works with Eleva CRM Pro 1.7.1.
+- **Compatibility:** works with Eleva CRM Pro 1.7.2.
 
 ### 1.7.0
 

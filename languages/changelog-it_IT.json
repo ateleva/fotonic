@@ -170,5 +170,5 @@
     "New: if you leave a client, a work, a service, a memory card or a backup location with changes you did not save, a bar at the top of the screen asks whether to stay or leave anyway. With Eleva CRM Pro the same happens on quotes, collaborators, products, suppliers and expenses.": "Novità: se esci da un cliente, un lavoro, un servizio, una memory card o una sede di backup con modifiche non salvate, una barra in alto ti chiede se rimanere o uscire comunque. Con Eleva CRM Pro succede lo stesso su preventivi, collaboratori, prodotti, fornitori e spese.",
     "Change: the name next to a client's source is encrypted by the Vault like your notes. After updating, unlock the Vault and let the short encryption finish.": "Modifica: il nome accanto alla fonte di un cliente è cifrato dal Vault come le tue note. Dopo l'aggiornamento sblocca il Vault e lascia finire la breve cifratura.",
     "Fix: clicking in the notes of a work and moving with the arrow keys no longer counts as a change.": "Correzione: cliccare nelle note di un lavoro e spostarsi con le frecce non conta più come una modifica.",
-    "Compatibility: works with Eleva CRM Pro 1.7.1.": "Compatibilità: funziona con Eleva CRM Pro 1.7.1."
+    "Compatibility: works with Eleva CRM Pro 1.7.2.": "Compatibilità: funziona con Eleva CRM Pro 1.7.2."
 }
