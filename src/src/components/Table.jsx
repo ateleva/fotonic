@@ -7,7 +7,7 @@ export default function Table({ columns = [], data = [], emptyMessage = 'No item
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"
+                className={`px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider${col.sticky === 'right' ? ' ftnc-sticky-right' : ''}`}
               >
                 {col.label}
               </th>
@@ -28,7 +28,7 @@ export default function Table({ columns = [], data = [], emptyMessage = 'No item
             data.map((row, i) => (
               <tr key={row.id ?? i} className="hover:bg-gray-50 transition-colors">
                 {columns.map((col) => (
-                  <td key={col.key} className="px-4 py-3 text-gray-700 whitespace-nowrap">
+                  <td key={col.key} className={`px-4 py-3 text-gray-700 whitespace-nowrap${col.sticky === 'right' ? ' ftnc-sticky-right' : ''}`}>
                     {col.render ? col.render(row) : row[col.key]}
                   </td>
                 ))}

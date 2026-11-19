@@ -4,7 +4,7 @@ Tags: crm, photographer, photography, gestionale, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,6 +181,13 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Changelog ==
 
+= 1.7.2 =
+* New: the Works list has a Year filter. It opens on the current year (or the nearest year that has works), and All years shows everything.
+* New: searching works now also finds them by the client's name (and by the name, email or phone of the people of that client), not only by the title of the work.
+* New: the client's name in the Works list opens the client.
+* Change: the columns of the Works list are now Title, Date, Customer, Payment, Total and Actions, and the Actions column stays on the right while the table scrolls, with just the pencil.
+* Compatibility: works with Eleva CRM Pro 1.7.3.
+
 = 1.7.1 =
 * New: on each client you can now note where they came from (Instagram, word of mouth, a supplier and so on), and for word of mouth, a supplier or Other also a name. The client list shows it in a new Source column, which replaces Main contact.
 * New: if you leave a client, a work, a service, a memory card or a backup location with changes you did not save, a bar at the top of the screen asks whether to stay or leave anyway. With Eleva CRM Pro the same happens on quotes, collaborators, products, suppliers and expenses.
@@ -335,6 +342,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 Entries for versions older than 1.4.0 were removed from this list to keep it short.
 
 == Upgrade Notice ==
+
+= 1.7.2 =
+Filter your works by year, and find a work by its client's name. Update Eleva CRM Pro to 1.7.3 for the collaborator icon and the owner filter.
 
 = 1.7.1 =
 Note where each client came from, and get a warning before you leave a page with unsaved changes. After updating, unlock the Vault and let the short encryption finish.

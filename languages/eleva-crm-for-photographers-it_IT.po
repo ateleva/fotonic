@@ -4265,3 +4265,18 @@ msgstr "Niente più modifiche perse per sbaglio"
 
 msgid "If you leave a client, a work or another page you are editing without saving, a small bar at the top asks whether to stay or leave anyway. Stay, check your changes and save."
 msgstr "Se esci da un cliente, da un lavoro o da un'altra pagina che stai modificando senza salvare, una piccola barra in alto ti chiede se rimanere o uscire comunque. Rimani, controlla le modifiche e salva."
+
+msgid "Edit work"
+msgstr "Modifica lavoro"
+
+msgid "No works found. Check the Year, Owner and Status filters, then try your search again."
+msgstr "Nessun lavoro trovato. Controlla i filtri Anno, Titolare e Stato, quindi riprova la ricerca."
+
+msgid "No works found. Check the Year and Status filters, then try your search again."
+msgstr "Nessun lavoro trovato. Controlla i filtri Anno e Stato, quindi riprova la ricerca."
+
+msgid "Filter your works by year"
+msgstr "Filtra i tuoi lavori per anno"
+
+msgid "You can now filter your works by year, and with one click on the client's name you check their details."
+msgstr "Ora puoi filtrare i lavori per anno e con un clic sul nome del cliente controlli i suoi dati."

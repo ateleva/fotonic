@@ -314,6 +314,10 @@ class Fotonic_REST_API {
 					'storage_alert'  => [ 'type' => 'boolean', 'default' => false ],
 					// Event date order. Ascending stays the default (the Dashboard and the Calendar rely on it).
 					'order'          => [ 'type' => 'string', 'default' => 'asc', 'enum' => [ 'asc', 'desc' ] ],
+					// Only the works of one event year ('' = every year).
+					'year'           => [ 'type' => 'string', 'default' => '', 'pattern' => '^(\d{4})?$' ],
+					// '' = everyone, 'admin' = the works of the site owner, 'collaborator:<id>' = the works owned by that collaborator.
+					'owner'          => [ 'type' => 'string', 'default' => '', 'pattern' => '^(admin|collaborator:\d+)?$' ],
 				],
 			],
 			[
@@ -321,6 +325,13 @@ class Fotonic_REST_API {
 				'callback'            => [ __CLASS__, 'create_work' ],
 				'permission_callback' => [ __CLASS__, 'data_permission' ],
 			],
+		] );
+
+		// The event years that have at least one work, newest first (the Year selects of the Works list and of Pro).
+		register_rest_route( self::NAMESPACE, '/works-years', [
+			'methods'             => \WP_REST_Server::READABLE,
+			'callback'            => [ __CLASS__, 'get_works_years' ],
+			'permission_callback' => [ __CLASS__, 'data_permission' ],
 		] );
 
 		register_rest_route( self::NAMESPACE, '/works/(?P<id>\d+)', [
@@ -2395,17 +2406,59 @@ class Fotonic_REST_API {
 		// The search is done in PHP over the (possibly encrypted) titles; the matching IDs go into the query below, so the order, the
 		// paging and the other filters work as before. The notes of a work are no longer searched (they are under the Vault too).
 		if ( '' !== trim( $search ) ) {
-			$args['post__in'] = Fotonic_Titles::search_ids( 'ftnc_work', $search, Fotonic_Vault::get_session_key() ) ?: [ 0 ];
+			$vault_key = Fotonic_Vault::get_session_key();
+			$ids       = Fotonic_Titles::search_ids( 'ftnc_work', $search, $vault_key );
+			// A work is also found by its customer: the customer's title and the name, email or phone of their people.
+			$customer_ids = Fotonic_Titles::search_ids( 'ftnc_customer', $search, $vault_key );
+			if ( $customer_ids ) {
+				$by_customer = get_posts( [
+					'post_type'      => 'ftnc_work',
+					'post_status'    => 'publish',
+					'posts_per_page' => -1,
+					'fields'         => 'ids',
+					'no_found_rows'  => true,
+					'meta_query'     => [ [ 'key' => '_ftnc_customer_id', 'value' => $customer_ids, 'compare' => 'IN', 'type' => 'NUMERIC' ] ], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				] );
+				$ids = array_merge( $ids, array_map( 'intval', $by_customer ) );
+			}
+			$args['post__in'] = array_values( array_unique( $ids ) ) ?: [ 0 ];
 		}
 
+		$meta_query = [ 'relation' => 'AND' ];
 		if ( $customer_id > 0 ) {
-			$args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-				[
-					'key'   => '_ftnc_customer_id',
-					'value' => $customer_id,
-					'type'  => 'NUMERIC',
-				],
+			$meta_query[] = [
+				'key'   => '_ftnc_customer_id',
+				'value' => $customer_id,
+				'type'  => 'NUMERIC',
 			];
+		}
+
+		// A work with no event date belongs to no year: it shows only when no year is asked for.
+		$year = (string) $req->get_param( 'year' );
+		if ( preg_match( '/^\d{4}$/', $year ) ) {
+			$meta_query[] = [
+				'key'     => '_ftnc_event_date',
+				'value'   => [ $year . '-01-01', $year . '-12-31' ],
+				'compare' => 'BETWEEN',
+				'type'    => 'CHAR',
+			];
+		}
+
+		$owner = (string) $req->get_param( 'owner' );
+		if ( 'admin' === $owner ) {
+			// A work saved before the owner existed has no owner meta: it is the site owner's.
+			$meta_query[] = [
+				'relation' => 'OR',
+				[ 'key' => '_ftnc_owner_type', 'compare' => 'NOT EXISTS' ],
+				[ 'key' => '_ftnc_owner_type', 'value' => 'admin' ],
+			];
+		} elseif ( preg_match( '/^collaborator:(\d+)$/', $owner, $m ) ) {
+			$meta_query[] = [ 'key' => '_ftnc_owner_type', 'value' => 'collaborator' ];
+			$meta_query[] = [ 'key' => '_ftnc_owner_id', 'value' => (int) $m[1], 'type' => 'NUMERIC' ];
+		}
+
+		if ( count( $meta_query ) > 1 ) {
+			$args['meta_query'] = $meta_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		}
 
 		if ( ! empty( $payment_status ) ) {
@@ -2438,6 +2491,27 @@ class Fotonic_REST_API {
 			// Every work with a deleted backup location, whatever the filters: the list shows it as a button.
 			'alert_count' => count( $alert_ids ),
 		], 200 );
+	}
+
+	/**
+	 * GET /works-years: the event years of the published works, newest first, as strings. A work with no
+	 * (or a malformed) event date has no year and is not counted.
+	 */
+	public static function get_works_years( \WP_REST_Request $req ): \WP_REST_Response {
+		global $wpdb;
+		$rows = $wpdb->get_col( $wpdb->prepare(
+			"SELECT DISTINCT LEFT( pm.meta_value, 4 ) FROM {$wpdb->postmeta} pm
+			 INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+			 WHERE pm.meta_key = %s AND p.post_type = %s AND p.post_status = %s",
+			'_ftnc_event_date',
+			'ftnc_work',
+			'publish'
+		) );
+		$years = array_values( array_filter( (array) $rows, function ( $y ) {
+			return (bool) preg_match( '/^\d{4}$/', (string) $y ) && '0000' !== $y;
+		} ) );
+		rsort( $years, SORT_STRING );
+		return new \WP_REST_Response( [ 'years' => $years ], 200 );
 	}
 
 	public static function get_work( \WP_REST_Request $req ): \WP_REST_Response {

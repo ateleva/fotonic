@@ -639,6 +639,19 @@
   scrollbar-color: #cbd5e1 transparent;
   overscroll-behavior-x: contain;
 }
+/* A column that stays pinned to the right edge while the table scrolls sideways (Table `col.sticky = 'right'`):
+   solid background so the cells under it never show through, a soft shadow on its left edge. Same look as the
+   Actions column of the Pro quotes list. */
+#fotonic-app-root .ftnc-table-scroll th.ftnc-sticky-right,
+#fotonic-app-root .ftnc-table-scroll td.ftnc-sticky-right {
+  position: sticky;
+  right: 0;
+  z-index: 1;
+  box-shadow: -6px 0 6px -6px rgba(0, 0, 0, 0.18);
+}
+#fotonic-app-root .ftnc-table-scroll th.ftnc-sticky-right { background: #f9fafb; }
+#fotonic-app-root .ftnc-table-scroll td.ftnc-sticky-right { background: #fff; }
+#fotonic-app-root .ftnc-table-scroll tr:hover td.ftnc-sticky-right { background: #f9fafb; }
 #fotonic-app-root .ftnc-table-scroll::-webkit-scrollbar { height: 10px; }
 #fotonic-app-root .ftnc-table-scroll::-webkit-scrollbar-track { background: transparent; }
 #fotonic-app-root .ftnc-table-scroll::-webkit-scrollbar-thumb {

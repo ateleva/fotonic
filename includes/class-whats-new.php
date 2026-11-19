@@ -58,6 +58,15 @@ class Fotonic_Whats_New {
 	private static function free_entries(): array {
 		return [
 			[
+				'id'      => '1.7.2:works-year-search',
+				'plugin'  => 'free',
+				'since'   => '1.7.2',
+				'section' => 'works',
+				'title'   => __( 'Filter your works by year', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'You can now filter your works by year, and with one click on the client\'s name you check their details.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
 				'id'      => '1.7.1:customers-source',
 				'plugin'  => 'free',
 				'since'   => '1.7.1',

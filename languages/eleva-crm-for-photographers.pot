@@ -5211,3 +5211,23 @@ msgstr ""
 #: includes/class-whats-new.php:75
 msgid "If you leave a client, a work or another page you are editing without saving, a small bar at the top asks whether to stay or leave anyway. Stay, check your changes and save."
 msgstr ""
+
+#: src/src/features/works/WorkList.jsx:163
+msgid "Edit work"
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:267
+msgid "No works found. Check the Year, Owner and Status filters, then try your search again."
+msgstr ""
+
+#: src/src/features/works/WorkList.jsx:267
+msgid "No works found. Check the Year and Status filters, then try your search again."
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Filter your works by year"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "You can now filter your works by year, and with one click on the client's name you check their details."
+msgstr ""

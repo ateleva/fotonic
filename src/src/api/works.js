@@ -10,16 +10,27 @@ function buildQuery(params = {}) {
   if (params.customer_id)    q.set('customer_id',    params.customer_id)
   if (params.storage_alert)  q.set('storage_alert',  '1')
   if (params.order)          q.set('order',          params.order)
+  if (params.year)           q.set('year',           params.year)
+  if (params.owner)          q.set('owner',          params.owner)
   const qs = q.toString()
   return qs ? `works?${qs}` : 'works'
 }
 
-export function useWorks(params = {}) {
+export function useWorks(params = {}, { enabled = true } = {}) {
   return useQuery({
     queryKey: ['works', params],
     queryFn: () => apiFetch(buildQuery(params)),
+    enabled,
     // Changing page or filter keeps the old rows on screen until the new ones arrive: no flash of a spinner.
     placeholderData: keepPreviousData,
+  })
+}
+
+// The event years that have works, newest first: { years: ['2026', '2025'] }.
+export function useWorkYears() {
+  return useQuery({
+    queryKey: ['works-years'],
+    queryFn: () => apiFetch('works-years'),
   })
 }
 
