@@ -3,7 +3,7 @@
   "plugin": "free",
   "plugin_version": "1.8.0",
   "locale": "en_US",
-  "generated_at": "2026-11-20T14:32:52.978Z",
+  "generated_at": "2026-11-20T20:50:48.054Z",
   "_note": "Generated from Notion. Do not edit by hand.",
   "sections": {
     "first-steps": "First steps",
@@ -26,7 +26,7 @@
       "first_steps": true,
       "requires": "",
       "question": "Where do I start?",
-      "answer": "Start with three things, in this order:\n\n1. Add a customer in [Customers](app:customers).\n2. Add your services and prices in [Services](app:services).\n3. Record your first work in [Works](app:works), choosing the customer and the services.\n\nAfter that, the [Dashboard](app:dashboard) shows you the summary of everything.",
+      "answer": "I recommend starting with three things, in this order, because each one is needed by the next:\n\n1. Add a customer in [Customers](app:customers).\n2. Add your services and prices in [Services](app:services).\n3. Record your first work in [Works](app:works), choosing the customer and the services you have just created.\n\nOnce you have a few works recorded, the [Dashboard](app:dashboard) shows you the summary of everything.",
       "keywords": [
         "first steps",
         "how do I begin",
@@ -42,7 +42,7 @@
       "first_steps": true,
       "requires": "",
       "question": "What must exist before I record a work?",
-      "answer": "A work is built from two things that must exist first:\n\n- the **customer**, which you create in [Customers](app:customers)\n- the **services**, which you create in [Services](app:services)\n\nIf one is missing, go back and add it, then continue the work from [Works](app:works).",
+      "answer": "To record a work you need two things that must already exist, because in the work you pick them from a list:\n\n- the **customer**, which you create in [Customers](app:customers)\n- the **services**, which you create in [Services](app:services)\n\nIf you cannot find the customer or the service you need, it simply has not been created yet: no need to start over, add it and then continue the work from [Works](app:works).",
       "keywords": [
         "what do I need before a work",
         "cannot find customer in work",
@@ -58,7 +58,7 @@
       "first_steps": false,
       "requires": "",
       "question": "What do I see on the Dashboard?",
-      "answer": "The [Dashboard](app:dashboard) is the summary: the **recent works** and the **payments to receive**, so you see at once what needs following up.\n\nFor the detail, open [Works](app:works) or [Customers](app:customers).",
+      "answer": "The [Dashboard](app:dashboard) is your summary: it shows the **recent works** and the **payments to receive**, so you see at once what you need to follow up without opening every work.\n\nWhen you need the detail, open [Works](app:works) or [Customers](app:customers).",
       "keywords": [
         "home page",
         "summary",
@@ -74,7 +74,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I add a customer?",
-      "answer": "Go to [Customers](app:customers) and press **Add Customer**. Write the name and the details you need, then press **Create Customer**.\n\nPersonal details (email, phone, address) are protected by the Vault, if you turned it on.",
+      "answer": "In the [Customers](app:customers) page, the **Add Customer** button opens the form where you collect your customers' people and contacts, which you then choose in your works.\n\nWrite the name and the details you have, then press **Create Customer**. You do not need to fill everything in right away: you can complete the form when you have the information. I recommend entering email and phone as soon as you have them, so you find them when you need to contact the customer.\n\nIf the customer is a couple or a family, enter the people in the same customer: you will find the explanation in the guide about two people.\n\nOnce you have set up the Vault, personal data (email, phone, address) is protected: to read or edit it the Vault must be unlocked.",
       "keywords": [
         "create a customer",
         "new customer",
@@ -90,7 +90,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I put two people in the same customer, like a couple?",
-      "answer": "In the customer page you can add more people with **Add Person**. Only one is the main person: it is the one you see in the list.\n\nThat way the same customer can have several works, for example a wedding and an anniversary.",
+      "answer": "In the customer page you can add more people with the **Add Person** button.",
       "keywords": [
         "couple",
         "bride and groom",
@@ -106,7 +106,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Why can't I delete a customer?",
-      "answer": "A customer that still has works cannot be deleted. The window lists the works that use it: open them and change their customer, or delete them first.\n\nWhatever you delete goes to the [Bin](app:trash), where you can get it back.",
+      "answer": "A customer linked to works cannot be deleted. If you want to delete the customer, the delete window shows the linked works: open them and change the customer, or delete the works and then delete the customer.\n\nWhatever you delete goes to the [Bin](app:trash), where you can get it back.",
       "keywords": [
         "cannot delete customer",
         "remove customer",
@@ -122,7 +122,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I create a service and its price?",
-      "answer": "Go to [Services](app:services) and press **Add Service**. Write the name, the base price and, if you like, some notes, then press **Create Service**.\n\nWhen you put the service in a work you can change the price for that work only, without touching the service.",
+      "answer": "Go to [Services](app:services) and press **Add Service**. Write the name, the base price and, if you like, some notes, then press **Create Service**.\n\nWhen you select the service in a work, you can change the price for that work only (examples: a discount, or a service with a higher cost), without changing the general price on the service.",
       "keywords": [
         "create a service",
         "price list",
@@ -138,7 +138,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I record a new work?",
-      "answer": "Go to [Works](app:works) and create a new work. Fill in, in order:\n\n1. the **title** and the **date** of the event\n2. the **customer**\n3. the **services included**\n4. the **installments** of the payment\n\nThen press **Create Work**. At least one service and one installment are needed.",
+      "answer": "Go to [Works](app:works) and create a new work. Fill in, in order:\n\n- the **title** and the **date** of the work\n- the **customer**\n- the **services included**\n- the **installments** of the payment\n\nThen press **Create Work**. At least one service and one installment are needed.",
       "keywords": [
         "new work",
         "record a work",
@@ -154,7 +154,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I record the installments and payments of a work?",
-      "answer": "In the work, in the payments part, press **Add Installment** for each expected payment: amount, date and payment method.\n\nThe installments together must cover exactly the price of the services, otherwise the work will not save. When a customer pays, mark the installment as paid.",
+      "answer": "In the work, in the payments section, press **Add Installment** for each expected payment: amount, date and payment method.\n\nThe installments together must cover exactly the price of the services, otherwise the work will not save. When a customer pays, remember to mark the installment as paid.",
       "keywords": [
         "add an installment",
         "deposit and balance",
@@ -170,7 +170,7 @@
       "first_steps": false,
       "requires": "",
       "question": "What do Paid, Partial and Unpaid mean?",
-      "answer": "The payment status of a work decides itself, by looking at the installments:\n\n- **Paid**: all the installments are paid\n- **Partial**: only some of them are paid\n- **Unpaid**: no installment is paid, or there are none\n\nYou never change it by hand: just mark the installments as paid.",
+      "answer": "The payment status of a work is a summary of the payment status of the installments you saved. Read the status this way:\n\n- **Paid**: all the installments have already been paid to you\n- **Partial**: some installments are still to be paid\n- **Unpaid**: no installment has been paid yet\n\nCheck and update the status of the installments in every work to keep track of your transactions flawlessly: it will be essential as a summary.",
       "keywords": [
         "payment status",
         "paid work",
@@ -186,7 +186,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Can I attach documents to a work?",
-      "answer": "Yes. In the work, in the **Files** part, you can upload PDFs, documents and images, or add a link. Each file can have a name of your choice.\n\nWith the Vault on, files are protected, so to upload or open them the Vault must be unlocked. There is a size limit for each file, which also depends on your site.",
+      "answer": "Yes. In the work, in the **Files** section, you can upload PDFs, documents and images, or add an external link. Each file can have a name of your choice, which does not overwrite the real name of the file you uploaded: it is only a label to sum up the content of the file or the external link.\n\nOnce you have set up the Vault, files are protected, so to upload or open them the Vault must be unlocked.",
       "keywords": [
         "attach a contract",
         "upload a file",
@@ -201,8 +201,8 @@
       "order": 50,
       "first_steps": false,
       "requires": "",
-      "question": "How do I record shots and delivered photos in a work?",
-      "answer": "In the work, in the **Shots** part, write **Shots taken** (how many you made) and **Photos delivered** (how many you gave the client). Only whole numbers are accepted.\n\n- They are **optional**: if you leave them empty no number is saved and the work does not appear in the [Shots History](app:storage/shots).\n- If **Photos delivered** is greater than **Shots taken** the message *You delivered more photos than you took. Check the two numbers.* appears. Fix one of them: it does not stop you from saving.",
+      "question": "How do I record shots taken and photos delivered in a work?",
+      "answer": "In every work, in the **Shots** section, you can enter the **Shots taken** (how many you made) and the **Photos delivered** (how many you gave the client).\n\nThese numbers are optional: if you leave them empty no number is saved and the work does not appear in the [Shots History](app:storage/shots).\n\nCheck the numbers: the photos delivered cannot be more than the shots taken.",
       "keywords": [
         "how many shots did I take",
         "number of delivered photos",
@@ -219,7 +219,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I keep track of photo delivery in a work?",
-      "answer": "In the work you find the **Delivery** part: it is for noting *how* the photos reached the client (a gallery link, a transfer, a USB stick). Everything is optional.\n\n- **Delivery title**: a name to recognise it, for example *Pixieset gallery*.\n- **Link**: the gallery address. It also works without the leading part, for example just the site name. If it does not look like a web address you get a warning before saving.\n- **Link expiry date**: the date until which the link works. It is a note for you and goes into the message for the client: the CRM **does not alert you** and does not switch the link off, so renew the gallery in time. Leave it empty if it does not expire.\n- **Gallery password** and **Delivery notes**: the gallery password, if any, and whatever you want to remember. With the Vault they are protected like the other private texts: you read and edit them only while it is unlocked. Title, link and expiry are not protected.\n\nThe numbers of shots and delivered photos are written in the **Shots** part instead.",
+      "answer": "In the work you find the **Delivery** section, where you can note how you delivered the work to the client (a gallery link, a transfer, a USB stick).\n\n- **Delivery title**: a name to recognise it, for example the name of the Pixieset gallery.\n- **Link**: the gallery address. You must enter a valid URL: if the system does not detect a real web address, it warns you before saving.\n- **Link expiry date**: the date until which the link works. It is a note for you and goes into the message for the client: the CRM **does not alert you** and does not switch the link off, so renew the gallery in time. Leave the field empty if there is no expiry.\n- **Gallery password** and **Delivery notes**: the gallery password, if any, and whatever you want to remember. With the Vault they are protected like the other private texts: you read and edit them only while the CRM is unlocked.",
       "keywords": [
         "photo delivery",
         "gallery link",
@@ -238,7 +238,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I prepare the message with the link for the client?",
-      "answer": "In the **Delivery** part of the work press **Copy message**: the text is copied and you paste it wherever you like (WhatsApp, email, social).\n\n- The message says *Hi*, followed by the first name of the main contact of the customer, and contains the link.\n- If you wrote the password and the expiry date, it adds them.\n- The button stays off until you write a link: with a USB stick there is nothing to send.\n- With the Vault locked the password cannot be read, so it does not go into the message: unlock the Vault before copying.",
+      "answer": "In the **Delivery** section of the work press **Copy message**: the text is copied and you paste it wherever you like (WhatsApp, email, social).\n\n- The message says *Hi*, followed by the first name of the main contact of the customer, and contains the link.\n- If you wrote the password and the expiry date, it adds them.\n- The button stays off until you write a link: with a USB stick there is nothing to send.\n- With the Vault locked the password cannot be read, so it does not go into the message: remember to unlock the Vault before copying.",
       "keywords": [
         "copy message",
         "message for the client with the gallery",
@@ -255,7 +255,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I keep track of my memory cards?",
-      "answer": "In [Storage](app:storage/cards), on the **Memory Cards** tab, you find the list of all your cards. The other two tabs of the page are **Backup Locations** and **Shots History**.\n\n- **Add**: press **Add Card**, type the **Card Name** (for example *SD-A 128GB SanDisk*) and press **Create Card**. A new card starts as **Ready**.\n- **Fields**: a card has only the **Card Name** and the **Status**. Notes and the backup and formatting ticks are written in the work, not on the card.\n- **Name required**: without a name you see *Card name is required* and the card is not saved.\n- **Edit**: click the name or press **Edit**, change the **Card Name** or **Status** and press **Update Card**. With **Cancel** you leave without saving.",
+      "answer": "In the [Storage](app:storage/cards) section you can create all the **Memory Cards** you own: save them with descriptive names that help you recognise them.\n\n- **Add**: press **Add Card**, type the **Card Name** (for example *SD-A 128GB SanDisk*) and press **Create Card**. Every new memory card is saved as *Ready*.\n- **Edit**: you can change the status of the card (*Ready*, *In use*, *Backed Up*, *Damaged*) also from the single work, which I recommend after you have made a backup or formatted the card: this way it always stays tracked, work by work, which cards you used, whether you have already made the backup and whether you have already formatted the card, which then becomes ready for another work. Every time you update the status, the date of the change is shown too, so you always see when you made the backup or formatted the card.\n\nIn a work you can select only *Ready* cards that are not already in use in other works. When a card is marked as backed up and formatted, it goes back to *Ready* and can be used in other works.",
       "keywords": [
         "where are my memory cards",
         "add a memory card",
@@ -274,7 +274,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do backup locations work (where I keep my photos)?",
-      "answer": "In [Storage](app:storage/backups) you create **backup locations**: the places where you keep your files, for example an external drive or a NAS.\n\n- **Create**: in the **Backup Locations** tab press **Add Backup Location**, write the **Name** (the only required field, for example *Synology NAS, office*) and press **Create Backup Location**.\n- **Type** and **Capacity**: free fields, for example *NAS*, *SSD*, *Cloud* and *4 TB*. They are only notes for you: the CRM does not check how much space is left.\n- **Status**: **Active** (you still use it), **Full** (no space left, files stay there) or **Retired** (you no longer use it). It blocks nothing: it only helps you sort the list with the filters.\n- **Notes**: whatever you want to remember, for example where the drive is kept. With the Vault you read and edit them only while it is unlocked.\n- **Edit**: open the location from the list, change the fields and press **Update Backup Location** (**Cancel** leaves without saving). Works see the new name right away.",
+      "answer": "**Backup locations** are the places where you keep the files of your works, for example an external drive, a NAS or the cloud. They help you quickly find where you saved the photos of each work, without having to remember it. You create them in [Storage](app:storage/backups) with **Add Backup Location**.\n\nWhat you can enter:\n\n- **Name**: the only required field. Use a name that lets you recognise the drive at a glance (example: *Synology NAS, office*).\n- **Type** and **Capacity**: free fields (for example *SSD* and *4 TB*). They are notes for you: the gestionale does not check the space left, so keep them up to date yourself.\n- **Status**: **Active** (you still use it), **Full** (no more space but the files stay there) or **Retired** (you no longer use it). It blocks nothing: it is used by the filters, for example to see right away which drives still have room.\n- **Notes**: anything you want to remember, for example where the drive is kept. Once you have set up the Vault, you read and edit them only with the gestionale unlocked.\n\nTo change something open the location from the list and save with **Update Backup Location**: the works that use it see the new name right away. I recommend updating the **Status** when a drive fills up, so you do not pick it for the next work.",
       "keywords": [
         "where are my photos",
         "external drive",
@@ -293,7 +293,7 @@
       "first_steps": false,
       "requires": "",
       "question": "What do the statuses of a card mean and how do they change?",
-      "answer": "Every card has one of four statuses:\n\n- **Ready**: it is free, you can use it in a work.\n- **In Use**: it is in a work and holds the photos to copy.\n- **Backed Up**: the photos are copied but the card is not formatted yet.\n- **Damaged**: you no longer want to use it, so it does not appear among the cards you can choose in works.\n\n**A card is linked to one work at a time**: the last one you put it in. Older works that still list it are history and never change its status again.\n\n**From the work to the card** (when you save the work): a **Ready** card put in the work becomes **In Use**; with **Backup Done** it becomes **Backed Up**; with **Formatting Done** as well it goes back to **Ready** (it stays listed in the work). If you untick one and save, the cards step back one step.\n\n**From the card to the work**: if you change the card's **Status** in Storage, the work it is used in updates. **Backup Done** is ticked only when all its cards (not damaged) have the backup, **Formatting Done** only when they are all **Ready**; if a card goes back, the tick is removed.\n\n**Damaged**: it stays in the work with that status, does not count for the ticks, and stays **Damaged** even if you remove it from the work or delete the work. To use it again, set it to **Ready** by hand.",
+      "answer": "Every memory card has a status, which tells you at a glance where it stands and whether you can use it for a new work:\n\n- **Ready**: it is free, you can put it in a work.\n- **In Use**: it is in a work and holds the photos still to be copied.\n- **Backed Up**: the photos have been copied, but the card is not formatted yet: do not reuse it until you have.\n- **Damaged**: you no longer want to use it, so it does not appear among the cards you can choose in works.\n\nA card is linked to **one work at a time**, the last one you put it in: this is why it cannot end up in two works together. Older works that still list it are history and never change its status again.\n\n**From the work to the card** (when you save the work): a *Ready* card put in the work becomes *In Use*. With **Backup Done** it becomes *Backed Up*. If you also tick **Formatting Done** it goes back to *Ready* (it stays listed in the work, but you can already use it in another one). If you untick one and save, the card steps back one step.\n\n**From the card to the work**: if you change the **Status** of a card in Storage, the work it is used in updates too. **Backup Done** is ticked by itself only when all its cards (not damaged) have the backup; **Formatting Done** only when they are all *Ready*. If a card goes back, the tick is removed.\n\n**Damaged**: the card stays in the work with that status and does not count for the ticks. It stays *Damaged* even if you remove it from the work or delete the work. If you repair it or want to use it again, remember to set it back to *Ready* by hand.",
       "keywords": [
         "card statuses",
         "card ready in use damaged",
@@ -312,7 +312,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I see, filter and delete my backup locations?",
-      "answer": "In [Backup Locations](app:storage/backups) each row shows **Name**, **Works** (how many works use the location), **Type**, **Capacity** and **Status**.\n\n- **Filters**: **All**, **Active**, **Full** and **Retired**, with the number of locations per status.\n- **Which works use it**: open the location (click the name or **Edit**): at the bottom you find the **Works** table with **Title**, **Date** and **Customer**, and each title opens the work. Handy before retiring a drive.\n- **Delete**: on the location page press **Delete** and confirm. The location goes to the [Bin](app:trash) and is never blocked, even if it is in use (a drive breaks or is retired).\n- After deleting, the works that used it show a red warning (see the guide on assigning). If you restore it from the Bin the warning goes away.",
+      "answer": "In [Backup Locations](app:storage/backups) each row shows **Name**, **Works** (how many works use the location), **Type**, **Capacity** and **Status**.\n\n- **Filters**: **All**, **Active**, **Full** and **Retired**, each with the number of locations per status.\n- **Which works use it**: open the location (click the name or **Edit**): at the bottom you find the **Works** table with **Title**, **Date** and **Customer**, and each title opens the work. I recommend looking at it before retiring a drive, to know what is on it.\n- **Delete**: on the location page press **Delete** and confirm. The location goes to the [Bin](app:trash) and is never blocked, even if it is in use: a drive breaks or is retired, and you do not need any obstacle.\n- **After deleting**: the works that used it show a red warning (see the guide on assigning) to remind you to choose another location. If you restore it from the Bin the warning goes away.",
       "keywords": [
         "backup locations list",
         "filter locations by status",
@@ -331,7 +331,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I read and filter the card list?",
-      "answer": "In the [Storage](app:storage/cards) list you see, for each card, the **Card Name**, the **Status** (with a colour), the work under **In Work** and the **Edit** button.\n\n- **Which work**: the **In Work** column shows the work title, click it to open the work. It shows for cards that are **In Use** or **Backed Up**; for the others there is a dash.\n- **Filters**: above the list there are **All**, **Ready**, **In Use**, **Backed Up** and **Damaged**, each with the number of cards. The numbers always count all the cards.\n- **Pages**: the list shows 24 cards at a time; changing filter goes back to the first page.\n- **I cannot see my cards**: if the list is empty press **Add Card**; if you have cards but do not see them, choose **All**.",
+      "answer": "The list in [Storage](app:storage/cards) helps you see at a glance which cards are free and which still hold photos to save. For each card you see the **Card Name**, its **Status** (with a colour), the work in the **In Work** column and the **Edit** button.\n\n- **In Work**: shows the title of the work (clickable) only for cards that are *In use* or *Backed Up*, that is the ones that still have a work to close. Other cards show a dash.\n- **Filters**: **All**, **Ready**, **In use**, **Backed Up** and **Damaged**, each with its number of cards (the numbers always count all the cards). Before a shoot choose **Ready** to see which ones you can bring; after the shoot check *Backed Up* to remember which cards are waiting to be formatted.\n- **Empty list**: press **Add Card** to create the first one. If you have cards but do not see them, check that you chose **All**: a filter may be active.",
       "keywords": [
         "memory card list",
         "filter cards by status",
@@ -350,7 +350,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I note where a work is saved, and what does the red warning mean?",
-      "answer": "In the work, in the **Storage & Backup** part, press **Add Backup Location** and pick a location from the list.\n\n- You can add **more than one** (for example external drive and cloud), but the same location cannot be chosen twice.\n- Use the arrows to reorder rows and the red bin to remove a row. Then save the work.\n- If the location does not exist yet, use **Create a new backup location**: it opens in another tab, so you do not lose what you are typing.\n\n**Red warning**: it means a chosen location was **deleted** or is in the Bin. In the [Works](app:works) list the work has a red circle with a triangle, and the **Works with warnings** button shows only the ones to fix. In the work the row is outlined in red: choose another location or remove the row and save, or restore the location from the [Bin](app:trash).",
+      "answer": "To note where you saved a work, open it and in the **Storage & Backup** section press **Add Backup Location**, then pick a location from the list.\n\n- You can add **more than one** (for example external drive and cloud), but the same location cannot be chosen twice.\n- Use the arrows to reorder rows and the red bin to remove a row. Then remember to save the work.\n- If the location does not exist yet, use **Create a new backup location**: it opens in another tab, so you do not lose what you are typing.\n\n**Red warning**: it means a chosen location was **deleted** or is in the Bin, so that work no longer has a safe place noted. In the [Works](app:works) list the work has a red circle with a triangle, and the **Works with warnings** button shows only the ones to fix. In the work the row is outlined in red: choose another location or remove the row and save. Otherwise restore the location from the [Bin](app:trash).",
       "keywords": [
         "assign a location to a work",
         "more locations for one work",
@@ -369,7 +369,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I use cards inside a work?",
-      "answer": "Open the work and go to the **Memory Cards** section. Then save the work: the status of the cards updates when you save.\n\n- **Add**: press **Add Card**, choose from the list and, if you like, write a note. You can put several cards in the same work. That work becomes the one the card is in use in.\n- **Which ones you can choose**: only **Ready** cards. Cards that are **In Use**, **Backed Up** or **Damaged** do not appear, so the same card never ends up in two works. If you see *No cards available*, add a card in [Storage](app:storage/cards) or free one that is in use.\n- **Notes**: the **Notes** field only applies to that card in that work, it does not stay on the card. If you use the Vault the notes are protected: with the Vault locked they cannot be read and saving does not touch them.\n- **Checkboxes**: at the bottom are **Backup Done** and **Formatting Done**, valid for all the cards of the work. Formatting can only be ticked after the backup; if you untick the backup, formatting is unticked too. The cards follow the checkboxes only if this is the work they are in use in: in an older work the checkboxes change but the cards do not.\n- **Order**: the arrows move a row up or down (disabled when the Vault is locked).\n- **Remove**: the red bin on the right removes the row; when you save, the card goes back to **Ready** (it stays **Damaged** if it was).\n- **Delete the work**: the cards in use in that work go back to **Ready** (**Damaged** ones stay so), even without backup and formatting: check first that the photos are safe. If you then restore the work from the [Bin](app:trash), the cards stay free and are not linked again by themselves.",
+      "answer": "In the work, in the **Memory Cards** section, you say which cards you use for the shoot: this way the gestionale updates the status of each card and tells you which ones still hold photos to save. Remember to save the work: card statuses update only when you save.\n\n- **Adding**: press **Add Card**, choose from the list and, if you like, write a note. You can use several cards in the same work.\n- **Which ones you can choose**: only *Ready* cards, so the same card does not end up in two works by mistake. If you see *No cards available*, add a card in [Storage](app:storage/cards) or free one of those in use.\n- **Notes**: they apply only to that card in that work. Once you have set up the Vault they are protected: with the gestionale locked they cannot be read and saving does not touch them.\n- **Checkboxes**: **Backup Done** and **Formatting Done** apply to all the cards of the work. Formatting can be ticked only after the backup, and if you untick the backup it is unticked too. Cards follow the checkboxes only in the work where they are in use.\n- **Removing a card**: with the red bin; when you save, the card goes back to *Ready* (it stays *Damaged* if it was).\n- **Deleting the work**: cards in use go back to *Ready* even if you have not done backup and formatting. I recommend checking first that the photos are safe. If you restore the work from the [Bin](app:trash), the cards stay free and do not reconnect by themselves.\n\nFor the full path of a shoot see the step by step guide.",
       "keywords": [
         "memory cards in a work",
         "add a card to a work",
@@ -388,7 +388,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How does the Shots History work?",
-      "answer": "In [Storage](app:storage/backups), in the **Shots History** tab, you see how many shots you took and how many photos you delivered, work by work. Each row shows **Work** (the title opens the work), **Date**, **Shots taken** and **Photos delivered**. You write the numbers yourself inside each work.\n\n- **Year**: above the table choose the year (or **All years**). The year of the work date counts and only years with counts are offered.\n- **Totals**: on the right you read **Works**, **Shots taken** and **Photos delivered** of what you are looking at. A missing number counts as zero.\n- **Yellow triangle**: for that work you wrote more photos delivered than shots, usually a typing mistake. Open the work and check. It is only a hint.\n- **Missing work or empty history**: only works with at least one of the two numbers appear (otherwise you read *No shot counts yet*). A work without a valid date appears only under **All years**.",
+      "answer": "In [Storage](app:storage/backups), in the **Shots History** tab, you see how many shots you took and how many photos you delivered, work by work: useful to understand how the year went. Each row shows **Work** (the title opens the work), **Date**, **Shots taken** and **Photos delivered**. You write the numbers yourself inside each work.\n\n- **Year**: above the table choose the year (or **All years**). The year of the work date counts and only years that have counts are offered.\n- **Totals**: on the right you read **Works**, **Shots taken** and **Photos delivered** of what you are looking at. A missing number counts as zero.\n- **Yellow triangle**: for that work you wrote more photos delivered than shots, usually it is a typing mistake. Open the work and check: it is only a hint, it blocks nothing.\n- **Missing work or empty history**: only works with at least one of the two numbers appear (otherwise you read *No shot counts yet*), so to see a work fill in its numbers in the **Shots** section. A work without a valid date appears only under **All years**.",
       "keywords": [
         "shots history",
         "how many shots did I take",
@@ -407,7 +407,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I use cards during a shoot, step by step?",
-      "answer": "1. Add your cards in [Storage](app:storage/cards).\n2. In the work, in **Memory Cards**, choose the ones you take and save: they are **In Use**.\n3. After the shoot copy the photos, tick **Backup Done** and save: they are **Backed Up**.\n4. Format the cards, tick **Formatting Done** and save: they go back to **Ready** (they stay listed in the work, but you can already use them in another one).\nIf a card breaks, mark it **Damaged** from the card: it no longer counts for the work's ticks.",
+      "answer": "Here is how to use cards in a shoot, from start to finish. By following these steps the status of each card always tells you whether you can reuse it or whether it still holds photos to save.\n\n1. Add your cards in [Storage](app:storage/cards): you do it only once.\n2. Before the shoot open the work, in the **Memory Cards** section choose the ones you take and save: they become *In Use*.\n3. After the shoot copy the photos, tick **Backup Done** and save: they become *Backed Up*. Do not reuse them yet.\n4. Format the cards, tick **Formatting Done** and save: they go back to *Ready*. They stay listed in the work as history, but you can already use them in another one.\n\nIf a card breaks, mark it **Damaged** from the card: this way you do not pick it by mistake and it no longer counts for the work's ticks.",
       "keywords": [
         "card usage example",
         "how do I organise my cards",
@@ -423,7 +423,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I delete a card and get it back?",
-      "answer": "Open the card in [Storage](app:storage/cards), press **Delete** and confirm. The card is not gone for good: it goes to the [Bin](app:trash) and you restore it from there (in Storage a small **Bin** button appears when there is something inside).\n\n- **Not possible if it is In Use**: you see *Card is currently in use and cannot be deleted*. Remove the card from the work, or complete backup and formatting, then try again.\n- **In works**: a deleted card also disappears from the **Memory Cards** section of the works where it was written. If you restore it you see it again. To keep it in a work, do not delete it while it is needed.",
+      "answer": "To delete a card, open it in [Storage](app:storage/cards), press **Delete** and confirm. It is not gone for good: it goes to the [Bin](app:trash) and you can restore it from there (in Storage a small **Bin** button appears when there is something inside).\n\n- **If it is In Use it cannot be deleted**: you see *Card is currently in use and cannot be deleted*, because it still holds photos to save. Remove the card from the work, or complete backup and formatting, then try again.\n- **In works**: a deleted card also disappears from the **Memory Cards** section of the works where it was written, and if you restore it you see it again. If you need it to stay listed in a work, do not delete it while you still need it.",
       "keywords": [
         "delete a card",
         "cannot delete card",
@@ -441,7 +441,7 @@
       "first_steps": false,
       "requires": "calendar",
       "question": "How do I see my works in the calendar?",
-      "answer": "Open [Calendar](app:calendar): each work appears on the day of its date. Press a work to open it.\n\nYou can choose the colour of each work in the **Calendar Color** part of the work, to tell them apart at a glance.",
+      "answer": "Open [Calendar](app:calendar): each work appears on the day of its date, and pressing a work opens it.\n\nTo tell your works apart at a glance you can choose the colour of each one in the **Calendar Color** section of the work: for example one colour for weddings and another for portrait sessions.",
       "keywords": [
         "calendar of works",
         "see the events",
@@ -457,7 +457,7 @@
       "first_steps": false,
       "requires": "",
       "question": "What is the Vault and what does it protect?",
-      "answer": "The Vault is a password lock that protects your customers' data: names, contacts, addresses, notes, work titles and attached documents.\n\nWithout unlocking it, this data cannot be read, even by someone who gets into the site. You turn it on and manage it from [Settings](app:settings).",
+      "answer": "The Vault is a password lock that protects your customers' data: names, contacts, addresses, notes, work titles and attached documents.\n\nAs long as you do not unlock it, this data cannot be read, even by someone who manages to get into the site. You set it up and manage it from [Settings](app:settings). I recommend keeping the password and the recovery kit with care.",
       "keywords": [
         "protect customer data",
         "privacy",
@@ -473,7 +473,7 @@
       "first_steps": false,
       "requires": "",
       "question": "I forgot the Vault password, what do I do?",
-      "answer": "On the unlock screen choose the option for a forgotten password and enter the **recovery phrase** or the **recovery code** from your recovery kit. Then you set a new password.\n\nIf you no longer have the kit, only resetting the Vault is left, which makes the protected data already saved unreadable. That is why you should keep the kit somewhere safe.",
+      "answer": "No panic: on the unlock screen choose the option for a forgotten password and enter the **recovery phrase** or the **recovery code** from your recovery kit. Then you set a new password.\n\nIf you no longer have the kit, only resetting the Vault is left, which makes the protected data already saved unreadable. That is why I recommend keeping the kit somewhere safe, away from the site.",
       "keywords": [
         "forgotten password",
         "recovery code",
@@ -489,7 +489,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Can I unlock the Vault with my fingerprint?",
-      "answer": "On devices that allow it, yes. In [Settings](app:settings), in the Vault part, you turn on fingerprint unlock for that device. The password and the code are needed once, to turn it on.\n\nIf your device does not support it, the option does not appear and you keep using the password.",
+      "answer": "Yes, on devices that allow it. In [Settings](app:settings), in the Vault section, use **Turn on fingerprint unlock** for that device: the password and the code are needed only once, to turn it on.\n\nAnyone who can unlock that device can therefore open the Vault from it: turn it on only on devices that you use yourself. If the device does not support it, the option does not appear and you keep using the password.",
       "keywords": [
         "unlock with fingerprint",
         "touch id",
@@ -505,7 +505,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I add a payment method, like bank transfer or cash?",
-      "answer": "In [Settings](app:settings), in the **Payment types** part, add or rename the methods you use. Then you pick them installment by installment when you record the payments of a work.\n\nYou write the names yourself, so you can use the ones you really use with your customers.",
+      "answer": "In [Settings](app:settings), in the **Payment types** section, add or rename the methods you use. Then you pick them installment by installment when you record the payments of a work.\n\nYou write the names yourself, so you can use the ones you really use with your customers (for example bank transfer, cash, PayPal).",
       "keywords": [
         "bank transfer",
         "cash",
@@ -521,7 +521,7 @@
       "first_steps": false,
       "requires": "",
       "question": "What changed in the latest version?",
-      "answer": "Open the [Changelog](app:changelog): you also reach it by pressing the version number at the bottom of the menu. Each version lists the new things and the fixes.\n\nIf a new version is available, you also find the button to update here.",
+      "answer": "Open the [Changelog](app:changelog): you also reach it by pressing the version number at the bottom of the menu. Each version lists the new things and the fixes, so you know what has changed.\n\nIf a new version is available, you also find the button to update here.",
       "keywords": [
         "what's new",
         "version",
@@ -537,7 +537,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I download a backup of my data?",
-      "answer": "In [Settings](app:settings), in the **Backups** part, press **Download encrypted backup**. You get a file with the data of your CRM, protected.\n\nThe Vault must be on to do it. Keep the file and your recovery kit somewhere safe, away from the site.",
+      "answer": "In [Settings](app:settings), in the **Backups** section, press **Download encrypted backup**: you get a file with the data of your CRM, protected.\n\nThe Vault must be on to do it. I recommend keeping the file and your recovery kit somewhere safe, away from the site, and making a new backup every now and then: that way, if something goes wrong, you always have a recent copy.",
       "keywords": [
         "download the backup",
         "safety copy",
@@ -553,7 +553,7 @@
       "first_steps": false,
       "requires": "restore",
       "question": "How do I restore a backup?",
-      "answer": "Open [Restore from a backup](app:restore). Choose a backup already saved on this site or upload the file, then enter the password, code or recovery phrase asked for.\n\nBefore writing anything it shows you what will change, and you can undo the latest restore. With \"replace everything\" there is no going back, but a safety backup is made first.",
+      "answer": "Open [Restore from a backup](app:restore). Choose a backup already saved on this site or upload the file, then enter the password, code or recovery phrase asked for.\n\nBefore writing anything, the CRM shows you what will change, and you can undo the latest restore. Be careful with the \"replace everything\" option: it cannot be undone, but a safety backup is made first.",
       "keywords": [
         "restore a backup",
         "recover my data",
@@ -569,7 +569,7 @@
       "first_steps": false,
       "requires": "",
       "question": "I deleted something by mistake, how do I get it back?",
-      "answer": "Open the [Bin](app:trash). You find the deleted items, with the date when they will disappear. Press **Restore item** to get them back, or **Delete for good** to really remove them.\n\nA customer or a service still used by a work cannot be deleted for good.",
+      "answer": "No worries: open the [Bin](app:trash). You find the deleted items, with the date when they will disappear. Press **Restore item** to get them back, or **Delete for good** if you really want to remove them.\n\nA customer or a service still used by a work cannot be deleted for good: first open the work and change the customer or the service, or delete the work.",
       "keywords": [
         "recover a deleted item",
         "bin",
