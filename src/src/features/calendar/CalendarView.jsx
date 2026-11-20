@@ -6,6 +6,7 @@ import { __ } from '../../utils/i18n'
 import { formatTime } from '../../utils/date'
 import Button from '../../components/Button'
 import { titleOr } from '../../utils/titles'
+import HelpShortcut from '../../components/HelpShortcut'
 
 // A work whose title the server could not read comes with title null; tasks always have theirs.
 const eventTitle = (ev) => (ev.type === 'task' ? ev.title : titleOr(ev.title, 'work', ev.id))
@@ -333,7 +334,10 @@ export function CalendarView() {
 
       {/* Header */}
       <div className="ftnc-head-col" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.25rem' }}>
-        <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#111827' }}>{__('Calendar', 'eleva-crm-for-photographers')}</h2>
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: 8 }}>
+          <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: '#111827' }}>{__('Calendar', 'eleva-crm-for-photographers')}</h2>
+          <HelpShortcut section="calendar" />
+        </div>
         <div className="ftnc-head-actions" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           {OpenGoogleCalendarButton && gcalEnabled && <OpenGoogleCalendarButton />}
           {gcalEnabled && (

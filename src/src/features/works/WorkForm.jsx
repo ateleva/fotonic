@@ -373,6 +373,7 @@ export default function WorkForm() {
     <>
     <div className="p-6 ftnc-pane">
       <PageHeader
+        helpSection="works"
         title={isEdit ? __('Edit Work', 'eleva-crm-for-photographers') : __('New Work', 'eleva-crm-for-photographers')}
         backTo="/works"
         onDelete={isEdit ? handleDeleteClick : undefined}
@@ -848,7 +849,7 @@ export default function WorkForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteWork.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/works') } })}
-      message={__('Delete this work? This action cannot be undone.', 'eleva-crm-for-photographers')}
+      message={__('Delete this work? It will be moved to the Bin, where you can restore it.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
       <p className="text-sm text-gray-600 mb-6">{blockReason}</p>

@@ -24,9 +24,10 @@ import PasswordInput from '../../components/PasswordInput'
 import { MIN_VAULT_PASSWORD } from '../../utils/recoveryKit'
 import BackupSettingsSection from './BackupSettingsSection'
 import RestoreLauncher from '../restore/RestoreLauncher'
+import HelpShortcut from '../../components/HelpShortcut'
 
 // `danger`: the "danger zone" look (red outline, red title and icon) for a card about things that cannot be undone.
-function SectionCard({ id, title, icon: Icon, children, danger = false }) {
+function SectionCard({ id, title, icon: Icon, children, danger = false, help }) {
   // `id` is an anchor target for extensions (e.g. a header shortcut that scrolls to a section).
   // The scroll margin (style attribute) keeps the card clear of the sticky shortcuts bar (about 56px high) when scrolled into view.
   return (
@@ -34,6 +35,7 @@ function SectionCard({ id, title, icon: Icon, children, danger = false }) {
       <div className="ftnc-panel__head">
         <Icon size={16} className={[danger ? 'text-red-600' : 'text-indigo-500', 'shrink-0'].join(' ')} />
         <h2 className={['text-sm font-bold', danger ? 'text-red-700' : 'text-gray-800'].join(' ')}>{title}</h2>
+        {help && <HelpShortcut section={help} compact label={__('Help for this section', 'eleva-crm-for-photographers')} />}
       </div>
       <div className="ftnc-panel__body">{children}</div>
     </div>
@@ -471,7 +473,7 @@ export default function SettingsPage() {
         header→first-card distance would grow instead of tightening. Same
         structure WorkForm and CustomerForm already use. */}
     <div className="p-6 ftnc-pane">
-      <PageHeader title={__('Settings', 'eleva-crm-for-photographers')} separator={false} />
+      <PageHeader helpSection="settings" title={__('Settings', 'eleva-crm-for-photographers')} separator={false} />
 
       {/* Pro: the shortcuts to the sections and the quote settings button. A bar of its own (not in the
           header's action slot) so it can stay stuck to the top of the scrolling page; it scrolls
@@ -487,7 +489,7 @@ export default function SettingsPage() {
           </SectionCard>
         )}
 
-        <SectionCard id="ftnc-sec-vault" title={__('Vault', 'eleva-crm-for-photographers')} icon={Shield}>
+        <SectionCard id="ftnc-sec-vault" help="vault" title={__('Vault', 'eleva-crm-for-photographers')} icon={Shield}>
           <div className="ftnc-fields">
             <VaultStatusRow status={vaultStatus} />
 
@@ -572,7 +574,7 @@ export default function SettingsPage() {
 
         {/* Placed directly below Vault, and above Pro's Drive panel slot:
             the free manual download reads as the baseline, Drive as the upgrade. */}
-        <SectionCard id="ftnc-sec-backups" title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
+        <SectionCard id="ftnc-sec-backups" help="backups-restore" title={__('Backups', 'eleva-crm-for-photographers')} icon={Archive}>
           {/* Two halves side by side (one under the other on a narrow screen): the backup, and the restore. The restore
               half is outside every check of the backup half, so it is there on a site with no Vault too. */}
           <div className="grid gap-6 md:grid-cols-2">

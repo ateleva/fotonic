@@ -475,14 +475,7 @@
   color: var(--fotonic-nav, #1d2327);
 }
 
-/* The "Pro" group label and the version footer. The label centres on the rail; the version
-   strings have no rail-width form worth keeping (two chips of ~70px each in 40px of content
-   box), and unlike a nav label they have no tooltip to recover them from, so they go. */
-#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__group-label {
-  text-align: center;
-  padding-left: 0;
-  padding-right: 0;
-}
+/* The version footer in the rail. */
 /* `.ftnc-sidebar__meta` sits in a flex-col footer whose sibling <nav> has `flex-1`.
    `display: none` would remove it from layout entirely, shrinking the footer — nav's
    `flex-1` then grows to fill the freed space, dragging Settings/Lock Vault down with it
@@ -521,7 +514,7 @@
   border-radius: 6px;
   background-color: var(--fotonic-nav, #1d2327);
   color: #fff;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   line-height: 1;
   white-space: nowrap;
@@ -905,3 +898,106 @@
   width: 1.3125rem;
   height: 1.3125rem;
 }
+
+/* Help: a word that matched the search. The theme colour as background and its contrast colour (white) as text, so
+   it reads clearly on any admin colour scheme; never the browser's yellow. */
+#fotonic-app-root mark.ftnc-help-mark {
+  background: var(--fotonic-primary);
+  color: var(--wp-admin-theme-color-contrast, #fff);
+  border-radius: 3px;
+  padding: 0 3px;
+}
+
+/* Sidebar height. The menu has to fit a 13 or 14 inch screen without a scrollbar, so the rows are compact, shorter
+   still on a low window, and the Pro pages have no heading of their own: a thin line, then a small tag per row. */
+#fotonic-app-root .ftnc-sidebar { scrollbar-width: none; }
+#fotonic-app-root .ftnc-sidebar::-webkit-scrollbar { display: none; }
+/* The divider before the Pro pages: a line, with the Pro tag (theme colour, its contrast colour as text, no
+   underline) at the right end. Roomy above and below so the two groups read apart. */
+#fotonic-app-root .ftnc-sidebar__pro-rule {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin: 18px 0 16px;
+  position: relative;
+}
+#fotonic-app-root .ftnc-sidebar__pro-rule::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: color-mix(in srgb, var(--fotonic-primary) 25%, white);
+}
+#fotonic-app-root .ftnc-pro-tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0 6px;
+  border-radius: 4px;
+  background: var(--fotonic-primary);
+  color: var(--wp-admin-theme-color-contrast, #fff);
+}
+#fotonic-app-root .ftnc-sidebar[data-collapsed="true"] .ftnc-sidebar__pro-rule { justify-content: center; }
+@media (max-height: 760px) {
+  #fotonic-app-root .ftnc-sidebar .ftnc-navlink { padding-top: 4px; padding-bottom: 4px; }
+  #fotonic-app-root .ftnc-sidebar__foot { padding-top: 4px; padding-bottom: 6px; }
+  #fotonic-app-root .ftnc-sidebar__meta { padding-top: 4px; margin-top: 0; }
+}
+
+/* "See the guides ?" next to a page title (components/HelpShortcut.jsx, also used by the Pro plugin): white with a thin
+   gray outline and gray text, so it never competes with the page buttons; on hover and focus a tint of the theme colour
+   with the theme colour as text and outline; filled with the theme colour (and its contrast colour as text) while pressed.
+   A link, so no underline. Narrow screen: icon only. */
+#fotonic-app-root .ftnc-help-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  margin-left: 8px;       /* on top of the gap of the title row: a little more air after the title */
+  position: relative;
+  top: -4px;              /* the BOX (not its text) rests on the baseline of the title: lifted 4px (set by eye, from the first 8px) */
+  height: 22px;
+  padding: 0 9px;
+  border-radius: 9999px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms, border-color 150ms;
+}
+#fotonic-app-root .ftnc-help-btn--compact { height: 20px; padding: 0 7px; font-size: 10px; gap: 4px; }
+#fotonic-app-root .ftnc-help-btn:hover,
+#fotonic-app-root .ftnc-help-btn:focus-visible {
+  border-color: color-mix(in srgb, var(--fotonic-primary) 45%, white);
+  background: color-mix(in srgb, var(--fotonic-primary) 8%, white);
+  color: var(--fotonic-primary);
+  text-decoration: none;
+}
+#fotonic-app-root .ftnc-help-btn:active {
+  border-color: var(--fotonic-primary);
+  background: var(--fotonic-primary);
+  color: var(--wp-admin-theme-color-contrast, #fff);
+}
+@media (max-width: 640px) {
+  #fotonic-app-root .ftnc-help-btn { padding: 0; width: 22px; justify-content: center; top: 0; }
+  #fotonic-app-root .ftnc-help-btn--compact { width: 20px; }
+  #fotonic-app-root .ftnc-help-btn__label { display: none; }
+}
+
+/* The title row that holds the button aligns its items on the text baseline (the wrapper has items-baseline), so the
+   words of the button sit on the same line as the title. In a Settings card head (icon, title, button) it stays centred. */
+#fotonic-app-root .ftnc-panel__head .ftnc-help-btn { align-self: center; top: 0; }

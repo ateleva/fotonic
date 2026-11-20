@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useMatches, Link } from 'react-router-dom'
-import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, HardDrive, PanelLeftClose, PanelLeftOpen, FileText } from 'lucide-react'
+import { LayoutDashboard, Users, Briefcase, Camera, Lock, Kanban, BarChart2, UserCheck, Package, Store, Settings, CalendarDays, Receipt, HardDrive, PanelLeftClose, PanelLeftOpen, FileText, LifeBuoy, ChevronDown } from 'lucide-react'
 import logoPng from '../assets/icon-256x256.png'
 import { useQueryClient } from '@tanstack/react-query'
 import { useVault } from '../context/VaultContext'
@@ -26,7 +26,7 @@ const SECTION_OF = {
 // sets the `transition-property` longhand, which would outrank the class and silently
 // kill the collapse animation. The class transitions colour itself instead.
 const NAV_LINK_BASE = [
-  'ftnc-navlink px-3 py-2 rounded-md text-sm font-medium',
+  'ftnc-navlink px-3 py-1.5 rounded-md text-sm font-medium',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fotonic-primary focus-visible:ring-offset-1',
 ].join(' ')
 
@@ -128,6 +128,7 @@ export default function Layout() {
   ]
 
   const settingsLabel = __('Settings', 'eleva-crm-for-photographers')
+  const helpLabel = __('Help', 'eleva-crm-for-photographers')
   const lockLabel = __('Lock Vault', 'eleva-crm-for-photographers')
 
   const handleLock = async () => {
@@ -196,7 +197,7 @@ export default function Layout() {
         </div>
 
         {/* Nav */}
-        <nav id="ftnc-sidebar-nav" className="ftnc-sidebar__nav flex-1 px-3 py-1.5 space-y-0.5">
+        <nav id="ftnc-sidebar-nav" className="ftnc-sidebar__nav flex-1 px-3 py-1.5 space-y-px">
           {navItems.map(({ to, label, icon: Icon }) => (
             <div key={to} className="relative">
               <NavLink to={to} className={navLinkClass('text-gray-600')} {...tipProps(label)}>
@@ -209,8 +210,9 @@ export default function Layout() {
 
           {proNavItems.some(({ feature }) => features[feature]) && (
             <>
-              <div className="ftnc-sidebar__group-label pt-1 pb-0.5 px-3">
-                <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">{__('Pro', 'eleva-crm-for-photographers')}</span>
+              {/* No heading row: a line with the Pro tag at its right end sets the Pro pages apart. */}
+              <div className="ftnc-sidebar__pro-rule" aria-hidden="true">
+                <span className="ftnc-pro-tag">{__('Pro', 'eleva-crm-for-photographers')}<ChevronDown size={10} strokeWidth={3} /></span>
               </div>
               {proNavItems.filter(({ feature }) => features[feature]).map(({ to, label, icon: Icon, alsoActive }) => (
                 <div key={to} className="relative">
@@ -233,6 +235,10 @@ export default function Layout() {
             </NavLink>
             {bySection.settings && <WhatsNewIcon section="settings" onOpen={setOpenSection} />}
           </div>
+          <NavLink to="/help" className={navLinkClass('text-gray-500')} {...tipProps(helpLabel)}>
+            <LifeBuoy size={16} />
+            <span>{helpLabel}</span>
+          </NavLink>
           {isUnlocked && (
             <button
               type="button"

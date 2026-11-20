@@ -151,6 +151,7 @@ export default function CustomerList() {
   return (
     <div className="p-6">
       <PageHeader
+        helpSection="customers"
         title={__('Customers', 'eleva-crm-for-photographers')}
         trashType="ftnc_customer"
         action={

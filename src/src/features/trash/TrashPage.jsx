@@ -228,7 +228,7 @@ function TrashBody({ type }) {
 
   return (
     <div className="p-6 space-y-4">
-      <PageHeader title={__('Bin', 'eleva-crm-for-photographers')} backTo={backTo} />
+      <PageHeader helpSection="trash" title={__('Bin', 'eleva-crm-for-photographers')} backTo={backTo} />
 
       <div className="ftnc-panel border-red-300">
         <div className="ftnc-panel__head">

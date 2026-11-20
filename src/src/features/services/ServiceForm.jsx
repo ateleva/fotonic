@@ -100,6 +100,7 @@ export default function ServiceForm() {
     <>
     <div className="p-6">
       <PageHeader
+        helpSection="services"
         title={isEdit ? __('Edit Service', 'eleva-crm-for-photographers') : __('New Service', 'eleva-crm-for-photographers')}
         backTo="/services"
         onDelete={isEdit ? handleDeleteClick : undefined}
@@ -186,7 +187,7 @@ export default function ServiceForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteService.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/services') } })}
-      message={__('Delete this service? This action cannot be undone.', 'eleva-crm-for-photographers')}
+      message={__('Delete this service? It will be moved to the Bin, where you can restore it.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => { setBlockReason(null); setBlockGroups(null) }} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
       <BlockedReason reason={blockReason} groups={blockGroups} onGo={(route) => { setBlockReason(null); navigate(route) }} />

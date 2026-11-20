@@ -305,7 +305,7 @@ export default function RestoreWizard() {
 
   return (
     <div className="p-6 ftnc-pane">
-      <PageHeader title={__('Restore from a backup', 'eleva-crm-for-photographers')} backTo="/settings" backLabel={__('← Leave the restore', 'eleva-crm-for-photographers')} separator={false} />
+      <PageHeader helpSection="backups-restore" title={__('Restore from a backup', 'eleva-crm-for-photographers')} backTo="/settings" backLabel={__('← Leave the restore', 'eleva-crm-for-photographers')} separator={false} />
       <RestoreStepper current={stage} allDone={jobEnded} jobPercent={showJob ? job.percent ?? 0 : null} />
 
       <div className="ftnc-panel">

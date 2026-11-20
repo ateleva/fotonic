@@ -86,6 +86,7 @@ export default function MemoryCardForm() {
     <>
     <div className="p-6">
       <PageHeader
+        helpSection="storage"
         title={isEdit ? __('Edit Card', 'eleva-crm-for-photographers') : __('New Card', 'eleva-crm-for-photographers')}
         backTo="/storage/cards"
         onDelete={isEdit ? handleDeleteClick : undefined}
@@ -153,7 +154,7 @@ export default function MemoryCardForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteCard.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/storage/cards') } })}
-      message={__('Delete this card? This action cannot be undone.', 'eleva-crm-for-photographers')}
+      message={__('Delete this card? It will be moved to the Bin, where you can restore it.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => setBlockReason(null)} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
       <p className="text-sm text-gray-600 mb-6">{blockReason}</p>

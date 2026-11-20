@@ -79,6 +79,7 @@ export default function ServiceList() {
   return (
     <div className="p-6">
       <PageHeader
+        helpSection="services"
         title={__('Services', 'eleva-crm-for-photographers')}
         trashType="ftnc_service"
         action={

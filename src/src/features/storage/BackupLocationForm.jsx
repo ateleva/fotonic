@@ -121,6 +121,7 @@ export default function BackupLocationForm() {
     <>
       <div className="p-6">
         <PageHeader
+          helpSection="storage"
           title={isEdit ? __('Edit Backup Location', 'eleva-crm-for-photographers') : __('New Backup Location', 'eleva-crm-for-photographers')}
           backTo="/storage/backups"
           onDelete={isEdit ? () => setShowConfirm(true) : undefined}

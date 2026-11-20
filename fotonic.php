@@ -65,6 +65,7 @@ require_once FOTONIC_DIR . 'includes/class-payments.php';
 require_once FOTONIC_DIR . 'includes/class-lead-sources.php';
 require_once FOTONIC_DIR . 'includes/class-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-whats-new.php';
+require_once FOTONIC_DIR . 'includes/class-help.php';
 require_once FOTONIC_DIR . 'includes/class-memory-card-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-backup-loc-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-admin-page.php';
@@ -89,6 +90,7 @@ add_action( 'rest_api_init', [ 'Fotonic_Trash_REST_API', 'register_routes' ] );
 add_filter( 'wp_untrash_post_status', [ 'Fotonic_Trash', 'untrash_status' ], 10, 3 );
 add_action( 'fotonic_restore_cleanup', [ 'Fotonic_Restore_Reader', 'cleanup_all' ] );
 add_action( 'rest_api_init', [ 'Fotonic_Whats_New', 'register_routes' ] );
+add_action( 'rest_api_init', [ 'Fotonic_Help', 'register_routes' ] );
 add_action( 'admin_init', [ 'Fotonic_Backup_Registry', 'maybe_run_audit' ] );
 add_action( 'admin_init', [ 'Fotonic_Record_Uid', 'maybe_backfill' ] );
 add_action( 'wp_after_insert_post', [ 'Fotonic_Record_Uid', 'on_insert' ], 10, 2 );
@@ -106,10 +108,10 @@ add_action( 'save_post_ftnc_service',  [ 'Fotonic_Meta_Boxes', 'save_service' ],
 add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'save_work' ],     10, 2 );
 add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'auto_assign_payment_status' ], 20, 1 );
 add_action( 'ftnc_after_save_work',    [ 'Fotonic_Meta_Boxes', 'sync_memory_card_statuses' ], 10, 2 );
-// (The customer search filters on posts_search/posts_join/posts_distinct are gone: titles may be encrypted, so Fotonic_Titles searches in PHP.)
-
 // The link of a memory card to its active work is rebuilt on demand: it is not part of a backup.
 add_filter( 'ftnc_backup_derived_meta', [ 'Fotonic_Memory_Card_Sync', 'derived_meta' ] );
+// (The customer search filters on posts_search/posts_join/posts_distinct are gone: titles may be encrypted, so Fotonic_Titles searches in PHP.)
+
 // Force a vault re-unlock on each WP login session change: clear the session
 // cookie on login and logout so a fresh login always requires password + OTP.
 add_action( 'wp_login',  [ 'Fotonic_Vault', 'lock' ] );

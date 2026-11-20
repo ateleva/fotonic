@@ -5231,3 +5231,83 @@ msgstr ""
 #: includes/class-whats-new.php:66
 msgid "You can now filter your works by year, and with one click on the client's name you check their details."
 msgstr ""
+
+#: src/src/router.jsx:70
+msgid "Help"
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:31
+msgid "This feature is not available right now."
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:32
+msgid "Found by:"
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:73
+msgid "First steps"
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:95
+msgid "Search the help: for example, how do I add a customer?"
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:96
+msgid "Search the help"
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:105
+msgid "Show all topics"
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:111
+msgid "No results. Try other words."
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:120
+msgid "No help available yet."
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:86
+msgid "Showing 1 guide."
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:86
+msgid "Showing %d guides."
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:87
+msgid "There is 1 guide."
+msgstr ""
+
+#: src/src/features/help/HelpPage.jsx:87
+msgid "There are %d guides."
+msgstr ""
+
+#: src/src/features/settings/SettingsPage.jsx:38
+msgid "Help for this section"
+msgstr ""
+
+#: src/src/components/HelpShortcut.jsx:12
+msgid "Help for this page"
+msgstr ""
+
+#: src/src/components/HelpShortcut.jsx:17
+msgid "See the guides"
+msgstr ""
+
+#: src/src/features/customers/CustomerForm.jsx:364
+msgid "Delete this customer? It will be moved to the Bin, where you can restore it."
+msgstr ""
+
+#: src/src/features/memory-cards/MemoryCardForm.jsx:157
+msgid "Delete this card? It will be moved to the Bin, where you can restore it."
+msgstr ""
+
+#: src/src/features/works/WorkForm.jsx:852
+msgid "Delete this work? It will be moved to the Bin, where you can restore it."
+msgstr ""
+
+#: src/src/features/services/ServiceForm.jsx:190
+msgid "Delete this service? It will be moved to the Bin, where you can restore it."
+msgstr ""

@@ -4280,3 +4280,63 @@ msgstr "Filtra i tuoi lavori per anno"
 
 msgid "You can now filter your works by year, and with one click on the client's name you check their details."
 msgstr "Ora puoi filtrare i lavori per anno e con un clic sul nome del cliente controlli i suoi dati."
+
+msgid "Help"
+msgstr "Guida"
+
+msgid "This feature is not available right now."
+msgstr "Questa funzione non è disponibile al momento."
+
+msgid "Found by:"
+msgstr "Trovata per:"
+
+msgid "First steps"
+msgstr "Primi passi"
+
+msgid "Search the help: for example, how do I add a customer?"
+msgstr "Cerca nella guida: per esempio, come aggiungo un cliente?"
+
+msgid "Search the help"
+msgstr "Cerca nella guida"
+
+msgid "Show all topics"
+msgstr "Mostra tutti gli argomenti"
+
+msgid "No results. Try other words."
+msgstr "Nessun risultato. Prova con altre parole."
+
+msgid "No help available yet."
+msgstr "Nessuna guida disponibile per ora."
+
+msgid "Showing 1 guide."
+msgstr "Stai visualizzando 1 guida."
+
+msgid "Showing %d guides."
+msgstr "Stai visualizzando %d guide."
+
+msgid "There is 1 guide."
+msgstr "C'è 1 guida."
+
+msgid "There are %d guides."
+msgstr "Ci sono %d guide."
+
+msgid "Help for this page"
+msgstr "Guida per questa pagina"
+
+msgid "Help for this section"
+msgstr "Guida per questa sezione"
+
+msgid "See the guides"
+msgstr "Vedi le guide"
+
+msgid "Delete this customer? It will be moved to the Bin, where you can restore it."
+msgstr "Eliminare questo cliente? Verrà spostato nel Cestino, da dove puoi ripristinarlo."
+
+msgid "Delete this card? It will be moved to the Bin, where you can restore it."
+msgstr "Eliminare questa scheda? Verrà spostata nel Cestino, da dove puoi ripristinarla."
+
+msgid "Delete this work? It will be moved to the Bin, where you can restore it."
+msgstr "Eliminare questo lavoro? Verrà spostato nel Cestino, da dove puoi ripristinarlo."
+
+msgid "Delete this service? It will be moved to the Bin, where you can restore it."
+msgstr "Eliminare questo servizio? Verrà spostato nel Cestino, da dove puoi ripristinarlo."

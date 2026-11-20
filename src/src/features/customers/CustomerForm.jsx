@@ -273,6 +273,7 @@ export default function CustomerForm() {
     <>
     <div className="p-6 ftnc-pane">
       <PageHeader
+        helpSection="customers"
         title={isEdit ? __('Edit Customer', 'eleva-crm-for-photographers') : __('New Customer', 'eleva-crm-for-photographers')}
         backTo="/customers"
         onDelete={isEdit ? handleDeleteClick : undefined}
@@ -360,7 +361,7 @@ export default function CustomerForm() {
       open={showConfirm}
       onClose={() => setShowConfirm(false)}
       onConfirm={() => deleteCustomer.mutate(id, { onSuccess: () => { guard.allowLeave(); navigate('/customers') } })}
-      message={__('Delete this customer? This action cannot be undone.', 'eleva-crm-for-photographers')}
+      message={__('Delete this customer? It will be moved to the Bin, where you can restore it.', 'eleva-crm-for-photographers')}
     />
     <Modal open={blockReason !== null} onClose={() => { setBlockReason(null); setBlockGroups(null) }} title={__('Cannot Delete', 'eleva-crm-for-photographers')}>
       <BlockedReason reason={blockReason} groups={blockGroups} onGo={(route) => { setBlockReason(null); navigate(route) }} />

@@ -182,6 +182,7 @@ export default function WorkList() {
   return (
     <div className="p-6">
       <PageHeader
+        helpSection="works"
         title={__('Works', 'eleva-crm-for-photographers')}
         trashType="ftnc_work"
         action={

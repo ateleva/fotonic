@@ -8,6 +8,7 @@ import Spinner from '../../components/Spinner'
 import Table from '../../components/Table'
 import { apiFetch } from '../../api/client'
 import { titleOr } from '../../utils/titles'
+import HelpShortcut from '../../components/HelpShortcut'
 
 // Pro strip with the late / due-today reminders; renders nothing when there are none.
 const RemindersDashboardCard = window.FotonicApp?.features?.kanban
@@ -103,7 +104,10 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 space-y-8 ftnc-pane">
-      <h1 className="text-xl font-semibold text-gray-900">{__('Dashboard', 'eleva-crm-for-photographers')}</h1>
+      <div className="flex items-baseline gap-2">
+        <h1 className="text-xl font-semibold text-gray-900">{__('Dashboard', 'eleva-crm-for-photographers')}</h1>
+        <HelpShortcut section="dashboard" />
+      </div>
 
       {/* Summary Cards */}
       <div className="ftnc-grid-4 ftnc-grid-stats">

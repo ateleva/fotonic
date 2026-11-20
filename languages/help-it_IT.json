@@ -1,0 +1,582 @@
+{
+  "schema": 1,
+  "plugin": "free",
+  "plugin_version": "1.8.0",
+  "locale": "it_IT",
+  "generated_at": "2026-11-20T14:32:52.978Z",
+  "_note": "Generated from Notion. Do not edit by hand.",
+  "sections": {
+    "first-steps": "Primi passi",
+    "dashboard": "Dashboard",
+    "customers": "Clienti",
+    "services": "Servizi",
+    "works": "Lavori",
+    "storage": "Archiviazione",
+    "calendar": "Calendario",
+    "vault": "Vault",
+    "settings": "Impostazioni",
+    "backups-restore": "Backup e ripristino",
+    "trash": "Cestino"
+  },
+  "cards": [
+    {
+      "id": "first-steps-start",
+      "section": "first-steps",
+      "order": 10,
+      "first_steps": true,
+      "requires": "",
+      "question": "Da dove comincio?",
+      "answer": "Parti da tre cose, in questo ordine:\n\n1. Aggiungi un cliente in [Clienti](app:customers).\n2. Aggiungi i tuoi servizi e i prezzi in [Servizi](app:services).\n3. Registra il primo lavoro in [Lavori](app:works), scegliendo cliente e servizi.\n\nDopo, nella [Bacheca](app:dashboard) trovi il riepilogo di tutto.",
+      "keywords": [
+        "primo utilizzo",
+        "come inizio",
+        "cosa devo fare per prima cosa",
+        "guida per iniziare",
+        "prime cose da fare"
+      ]
+    },
+    {
+      "id": "first-steps-order",
+      "section": "first-steps",
+      "order": 20,
+      "first_steps": true,
+      "requires": "",
+      "question": "Cosa devo creare prima di registrare un lavoro?",
+      "answer": "Un lavoro si costruisce con due cose che devono esistere prima:\n\n- il **cliente**, che crei in [Clienti](app:customers)\n- i **servizi**, che crei in [Servizi](app:services)\n\nSe uno dei due manca, torna indietro e aggiungilo, poi riprendi il lavoro da [Lavori](app:works).",
+      "keywords": [
+        "cosa serve prima di un lavoro",
+        "non trovo il cliente nel lavoro",
+        "non trovo il servizio nel lavoro",
+        "ordine di inserimento",
+        "prima il cliente poi il lavoro"
+      ]
+    },
+    {
+      "id": "dashboard-overview",
+      "section": "dashboard",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Cosa vedo nella Bacheca?",
+      "answer": "La [Bacheca](app:dashboard) è il riepilogo: i **lavori recenti** e i **pagamenti da ricevere**, così vedi subito cosa è da seguire.\n\nPer il dettaglio apri [Lavori](app:works) o [Clienti](app:customers).",
+      "keywords": [
+        "pagina iniziale",
+        "riepilogo",
+        "pagamenti da ricevere",
+        "lavori recenti",
+        "bacheca"
+      ]
+    },
+    {
+      "id": "customers-create",
+      "section": "customers",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come aggiungo un cliente?",
+      "answer": "Vai su [Clienti](app:customers) e premi **Aggiungi cliente**. Scrivi il nome e i dati che ti servono, poi premi **Crea cliente**.\n\nI dati personali (email, telefono, indirizzo) sono protetti dal Vault, se lo hai attivato.",
+      "keywords": [
+        "creare un cliente",
+        "nuovo cliente",
+        "aggiungere cliente",
+        "inserire i dati del cliente",
+        "anagrafica cliente"
+      ]
+    },
+    {
+      "id": "customers-people",
+      "section": "customers",
+      "order": 20,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come inserisco due persone nello stesso cliente, per esempio gli sposi?",
+      "answer": "Nella scheda del cliente puoi aggiungere più persone con **Aggiungi persona**. Una sola è la persona principale: è quella che vedi nell'elenco.\n\nCosì lo stesso cliente può avere più lavori, per esempio matrimonio e anniversario.",
+      "keywords": [
+        "sposi",
+        "coppia",
+        "più persone",
+        "aggiungere una persona al cliente",
+        "persona principale"
+      ]
+    },
+    {
+      "id": "customers-delete",
+      "section": "customers",
+      "order": 30,
+      "first_steps": false,
+      "requires": "",
+      "question": "Perché non riesco a eliminare un cliente?",
+      "answer": "Un cliente che ha ancora dei lavori non si può eliminare. La finestra ti elenca i lavori che lo usano: aprili e cambiali di cliente, oppure eliminali prima.\n\nQuello che elimini finisce nel [Cestino](app:trash), da dove puoi riprenderlo.",
+      "keywords": [
+        "impossibile eliminare cliente",
+        "cancellare cliente",
+        "cliente con lavori",
+        "eliminare un cliente",
+        "non posso cancellare"
+      ]
+    },
+    {
+      "id": "services-create",
+      "section": "services",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come creo un servizio e il suo prezzo?",
+      "answer": "Vai su [Servizi](app:services) e premi **Aggiungi servizio**. Scrivi il nome, il prezzo di base e, se vuoi, delle note, poi premi **Crea servizio**.\n\nQuando metti il servizio in un lavoro puoi cambiare il prezzo solo per quel lavoro, senza toccare il servizio.",
+      "keywords": [
+        "creare un servizio",
+        "listino prezzi",
+        "prezzo del servizio",
+        "nuovo servizio",
+        "cambiare il prezzo in un lavoro"
+      ]
+    },
+    {
+      "id": "works-create",
+      "section": "works",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come registro un nuovo lavoro?",
+      "answer": "Vai su [Lavori](app:works) e crea un nuovo lavoro. Compila in ordine:\n\n1. il **titolo** e la **data** dell'evento\n2. il **cliente**\n3. i **servizi inclusi**\n4. le **rate** del pagamento\n\nPoi premi **Crea lavoro**. Servono almeno un servizio e una rata.",
+      "keywords": [
+        "nuovo lavoro",
+        "registrare un lavoro",
+        "aggiungere un evento",
+        "creare un lavoro",
+        "data dell'evento"
+      ]
+    },
+    {
+      "id": "works-payments",
+      "section": "works",
+      "order": 20,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come registro le rate e i pagamenti di un lavoro?",
+      "answer": "Nel lavoro, nella parte dei pagamenti, premi **Aggiungi rata** per ogni pagamento previsto: importo, data e metodo di pagamento.\n\nLe rate insieme devono coprire esattamente il prezzo dei servizi, altrimenti il lavoro non si salva. Quando un cliente paga, segna la rata come pagata.",
+      "keywords": [
+        "aggiungere una rata",
+        "acconto e saldo",
+        "segnare un pagamento",
+        "rate non coprono il prezzo",
+        "pagamento del cliente"
+      ]
+    },
+    {
+      "id": "works-status",
+      "section": "works",
+      "order": 30,
+      "first_steps": false,
+      "requires": "",
+      "question": "Cosa significano Pagato, Parziale e Non pagato?",
+      "answer": "Lo stato di pagamento di un lavoro si decide da solo, guardando le rate:\n\n- **Pagato**: tutte le rate sono pagate\n- **Parziale**: ne è pagata solo una parte\n- **Non pagato**: nessuna rata è pagata, o non ci sono rate\n\nNon devi cambiarlo a mano: basta segnare le rate come pagate.",
+      "keywords": [
+        "stato del pagamento",
+        "lavoro pagato",
+        "pagamento parziale",
+        "da pagare",
+        "perché risulta non pagato"
+      ]
+    },
+    {
+      "id": "works-files",
+      "section": "works",
+      "order": 40,
+      "first_steps": false,
+      "requires": "",
+      "question": "Posso allegare documenti a un lavoro?",
+      "answer": "Sì. Nel lavoro, nella parte **File**, puoi caricare PDF, documenti e immagini, oppure aggiungere un link. Ogni file può avere un nome a tua scelta.\n\nCon il Vault attivo i file sono protetti, quindi per caricarli o aprirli il Vault deve essere sbloccato. C'è un limite di dimensione per ogni file, che dipende anche dal tuo sito.",
+      "keywords": [
+        "allegare un contratto",
+        "caricare un file",
+        "aggiungere un documento",
+        "file troppo grande",
+        "contratto del cliente"
+      ]
+    },
+    {
+      "id": "works-shots-fields",
+      "section": "works",
+      "order": 50,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come registro scatti e foto consegnate in un lavoro?",
+      "answer": "Nel lavoro, nella parte **Scatti**, scrivi **Scatti realizzati** (quanti ne hai fatti) e **Foto consegnate** (quante ne hai date al cliente). Servono solo numeri interi.\n\n- Sono **facoltativi**: se li lasci vuoti nessun numero viene salvato e il lavoro non compare nello [Storico scatti](app:storage/shots).\n- Se **Foto consegnate** supera **Scatti realizzati** compare il messaggio *Hai consegnato più foto di quelle scattate. Controlla i due numeri.* Correggi uno dei due: non ti impedisce di salvare.",
+      "keywords": [
+        "quanti scatti ho fatto",
+        "numero foto consegnate",
+        "campi scatti del lavoro",
+        "hai consegnato più foto di quelle scattate",
+        "messaggio giallo nel lavoro",
+        "lasciare vuoti gli scatti"
+      ]
+    },
+    {
+      "id": "works-delivery",
+      "section": "works",
+      "order": 60,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come tengo traccia della consegna delle foto in un lavoro?",
+      "answer": "Nel lavoro trovi la parte **Consegna**: serve per annotare *come* le foto sono arrivate al cliente (un link a una galleria, un trasferimento, una chiavetta USB). È tutto facoltativo.\n\n- **Titolo consegna**: un nome per riconoscerla, per esempio *Galleria Pixieset*.\n- **Link**: l'indirizzo della galleria. Va bene anche senza la parte iniziale, per esempio solo il nome del sito. Se non sembra un indirizzo web ti avvisa prima di salvare.\n- **Scadenza link**: la data fino a cui il link funziona. È una nota per te e finisce nel messaggio per il cliente: il gestionale **non ti avvisa** e non spegne il link, quindi rinnova tu la galleria in tempo. Lasciala vuota se non scade.\n- **Password galleria** e **Note consegna**: se la galleria ha una password e ciò che vuoi ricordare. Con il Vault sono protette come gli altri testi riservati: le leggi e modifichi solo da sbloccato. Titolo, link e scadenza non sono protetti.\n\nI numeri di scatti e foto consegnate si scrivono invece nella parte **Scatti**.",
+      "keywords": [
+        "consegna delle foto",
+        "link galleria",
+        "password della galleria",
+        "scadenza link galleria",
+        "avviso quando scade il link",
+        "chiavetta usb",
+        "password galleria protetta vault",
+        "note consegna"
+      ]
+    },
+    {
+      "id": "works-delivery-message",
+      "section": "works",
+      "order": 70,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come preparo il messaggio con il link da mandare al cliente?",
+      "answer": "Nella parte **Consegna** del lavoro premi **Copia messaggio**: il testo si copia negli appunti e lo incolli dove vuoi (WhatsApp, email, social).\n\n- Il messaggio dice *Ciao*, seguito dal nome del contatto principale del cliente, e contiene il link.\n- Se hai scritto password e scadenza, le aggiunge.\n- Il pulsante resta spento finché non scrivi un link: con una chiavetta USB non c'è nulla da inviare.\n- Con il Vault bloccato la password non è leggibile, quindi non finisce nel messaggio: sblocca il Vault prima di copiare.",
+      "keywords": [
+        "copia messaggio",
+        "messaggio per il cliente con la galleria",
+        "mandare il link su whatsapp",
+        "pulsante copia messaggio spento",
+        "password nel messaggio",
+        "vault bloccato consegna"
+      ]
+    },
+    {
+      "id": "storage-memory-cards",
+      "section": "storage",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come tengo traccia delle schede di memoria?",
+      "answer": "In [Archiviazione](app:storage/cards), nella scheda **Schede di memoria**, trovi l'elenco di tutte le tue schede. Le altre due schede della pagina sono **Archivi backup** e **Storico scatti**.\n\n- **Aggiungere**: premi **Aggiungi scheda**, scrivi il **Nome scheda** (per esempio *SD-A 128GB SanDisk*) e premi **Crea scheda**. Una scheda nuova parte **Pronta**.\n- **Campi**: una scheda ha solo il **Nome scheda** e lo **Stato**. Le note e le spunte di backup e formattazione si scrivono nel lavoro, non sulla scheda.\n- **Nome obbligatorio**: senza nome compare *Il nome della scheda è necessario* e la scheda non si salva.\n- **Modificare**: clicca sul nome o premi **Modifica**, cambia **Nome scheda** o **Stato** e premi **Aggiorna scheda**. Con **Annulla** esci senza salvare.",
+      "keywords": [
+        "dove gestisco le schede di memoria",
+        "aggiungere una scheda sd",
+        "nuova scheda",
+        "modificare o rinominare una scheda",
+        "nome scheda obbligatorio",
+        "scheda non si salva",
+        "campi della scheda",
+        "pagina archiviazione"
+      ]
+    },
+    {
+      "id": "storage-locations",
+      "section": "storage",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come funzionano gli archivi backup (dove salvo le foto)?",
+      "answer": "In [Archiviazione](app:storage/backups) crei gli **archivi backup**: i posti dove tieni i file, per esempio un disco esterno o un NAS.\n\n- **Creare**: nella scheda **Archivi backup** premi **Aggiungi archivio backup**, scrivi il **Nome** (l'unico campo obbligatorio, per esempio *NAS Synology, ufficio*) e premi **Crea archivio backup**.\n- **Tipo** e **Capacità**: campi liberi, per esempio *NAS*, *SSD*, *Cloud* e *4 TB*. Sono solo appunti per te: il gestionale non controlla lo spazio che resta.\n- **Stato**: **Attivo** (lo usi ancora), **Pieno** (niente più spazio, i file restano lì) o **Dismesso** (non lo usi più). Non blocca nulla: serve a ordinare la lista con i filtri.\n- **Note**: ciò che vuoi ricordare, per esempio dove si trova il disco. Con il Vault le leggi e modifichi solo da sbloccato.\n- **Modificare**: apri l'archivio dalla lista, cambia i campi e premi **Aggiorna archivio backup** (**Annulla** esce senza salvare). I lavori vedono subito il nome nuovo.",
+      "keywords": [
+        "dove sono le foto",
+        "disco esterno",
+        "nas",
+        "aggiungere un archivio backup",
+        "stato archivio pieno dismesso",
+        "cosa scrivere in tipo e capacità",
+        "note archivio backup",
+        "modificare un archivio"
+      ]
+    },
+    {
+      "id": "storage-cards-statuses",
+      "section": "storage",
+      "order": 20,
+      "first_steps": false,
+      "requires": "",
+      "question": "Cosa significano gli stati di una scheda e come cambiano?",
+      "answer": "Ogni scheda ha uno di quattro stati:\n\n- **Pronta**: è libera, puoi usarla in un lavoro.\n- **In uso**: è in un lavoro e contiene le foto da copiare.\n- **Backup effettuato**: le foto sono copiate ma la scheda non è ancora formattata.\n- **Danneggiata**: non la vuoi più usare, non compare tra le schede scelte nei lavori.\n\n**Una scheda è collegata a un solo lavoro alla volta**: l'ultimo in cui l'hai messa. I vecchi lavori che la elencano restano come storia e non ne cambiano più lo stato.\n\n**Dal lavoro alla scheda** (quando salvi il lavoro): una scheda **Pronta** messa nel lavoro diventa **In uso**; con **Backup completato** diventa **Backup effettuato**; con anche **Formattazione completata** torna **Pronta** (resta scritta nel lavoro). Se togli una spunta e salvi, le schede tornano indietro di un passo.\n\n**Dalla scheda al lavoro**: se cambi lo **Stato** della scheda in Archiviazione, si aggiorna il lavoro in cui è usata. **Backup completato** si spunta solo quando tutte le sue schede (non danneggiate) hanno il backup, **Formattazione completata** solo quando sono tutte **Pronte**; se una scheda torna indietro, la spunta si toglie.\n\n**Danneggiata**: resta nel lavoro con quello stato, non conta per le spunte e resta **Danneggiata** anche se la togli dal lavoro o elimini il lavoro. Per riusarla rimettila **Pronta** a mano.",
+      "keywords": [
+        "stati della scheda",
+        "scheda pronta in uso danneggiata",
+        "backup effettuato",
+        "stato scheda non cambia",
+        "cambiare stato manualmente",
+        "segnare scheda danneggiata",
+        "scheda in due lavori",
+        "stato scheda e lavoro"
+      ]
+    },
+    {
+      "id": "storage-location-list",
+      "section": "storage",
+      "order": 20,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come vedo, filtro ed elimino i miei archivi backup?",
+      "answer": "In [Archivi backup](app:storage/backups) ogni riga mostra **Nome**, **Lavori** (quanti lavori usano l'archivio), **Tipo**, **Capacità** e **Stato**.\n\n- **Filtri**: **Tutti**, **Attivo**, **Pieno** e **Dismesso**, con il numero di archivi per stato.\n- **Quali lavori lo usano**: apri l'archivio (clic sul nome o su **Modifica**): in fondo trovi la tabella **Lavori** con **Titolo**, **Data** e **Cliente**, e ogni titolo apre il lavoro. Utile prima di dismettere un disco.\n- **Eliminare**: nella pagina dell'archivio premi **Elimina** e conferma. L'archivio va nel [Cestino](app:trash) e non è mai bloccato, nemmeno se è usato (un disco si rompe o viene dismesso).\n- Dopo l'eliminazione i lavori che lo usavano mostrano un avviso rosso (vedi la guida sull'assegnazione). Se lo ripristini dal Cestino l'avviso sparisce.",
+      "keywords": [
+        "lista archivi backup",
+        "filtrare gli archivi per stato",
+        "quanti lavori usano un archivio",
+        "quali lavori sono su questo disco",
+        "eliminare un archivio backup",
+        "disco rotto cosa faccio",
+        "ripristinare un archivio eliminato",
+        "prima di dismettere un disco"
+      ]
+    },
+    {
+      "id": "storage-cards-list",
+      "section": "storage",
+      "order": 30,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come leggo e filtro l'elenco delle schede?",
+      "answer": "Nell'elenco di [Archiviazione](app:storage/cards) vedi per ogni scheda il **Nome scheda**, lo **Stato** (con un colore), il lavoro nella colonna **Nel lavoro** e il pulsante **Modifica**.\n\n- **Quale lavoro**: la colonna **Nel lavoro** mostra il titolo del lavoro, cliccalo per aprirlo. Compare per le schede **In uso** o con **Backup effettuato**; per le altre c'è un trattino.\n- **Filtri**: sopra l'elenco ci sono **Tutti**, **Pronta**, **In uso**, **Backup effettuato** e **Danneggiata**, ognuno con il numero di schede. I numeri contano sempre tutte le schede.\n- **Pagine**: l'elenco mostra 24 schede per volta; cambiando filtro si torna alla prima pagina.\n- **Non vedo le schede**: se l'elenco è vuoto premi **Aggiungi scheda**; se ne hai ma non le vedi, scegli **Tutti**.",
+      "keywords": [
+        "elenco schede di memoria",
+        "filtrare le schede per stato",
+        "in quale lavoro è la scheda",
+        "colonna nel lavoro",
+        "vedere solo le schede pronte",
+        "quante schede sono libere",
+        "nessuna scheda trovata",
+        "più di 24 schede"
+      ]
+    },
+    {
+      "id": "storage-location-assign",
+      "section": "storage",
+      "order": 30,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come indico dove ho salvato un lavoro e cosa significa l'avviso rosso?",
+      "answer": "Nel lavoro, nella parte **Archiviazione & Backup**, premi **Aggiungi archivio backup** e scegli un archivio dalla lista.\n\n- Puoi aggiungerne **più di uno** (per esempio disco esterno e cloud), ma lo stesso archivio non si sceglie due volte.\n- Con le frecce cambi l'ordine delle righe, con il cestino rosso togli una riga. Poi salva il lavoro.\n- Se l'archivio non c'è ancora, usa **Crea un nuovo archivio backup**: si apre in un'altra scheda, così non perdi quello che stai scrivendo.\n\n**Avviso rosso**: vuol dire che un archivio scelto è stato **eliminato** o è nel Cestino. Nella lista [Lavori](app:works) il lavoro ha un cerchio rosso con un triangolo, e il pulsante **Lavori con avvisi** mostra solo quelli da sistemare. Nel lavoro la riga è bordata di rosso: scegli un altro archivio o rimuovi la riga e salva, oppure ripristina l'archivio dal [Cestino](app:trash).",
+      "keywords": [
+        "assegnare un archivio a un lavoro",
+        "più archivi per lo stesso lavoro",
+        "archiviazione e backup nel lavoro",
+        "avviso rosso lavoro",
+        "archivio eliminato avviso",
+        "lavori con avvisi",
+        "cerchio rosso nella lista lavori",
+        "come tolgo l'avviso del lavoro"
+      ]
+    },
+    {
+      "id": "storage-cards-in-work",
+      "section": "storage",
+      "order": 40,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come uso le schede dentro un lavoro?",
+      "answer": "Apri il lavoro e vai alla sezione **Schede di memoria**. Poi salva il lavoro: lo stato delle schede si aggiorna al salvataggio.\n\n- **Aggiungere**: premi **Aggiungi scheda**, scegli dall'elenco e, se vuoi, scrivi una nota. Puoi mettere più schede nello stesso lavoro. Quel lavoro diventa il lavoro in cui la scheda è in uso.\n- **Quali si scelgono**: solo le schede **Pronte**. Quelle **In uso**, con **Backup effettuato** o **Danneggiate** non compaiono, così la stessa scheda non finisce in due lavori. Se vedi *Nessuna scheda disponibile*, aggiungi una scheda in [Archiviazione](app:storage/cards) o liberane una in uso.\n- **Note**: il campo **Note** vale solo per quella scheda in quel lavoro, non resta sulla scheda. Se usi il Vault le note sono protette: con il Vault bloccato non si leggono e il salvataggio non le tocca.\n- **Caselle**: in fondo ci sono **Backup completato** e **Formattazione completata**, valide per tutte le schede del lavoro. La formattazione si spunta solo dopo il backup; se togli il backup si toglie anche lei. Le schede seguono le caselle solo se questo è il lavoro in cui sono in uso: in un vecchio lavoro le caselle cambiano ma le schede no.\n- **Ordine**: le frecce spostano una riga su o giù (disattivate se il Vault è bloccato).\n- **Togliere**: il cestino rosso a destra toglie la riga; al salvataggio la scheda torna **Pronta** (resta **Danneggiata** se lo era).\n- **Eliminare il lavoro**: le schede in uso in quel lavoro tornano **Pronte** (le **Danneggiate** restano tali), anche senza backup e formattazione: controlla prima che le foto siano al sicuro. Se poi ripristini il lavoro dal [Cestino](app:trash), le schede restano libere e non si ricollegano da sole.",
+      "keywords": [
+        "schede di memoria nel lavoro",
+        "aggiungere una scheda a un lavoro",
+        "nessuna scheda disponibile",
+        "backup completato formattazione completata",
+        "note della scheda",
+        "riordinare le schede",
+        "togliere scheda dal lavoro",
+        "eliminare un lavoro e le schede"
+      ]
+    },
+    {
+      "id": "storage-shots-history",
+      "section": "storage",
+      "order": 40,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come funziona lo Storico scatti?",
+      "answer": "In [Archiviazione](app:storage/backups), nella scheda **Storico scatti**, vedi quanti scatti hai fatto e quante foto hai consegnato, lavoro per lavoro. Ogni riga mostra **Lavoro** (il titolo apre il lavoro), **Data**, **Scatti realizzati** e **Foto consegnate**. I numeri li scrivi tu dentro ogni lavoro.\n\n- **Anno**: sopra la tabella scegli l'anno (o **Tutti gli anni**). Conta l'anno della data del lavoro e compaiono solo gli anni con dei conteggi.\n- **Totali**: a destra leggi **Lavori**, **Scatti realizzati** e **Foto consegnate** di ciò che stai guardando. Un numero mancante vale zero.\n- **Triangolo giallo**: per quel lavoro hai scritto più foto consegnate che scatti, di solito un errore di battitura. Apri il lavoro e controlla. È solo un avviso.\n- **Lavoro mancante o storico vuoto**: compaiono solo i lavori con almeno uno dei due numeri (altrimenti leggi *Ancora nessun conteggio di scatti*). Un lavoro senza data valida appare solo in **Tutti gli anni**.",
+      "keywords": [
+        "storico scatti",
+        "quanti scatti ho fatto",
+        "quante foto ho consegnato quest'anno",
+        "filtro anno scatti",
+        "triangolo giallo scatti",
+        "storico scatti vuoto",
+        "lavoro mancante nello storico",
+        "totali scatti"
+      ]
+    },
+    {
+      "id": "storage-cards-workflow",
+      "section": "storage",
+      "order": 50,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come uso le schede durante un servizio, passo per passo?",
+      "answer": "1. Aggiungi le tue schede in [Archiviazione](app:storage/cards).\n2. Nel lavoro, in **Schede di memoria**, scegli quelle che porti e salva: sono **In uso**.\n3. Dopo il servizio copia le foto, spunta **Backup completato** e salva: sono **Backup effettuato**.\n4. Formatta le schede, spunta **Formattazione completata** e salva: tornano **Pronte** (restano scritte nel lavoro, ma puoi già usarle in un altro).\nSe una scheda si rompe, segnala **Danneggiata** dalla scheda: non conta più per le spunte del lavoro.",
+      "keywords": [
+        "esempio uso schede",
+        "come organizzo le mie schede",
+        "procedura schede dopo servizio",
+        "passo passo schede",
+        "flusso schede di memoria"
+      ]
+    },
+    {
+      "id": "storage-cards-delete",
+      "section": "storage",
+      "order": 60,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come elimino una scheda e come la recupero?",
+      "answer": "Apri la scheda in [Archiviazione](app:storage/cards), premi **Elimina** e conferma. La scheda non sparisce per sempre: va nel [Cestino](app:trash) e da lì la ripristini (in Archiviazione compare un piccolo pulsante **Cestino** quando c'è qualcosa dentro).\n\n- **Non si elimina se è In uso**: compare *La scheda è in uso: impossibile eliminarla*. Togli la scheda dal lavoro, oppure completa backup e formattazione, poi riprova.\n- **Nei lavori**: una scheda eliminata sparisce anche dalla sezione **Schede di memoria** dei lavori in cui era scritta. Se la ripristini la rivedi. Per non farla sparire da un lavoro, non eliminarla finché serve.",
+      "keywords": [
+        "eliminare una scheda",
+        "non posso eliminare la scheda",
+        "la scheda è in uso",
+        "recuperare scheda eliminata",
+        "scheda nel cestino",
+        "scheda sparita dal lavoro",
+        "ripristinare una scheda"
+      ]
+    },
+    {
+      "id": "calendar-view",
+      "section": "calendar",
+      "order": 10,
+      "first_steps": false,
+      "requires": "calendar",
+      "question": "Come vedo i miei lavori nel calendario?",
+      "answer": "Apri [Calendario](app:calendar): ogni lavoro compare nel giorno della sua data. Premi su un lavoro per aprirlo.\n\nPuoi scegliere il colore di ogni lavoro nella parte **Colore calendario** del lavoro, per riconoscerli a colpo d'occhio.",
+      "keywords": [
+        "calendario dei lavori",
+        "vedere gli eventi",
+        "colore nel calendario",
+        "impegni del mese",
+        "agenda"
+      ]
+    },
+    {
+      "id": "vault-what",
+      "section": "vault",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Cos'è il Vault e cosa protegge?",
+      "answer": "Il Vault è un blocco con password che protegge i dati dei tuoi clienti: nomi, contatti, indirizzi, note, titoli dei lavori e documenti allegati.\n\nSenza sbloccarlo questi dati non si leggono, nemmeno da chi accede al sito. Lo attivi e lo gestisci da [Impostazioni](app:settings).",
+      "keywords": [
+        "proteggere i dati dei clienti",
+        "privacy",
+        "password del vault",
+        "dati cifrati",
+        "sicurezza"
+      ]
+    },
+    {
+      "id": "vault-forgot",
+      "section": "vault",
+      "order": 20,
+      "first_steps": false,
+      "requires": "",
+      "question": "Ho dimenticato la password del Vault, cosa faccio?",
+      "answer": "Nella schermata di sblocco scegli la voce per la password dimenticata e inserisci la **frase di recupero** o il **codice di recupero** del tuo kit di recupero. Poi imposti una nuova password.\n\nSe non hai più il kit, resta solo la reimpostazione del Vault, che rende illeggibili i dati protetti già salvati. Per questo conserva il kit in un posto sicuro.",
+      "keywords": [
+        "password dimenticata",
+        "codice di recupero",
+        "frase di recupero",
+        "kit di recupero",
+        "non riesco a sbloccare"
+      ]
+    },
+    {
+      "id": "vault-fingerprint",
+      "section": "vault",
+      "order": 30,
+      "first_steps": false,
+      "requires": "",
+      "question": "Posso sbloccare il Vault con l'impronta?",
+      "answer": "Sui dispositivi che lo permettono sì. In [Impostazioni](app:settings), nella parte del Vault, attivi lo sblocco con l'impronta per quel dispositivo. Servono la password e il codice una volta sola, per attivarlo.\n\nSe il tuo dispositivo non lo supporta, la voce non compare e continui con la password.",
+      "keywords": [
+        "sbloccare con l'impronta",
+        "touch id",
+        "sblocco veloce",
+        "senza password",
+        "impronta digitale"
+      ]
+    },
+    {
+      "id": "settings-payment-types",
+      "section": "settings",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come aggiungo un metodo di pagamento, come bonifico o contanti?",
+      "answer": "In [Impostazioni](app:settings), nella parte **Metodi di pagamento**, aggiungi o rinomini i metodi che usi. Poi li scegli rata per rata quando registri i pagamenti di un lavoro.\n\nI nomi li scrivi tu, quindi puoi usare quelli che usi davvero con i clienti.",
+      "keywords": [
+        "bonifico",
+        "contanti",
+        "tipo di pagamento",
+        "aggiungere un metodo",
+        "carta o paypal"
+      ]
+    },
+    {
+      "id": "settings-changelog",
+      "section": "settings",
+      "order": 20,
+      "first_steps": false,
+      "requires": "",
+      "question": "Cosa è cambiato nell'ultima versione?",
+      "answer": "Apri la [Cronologia delle versioni](app:changelog): la trovi anche premendo il numero di versione in basso nel menu. Ogni versione elenca le novità e le correzioni.\n\nSe c'è una versione nuova, qui trovi anche il pulsante per aggiornare.",
+      "keywords": [
+        "novità",
+        "versione",
+        "aggiornamento",
+        "cosa c'è di nuovo",
+        "cronologia modifiche"
+      ]
+    },
+    {
+      "id": "backups-restore-download",
+      "section": "backups-restore",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come scarico un backup dei miei dati?",
+      "answer": "In [Impostazioni](app:settings), nella parte **Backup**, premi **Scarica backup cifrato**. Ottieni un file che contiene i dati del tuo gestionale, protetto.\n\nPer farlo il Vault deve essere attivo. Conserva il file e il tuo kit di recupero in un posto sicuro, lontano dal sito.",
+      "keywords": [
+        "scaricare il backup",
+        "copia di sicurezza",
+        "salvare i miei dati",
+        "backup cifrato",
+        "esportare i dati"
+      ]
+    },
+    {
+      "id": "backups-restore-restore",
+      "section": "backups-restore",
+      "order": 20,
+      "first_steps": false,
+      "requires": "restore",
+      "question": "Come ripristino un backup?",
+      "answer": "Apri [Ripristina da un backup](app:restore). Scegli un backup già salvato su questo sito oppure carica il file, poi inserisci la password, il codice o la frase di recupero richiesti.\n\nPrima di scrivere qualcosa ti mostra cosa cambierà, e puoi annullare l'ultimo ripristino. Con \"sostituisci tutto\" non si torna indietro, ma viene fatto prima un backup di sicurezza.",
+      "keywords": [
+        "ripristinare un backup",
+        "recuperare i dati",
+        "caricare un backup",
+        "tornare indietro",
+        "nuovo sito dati"
+      ]
+    },
+    {
+      "id": "trash-restore",
+      "section": "trash",
+      "order": 10,
+      "first_steps": false,
+      "requires": "",
+      "question": "Ho eliminato qualcosa per sbaglio, come lo recupero?",
+      "answer": "Apri il [Cestino](app:trash). Trovi gli elementi eliminati, con la data in cui spariranno. Premi **Ripristina** per riaverli, oppure **Elimina per sempre** per cancellarli davvero.\n\nUn cliente o un servizio ancora usato da un lavoro non si può eliminare per sempre.",
+      "keywords": [
+        "recuperare un elemento eliminato",
+        "cestino",
+        "annullare l'eliminazione",
+        "ho cancellato per errore",
+        "riavere un cliente"
+      ]
+    }
+  ]
+}
