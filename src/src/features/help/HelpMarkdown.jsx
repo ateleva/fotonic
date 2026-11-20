@@ -30,11 +30,11 @@ function Inline({ nodes, tokens }) {
 
 export default function HelpMarkdown({ text, tokens }) {
   return parseMarkdown(text).map((b, i) => {
-    if (b.t === 'p') return <p key={i} className="mb-2 last:mb-0"><Inline nodes={b.inline} tokens={tokens} /></p>
+    if (b.t === 'p') return <p key={i} className="mb-2 last:mb-0 text-sm leading-relaxed"><Inline nodes={b.inline} tokens={tokens} /></p>
     const Tag = b.t
     return (
-      <Tag key={i} className={`mb-2 last:mb-0 pl-5 ${b.t === 'ul' ? 'list-disc' : 'list-decimal'}`}>
-        {b.items.map((it, j) => <li key={j} className="mb-1"><Inline nodes={it} tokens={tokens} /></li>)}
+      <Tag key={i} className={`mb-2 last:mb-0 pl-5 text-sm leading-relaxed ${b.t === 'ul' ? 'list-disc' : 'list-decimal'}`}>
+        {b.items.map((it, j) => <li key={j} className="mb-1 text-sm leading-relaxed"><Inline nodes={it} tokens={tokens} /></li>)}
       </Tag>
     )
   })
