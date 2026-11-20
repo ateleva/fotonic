@@ -37,7 +37,11 @@ export function useUpdateMemoryCard() {
         method: 'PUT',
         body: JSON.stringify(data),
       }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['memory-cards'] }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['memory-cards'] })
+      // A status set on the card also moves the flags of the work the card is active in.
+      qc.invalidateQueries({ queryKey: ['works'] })
+    },
   })
 }
 

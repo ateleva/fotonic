@@ -25,6 +25,7 @@ require_once FOTONIC_DIR . 'includes/class-i18n.php';
 require_once FOTONIC_DIR . 'includes/class-activator.php';
 require_once FOTONIC_DIR . 'includes/class-cpt-registry.php';
 require_once FOTONIC_DIR . 'includes/class-memory-card-cpt.php';
+require_once FOTONIC_DIR . 'includes/class-memory-card-sync.php';
 require_once FOTONIC_DIR . 'includes/class-backup-loc-cpt.php';
 require_once FOTONIC_DIR . 'includes/class-uploads.php';
 require_once FOTONIC_DIR . 'includes/class-record-uid.php';
@@ -107,6 +108,8 @@ add_action( 'save_post_ftnc_work',     [ 'Fotonic_Meta_Boxes', 'auto_assign_paym
 add_action( 'ftnc_after_save_work',    [ 'Fotonic_Meta_Boxes', 'sync_memory_card_statuses' ], 10, 2 );
 // (The customer search filters on posts_search/posts_join/posts_distinct are gone: titles may be encrypted, so Fotonic_Titles searches in PHP.)
 
+// The link of a memory card to its active work is rebuilt on demand: it is not part of a backup.
+add_filter( 'ftnc_backup_derived_meta', [ 'Fotonic_Memory_Card_Sync', 'derived_meta' ] );
 // Force a vault re-unlock on each WP login session change: clear the session
 // cookie on login and logout so a fresh login always requires password + OTP.
 add_action( 'wp_login',  [ 'Fotonic_Vault', 'lock' ] );

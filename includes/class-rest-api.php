@@ -2630,6 +2630,7 @@ class Fotonic_REST_API {
 
 		// Capture previous card list before save_work_meta overwrites it (for removed-card detection in sync).
 		$prev_memory_cards = get_post_meta( $id, '_ftnc_memory_cards', true );
+		$prev_card_flags   = Fotonic_Memory_Card_Sync::flags_of_work( $id );
 
 		self::save_work_meta( $id, $body );
 		Fotonic_Meta_Boxes::auto_assign_payment_status( $id );
@@ -2641,7 +2642,7 @@ class Fotonic_REST_API {
 		 * @param int   $id   Work post ID.
 		 * @param array $body Decoded request body array.
 		 */
-		do_action( 'ftnc_after_save_work', $id, array_merge( $body, [ '_prev_memory_cards' => $prev_memory_cards ] ) );
+		do_action( 'ftnc_after_save_work', $id, array_merge( $body, [ '_prev_memory_cards' => $prev_memory_cards, '_prev_flags' => $prev_card_flags ] ) );
 
 		return new \WP_REST_Response( self::format_work( get_post( $id ), true ), 200 );
 	}
@@ -2657,21 +2658,8 @@ class Fotonic_REST_API {
 			);
 		}
 
-		// Free any memory cards still linked to this work.
-		if ( class_exists( 'Fotonic_Memory_Card_CPT' ) ) {
-			$raw = get_post_meta( $id, '_ftnc_memory_cards', true );
-			if ( ! empty( $raw ) ) {
-				$mc_list = json_decode( $raw, true );
-				if ( is_array( $mc_list ) ) {
-					foreach ( $mc_list as $mc ) {
-						$card_id = (int) ( $mc['card_id'] ?? 0 );
-						if ( $card_id > 0 ) {
-							Fotonic_Memory_Card_CPT::set_card_status( $card_id, 'free' );
-						}
-					}
-				}
-			}
-		}
+		// Release the memory cards whose active work this is (a damaged card stays damaged); older works change nothing.
+		Fotonic_Memory_Card_Sync::on_work_deleted( $id );
 
 		wp_trash_post( $id );
 

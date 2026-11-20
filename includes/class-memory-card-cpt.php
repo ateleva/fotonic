@@ -3,6 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Memory_Card_CPT {
 
+	/** Postmeta on the card: the day and time (Y-m-d H:i, site time zone) its status last changed. Derived, so it is not part of a backup. */
+	const META_STATUS_CHANGED = '_ftnc_status_changed';
+
 	public static function register(): void {
 		self::register_memory_card_cpt();
 		self::register_card_status_taxonomy();
@@ -134,6 +137,12 @@ class Fotonic_Memory_Card_CPT {
 		if ( ! in_array( $status, $valid, true ) ) {
 			return;
 		}
+		$terms = wp_get_object_terms( $card_id, 'ftnc_card_status', [ 'fields' => 'slugs' ] );
+		$prev  = ( is_wp_error( $terms ) || empty( $terms ) ) ? '' : (string) $terms[0];
 		wp_set_object_terms( $card_id, $status, 'ftnc_card_status' );
+		// The day and time of the last change (site time zone), shown next to the status in the works (not set for the first status of a new card).
+		if ( '' !== $prev && $prev !== $status ) {
+			update_post_meta( $card_id, self::META_STATUS_CHANGED, wp_date( 'Y-m-d H:i' ) );
+		}
 	}
 }

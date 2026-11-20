@@ -6,12 +6,20 @@ import SearchSelect from '../../components/SearchSelect'
 import RowReorder from '../../components/RowReorder'
 import { moveRow } from '../../utils/moveRow'
 import { __ } from '../../utils/i18n'
+import { formatDate, formatTime } from '../../utils/date'
 
 const STATUS_STYLES = {
   free:      'bg-green-100 text-green-800',
   in_use:    'bg-blue-100 text-blue-800',
   backed_up: 'bg-teal-100 text-teal-800',
   damaged:   'bg-red-100 text-red-800',
+}
+
+// 'Y-m-d H:i' written by the server in the site's time zone: the date and the time, in the site's formats (no conversion here).
+// A value from before the time was kept is just a date.
+function changedAt(value) {
+  const day = formatDate(value.slice(0, 10))
+  return value.length > 10 ? `${day} ${formatTime(value.slice(11, 16))}` : day
 }
 
 function statusLabel(status) {
@@ -36,6 +44,7 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
   const { data: freeData }     = useMemoryCards({ status: 'free' })
   const { data: inUseData }    = useMemoryCards({ status: 'in_use' })
   const { data: backedUpData } = useMemoryCards({ status: 'backed_up' })
+  const { data: damagedData }  = useMemoryCards({ status: 'damaged' })
 
   const allCards = useMemo(() => {
     const merge = (d) => (Array.isArray(d) ? d : d?.data ?? [])
@@ -43,6 +52,7 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
       ...merge(freeData),
       ...merge(inUseData),
       ...merge(backedUpData),
+      ...merge(damagedData),
     ]
     const seen = new Set()
     return combined.filter((c) => {
@@ -50,12 +60,11 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
       seen.add(c.id)
       return true
     })
-  }, [freeData, inUseData, backedUpData])
+  }, [freeData, inUseData, backedUpData, damagedData])
 
   function optionsForRow(currentCardId) {
-    return allCards.filter(
-      (c) => c.status !== 'damaged' && (c.status === 'free' || c.id === currentCardId)
-    )
+    // Only ready cards can be picked; the card already in this row always stays in it, even a damaged one, so a row never turns blank.
+    return allCards.filter((c) => c.status === 'free' || c.id === currentCardId)
   }
 
   function update(newCards, newBackup, newFormatting) {
@@ -99,7 +108,7 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
             return (
               <div key={idx} className="flex items-center gap-2">
                 <SearchSelect
-                  className="flex-none w-44"
+                  className="flex-none w-72 max-w-[50%]"
                   value={row.card_id ?? ''}
                   onChange={(val) => updateRow(idx, 'card_id', val ? Number(val) : '')}
                   options={[
@@ -113,11 +122,6 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
                   placeholder={__('Select a card…', 'eleva-crm-for-photographers')}
                   emptyText={__('No cards available', 'eleva-crm-for-photographers')}
                 />
-                {selectedCard && selectedCard.status !== 'free' ? (
-                  <span className={`flex-none inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${STATUS_STYLES[selectedCard.status] ?? 'bg-gray-100 text-gray-700'}`}>
-                    {statusLabel(selectedCard.status)}
-                  </span>
-                ) : null}
                 <input
                   type="text"
                   value={row.notes ?? ''}
@@ -125,6 +129,14 @@ export default function MemoryCardsSection({ value = {}, onChange }) {
                   placeholder={__('Notes…', 'eleva-crm-for-photographers')}
                   className="flex-1 min-w-0 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
+                {/* The status of the card (it can also be changed from the card itself) with the day it last changed.
+                    Same height as the select and the notes field. A ready card shows it only once it has a day. */}
+                {selectedCard && (selectedCard.status !== 'free' || selectedCard.status_changed) ? (
+                  <span className={`flex-none inline-flex h-[38px] items-center whitespace-nowrap px-2 rounded text-xs font-medium ${STATUS_STYLES[selectedCard.status] ?? 'bg-gray-100 text-gray-700'}`}>
+                    {statusLabel(selectedCard.status)}
+                    {selectedCard.status_changed ? ` · ${changedAt(selectedCard.status_changed)}` : ''}
+                  </span>
+                ) : null}
                 <RowReorder index={idx} count={cards.length} onMove={moveRowBy} disabled={moveLocked} />
                 <Button type="button" variant="danger" size="sm" onClick={() => removeRow(idx)} aria-label={__('Remove', 'eleva-crm-for-photographers')}>
                   <Trash2 size={14} />

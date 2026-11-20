@@ -81,10 +81,16 @@ class Fotonic_Memory_Card_REST_API {
 			}
 		}
 
-		$query        = new \WP_Query( $args );
+		$query = new \WP_Query( $args );
+		// Natural order by name (1, 2, ... 9, 10, 11), not text order (1, 10, 11, 2); the ID breaks ties.
+		$posts = $query->posts;
+		usort( $posts, static function ( $a, $b ) {
+			$c = strnatcasecmp( (string) $a->post_title, (string) $b->post_title );
+			return 0 !== $c ? $c : $a->ID <=> $b->ID;
+		} );
 		$card_to_work = self::build_card_to_work_map();
 		$data         = [];
-		foreach ( $query->posts as $post ) {
+		foreach ( $posts as $post ) {
 			$data[] = self::format_card( $post, $card_to_work );
 		}
 
@@ -142,6 +148,8 @@ class Fotonic_Memory_Card_REST_API {
 
 		if ( isset( $body['status'] ) ) {
 			Fotonic_Memory_Card_CPT::set_card_status( $id, sanitize_text_field( $body['status'] ) );
+			// A status set by hand updates only the work this card is active in (its flags follow all its cards).
+			Fotonic_Memory_Card_Sync::on_card_status_set( $id );
 		}
 
 		return new \WP_REST_Response( self::format_card( get_post( $id ) ), 200 );
@@ -198,9 +206,15 @@ class Fotonic_Memory_Card_REST_API {
 			}
 			foreach ( $cards as $mc ) {
 				$card_id = (int) ( $mc['card_id'] ?? 0 );
-				if ( $card_id > 0 && ! isset( $map[ $card_id ] ) ) {
-					$map[ $card_id ] = [ 'id' => $work->ID, 'title' => Fotonic_Titles::read( $work, Fotonic_Vault::get_session_key() ) ];
+				if ( $card_id <= 0 ) {
+					continue;
 				}
+				// The work the card is active in wins; a card with no link yet shows the first work that lists it.
+				$active = (int) get_post_meta( $card_id, Fotonic_Memory_Card_Sync::META_ACTIVE, true );
+				if ( isset( $map[ $card_id ] ) && $active !== $work->ID ) {
+					continue;
+				}
+				$map[ $card_id ] = [ 'id' => $work->ID, 'title' => Fotonic_Titles::read( $work, Fotonic_Vault::get_session_key() ) ];
 			}
 		}
 		return $map;
@@ -230,6 +244,8 @@ class Fotonic_Memory_Card_REST_API {
 			'status'       => $status,
 			'status_label' => $labels[ $status ] ?? $status,
 			'in_use_work'  => $in_use_work,
+			// The day and time the status last changed ('Y-m-d H:i' in the site time zone), '' when unknown (cards from before this was kept, or never changed).
+			'status_changed' => (string) get_post_meta( $post->ID, Fotonic_Memory_Card_CPT::META_STATUS_CHANGED, true ),
 		];
 	}
 }
