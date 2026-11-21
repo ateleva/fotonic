@@ -5327,3 +5327,19 @@ msgstr ""
 #: src/src/components/UpdateAvailable.jsx:31
 msgid "A gestionale update is available"
 msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "Answers inside the app"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "Not sure how something works? Open Help in the sidebar, or press See the guides next to the title of any page, and type a few words to find a short answer."
+msgstr ""
+
+#: includes/class-whats-new.php:74
+msgid "You are told when an update is ready"
+msgstr ""
+
+#: includes/class-whats-new.php:75
+msgid "When a new version of Eleva CRM is available, an Update available button appears in the sidebar. Press it and you are taken to the page where you update."
+msgstr ""

@@ -58,6 +58,23 @@ class Fotonic_Whats_New {
 	private static function free_entries(): array {
 		return [
 			[
+				'id'      => '1.8.0:help-guide',
+				'plugin'  => 'free',
+				'since'   => '1.8.0',
+				'section' => 'dashboard',
+				'title'   => __( 'Answers inside the app', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'Not sure how something works? Open Help in the sidebar, or press See the guides next to the title of any page, and type a few words to find a short answer.', 'eleva-crm-for-photographers' ),
+				'banner'  => true,
+			],
+			[
+				'id'      => '1.8.0:update-available',
+				'plugin'  => 'free',
+				'since'   => '1.8.0',
+				'section' => 'dashboard',
+				'title'   => __( 'You are told when an update is ready', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'When a new version of Eleva CRM is available, an Update available button appears in the sidebar. Press it and you are taken to the page where you update.', 'eleva-crm-for-photographers' ),
+			],
+			[
 				'id'      => '1.7.2:works-year-search',
 				'plugin'  => 'free',
 				'since'   => '1.7.2',

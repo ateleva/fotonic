@@ -4,7 +4,7 @@ Tags: crm, photographer, photography, gestionale, wedding
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.7.2
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,6 +181,13 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Changelog ==
 
+= 1.8.0 =
+* New: a Help page inside the app, with short answers to the questions photographers ask most. Open Help in the sidebar, or press See the guides next to the title of a page. You can search by typing a few words.
+* New: an Update available button appears in the sidebar when a new version of Eleva CRM is waiting. A window explains what to do and takes you to the Plugins page. Only people who can update plugins see it.
+* Change: a memory card is now linked to one work at a time, the last work it was added to, so its status stays in step with that work. Damaged cards keep their place in a work, the card list is in natural order (1, 2 ... 9, 10), and a card shows the day and time of its last change.
+* Change: deleting a customer, service, work or memory card now says it goes to the Bin and can be restored. The sidebar is more compact, and the Pro pages are set apart by a divider.
+* Compatibility: works with Eleva CRM Pro 1.8.1.
+
 = 1.7.2 =
 * New: the Works list has a Year filter. It opens on the current year (or the nearest year that has works), and All years shows everything.
 * New: searching works now also finds them by the client's name (and by the name, email or phone of the people of that client), not only by the title of the work.
@@ -342,6 +349,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 Entries for versions older than 1.4.0 were removed from this list to keep it short.
 
 == Upgrade Notice ==
+
+= 1.8.0 =
+A Help page inside the app, an Update available button in the sidebar, and memory cards that follow one work at a time. Update Eleva CRM Pro to 1.8.1 together with it.
 
 = 1.7.2 =
 Filter your works by year, and find a work by its client's name. Update Eleva CRM Pro to 1.7.3 for the collaborator icon and the owner filter.

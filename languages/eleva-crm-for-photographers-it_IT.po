@@ -4352,3 +4352,15 @@ msgstr "Vai agli aggiornamenti"
 
 msgid "A gestionale update is available"
 msgstr "È disponibile un aggiornamento del gestionale"
+
+msgid "Answers inside the app"
+msgstr "Le risposte dentro l'app"
+
+msgid "Not sure how something works? Open Help in the sidebar, or press See the guides next to the title of any page, and type a few words to find a short answer."
+msgstr "Non sai come funziona qualcosa? Apri Guida nella barra laterale, oppure premi Vedi le guide accanto al titolo di una pagina, e scrivi qualche parola per trovare una risposta breve."
+
+msgid "You are told when an update is ready"
+msgstr "Ti avvisiamo quando c'è un aggiornamento"
+
+msgid "When a new version of Eleva CRM is available, an Update available button appears in the sidebar. Press it and you are taken to the page where you update."
+msgstr "Quando è disponibile una nuova versione di Eleva CRM, nella barra laterale compare il pulsante Aggiornamento disponibile. Premilo e arrivi alla pagina dove aggiornare."
