@@ -1,4 +1,4 @@
-// Search of the Help cards: client side, no dependency, pure functions (tested by tests/js/help-search.test.mjs).
+// Search of the Help cards: client side, no dependency, pure functions.
 // Lowercase, accents stripped, stopwords dropped, prefix match for words of 3+ letters.
 // A search starts at 3 typed characters: one or two letters would find nothing useful while the person is still typing.
 // Weight: question > keywords > answer.

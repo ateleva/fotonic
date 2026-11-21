@@ -1,6 +1,6 @@
 <?php
 /**
- * The state model of the memory cards (confirmed by the owner, 2026-11-20; see .claude/plans/help-guide/MEMORY-CARDS-MODEL.md).
+ * The state model of the memory cards (confirmed by the owner, 2026-11-20).
  *
  * A card is linked to ONE work at a time: its ACTIVE work, the last work it was added to (postmeta `_ftnc_active_work` on the card).
  * Older works that still list the card are history: saving them never changes the card. Statuses: free (Pronta), in_use, backed_up,
