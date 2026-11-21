@@ -3,7 +3,7 @@
   "plugin": "free",
   "plugin_version": "1.8.0",
   "locale": "it_IT",
-  "generated_at": "2026-11-21T12:16:55.389Z",
+  "generated_at": "2026-11-21T16:38:07.994Z",
   "_note": "Generated from Notion. Do not edit by hand.",
   "sections": {
     "first-steps": "Primi passi",
@@ -35,22 +35,6 @@
         "prime cose da fare",
         "da dove parto",
         "ordine di configurazione"
-      ]
-    },
-    {
-      "id": "first-steps-order",
-      "section": "first-steps",
-      "order": 20,
-      "first_steps": true,
-      "requires": "",
-      "question": "Cosa devo creare prima di registrare un lavoro?",
-      "answer": "Per registrare un lavoro servono due cose che devono già esistere, perché nel lavoro le scegli da un elenco:\n\n- il **cliente**, che crei in [Clienti](app:customers)\n- i **servizi**, che crei in [Servizi](app:services)\n\nSe non trovi il cliente o il servizio che ti serve, significa che non è ancora stato creato: non serve ricominciare, aggiungilo e poi riprendi il lavoro da [Lavori](app:works).",
-      "keywords": [
-        "cosa serve prima di un lavoro",
-        "non trovo il cliente nel lavoro",
-        "non trovo il servizio nel lavoro",
-        "ordine di inserimento",
-        "prima il cliente poi il lavoro"
       ]
     },
     {
@@ -238,7 +222,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Come tengo traccia della consegna delle foto in un lavoro?",
-      "answer": "Nel lavoro trovi la sezione **Consegna**, in cui puoi annotare come hai consegnato il lavoro al cliente (un link a una galleria, un trasferimento, una chiavetta USB).\n\n- **Titolo consegna**: un nome per riconoscerla, per esempio il nome della galleria di Pixieset.\n- **Link**: l'indirizzo della galleria. Devi inserire un URL valido: se il sistema non rileva un vero indirizzo web, ti avvisa prima di salvare.\n- **Scadenza link**: la data fino a cui il link funziona. È una nota per te e finisce nel messaggio per il cliente: il gestionale **non ti avvisa** e non spegne il link, quindi rinnova tu la galleria in tempo. Non compilare il campo se non c'è nessuna scadenza.\n- **Password galleria** e **Note consegna**: la password della galleria, se c'è, e ciò che vuoi ricordare. Con il Vault sono protette come gli altri testi riservati: le leggi e le modifichi solo con il gestionale sbloccato.",
+      "answer": "Nel lavoro trovi la sezione **Consegna**, in cui puoi annotare come hai consegnato il lavoro al cliente (un link a una galleria, un trasferimento, una chiavetta USB).\n\n- **Titolo consegna**: un nome per riconoscerla, per esempio il nome della galleria di Pixieset.\n- **Link**: l'indirizzo della galleria. Devi inserire un URL valido: se il sistema non rileva un vero indirizzo web, ti avvisa prima di salvare.\n- **Scadenza link**: la data fino a cui il link funziona. È una nota per te e finisce nel messaggio per il cliente: il gestionale **non ti avvisa** e non spegne il link, quindi rinnova tu la galleria in tempo. Non compilare il campo se non c'è nessuna scadenza.\n- **Password galleria** e **Note consegna**: la password della galleria, se c'è, e ciò che vuoi ricordare. Con il Vault sono protette come gli altri testi riservati: le leggi e le modifichi solo con il gestionale sbloccato.\n\nQuando hai controllato tutti i dati, clicca **Copia messaggio** e incollalo su WhatsApp, email o social per dare al cliente l'accesso alla galleria.",
       "keywords": [
         "consegna delle foto",
         "link galleria",
@@ -457,14 +441,14 @@
       "order": 10,
       "first_steps": false,
       "requires": "calendar",
-      "question": "Come vedo i miei lavori nel calendario?",
-      "answer": "Apri [Calendario](app:calendar): ogni lavoro compare nel giorno della sua data e, premendo su un lavoro, lo apri.\n\nPer riconoscere i lavori a colpo d'occhio puoi scegliere il colore di ciascuno nella sezione **Colore calendario** del lavoro: per esempio un colore per i matrimoni e uno per i servizi di ritratto.",
+      "question": "C'è una vista calendario?",
+      "answer": "Sì, assolutamente: la pagina [Calendario](app:calendar) mostra ogni lavoro creato nel gestionale.\n\nPer riconoscere i lavori a colpo d'occhio puoi scegliere il colore di ciascuno nella sezione **Colore calendario** del lavoro: per esempio un colore per i matrimoni e uno per i servizi di ritratto.",
       "keywords": [
+        "vista calendario",
+        "c'è un calendario",
         "calendario dei lavori",
-        "vedere gli eventi",
         "colore nel calendario",
-        "impegni del mese",
-        "agenda"
+        "vedere gli eventi"
       ]
     },
     {
@@ -536,13 +520,30 @@
       ]
     },
     {
+      "id": "backups-restore-can",
+      "section": "backups-restore",
+      "order": 5,
+      "first_steps": false,
+      "requires": "",
+      "question": "Posso effettuare un backup dei dati inseriti nel gestionale?",
+      "answer": "Sì, assolutamente: nella pagina [Impostazioni](app:settings), dopo aver configurato il Vault, vai nella sezione **Backup** e clicca **Scarica backup cifrato** per creare e scaricare un backup dei dati del tuo gestionale.\n\nQuesta funzione salva i dati del gestionale, non l'intero sito WordPress.\n\nIl file si apre solo con la password del Vault o con il codice di recupero. Una password del Vault robusta (almeno 8 caratteri, più è lunga meglio è) è ciò che lo protegge se qualcuno ne ottiene una copia, quindi tieni il file privato: nessun altro può leggerlo.\n\nSe perdi la password del Vault, il codice di recupero e la frase di recupero, il file non potrà mai più essere aperto.",
+      "keywords": [
+        "fare un backup",
+        "backup dei dati",
+        "copia di sicurezza",
+        "backup cifrato",
+        "perdo la password del vault",
+        "wordpress intero"
+      ]
+    },
+    {
       "id": "backups-restore-download",
       "section": "backups-restore",
       "order": 10,
       "first_steps": false,
       "requires": "",
       "question": "Come scarico un backup dei miei dati?",
-      "answer": "In [Impostazioni](app:settings), nella sezione **Backup**, premi **Scarica backup cifrato**: ottieni un file con i dati del tuo gestionale, protetto.\n\nPer farlo il Vault deve essere attivo. Ti consiglio di conservare il file e il tuo kit di recupero in un posto sicuro, lontano dal sito, e di rifare il backup ogni tanto: così, se qualcosa va storto, hai sempre una copia recente.",
+      "answer": "Nella pagina [Impostazioni](app:settings), sezione **Backup**, premi **Scarica backup cifrato**: ottieni un file con i dati del tuo gestionale, protetto.\n\nPer farlo il Vault deve essere attivo. Ti consiglio di conservare il file e il tuo kit di recupero in un posto sicuro, lontano dal sito, e di rifare il backup ogni tanto: così, se qualcosa va storto, hai sempre una copia recente.",
       "keywords": [
         "scaricare il backup",
         "copia di sicurezza",
@@ -557,8 +558,8 @@
       "order": 20,
       "first_steps": false,
       "requires": "restore",
-      "question": "Come ripristino un backup?",
-      "answer": "Apri [Ripristina da un backup](app:restore). Scegli un backup già salvato su questo sito oppure carica il file, poi inserisci la password, il codice o la frase di recupero richiesti.\n\nPrima di scrivere qualcosa, il gestionale ti mostra cosa cambierà, e puoi annullare l'ultimo ripristino. Fai attenzione all'opzione \"sostituisci tutto\": non si può annullare, ma prima viene fatto un backup di sicurezza.",
+      "question": "Come faccio a ripristinare un backup?",
+      "answer": "Nella pagina [Impostazioni](app:settings), sezione **Backup**, clicca **Ripristina da un backup** e segui gli step leggendo attentamente i messaggi.\n\n**Step 1, Backup**: carica un file .zip oppure scegli un backup creato su questo sito, controllando bene la data.\n\n**Step 2, Controllo**: il sistema verifica che il backup sia valido e integro. Ti chiede la password e il codice dell'autenticatore solo se il backup proviene da un sito diverso da quello attuale.\n\n**Step 3, Le tue scelte**: ricevi un riepilogo dei dati nel backup, con eventuali conflitti da risolvere:\n\n- Se ci sono dati nuovi, non presenti su questo sito, vedi quanti ne verranno importati.\n- Se ci sono dati già presenti ma modificati rispetto al backup, per ogni riga in conflitto scegli se mantenere la versione del sito attuale o usare quella del backup.\n- Se i dati sono uguali, non c'è nessuna scelta da fare.\n- Se nel backup ci sono dati che questa versione del gestionale non può leggere, il riepilogo te li elenca e non li importa. Restano nel file: se in futuro potrai leggerli, potrai ripristinare di nuovo lo stesso backup.\n\nRivedi le scelte se ci sono conflitti, poi scegli come procedere:\n\n- **Aggiungi a quello che ho (consigliato)**: i tuoi dati attuali restano. Quello che manca viene aggiunto e quello che c'è già non viene toccato, a meno che tu scelga diversamente. Potrai annullare dopo.\n- **Sostituisci tutto**: i dati attuali di Eleva CRM vengono tolti e sostituiti con il backup, così il sito torna esattamente com'era quando è stato fatto il backup. Ti consiglio questa opzione solo quando vuoi eliminare tutti i dati esistenti su questo sito.\n\n**Step 4, Ultimo controllo**: un ultimo riepilogo prima di ripristinare.\n\n**Step 5, Conferma**: conferma il ripristino e resta nella schermata, senza chiudere la scheda, fino al completamento, per evitare conflitti. Di solito bastano pochi minuti.",
       "keywords": [
         "ripristinare un backup",
         "recuperare i dati",
@@ -574,7 +575,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Ho eliminato qualcosa per sbaglio, come lo recupero?",
-      "answer": "Niente paura: apri il [Cestino](app:trash). Trovi gli elementi eliminati, con la data in cui spariranno. Premi **Ripristina** per riaverli, oppure **Elimina per sempre** se vuoi cancellarli davvero.\n\nUn cliente o un servizio ancora usato da un lavoro non si può eliminare per sempre: apri prima il lavoro e cambia il cliente o il servizio, oppure elimina il lavoro.",
+      "answer": "Niente paura: nella pagina [Impostazioni](app:settings), sezione **Cestino**, vedi se ci sono elementi al suo interno.\n\nClicca **Apri il Cestino** per trovare gli elementi eliminati, con la data in cui sono stati eliminati e la data in cui spariranno in automatico (30 giorni dopo l'eliminazione).\n\nPer ogni elemento premi **Ripristina** per riaverlo, oppure **Elimina per sempre** se vuoi cancellarlo davvero.\n\nUn cliente o un servizio ancora usato da un lavoro non si può eliminare per sempre: prima apri il lavoro e cambia il cliente o il servizio, oppure elimina il lavoro.",
       "keywords": [
         "recuperare un elemento eliminato",
         "cestino",

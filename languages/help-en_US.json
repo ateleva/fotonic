@@ -3,7 +3,7 @@
   "plugin": "free",
   "plugin_version": "1.8.0",
   "locale": "en_US",
-  "generated_at": "2026-11-21T12:16:55.389Z",
+  "generated_at": "2026-11-21T16:38:07.994Z",
   "_note": "Generated from Notion. Do not edit by hand.",
   "sections": {
     "first-steps": "First steps",
@@ -35,22 +35,6 @@
         "new user guide",
         "where do I start",
         "setup order"
-      ]
-    },
-    {
-      "id": "first-steps-order",
-      "section": "first-steps",
-      "order": 20,
-      "first_steps": true,
-      "requires": "",
-      "question": "What must exist before I record a work?",
-      "answer": "To record a work you need two things that must already exist, because in the work you pick them from a list:\n\n- the **customer**, which you create in [Customers](app:customers)\n- the **services**, which you create in [Services](app:services)\n\nIf you cannot find the customer or the service you need, it simply has not been created yet: no need to start over, add it and then continue the work from [Works](app:works).",
-      "keywords": [
-        "what do I need before a work",
-        "cannot find customer in work",
-        "cannot find service in work",
-        "order of entry",
-        "customer first then work"
       ]
     },
     {
@@ -238,7 +222,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I keep track of photo delivery in a work?",
-      "answer": "In the work you find the **Delivery** section, where you can note how you delivered the work to the client (a gallery link, a transfer, a USB stick).\n\n- **Delivery title**: a name to recognise it, for example the name of the Pixieset gallery.\n- **Link**: the gallery address. You must enter a valid URL: if the system does not detect a real web address, it warns you before saving.\n- **Link expiry date**: the date until which the link works. It is a note for you and goes into the message for the client: the CRM **does not alert you** and does not switch the link off, so renew the gallery in time. Leave the field empty if there is no expiry.\n- **Gallery password** and **Delivery notes**: the gallery password, if any, and whatever you want to remember. With the Vault they are protected like the other private texts: you read and edit them only while the CRM is unlocked.",
+      "answer": "In the work you find the **Delivery** section, where you can note how you delivered the work to the client (a gallery link, a transfer, a USB stick).\n\n- **Delivery title**: a name to recognise it, for example the name of the Pixieset gallery.\n- **Link**: the gallery address. You must enter a valid URL: if the system does not detect a real web address, it warns you before saving.\n- **Link expiry date**: the date until which the link works. It is a note for you and goes into the message for the client: the gestionale **does not alert you** and does not switch the link off, so renew the gallery in time. Leave the field empty if there is no expiry.\n- **Gallery password** and **Delivery notes**: the gallery password, if any, and whatever you want to remember. With the Vault they are protected like the other private texts: you read and edit them only while the gestionale is unlocked.\n\nWhen you have checked all the details, click **Copy message** and paste it into WhatsApp, email or social media to give the client access to the gallery.",
       "keywords": [
         "photo delivery",
         "gallery link",
@@ -457,14 +441,14 @@
       "order": 10,
       "first_steps": false,
       "requires": "calendar",
-      "question": "How do I see my works in the calendar?",
-      "answer": "Open [Calendar](app:calendar): each work appears on the day of its date, and pressing a work opens it.\n\nTo tell your works apart at a glance you can choose the colour of each one in the **Calendar Color** section of the work: for example one colour for weddings and another for portrait sessions.",
+      "question": "Is there a calendar view?",
+      "answer": "Yes, absolutely: the [Calendar](app:calendar) page shows every work created in the gestionale.\n\nTo recognise the works at a glance you can choose the colour of each one in the **Calendar Color** section of the work: for example one colour for weddings and another for portrait sessions.",
       "keywords": [
+        "calendar view",
+        "is there a calendar",
         "calendar of works",
-        "see the events",
         "colour in the calendar",
-        "this month's bookings",
-        "schedule"
+        "see the events"
       ]
     },
     {
@@ -536,6 +520,23 @@
       ]
     },
     {
+      "id": "backups-restore-can",
+      "section": "backups-restore",
+      "order": 5,
+      "first_steps": false,
+      "requires": "",
+      "question": "Can I make a backup of the data in the gestionale?",
+      "answer": "Yes, absolutely: in the [Settings](app:settings) page, once you have set up the Vault, go to the **Backups** section and click **Download encrypted backup** to create and download a backup of your gestionale data.\n\nThis feature saves the gestionale data, not the whole WordPress site.\n\nThe file can only be opened with the Vault password or the recovery code. A strong Vault password (at least 8 characters, the longer the better) is what protects it if someone gets a copy, so keep the file private: nobody else can read it.\n\nIf you lose the Vault password, the recovery code and the recovery phrase, the file can never be opened again.",
+      "keywords": [
+        "make a backup",
+        "backup of my data",
+        "safety copy",
+        "encrypted backup",
+        "lost vault password",
+        "whole wordpress site"
+      ]
+    },
+    {
       "id": "backups-restore-download",
       "section": "backups-restore",
       "order": 10,
@@ -558,7 +559,7 @@
       "first_steps": false,
       "requires": "restore",
       "question": "How do I restore a backup?",
-      "answer": "Open [Restore from a backup](app:restore). Choose a backup already saved on this site or upload the file, then enter the password, code or recovery phrase asked for.\n\nBefore writing anything, the CRM shows you what will change, and you can undo the latest restore. Be careful with the \"replace everything\" option: it cannot be undone, but a safety backup is made first.",
+      "answer": "In the [Settings](app:settings) page, **Backups** section, click **Restore from a backup** and follow the steps, reading the messages carefully.\n\n**Step 1, Backup**: upload a .zip file or choose a backup made on this site, checking the date carefully.\n\n**Step 2, Check**: the system checks that the backup is valid and intact. It asks for the password and the authenticator code only if the backup comes from a different site than the current one.\n\n**Step 3, Your choices**: you get a summary of the data in the backup, with any conflicts to solve:\n\n- If there is new data, not present on this site, you see how many items will be imported.\n- If there is data already present but changed compared with the backup, for each conflicting row you choose whether to keep the current site's version or use the backup's.\n- If the data is the same, there is nothing to choose.\n- If the backup contains data that this version of the gestionale cannot read, the summary lists it and does not import it. It stays in the file: if you can read it in the future, you can restore the same backup again.\n\nReview your choices if there are conflicts, then pick how to proceed:\n\n- **Add to what I have (recommended)**: your current data stays. What is missing is added and what is already there is not touched, unless you choose otherwise. You will be able to undo afterwards.\n- **Replace everything**: the current Eleva CRM data is removed and replaced with the backup, so the site goes back exactly as it was when the backup was made. I recommend this option only when you want to delete all the existing data on this site.\n\n**Step 4, Last check**: one last summary before restoring.\n\n**Step 5, Confirm**: confirm the restore and stay on the screen, without closing the tab, until it finishes, to avoid conflicts. It usually takes a few minutes.",
       "keywords": [
         "restore a backup",
         "recover my data",
@@ -574,7 +575,7 @@
       "first_steps": false,
       "requires": "",
       "question": "I deleted something by mistake, how do I get it back?",
-      "answer": "No worries: open the [Bin](app:trash). You find the deleted items, with the date when they will disappear. Press **Restore item** to get them back, or **Delete for good** if you really want to remove them.\n\nA customer or a service still used by a work cannot be deleted for good: first open the work and change the customer or the service, or delete the work.",
+      "answer": "No worries: in the [Settings](app:settings) page, **Trash** section, you see whether there are items inside.\n\nClick **Open the Bin** to find the deleted items, with the date they were deleted and the date they will disappear automatically (30 days after deletion).\n\nFor each item press **Restore item** to get it back, or **Delete for good** if you really want to remove it.\n\nA customer or a service still used by a work cannot be deleted for good: first open the work and change the customer or the service, or delete the work.",
       "keywords": [
         "recover a deleted item",
         "bin",
