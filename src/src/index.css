@@ -1001,3 +1001,35 @@
 /* The title row that holds the button aligns its items on the text baseline (the wrapper has items-baseline), so the
    words of the button sit on the same line as the title. In a Settings card head (icon, title, button) it stays centred. */
 #fotonic-app-root .ftnc-panel__head .ftnc-help-btn { align-self: center; top: 0; }
+
+/* "Update available" button of the rail (UpdateAvailable.jsx): a `.ftnc-navlink` row filled with the theme colour (on the
+   white rail it is the only solid coloured row besides the active page), no gradient. It does not blink or send rings
+   out: it breathes. A thin ring and a soft glow of the same colour swell a few pixels and settle back, slowly, on an
+   ease-in-out curve, so the movement is calm and still noticed. Only the theme colour. People who ask for less motion
+   get the same ring, steady. */
+#fotonic-app-root .ftnc-update-btn {
+  position: relative;
+  color: #fff;
+  background-color: var(--fotonic-primary);
+  animation: ftnc-update-breathe 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+#fotonic-app-root .ftnc-update-btn:hover {
+  filter: brightness(1.1);
+  color: #fff;
+}
+@keyframes ftnc-update-breathe {
+  0%, 100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--fotonic-primary) 55%, transparent),
+                0 0 4px 0 color-mix(in srgb, var(--fotonic-primary) 30%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--fotonic-primary) 32%, transparent),
+                0 0 12px 3px color-mix(in srgb, var(--fotonic-primary) 50%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  #fotonic-app-root .ftnc-update-btn {
+    animation: none;
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--fotonic-primary) 35%, transparent);
+  }
+}

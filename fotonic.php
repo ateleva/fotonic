@@ -66,6 +66,7 @@ require_once FOTONIC_DIR . 'includes/class-lead-sources.php';
 require_once FOTONIC_DIR . 'includes/class-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-whats-new.php';
 require_once FOTONIC_DIR . 'includes/class-help.php';
+require_once FOTONIC_DIR . 'includes/class-update-notice.php';
 require_once FOTONIC_DIR . 'includes/class-memory-card-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-backup-loc-rest-api.php';
 require_once FOTONIC_DIR . 'includes/class-admin-page.php';

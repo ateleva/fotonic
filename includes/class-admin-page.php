@@ -158,6 +158,8 @@ class Fotonic_Admin_Page {
             'features'       => apply_filters( 'ftnc_app_features', array( 'calendar' => true, 'restore' => true ) ),
             'maxUploadBytes' => Fotonic_Work_Files::max_bytes(), // Never above what a restore can take.
             'isLocalWp'      => self::is_local_wp(),
+            // A newer version of one of our plugins is waiting (read from WordPress's own update check).
+            'updates'        => Fotonic_Update_Notice::get(),
             // Where a customer came from: the options of the select and the sources that take a short text next to it.
             'leadSources'       => array_map(
                 function ( $value, $label ) {

@@ -9,6 +9,8 @@ import { __ } from '../utils/i18n'
 import { useWhatsNew } from '../api/whatsNew'
 import { WhatsNewIcon, WhatsNewSectionBanner } from './WhatsNew'
 import WhatsNewHost from './WhatsNewHost'
+import { UpdateButton, UpdateModal } from './UpdateAvailable'
+import { pendingUpdates } from '../utils/updates'
 import RestoreHost from '../features/restore/RestoreHost'
 import { groupBySection } from '../utils/whatsNew'
 
@@ -58,6 +60,9 @@ export default function Layout() {
   const { data: whatsNew } = useWhatsNew()
   const bySection = groupBySection(whatsNew?.entries ?? [])
   const [openSection, setOpenSection] = useState(null)
+  // A newer version of one of our plugins is waiting: an animated button in the rail and a window that explains.
+  const [updateOpen, setUpdateOpen] = useState(false)
+  const hasUpdate = pendingUpdates().length > 0
   // The section of the page being visited ('/services/12' is still Services).
   const currentSection = SECTION_OF[`/${pathname.split('/')[1]}`] ?? null
 
@@ -250,6 +255,11 @@ export default function Layout() {
               <span>{lockLabel}</span>
             </button>
           )}
+          {/* Right under Lock Vault and above the versions (which fold away when collapsed), so it stays at the same
+              height with the rail open or collapsed. */}
+          {hasUpdate && (
+            <UpdateButton className={NAV_LINK_BASE} onOpen={() => setUpdateOpen(true)} tipProps={tipProps} />
+          )}
           <div className="ftnc-sidebar__meta px-3 pt-1.5 mt-0.5 border-t border-gray-100 flex items-center gap-2 flex-wrap">
             <Link to="/changelog?tab=free" className="text-xs text-gray-400 hover:text-gray-600 hover:underline" title={__('See what changed in each version', 'eleva-crm-for-photographers')}>CRM v{window.FotonicApp?.version ?? '–'}</Link>
             {window.FotonicApp?.proVersion && (
@@ -299,6 +309,8 @@ export default function Layout() {
       )}
 
       {/* What's new: the overview once after an update, and the window of one section. */}
+      {hasUpdate && <UpdateModal open={updateOpen} onClose={() => setUpdateOpen(false)} />}
+
       <WhatsNewHost openSection={openSection} setOpenSection={setOpenSection} />
 
       {/* Drives a backup restore (and its undo) while the person moves around, and shows its floating bar. */}
