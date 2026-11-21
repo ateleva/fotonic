@@ -4344,11 +4344,11 @@ msgstr "Eliminare questo servizio? Verrà spostato nel Cestino, da dove puoi rip
 msgid "Update available"
 msgstr "Aggiornamento disponibile"
 
-msgid "A new version is available"
-msgstr "È disponibile una nuova versione"
-
 msgid "Updating is quick: in the page that opens, find the plugin in the list and press Update now."
 msgstr "Aggiornare è semplice: nella pagina che si apre trova il plugin nell'elenco e premi Aggiorna ora."
 
 msgid "Go to updates"
 msgstr "Vai agli aggiornamenti"
+
+msgid "A gestionale update is available"
+msgstr "È disponibile un aggiornamento del gestionale"

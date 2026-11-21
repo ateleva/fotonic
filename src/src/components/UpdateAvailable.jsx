@@ -28,7 +28,7 @@ export function UpdateModal({ open, onClose }) {
   const url = window.FotonicApp?.updates?.url ?? ''
   const notes = items.map((i) => i.note).filter(Boolean)
   return (
-    <Modal open={open} onClose={onClose} title={__('A new version is available', 'eleva-crm-for-photographers')} size="md">
+    <Modal open={open} onClose={onClose} title={__('A gestionale update is available', 'eleva-crm-for-photographers')} size="md" closeProminent>
       <ul className="space-y-2 mb-4">
         {items.map((i) => (
           <li key={i.id} className="flex items-baseline justify-between gap-3 text-sm">

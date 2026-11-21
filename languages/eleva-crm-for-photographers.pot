@@ -5316,14 +5316,14 @@ msgstr ""
 msgid "Update available"
 msgstr ""
 
-#: src/src/components/UpdateAvailable.jsx:31
-msgid "A new version is available"
-msgstr ""
-
 #: src/src/components/UpdateAvailable.jsx:41
 msgid "Updating is quick: in the page that opens, find the plugin in the list and press Update now."
 msgstr ""
 
 #: src/src/components/UpdateAvailable.jsx:48
 msgid "Go to updates"
+msgstr ""
+
+#: src/src/components/UpdateAvailable.jsx:31
+msgid "A gestionale update is available"
 msgstr ""

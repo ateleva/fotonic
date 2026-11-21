@@ -12,9 +12,10 @@ const SIZE_CLASSES = {
   full: 'max-w-5xl w-[90vw] h-[85vh] p-6 flex flex-col',
 }
 
+// `closeProminent`: a bigger, darker close X (used by the update notice).
 // `scroll`: the whole window scrolls when it is taller than the screen (wheel or trackpad anywhere over it, and the
 // keyboard), and it takes the focus the moment it opens, so nothing has to be clicked first.
-export default function Modal({ open, onClose, title, size = 'md', headerAction = null, scroll = false, children }) {
+export default function Modal({ open, onClose, title, size = 'md', headerAction = null, scroll = false, closeProminent = false, children }) {
   const contentRef = useRef(null)
   const noRef = useRef(null)
   useModalScroll(scroll ? contentRef : noRef)
@@ -52,9 +53,9 @@ export default function Modal({ open, onClose, title, size = 'md', headerAction 
               <Dialog.Close asChild>
                 <button
                   aria-label="Close"
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                  className={closeProminent ? 'text-gray-600 hover:text-gray-900 transition-colors cursor-pointer' : 'text-gray-400 hover:text-gray-600 transition-colors'}
                 >
-                  <X size={18} />
+                  <X size={closeProminent ? 24 : 18} strokeWidth={closeProminent ? 2.5 : 2} />
                 </button>
               </Dialog.Close>
             </div>
