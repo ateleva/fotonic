@@ -3,7 +3,7 @@
   "plugin": "free",
   "plugin_version": "1.8.0",
   "locale": "en_US",
-  "generated_at": "2026-11-20T20:50:48.054Z",
+  "generated_at": "2026-11-21T12:16:55.389Z",
   "_note": "Generated from Notion. Do not edit by hand.",
   "sections": {
     "first-steps": "First steps",
@@ -26,13 +26,15 @@
       "first_steps": true,
       "requires": "",
       "question": "Where do I start?",
-      "answer": "I recommend starting with three things, in this order, because each one is needed by the next:\n\n1. Add a customer in [Customers](app:customers).\n2. Add your services and prices in [Services](app:services).\n3. Record your first work in [Works](app:works), choosing the customer and the services you have just created.\n\nOnce you have a few works recorded, the [Dashboard](app:dashboard) shows you the summary of everything.",
+      "answer": "I recommend setting up the **Vault** before entering any data. Search for *Vault* on this page to read the Vault guides.\n\nOnce the Vault is set up, I recommend going in this order:\n\n1. Add your services and prices in [Services](app:services).\n2. Add the payment methods from the [Works](app:works) list.\n3. Add memory cards and backup locations in [Storage](app:storage/cards), to keep track of what you use in your works and where you save the photos.\n4. Add a customer in [Customers](app:customers).\n5. Record your first work in [Works](app:works), choosing the customer and the services you have just created.\n\nOnce you have a few works recorded, the [Dashboard](app:dashboard) shows you the summary of everything.",
       "keywords": [
         "first steps",
         "how do I begin",
         "what to do first",
         "getting started",
-        "new user guide"
+        "new user guide",
+        "where do I start",
+        "setup order"
       ]
     },
     {
@@ -180,6 +182,23 @@
       ]
     },
     {
+      "id": "works-payment-types",
+      "section": "works",
+      "order": 35,
+      "first_steps": false,
+      "requires": "",
+      "question": "How do I add a payment method, like bank transfer or cash?",
+      "answer": "In the [Works](app:works) list, click the button at the top right, **Manage payment types**: enter the name of the method (*Bank transfer*, *PayPal*, *Cash* and so on) and save.\n\nYou write the names yourself, so you can use the ones you really use with your customers.\n\nInside each work, in the **Payments** section, when you enter the payment installments (for example *Deposit* and *Balance*) you choose the method and the payment date.",
+      "keywords": [
+        "bank transfer",
+        "cash",
+        "payment type",
+        "manage payment types",
+        "add a method",
+        "card or paypal"
+      ]
+    },
+    {
       "id": "works-files",
       "section": "works",
       "order": 40,
@@ -255,7 +274,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I keep track of my memory cards?",
-      "answer": "In the [Storage](app:storage/cards) section you can create all the **Memory Cards** you own: save them with descriptive names that help you recognise them.\n\n- **Add**: press **Add Card**, type the **Card Name** (for example *SD-A 128GB SanDisk*) and press **Create Card**. Every new memory card is saved as *Ready*.\n- **Edit**: you can change the status of the card (*Ready*, *In use*, *Backed Up*, *Damaged*) also from the single work, which I recommend after you have made a backup or formatted the card: this way it always stays tracked, work by work, which cards you used, whether you have already made the backup and whether you have already formatted the card, which then becomes ready for another work. Every time you update the status, the date of the change is shown too, so you always see when you made the backup or formatted the card.\n\nIn a work you can select only *Ready* cards that are not already in use in other works. When a card is marked as backed up and formatted, it goes back to *Ready* and can be used in other works.",
+      "answer": "In the [Storage](app:storage/cards) section you can enter all the **Memory Cards** you own: save them with descriptive names that help you recognise them.\n\nIn the **Memory Cards** section press the button at the top right, **Add Card**, type the **Card Name** (for example *SD-A 128GB SanDisk*) and press **Create Card**.\n\nEvery new memory card is saved as *Ready*. The other statuses are *In use*, *Backed Up* and *Damaged*. The status becomes *In use* when the card is put in a work.\n\nI recommend changing the status of the cards in the single work: once you have made the backup, open the work and tick **Backup Done**. If you have already formatted the card, also tick **Formatting Done**. When a card receives both the backup and the formatting, it goes back to *Ready* and you can use it in other works.\n\nA card that is *In use* cannot be put in other works. In the card list you see which work it is currently used in: open it and tick **Backup Done** and **Formatting Done**.\n\nWhen you set a card as *Damaged*, it stays in the works where it was already used, but it cannot be used in other works.\n\nEvery time a card changes status you see the date and time of the change, to remind you when you made the backup, when you formatted it or when you marked it as *Damaged*.",
       "keywords": [
         "where are my memory cards",
         "add a memory card",
@@ -274,7 +293,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do backup locations work (where I keep my photos)?",
-      "answer": "**Backup locations** are the places where you keep the files of your works, for example an external drive, a NAS or the cloud. They help you quickly find where you saved the photos of each work, without having to remember it. You create them in [Storage](app:storage/backups) with **Add Backup Location**.\n\nWhat you can enter:\n\n- **Name**: the only required field. Use a name that lets you recognise the drive at a glance (example: *Synology NAS, office*).\n- **Type** and **Capacity**: free fields (for example *SSD* and *4 TB*). They are notes for you: the gestionale does not check the space left, so keep them up to date yourself.\n- **Status**: **Active** (you still use it), **Full** (no more space but the files stay there) or **Retired** (you no longer use it). It blocks nothing: it is used by the filters, for example to see right away which drives still have room.\n- **Notes**: anything you want to remember, for example where the drive is kept. Once you have set up the Vault, you read and edit them only with the gestionale unlocked.\n\nTo change something open the location from the list and save with **Update Backup Location**: the works that use it see the new name right away. I recommend updating the **Status** when a drive fills up, so you do not pick it for the next work.",
+      "answer": "**Backup locations** are the places where you keep the files of your works, for example an external drive, a NAS or the cloud.\n\nKeeping track of where you save your backups helps you quickly find where you saved the photos of each work, without having to remember it. From the [Storage](app:storage/backups) page, **Backup Locations** section, you add them with the **Add Backup Location** button.\n\nWhat you can enter:\n\n- **Name**: the only required field. Use a name that lets you recognise the drive at a glance (example: *Synology NAS, office*).\n- **Type** and **Capacity**: free fields (for example *SSD* and *4 TB*). They are notes for you: the gestionale does not check the space left, so keep them up to date yourself.\n- **Status**: **Active** (you still use it), **Full** (no more space but the files stay there) or **Retired** (you no longer use it). It blocks nothing: it is used by the filters, for example to see right away which drives still have room.\n- **Notes**: anything you want to remember, for example where the drive is kept. Once you have set up the Vault, you read and edit them only with the gestionale unlocked.\n\nFrom the location list you also see how many works you saved in that location. Opening a single location you see the list of all the works saved there.\n\nThanks to this information it only takes a few seconds to find where you saved a work: open the work from the [Works](app:works) list and look at the **Storage & Backup** section.\n\nI recommend updating the **Status** (*Full* or *Retired*) when a drive fills up, so you do not pick it for the next work.",
       "keywords": [
         "where are my photos",
         "external drive",
@@ -311,17 +330,15 @@
       "order": 20,
       "first_steps": false,
       "requires": "",
-      "question": "How do I see, filter and delete my backup locations?",
-      "answer": "In [Backup Locations](app:storage/backups) each row shows **Name**, **Works** (how many works use the location), **Type**, **Capacity** and **Status**.\n\n- **Filters**: **All**, **Active**, **Full** and **Retired**, each with the number of locations per status.\n- **Which works use it**: open the location (click the name or **Edit**): at the bottom you find the **Works** table with **Title**, **Date** and **Customer**, and each title opens the work. I recommend looking at it before retiring a drive, to know what is on it.\n- **Delete**: on the location page press **Delete** and confirm. The location goes to the [Bin](app:trash) and is never blocked, even if it is in use: a drive breaks or is retired, and you do not need any obstacle.\n- **After deleting**: the works that used it show a red warning (see the guide on assigning) to remind you to choose another location. If you restore it from the Bin the warning goes away.",
+      "question": "How do I find where I saved the backup of a work?",
+      "answer": "To find where you saved a work you have two ways:\n\n- From the [Works](app:works) list, open the work and scroll down to the **Storage & Backup** section to see where you saved it.\n- From the [Backup Locations](app:storage/backups) list, open one location at a time and scroll down to the **Works** section, where you can look for the work.\n\nI recommend the first option: it is faster to search for the work and see where you saved it, rather than searching through all the locations.",
       "keywords": [
-        "backup locations list",
-        "filter locations by status",
-        "how many works use a location",
+        "where did I save the photos",
+        "find the backup of a work",
+        "which drive is the work on",
+        "where are the photos of a work",
         "which works are on this drive",
-        "delete a backup location",
-        "drive broke what do I do",
-        "restore a deleted location",
-        "before retiring a drive"
+        "backup location of a work"
       ]
     },
     {
@@ -331,7 +348,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I read and filter the card list?",
-      "answer": "The list in [Storage](app:storage/cards) helps you see at a glance which cards are free and which still hold photos to save. For each card you see the **Card Name**, its **Status** (with a colour), the work in the **In Work** column and the **Edit** button.\n\n- **In Work**: shows the title of the work (clickable) only for cards that are *In use* or *Backed Up*, that is the ones that still have a work to close. Other cards show a dash.\n- **Filters**: **All**, **Ready**, **In use**, **Backed Up** and **Damaged**, each with its number of cards (the numbers always count all the cards). Before a shoot choose **Ready** to see which ones you can bring; after the shoot check *Backed Up* to remember which cards are waiting to be formatted.\n- **Empty list**: press **Add Card** to create the first one. If you have cards but do not see them, check that you chose **All**: a filter may be active.",
+      "answer": "The card list in [Storage](app:storage/cards) shows you which cards are in use and in which works they are used.\n\nA card with the *Ready* status is free: either it is new, or the backup and the formatting have already been done, so you can use it in another work.\n\nIf you want to quickly see which cards need a backup, click the **In use** filter and you will see only the cards that are active in a work. Next to each *In use* card you see the work it is in: open it and check whether you still have to make the backup and format the card.\n\nWhen you tick **Backup Done** and **Formatting Done**, the card goes back to *Ready* and you can use it in other works.",
       "keywords": [
         "memory card list",
         "filter cards by status",
@@ -369,7 +386,7 @@
       "first_steps": false,
       "requires": "",
       "question": "How do I use cards inside a work?",
-      "answer": "In the work, in the **Memory Cards** section, you say which cards you use for the shoot: this way the gestionale updates the status of each card and tells you which ones still hold photos to save. Remember to save the work: card statuses update only when you save.\n\n- **Adding**: press **Add Card**, choose from the list and, if you like, write a note. You can use several cards in the same work.\n- **Which ones you can choose**: only *Ready* cards, so the same card does not end up in two works by mistake. If you see *No cards available*, add a card in [Storage](app:storage/cards) or free one of those in use.\n- **Notes**: they apply only to that card in that work. Once you have set up the Vault they are protected: with the gestionale locked they cannot be read and saving does not touch them.\n- **Checkboxes**: **Backup Done** and **Formatting Done** apply to all the cards of the work. Formatting can be ticked only after the backup, and if you untick the backup it is unticked too. Cards follow the checkboxes only in the work where they are in use.\n- **Removing a card**: with the red bin; when you save, the card goes back to *Ready* (it stays *Damaged* if it was).\n- **Deleting the work**: cards in use go back to *Ready* even if you have not done backup and formatting. I recommend checking first that the photos are safe. If you restore the work from the [Bin](app:trash), the cards stay free and do not reconnect by themselves.\n\nFor the full path of a shoot see the step by step guide.",
+      "answer": "In the single work, **Memory Cards** section, you say which cards you use for the shoot: this way the gestionale updates the status of each card and tells you which ones you still have to back up.\n\nRemember to save the work: card statuses update only when you save.\n\nPress the **Add Card** button, choose from the list and, if you like, write a note. You can use several cards in the same work. The list shows only *Ready* cards: if you see *No cards available*, add a card in [Storage](app:storage/cards) or free one of those in use. Once you have set up the Vault, the notes are protected: with the gestionale locked they cannot be read.\n\nWhen you have made the backup and formatted all the cards of the work, click **Backup Done** and **Formatting Done**. Formatting can be ticked only after the backup. The cards then go back to *Ready* to be used in other works.\n\nEvery time the status of a card changes, you see the date and time of the change next to the card in the work. To take a card out of the work use the red bin: when you save, the card goes back to *Ready* (it stays *Damaged* if it was).\n\nWhen you delete a work, the cards in use go back to *Ready* even if you had not made the backup and formatted them. I recommend always checking first that the photos are safe. If you restore the work from the [Bin](app:trash), the cards stay free and do not reconnect by themselves.",
       "keywords": [
         "memory cards in a work",
         "add a card to a work",
@@ -457,13 +474,16 @@
       "first_steps": false,
       "requires": "",
       "question": "What is the Vault and what does it protect?",
-      "answer": "The Vault is a password lock that protects your customers' data: names, contacts, addresses, notes, work titles and attached documents.\n\nAs long as you do not unlock it, this data cannot be read, even by someone who manages to get into the site. You set it up and manage it from [Settings](app:settings). I recommend keeping the password and the recovery kit with care.",
+      "answer": "The Vault is a password lock that protects your customers' data: names, contacts, addresses, notes, work titles and attached documents. As long as you do not unlock it, this data cannot be read, even by someone who manages to get into the site.\n\nI recommend setting up the Vault first of all, before entering any data in the gestionale. Go to [Settings](app:settings), Vault section, and click **Set Up Vault**.\n\nPay close attention to the messages you see on screen. The setup requires:\n\n- creating a **password** to unlock the gestionale (keep it in a safe place)\n- setting up an **authenticator** app, for example Google Authenticator ([iOS](https://apps.apple.com/app/google-authenticator/id388497605) and [Android](https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2))\n- saving the **recovery phrase** (you need it if you no longer remember your password: keep it in a safe place)\n- saving the **recovery code** (you need it if you no longer remember your password: keep it in a safe place)\n\nIt may seem like \"too much\" security, but you will see that unlocking the gestionale when you need to work is very quick, and the safety and protection of the data are worth more than the 30 seconds needed to unlock the Vault. If you have a device that unlocks with a fingerprint (Mac, laptops or latest-generation keyboards) you can set up your fingerprint for a safe and very fast unlock.\n\nFor extra security, every time you step away from your device you can click **Lock Vault**, at the bottom left of the gestionale. The Vault also locks by itself after 15 minutes of inactivity.",
       "keywords": [
         "protect customer data",
         "privacy",
-        "vault password",
-        "encrypted data",
-        "security"
+        "how do I set up the vault",
+        "set up vault",
+        "authenticator google authenticator",
+        "lock vault",
+        "auto lock after 15 minutes",
+        "encrypted data"
       ]
     },
     {
@@ -473,7 +493,7 @@
       "first_steps": false,
       "requires": "",
       "question": "I forgot the Vault password, what do I do?",
-      "answer": "No panic: on the unlock screen choose the option for a forgotten password and enter the **recovery phrase** or the **recovery code** from your recovery kit. Then you set a new password.\n\nIf you no longer have the kit, only resetting the Vault is left, which makes the protected data already saved unreadable. That is why I recommend keeping the kit somewhere safe, away from the site.",
+      "answer": "No panic: on the unlock screen choose the option for a forgotten password and enter the **recovery phrase** or the **recovery code** from your recovery kit. Then you set a new password.",
       "keywords": [
         "forgotten password",
         "recovery code",
@@ -489,29 +509,14 @@
       "first_steps": false,
       "requires": "",
       "question": "Can I unlock the Vault with my fingerprint?",
-      "answer": "Yes, on devices that allow it. In [Settings](app:settings), in the Vault section, use **Turn on fingerprint unlock** for that device: the password and the code are needed only once, to turn it on.\n\nAnyone who can unlock that device can therefore open the Vault from it: turn it on only on devices that you use yourself. If the device does not support it, the option does not appear and you keep using the password.",
+      "answer": "Yes, on devices that allow it. After you have set up the Vault (when you have set the password and the authenticator app), in [Settings](app:settings), in the Vault section, you will see the **Turn on fingerprint unlock** option for that device: the password and the code are needed only once, to turn it on.\n\nOnce the feature is on you can unlock the Vault in a few seconds, without typing the password and without opening the authenticator app.\n\nAnyone who can unlock that device can open the Vault from it: turn it on only on devices that you use yourself. If the device does not support it, the option does not appear and you keep using the password.",
       "keywords": [
         "unlock with fingerprint",
         "touch id",
         "quick unlock",
         "without password",
-        "biometric"
-      ]
-    },
-    {
-      "id": "settings-payment-types",
-      "section": "settings",
-      "order": 10,
-      "first_steps": false,
-      "requires": "",
-      "question": "How do I add a payment method, like bank transfer or cash?",
-      "answer": "In [Settings](app:settings), in the **Payment types** section, add or rename the methods you use. Then you pick them installment by installment when you record the payments of a work.\n\nYou write the names yourself, so you can use the ones you really use with your customers (for example bank transfer, cash, PayPal).",
-      "keywords": [
-        "bank transfer",
-        "cash",
-        "payment type",
-        "add a method",
-        "card or paypal"
+        "biometric",
+        "turn on fingerprint unlock"
       ]
     },
     {
@@ -521,7 +526,7 @@
       "first_steps": false,
       "requires": "",
       "question": "What changed in the latest version?",
-      "answer": "Open the [Changelog](app:changelog): you also reach it by pressing the version number at the bottom of the menu. Each version lists the new things and the fixes, so you know what has changed.\n\nIf a new version is available, you also find the button to update here.",
+      "answer": "The gestionale tells you when there is a new update to install, which fixes bugs or adds or improves features.\n\nEvery time you update you will find a message on screen that explains what has changed or been fixed in each section.\n\nYou can read again the history of the changes of every update by opening the [Changelog](app:changelog): you also reach it by clicking the version number at the bottom left of the screen (for example *CRM 1.7.2*).",
       "keywords": [
         "what's new",
         "version",

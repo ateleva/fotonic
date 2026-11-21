@@ -3,7 +3,7 @@
   "plugin": "free",
   "plugin_version": "1.8.0",
   "locale": "it_IT",
-  "generated_at": "2026-11-20T20:50:48.054Z",
+  "generated_at": "2026-11-21T12:16:55.389Z",
   "_note": "Generated from Notion. Do not edit by hand.",
   "sections": {
     "first-steps": "Primi passi",
@@ -26,13 +26,15 @@
       "first_steps": true,
       "requires": "",
       "question": "Da dove comincio?",
-      "answer": "Ti consiglio di partire da tre cose, in questo ordine, perché ognuna serve alla successiva:\n\n1. Aggiungi un cliente in [Clienti](app:customers).\n2. Aggiungi i tuoi servizi e i prezzi in [Servizi](app:services).\n3. Registra il primo lavoro in [Lavori](app:works), scegliendo il cliente e i servizi che hai appena creato.\n\nQuando hai qualche lavoro registrato, nella [Bacheca](app:dashboard) trovi il riepilogo di tutto.",
+      "answer": "Ti consiglio di configurare il **Vault** prima di inserire qualsiasi dato. Cerca *Vault* in questa pagina per leggere le guide sul Vault.\n\nUna volta configurato il Vault, ti consiglio di procedere in questo ordine:\n\n1. Aggiungi i tuoi servizi e i prezzi in [Servizi](app:services).\n2. Aggiungi i metodi di pagamento dalla lista [Lavori](app:works).\n3. Aggiungi le schede di memoria e gli archivi backup in [Archiviazione](app:storage/cards), per tenere traccia di cosa usi nei lavori e di dove salvi le foto.\n4. Aggiungi un cliente in [Clienti](app:customers).\n5. Registra il primo lavoro in [Lavori](app:works), scegliendo il cliente e i servizi che hai appena creato.\n\nQuando hai qualche lavoro registrato, nella [Bacheca](app:dashboard) trovi il riepilogo di tutto.",
       "keywords": [
         "primo utilizzo",
         "come inizio",
         "cosa devo fare per prima cosa",
         "guida per iniziare",
-        "prime cose da fare"
+        "prime cose da fare",
+        "da dove parto",
+        "ordine di configurazione"
       ]
     },
     {
@@ -180,6 +182,23 @@
       ]
     },
     {
+      "id": "works-payment-types",
+      "section": "works",
+      "order": 35,
+      "first_steps": false,
+      "requires": "",
+      "question": "Come aggiungo un metodo di pagamento, come bonifico o contanti?",
+      "answer": "Nella lista [Lavori](app:works), clicca il pulsante in alto a destra **Gestisci metodi di pagamento**: inserisci il nome del metodo (*Bonifico*, *PayPal*, *Contanti* e così via) e salva.\n\nI nomi li scrivi tu, quindi puoi usare quelli che usi davvero con i tuoi clienti.\n\nAll'interno di ogni lavoro, nella sezione **Pagamenti**, quando inserisci le rate di pagamento (per esempio *Acconto* e *Saldo*) scegli il metodo e la data di pagamento.",
+      "keywords": [
+        "bonifico",
+        "contanti",
+        "metodo di pagamento",
+        "gestisci metodi di pagamento",
+        "aggiungere un metodo",
+        "carta o paypal"
+      ]
+    },
+    {
       "id": "works-files",
       "section": "works",
       "order": 40,
@@ -255,7 +274,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Come tengo traccia delle schede di memoria?",
-      "answer": "Nella sezione [Archiviazione](app:storage/cards) puoi creare tutte le **Schede di memoria** che possiedi: salvale con nomi parlanti che ti aiutano a riconoscerle.\n\n- **Aggiungere**: premi **Aggiungi scheda**, scrivi il **Nome scheda** (per esempio *SD-A 128GB SanDisk*) e premi **Crea scheda**. Ogni nuova scheda di memoria viene salvata come *Pronta*.\n- **Modificare**: puoi cambiare lo stato della scheda (*Pronta*, *In uso*, *Backup effettuato*, *Danneggiata*) anche nel singolo lavoro, cosa che ti consiglio dopo che hai effettuato un backup o la formattazione: così resta sempre tracciato, lavoro per lavoro, quali schede hai utilizzato, se hai già fatto il backup e se hai già formattato la scheda, che quindi torna pronta per un altro lavoro. Ogni volta che aggiorni lo stato viene mostrato anche quando è stato cambiato, così vedi sempre quando hai fatto il backup o la formattazione.\n\nIn un lavoro puoi selezionare solo le schede *Pronte* che non sono già in uso in altri lavori. Quando una scheda viene contrassegnata con backup effettuato e formattazione completata, torna allo stato *Pronta* e può essere usata in altri lavori.",
+      "answer": "Nella sezione [Archiviazione](app:storage/cards) puoi inserire tutte le **Schede di memoria** che possiedi: salvale con nomi parlanti che ti aiutano a riconoscerle.\n\nNella sezione **Schede di memoria** premi il pulsante in alto a destra **Aggiungi scheda**, scrivi il **Nome scheda** (per esempio *SD-A 128GB SanDisk*) e premi **Crea scheda**.\n\nOgni nuova scheda di memoria viene salvata come *Pronta*. Gli altri stati sono *In uso*, *Backup effettuato* e *Danneggiata*. Lo stato diventa *In uso* quando la scheda viene inserita in un lavoro.\n\nTi consiglio di cambiare lo stato delle schede nel singolo lavoro: quando hai effettuato il backup, entri nel lavoro e segni **Backup completato**. Se hai già formattato la scheda, segna anche **Formattazione completata**. Quando una scheda riceve sia il backup sia la formattazione, torna *Pronta* e puoi inserirla in altri lavori.\n\nUna scheda *In uso* non può essere inserita in altri lavori. Dalla lista delle schede vedi in quale lavoro è attualmente in uso: aprilo e segna **Backup completato** e **Formattazione completata**.\n\nQuando imposti una scheda come *Danneggiata*, rimane comunque nei lavori in cui era inserita, ma non può essere utilizzata in altri lavori.\n\nOgni volta che una scheda cambia stato vedi la data e l'ora del cambio, per ricordarti quando hai effettuato il backup, quando l'hai formattata oppure quando l'hai contrassegnata come *Danneggiata*.",
       "keywords": [
         "dove gestisco le schede di memoria",
         "aggiungere una scheda sd",
@@ -274,7 +293,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Come funzionano gli archivi backup (dove salvo le foto)?",
-      "answer": "Gli **archivi backup** sono i posti dove tieni i file dei lavori, per esempio un disco esterno, un NAS o il cloud. Servono a ritrovare in fretta dove hai salvato le foto di ogni lavoro, senza doverlo ricordare a memoria. Li crei in [Archiviazione](app:storage/backups) con **Aggiungi archivio backup**.\n\nCosa puoi inserire:\n\n- **Nome**: è l'unico campo obbligatorio. Usa un nome che ti faccia riconoscere il disco al volo (esempio: *NAS Synology, ufficio*).\n- **Tipo** e **Capacità**: campi liberi (per esempio *SSD* e *4 TB*). Sono appunti per te: il gestionale non controlla lo spazio che resta, quindi aggiornali tu.\n- **Stato**: **Attivo** (lo usi ancora), **Pieno** (non c'è più spazio ma i file restano lì) o **Dismesso** (non lo usi più). Non blocca nulla: serve ai filtri, per esempio per vedere subito quali dischi hanno ancora posto.\n- **Note**: ciò che vuoi ricordare, per esempio dove si trova il disco. Quando hai configurato il Vault, le leggi e le modifichi solo con il gestionale sbloccato.\n\nPer cambiare qualcosa apri l'archivio dalla lista e salva con **Aggiorna archivio backup**: i lavori che lo usano vedono subito il nome nuovo. Ti consiglio di aggiornare lo **Stato** quando un disco si riempie, così non lo scegli per il lavoro successivo.",
+      "answer": "Gli **archivi backup** sono i posti dove tieni i file dei lavori, per esempio un disco esterno, un NAS o il cloud.\n\nTenere traccia di dove salvi i backup ti aiuta a ritrovare in fretta dove hai salvato le foto di ogni lavoro, senza doverlo ricordare a memoria. Dalla pagina [Archiviazione](app:storage/backups), sezione **Archivi backup**, li aggiungi con il pulsante **Aggiungi archivio backup**.\n\nCosa puoi inserire:\n\n- **Nome**: è l'unico campo obbligatorio. Usa un nome che ti faccia riconoscere il disco al volo (esempio: *NAS Synology, ufficio*).\n- **Tipo** e **Capacità**: campi liberi (per esempio *SSD* e *4 TB*). Sono appunti per te: il gestionale non controlla lo spazio che resta, quindi aggiornali tu.\n- **Stato**: **Attivo** (lo usi ancora), **Pieno** (non c'è più spazio ma i file restano lì) o **Dismesso** (non lo usi più). Non blocca nulla: serve ai filtri, per esempio per vedere subito quali dischi hanno ancora posto.\n- **Note**: ciò che vuoi ricordare, per esempio dove si trova il disco. Quando hai configurato il Vault, le leggi e le modifichi solo con il gestionale sbloccato.\n\nDalla lista degli archivi vedi anche quanti lavori hai salvato in quella posizione. Aprendo il singolo archivio vedi l'elenco di tutti i lavori salvati lì.\n\nGrazie a queste informazioni ti bastano pochi secondi per trovare dove hai salvato un lavoro: apri il lavoro dalla lista [Lavori](app:works) e guarda la sezione **Archiviazione & Backup**.\n\nTi consiglio di aggiornare lo **Stato** (*Pieno* o *Dismesso*) quando un disco si riempie, così non lo scegli per il lavoro successivo.",
       "keywords": [
         "dove sono le foto",
         "disco esterno",
@@ -311,17 +330,15 @@
       "order": 20,
       "first_steps": false,
       "requires": "",
-      "question": "Come vedo, filtro ed elimino i miei archivi backup?",
-      "answer": "In [Archivi backup](app:storage/backups) ogni riga mostra **Nome**, **Lavori** (quanti lavori usano l'archivio), **Tipo**, **Capacità** e **Stato**.\n\n- **Filtri**: **Tutti**, **Attivo**, **Pieno** e **Dismesso**, ognuno con il numero di archivi per stato.\n- **Quali lavori lo usano**: apri l'archivio (clic sul nome o su **Modifica**): in fondo trovi la tabella **Lavori** con **Titolo**, **Data** e **Cliente**, e ogni titolo apre il lavoro. Ti consiglio di guardarla prima di dismettere un disco, per sapere cosa c'è sopra.\n- **Eliminare**: nella pagina dell'archivio premi **Elimina** e conferma. L'archivio va nel [Cestino](app:trash) e non è mai bloccato, nemmeno se è usato: un disco si rompe o viene dismesso, e non ti serve nessun ostacolo.\n- **Dopo l'eliminazione**: i lavori che lo usavano mostrano un avviso rosso (vedi la guida sull'assegnazione) per ricordarti di scegliere un altro archivio. Se lo ripristini dal Cestino l'avviso sparisce.",
+      "question": "Come trovo dove ho salvato il backup di un lavoro?",
+      "answer": "Per trovare dove hai salvato un lavoro hai due strade:\n\n- Dalla lista [Lavori](app:works), apri il lavoro e scendi fino alla sezione **Archiviazione & Backup** per vedere dove l'hai salvato.\n- Dalla lista [Archivi backup](app:storage/backups), apri un archivio alla volta e scorri in basso fino alla sezione **Lavori**, dove puoi cercare il lavoro.\n\nTi consiglio la prima opzione: è più veloce cercare il lavoro e vedere dove l'hai salvato, anziché cercare tra tutti gli archivi.",
       "keywords": [
-        "lista archivi backup",
-        "filtrare gli archivi per stato",
-        "quanti lavori usano un archivio",
+        "dove ho salvato le foto",
+        "trovare il backup di un lavoro",
+        "in quale disco è il lavoro",
+        "dove sono le foto di un lavoro",
         "quali lavori sono su questo disco",
-        "eliminare un archivio backup",
-        "disco rotto cosa faccio",
-        "ripristinare un archivio eliminato",
-        "prima di dismettere un disco"
+        "archivio backup di un lavoro"
       ]
     },
     {
@@ -331,7 +348,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Come leggo e filtro l'elenco delle schede?",
-      "answer": "L'elenco in [Archiviazione](app:storage/cards) serve a capire in un attimo quali schede sono libere e quali hanno ancora foto da salvare. Per ogni scheda vedi il **Nome scheda**, lo **Stato** (con un colore), il lavoro nella colonna **Nel lavoro** e il pulsante **Modifica**.\n\n- **Nel lavoro**: mostra il titolo del lavoro (cliccabile) solo per le schede *In uso* o con *Backup effettuato*, cioè quelle che hanno ancora un lavoro da chiudere. Per le altre c'è un trattino.\n- **Filtri**: **Tutti**, **Pronta**, **In uso**, **Backup effettuato** e **Danneggiata**, ognuno con il numero di schede (i numeri contano sempre tutte le schede). Prima di un servizio scegli **Pronta** per vedere quali puoi portare; dopo il servizio controlla *Backup effettuato* per ricordarti quali schede aspettano la formattazione.\n- **Elenco vuoto**: premi **Aggiungi scheda** per creare la prima. Se ne hai ma non le vedi, controlla di aver scelto **Tutti**: potresti avere un filtro attivo.",
+      "answer": "La lista delle schede in [Archiviazione](app:storage/cards) ti mostra quali sono in uso e in quali lavori sono utilizzate.\n\nUna scheda con lo stato *Pronta* è libera: o è nuova, oppure il backup e la formattazione sono già stati effettuati, quindi la puoi utilizzare in un altro lavoro.\n\nSe vuoi capire velocemente quali schede hanno bisogno di un backup, clicca sul filtro **In uso** e vedrai solamente le schede attive in un lavoro. Di fianco a ogni scheda *In uso* vedi il lavoro in cui è inserita: aprilo e controlla se devi effettuare il backup e la formattazione.\n\nQuando spunti **Backup completato** e **Formattazione completata**, la scheda torna *Pronta* e puoi utilizzarla in altri lavori.",
       "keywords": [
         "elenco schede di memoria",
         "filtrare le schede per stato",
@@ -369,7 +386,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Come uso le schede dentro un lavoro?",
-      "answer": "Nel lavoro, nella sezione **Schede di memoria**, indichi quali schede usi nel servizio: così il gestionale aggiorna lo stato di ogni scheda e ti dice quali hanno ancora foto da salvare. Ricordati di salvare il lavoro: lo stato delle schede si aggiorna solo al salvataggio.\n\n- **Aggiungere**: premi **Aggiungi scheda**, scegli dall'elenco e, se vuoi, scrivi una nota. Puoi usare più schede nello stesso lavoro.\n- **Quali puoi scegliere**: solo le schede *Pronte*, così la stessa scheda non finisce per sbaglio in due lavori. Se vedi *Nessuna scheda disponibile*, aggiungi una scheda in [Archiviazione](app:storage/cards) oppure libera una di quelle in uso.\n- **Note**: valgono solo per quella scheda in quel lavoro. Quando hai configurato il Vault sono protette: con il gestionale bloccato non si leggono e il salvataggio non le tocca.\n- **Caselle**: **Backup completato** e **Formattazione completata** valgono per tutte le schede del lavoro. La formattazione si spunta solo dopo il backup, e se togli il backup si toglie anche lei. Le schede seguono le caselle solo nel lavoro in cui sono in uso.\n- **Togliere una scheda**: con il cestino rosso; al salvataggio la scheda torna *Pronta* (resta *Danneggiata* se lo era).\n- **Eliminare il lavoro**: le schede in uso tornano *Pronte* anche se non hai fatto backup e formattazione. Ti consiglio di controllare prima che le foto siano al sicuro. Se ripristini il lavoro dal [Cestino](app:trash), le schede restano libere e non si ricollegano da sole.\n\nPer il percorso completo di un servizio vedi la guida passo per passo.",
+      "answer": "Nel singolo lavoro, sezione **Schede di memoria**, indichi quali schede usi nel servizio: così il gestionale aggiorna lo stato di ogni scheda e ti dice per quali devi ancora fare un backup.\n\nRicordati di salvare il lavoro: lo stato delle schede si aggiorna solo al salvataggio.\n\nPremi il pulsante **Aggiungi scheda**, scegli dall'elenco e, se vuoi, scrivi una nota. Puoi usare più schede nello stesso lavoro. Nell'elenco trovi solo le schede *Pronte*: se vedi *Nessuna scheda disponibile*, aggiungi una scheda in [Archiviazione](app:storage/cards) oppure libera una di quelle in uso. Quando hai configurato il Vault, le note sono protette: con il gestionale bloccato non si leggono.\n\nQuando effettui il backup e la formattazione di tutte le schede del lavoro, clicca sulle voci **Backup completato** e **Formattazione completata**. La formattazione si spunta solo dopo il backup. Le schede tornano così *Pronte* per essere inserite in altri lavori.\n\nOgni volta che lo stato di una scheda cambia, vedi la data e l'ora del cambio di fianco alla scheda nel lavoro. Per togliere una scheda dal lavoro usa il cestino rosso: al salvataggio la scheda torna *Pronta* (resta *Danneggiata* se lo era).\n\nQuando elimini un lavoro, le schede in uso tornano *Pronte* anche se non avevi fatto backup e formattazione. Ti consiglio di controllare sempre prima che le foto siano al sicuro. Se ripristini il lavoro dal [Cestino](app:trash), le schede restano libere e non si ricollegano da sole.",
       "keywords": [
         "schede di memoria nel lavoro",
         "aggiungere una scheda a un lavoro",
@@ -457,13 +474,16 @@
       "first_steps": false,
       "requires": "",
       "question": "Cos'è il Vault e cosa protegge?",
-      "answer": "Il Vault è un blocco con password che protegge i dati dei tuoi clienti: nomi, contatti, indirizzi, note, titoli dei lavori e documenti allegati.\n\nFinché non lo sblocchi, questi dati non si leggono, nemmeno da chi riuscisse ad entrare nel sito. Lo configuri e lo gestisci da [Impostazioni](app:settings). Ti consiglio di conservare con cura la password e il kit di recupero.",
+      "answer": "Il Vault è un blocco con password che protegge i dati dei tuoi clienti: nomi, contatti, indirizzi, note, titoli dei lavori e documenti allegati. Finché non lo sblocchi, questi dati non si leggono, nemmeno da chi riuscisse ad entrare nel sito.\n\nTi consiglio di configurare il Vault come prima cosa, prima di inserire qualsiasi dato nel gestionale. Vai in [Impostazioni](app:settings), sezione Vault, e clicca **Configura Vault**.\n\nPresta molta attenzione ai messaggi che vedi a schermo. La configurazione richiede:\n\n- la creazione di una **password** per sbloccare il gestionale (salvala in un posto sicuro)\n- la configurazione di un **autenticatore**, per esempio Google Authenticator ([iOS](https://apps.apple.com/app/google-authenticator/id388497605) e [Android](https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2))\n- il salvataggio della **frase di recupero** (ti serve se non ricordi più la password: salvala in un posto sicuro)\n- il salvataggio del **codice di recupero** (ti serve se non ricordi più la password: salvalo in un posto sicuro)\n\nTi potrà sembrare \"troppo\" come sicurezza, ma vedrai che sbloccare il gestionale quando ci devi lavorare è velocissimo, e la sicurezza e la protezione dei dati valgono più dei 30 secondi necessari per sbloccare il Vault. Se hai un dispositivo con sblocco tramite impronta digitale (Mac, portatili o tastiere di ultima generazione) puoi configurare la tua impronta per uno sblocco sicuro e rapidissimo.\n\nPer una maggiore sicurezza, ogni volta che ti allontani dal dispositivo puoi cliccare **Blocca Vault**, in basso a sinistra nel gestionale. Il Vault si blocca comunque in automatico dopo 15 minuti di inattività.",
       "keywords": [
         "proteggere i dati dei clienti",
         "privacy",
-        "password del vault",
-        "dati cifrati",
-        "sicurezza"
+        "come configuro il vault",
+        "configura vault",
+        "autenticatore google authenticator",
+        "blocca vault",
+        "blocco automatico dopo 15 minuti",
+        "dati cifrati"
       ]
     },
     {
@@ -473,7 +493,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Ho dimenticato la password del Vault, cosa faccio?",
-      "answer": "Niente panico: nella schermata di sblocco scegli la voce per la password dimenticata e inserisci la **frase di recupero** o il **codice di recupero** del tuo kit di recupero. Poi imposti una nuova password.\n\nSe non hai più il kit, resta solo la reimpostazione del Vault, che rende illeggibili i dati protetti già salvati. Per questo ti consiglio di conservare il kit in un posto sicuro, fuori dal sito.",
+      "answer": "Niente panico: nella schermata di sblocco scegli la voce per la password dimenticata e inserisci la **frase di recupero** o il **codice di recupero** del tuo kit di recupero. Poi imposti una nuova password.",
       "keywords": [
         "password dimenticata",
         "codice di recupero",
@@ -489,29 +509,14 @@
       "first_steps": false,
       "requires": "",
       "question": "Posso sbloccare il Vault con l'impronta?",
-      "answer": "Sì, sui dispositivi che lo permettono. In [Impostazioni](app:settings), nella sezione del Vault, usa **Attiva lo sblocco con l'impronta** per quel dispositivo: la password e il codice servono una volta sola, per attivarlo.\n\nChi può sbloccare quel dispositivo può quindi aprire il Vault da lì: attivalo solo su dispositivi che usi tu. Se il dispositivo non lo supporta, la voce non compare e continui con la password.",
+      "answer": "Sì, sui dispositivi che lo permettono. Dopo aver configurato il Vault (quando hai impostato la password e l'app autenticatore), in [Impostazioni](app:settings), nella sezione del Vault, vedrai l'opzione **Attiva lo sblocco con l'impronta** per quel dispositivo: la password e il codice servono una volta sola, per attivarlo.\n\nUna volta attivata la funzione potrai sbloccare il Vault in pochi secondi, senza scrivere la password e senza aprire l'app autenticatore.\n\nChi può sbloccare quel dispositivo può aprire il Vault da lì: attivalo solo su dispositivi che usi tu. Se il dispositivo non lo supporta, la voce non compare e continui con la password.",
       "keywords": [
         "sbloccare con l'impronta",
         "touch id",
         "sblocco veloce",
         "senza password",
-        "impronta digitale"
-      ]
-    },
-    {
-      "id": "settings-payment-types",
-      "section": "settings",
-      "order": 10,
-      "first_steps": false,
-      "requires": "",
-      "question": "Come aggiungo un metodo di pagamento, come bonifico o contanti?",
-      "answer": "In [Impostazioni](app:settings), nella sezione **Metodi di pagamento**, aggiungi o rinomini i metodi che usi. Poi li scegli rata per rata quando registri i pagamenti di un lavoro.\n\nI nomi li scrivi tu, quindi puoi usare quelli che usi davvero con i tuoi clienti (per esempio bonifico, contanti, PayPal).",
-      "keywords": [
-        "bonifico",
-        "contanti",
-        "tipo di pagamento",
-        "aggiungere un metodo",
-        "carta o paypal"
+        "impronta digitale",
+        "attivare lo sblocco con l'impronta"
       ]
     },
     {
@@ -521,7 +526,7 @@
       "first_steps": false,
       "requires": "",
       "question": "Cosa è cambiato nell'ultima versione?",
-      "answer": "Apri la [Cronologia delle versioni](app:changelog): ci arrivi anche premendo il numero di versione in basso nel menu. Ogni versione elenca le novità e le correzioni, così sai cosa è cambiato.\n\nSe è disponibile una versione nuova, qui trovi anche il pulsante per aggiornare.",
+      "answer": "Il gestionale ti avvisa quando c'è un nuovo aggiornamento da effettuare, che risolve bug, aggiunge o migliora funzionalità.\n\nOgni volta che aggiorni troverai un messaggio a schermo che ti spiega cosa è cambiato o cosa è stato sistemato in ogni sezione.\n\nPuoi rileggere lo storico dei cambiamenti di ogni aggiornamento aprendo la [Cronologia delle versioni](app:changelog): ci arrivi anche cliccando sul numero di versione in basso a sinistra nello schermo (per esempio *CRM 1.7.2*).",
       "keywords": [
         "novità",
         "versione",
