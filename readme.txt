@@ -168,9 +168,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 1. Photographer CRM dashboard: jobs and revenue of the year, payments still to receive, payment methods and recent works at a glance
 2. Client management: customer list with several contacts per client, quick search by name, email or phone, and full booking history
 3. Services catalog for photographers: packages and add-ons with a base price, reusable in every booking
-4. Bookings (works): list with payment status filter and total price, and the booking form with date, locations, services and files
+4. Bookings (works): list with year and payment status filters, search by title or customer, and the booking form with date, locations, services and files
 5. Payments and installments: deposit, balance and installments per booking, each with its own payment method, date and paid or unpaid status
-6. Memory cards inventory: status Ready, In Use, Backed Up or Damaged, and the work each card belongs to
+6. Memory cards inventory: status Ready, In Use, Backed Up or Damaged, with each card following one work at a time
 7. Backup locations: external drives, NAS and cloud with type, capacity, status and the number of works saved in each
 8. Shot history: photos shot and delivered for every work, with a year filter and totals
 9. Photography booking calendar: every job as a colored pill on a monthly calendar, with start and end time
@@ -178,6 +178,7 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 11. Encrypted vault for client data: set up with a password, an authenticator app code, a recovery phrase and a recovery code, with optional fingerprint unlock
 12. Trash: restore a client or service deleted by mistake within 30 days, or delete it for good
 13. Restore a backup: guided five-step restore from your encrypted backup, on the same site or on a new one
+14. In-app Help: search the guides in your own words, with an answer for every section of the plugin
 
 == Changelog ==
 
