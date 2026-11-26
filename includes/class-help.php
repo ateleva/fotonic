@@ -140,7 +140,7 @@ final class Fotonic_Help {
 
 	public static function register_routes(): void {
 		register_rest_route(
-			Fotonic_REST_API::NAMESPACE,
+			Fotonic_REST_API::REST_NAMESPACE,
 			'/help',
 			array(
 				'methods'             => \WP_REST_Server::READABLE,

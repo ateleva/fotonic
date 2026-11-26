@@ -10,11 +10,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Memory_Card_REST_API {
 
-	const NAMESPACE = 'fotonic/v1';
+	const REST_NAMESPACE = 'fotonic/v1';
 
 	public static function register_routes(): void {
 
-		register_rest_route( self::NAMESPACE, '/memory-cards', [
+		register_rest_route( self::REST_NAMESPACE, '/memory-cards', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_cards' ],
@@ -30,7 +30,7 @@ class Fotonic_Memory_Card_REST_API {
 			],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/memory-cards/(?P<id>\d+)', [
+		register_rest_route( self::REST_NAMESPACE, '/memory-cards/(?P<id>\d+)', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_card' ],

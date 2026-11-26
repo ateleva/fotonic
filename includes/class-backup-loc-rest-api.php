@@ -10,10 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Backup_Loc_REST_API {
 
-	const NAMESPACE = 'fotonic/v1';
+	const REST_NAMESPACE = 'fotonic/v1';
 
 	public static function register_routes(): void {
-		register_rest_route( self::NAMESPACE, '/backup-locations', [
+		register_rest_route( self::REST_NAMESPACE, '/backup-locations', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_locations' ],
@@ -26,7 +26,7 @@ class Fotonic_Backup_Loc_REST_API {
 			],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/backup-locations/(?P<id>\d+)', [
+		register_rest_route( self::REST_NAMESPACE, '/backup-locations/(?P<id>\d+)', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_location' ],
@@ -44,7 +44,7 @@ class Fotonic_Backup_Loc_REST_API {
 			],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/storage/shots', [
+		register_rest_route( self::REST_NAMESPACE, '/storage/shots', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_shots' ],

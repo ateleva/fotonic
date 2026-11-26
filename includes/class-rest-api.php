@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Fotonic_REST_API {
 
-	const NAMESPACE = 'fotonic/v1';
+	const REST_NAMESPACE = 'fotonic/v1';
 
 	/** Marker for Pro: this version has the service hooks (ftnc_format_service, ftnc_after_save_service) and a total that follows a service surcharge. */
 	const SERVICE_HOOKS = true;
@@ -29,169 +29,169 @@ class Fotonic_REST_API {
 		// Vault.
 		// ------------------------------------------------------------------
 
-		register_rest_route( self::NAMESPACE, '/vault/setup', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/setup', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_setup' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/choice', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/choice', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_choice' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/encrypt-existing', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_encrypt_existing' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing/pause', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/encrypt-existing/pause', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_encrypt_pause' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing/cancel', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/encrypt-existing/cancel', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_encrypt_cancel' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/encrypt-existing/resume', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/encrypt-existing/resume', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_encrypt_resume' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/unlock', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/unlock', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_unlock' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/lock', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/lock', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_lock' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/status', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/status', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'vault_status' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/fingerprint', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/fingerprint', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'vault_fingerprint_list' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/fingerprint/challenge', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/fingerprint/challenge', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'vault_fingerprint_challenge' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/fingerprint/unlock', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/fingerprint/unlock', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_fingerprint_unlock' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/fingerprint/begin', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/fingerprint/begin', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_fingerprint_begin' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/fingerprint/finish', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/fingerprint/finish', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_fingerprint_finish' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/fingerprint/remove', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/fingerprint/remove', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_fingerprint_remove' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/change-password', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/change-password', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_change_password' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/reset-totp', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/reset-totp', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_reset_totp' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/setup/confirm', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/setup/confirm', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_setup_confirm' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery-kit', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/recovery-kit', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_recovery_kit' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery-kit/ack', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/recovery-kit/ack', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_recovery_kit_ack' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/recovery/begin', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/recovery/begin', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_recovery_begin' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/totp/pending', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/totp/pending', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_totp_pending' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/totp/confirm', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/totp/confirm', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_totp_confirm' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/reset/request-code', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/reset/request-code', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_reset_request_code' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault/reset', [
+		register_rest_route( self::REST_NAMESPACE, '/vault/reset', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'vault_reset' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/vault-download/(?P<id>\d+)', [
+		register_rest_route( self::REST_NAMESPACE, '/vault-download/(?P<id>\d+)', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'vault_download' ],
 			'permission_callback' => [ __CLASS__, 'vault_download_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/work-files/skipped', [
+		register_rest_route( self::REST_NAMESPACE, '/work-files/skipped', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'skipped_work_files' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/work-files', [
+		register_rest_route( self::REST_NAMESPACE, '/work-files', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'upload_work_file' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
@@ -201,19 +201,19 @@ class Fotonic_REST_API {
 		// Backup: manual encrypted archive, no destination.
 		// ------------------------------------------------------------------
 
-		register_rest_route( self::NAMESPACE, '/backup/status', [
+		register_rest_route( self::REST_NAMESPACE, '/backup/status', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'backup_status' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/backup/create', [
+		register_rest_route( self::REST_NAMESPACE, '/backup/create', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'backup_create' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/backup/download/(?P<token>[a-f0-9]{32})', [
+		register_rest_route( self::REST_NAMESPACE, '/backup/download/(?P<token>[a-f0-9]{32})', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'backup_download' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
@@ -222,7 +222,7 @@ class Fotonic_REST_API {
 		// ------------------------------------------------------------------
 		// Customers
 		// ------------------------------------------------------------------
-		register_rest_route( self::NAMESPACE, '/customers', [
+		register_rest_route( self::REST_NAMESPACE, '/customers', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_customers' ],
@@ -240,7 +240,7 @@ class Fotonic_REST_API {
 			],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/customers/(?P<id>\d+)', [
+		register_rest_route( self::REST_NAMESPACE, '/customers/(?P<id>\d+)', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_customer' ],
@@ -261,7 +261,7 @@ class Fotonic_REST_API {
 		// ------------------------------------------------------------------
 		// Services
 		// ------------------------------------------------------------------
-		register_rest_route( self::NAMESPACE, '/services', [
+		register_rest_route( self::REST_NAMESPACE, '/services', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_services' ],
@@ -274,7 +274,7 @@ class Fotonic_REST_API {
 			],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/services/(?P<id>\d+)', [
+		register_rest_route( self::REST_NAMESPACE, '/services/(?P<id>\d+)', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_service' ],
@@ -295,7 +295,7 @@ class Fotonic_REST_API {
 		// ------------------------------------------------------------------
 		// Works
 		// ------------------------------------------------------------------
-		register_rest_route( self::NAMESPACE, '/works', [
+		register_rest_route( self::REST_NAMESPACE, '/works', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_works' ],
@@ -328,13 +328,13 @@ class Fotonic_REST_API {
 		] );
 
 		// The event years that have at least one work, newest first (the Year selects of the Works list and of Pro).
-		register_rest_route( self::NAMESPACE, '/works-years', [
+		register_rest_route( self::REST_NAMESPACE, '/works-years', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'get_works_years' ],
 			'permission_callback' => [ __CLASS__, 'data_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/works/(?P<id>\d+)', [
+		register_rest_route( self::REST_NAMESPACE, '/works/(?P<id>\d+)', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_work' ],
@@ -355,19 +355,19 @@ class Fotonic_REST_API {
 		// ------------------------------------------------------------------
 		// Can-delete checks
 		// ------------------------------------------------------------------
-		register_rest_route( self::NAMESPACE, '/customers/(?P<id>\d+)/can-delete', [
+		register_rest_route( self::REST_NAMESPACE, '/customers/(?P<id>\d+)/can-delete', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'can_delete_customer' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/services/(?P<id>\d+)/can-delete', [
+		register_rest_route( self::REST_NAMESPACE, '/services/(?P<id>\d+)/can-delete', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'can_delete_service' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/works/(?P<id>\d+)/can-delete', [
+		register_rest_route( self::REST_NAMESPACE, '/works/(?P<id>\d+)/can-delete', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'can_delete_work' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
@@ -384,7 +384,7 @@ class Fotonic_REST_API {
 		// silently racing for the same URL.
 		// ------------------------------------------------------------------
 		if ( ! defined( 'FOTO_PRO_VERSION' ) ) {
-			register_rest_route( self::NAMESPACE, '/calendar', [
+			register_rest_route( self::REST_NAMESPACE, '/calendar', [
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_calendar_works' ],
 				'permission_callback' => [ __CLASS__, 'admin_permission' ],
@@ -398,7 +398,7 @@ class Fotonic_REST_API {
 		// ------------------------------------------------------------------
 		// Payment Types
 		// ------------------------------------------------------------------
-		register_rest_route( self::NAMESPACE, '/payment-types', [
+		register_rest_route( self::REST_NAMESPACE, '/payment-types', [
 			[
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => [ __CLASS__, 'get_payment_types' ],
@@ -418,13 +418,13 @@ class Fotonic_REST_API {
 			],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/dashboard-stats', [
+		register_rest_route( self::REST_NAMESPACE, '/dashboard-stats', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'get_dashboard_stats' ],
 			'permission_callback' => [ __CLASS__, 'admin_permission' ],
 		] );
 
-		register_rest_route( self::NAMESPACE, '/payment-types/(?P<id>\d+)', [
+		register_rest_route( self::REST_NAMESPACE, '/payment-types/(?P<id>\d+)', [
 			[
 				'methods'             => 'PUT',
 				'callback'            => [ __CLASS__, 'update_payment_type' ],

@@ -17,14 +17,14 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Trash_REST_API {
 
-	const NAMESPACE = 'fotonic/v1';
+	const REST_NAMESPACE = 'fotonic/v1';
 
 	public static function register_routes(): void {
 		$perm = array( __CLASS__, 'admin_permission' );
-		register_rest_route( self::NAMESPACE, '/trash/summary', array(
+		register_rest_route( self::REST_NAMESPACE, '/trash/summary', array(
 			array( 'methods' => \WP_REST_Server::READABLE, 'callback' => array( __CLASS__, 'summary' ), 'permission_callback' => $perm ),
 		) );
-		register_rest_route( self::NAMESPACE, '/trash', array(
+		register_rest_route( self::REST_NAMESPACE, '/trash', array(
 			array(
 				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( __CLASS__, 'items' ),
@@ -36,10 +36,10 @@ class Fotonic_Trash_REST_API {
 				),
 			),
 		) );
-		register_rest_route( self::NAMESPACE, '/trash/restore', array(
+		register_rest_route( self::REST_NAMESPACE, '/trash/restore', array(
 			array( 'methods' => \WP_REST_Server::CREATABLE, 'callback' => array( __CLASS__, 'restore' ), 'permission_callback' => $perm ),
 		) );
-		register_rest_route( self::NAMESPACE, '/trash/delete', array(
+		register_rest_route( self::REST_NAMESPACE, '/trash/delete', array(
 			array( 'methods' => \WP_REST_Server::CREATABLE, 'callback' => array( __CLASS__, 'delete' ), 'permission_callback' => $perm ),
 		) );
 	}

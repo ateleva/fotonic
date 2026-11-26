@@ -442,12 +442,12 @@ class Fotonic_Whats_New {
 	// -------------------------------------------------------------------------
 
 	public static function register_routes(): void {
-		register_rest_route( Fotonic_REST_API::NAMESPACE, '/whats-new', [
+		register_rest_route( Fotonic_REST_API::REST_NAMESPACE, '/whats-new', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'rest_get' ],
 			'permission_callback' => [ 'Fotonic_REST_API', 'admin_permission' ],
 		] );
-		register_rest_route( Fotonic_REST_API::NAMESPACE, '/whats-new/dismiss', [
+		register_rest_route( Fotonic_REST_API::REST_NAMESPACE, '/whats-new/dismiss', [
 			'methods'             => 'POST',
 			'callback'            => [ __CLASS__, 'rest_dismiss' ],
 			'permission_callback' => [ 'Fotonic_REST_API', 'admin_permission' ],
@@ -455,7 +455,7 @@ class Fotonic_Whats_New {
 				'ids' => [ 'required' => true, 'type' => 'array', 'items' => [ 'type' => 'string' ] ],
 			],
 		] );
-		register_rest_route( Fotonic_REST_API::NAMESPACE, '/changelog', [
+		register_rest_route( Fotonic_REST_API::REST_NAMESPACE, '/changelog', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'rest_changelog' ],
 			'permission_callback' => [ 'Fotonic_REST_API', 'admin_permission' ],

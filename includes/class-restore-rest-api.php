@@ -26,69 +26,69 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Fotonic_Restore_REST_API {
 
-	const NAMESPACE = 'fotonic/v1';
+	const REST_NAMESPACE = 'fotonic/v1';
 
 	public static function register_routes(): void {
 		$perm = [ __CLASS__, 'admin_permission' ];
 
-		register_rest_route( self::NAMESPACE, '/restore/upload/start', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/upload/start', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'upload_start' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/upload/status', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/upload/status', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'upload_status' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/upload/chunk', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/upload/chunk', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'upload_chunk' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/upload/finish', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/upload/finish', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'upload_finish' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/backups', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/backups', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'list_backups' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/sources', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/sources', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'list_sources' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/fetch', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/fetch', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'fetch_source' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/open', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/open', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'open' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/preview', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/preview', [
 			'methods'             => \WP_REST_Server::CREATABLE,
 			'callback'            => [ __CLASS__, 'preview' ],
 			'permission_callback' => $perm,
 		] );
 		foreach ( [ 'start', 'run', 'pause', 'resume', 'undo', 'dismiss' ] as $action ) {
-			register_rest_route( self::NAMESPACE, '/restore/' . $action, [
+			register_rest_route( self::REST_NAMESPACE, '/restore/' . $action, [
 				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => [ __CLASS__, 'job_' . $action ],
 				'permission_callback' => $perm,
 			] );
 		}
-		register_rest_route( self::NAMESPACE, '/restore/status', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/status', [
 			'methods'             => \WP_REST_Server::READABLE,
 			'callback'            => [ __CLASS__, 'job_status' ],
 			'permission_callback' => $perm,
 		] );
-		register_rest_route( self::NAMESPACE, '/restore/(?P<id>[a-f0-9]{32})', [
+		register_rest_route( self::REST_NAMESPACE, '/restore/(?P<id>[a-f0-9]{32})', [
 			'methods'             => \WP_REST_Server::DELETABLE,
 			'callback'            => [ __CLASS__, 'close' ],
 			'permission_callback' => $perm,
