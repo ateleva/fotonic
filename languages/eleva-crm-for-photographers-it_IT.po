@@ -4364,3 +4364,162 @@ msgstr "Ti avvisiamo quando c'è un aggiornamento"
 
 msgid "When a new version of Eleva CRM is available, an Update available button appears in the sidebar. Press it and you are taken to the page where you update."
 msgstr "Quando è disponibile una nuova versione di Eleva CRM, nella barra laterale compare il pulsante Aggiornamento disponibile. Premilo e arrivi alla pagina dove aggiornare."
+
+msgid "To be paid"
+msgstr "Da pagare"
+
+msgid "In the Bin"
+msgstr "Nel Cestino"
+
+msgid "One that is only in the backup"
+msgstr "Uno presente solo nel backup"
+
+msgid "A payment type this site does not have"
+msgstr "Un tipo di pagamento che questo sito non ha"
+
+msgid "Document"
+msgstr "Documento"
+
+msgid "Where the customer came from"
+msgstr "Provenienza del cliente"
+
+msgid "Who referred the customer"
+msgstr "Chi ha consigliato il cliente"
+
+msgid "Sent to Google Calendar"
+msgstr "Inviato a Google Calendar"
+
+msgid "Delivery link"
+msgstr "Link di consegna"
+
+msgid "Delivery password"
+msgstr "Password della consegna"
+
+msgid "Delivery link expiry"
+msgstr "Scadenza del link di consegna"
+
+msgid "Tax code"
+msgstr "Codice fiscale"
+
+msgid "Main contact"
+msgstr "Contatto principale"
+
+msgid "Amount"
+msgstr "Importo"
+
+msgid "Payment type"
+msgstr "Tipo di pagamento"
+
+msgid "Surcharge"
+msgstr "Maggiorazione"
+
+msgid "Total to collect"
+msgstr "Totale da incassare"
+
+msgid "Kind"
+msgstr "Genere"
+
+msgid "Card"
+msgstr "Scheda"
+
+msgid "Location"
+msgstr "Posizione"
+
+msgid "Other detail"
+msgstr "Altro dettaglio"
+
+msgid "One of the two cannot be read, so they cannot be shown side by side."
+msgstr "Uno dei due non si può leggere, quindi non si possono mostrare affiancati."
+
+msgid "They are not the same (the details are not shown here)."
+msgstr "Non sono uguali (i dettagli non vengono mostrati qui)."
+
+msgid "The same entries, in a different order or written in a different way."
+msgstr "Le stesse voci, in un ordine diverso o scritte in modo diverso."
+
+msgid "Not there"
+msgstr "Non presente"
+
+msgid "On this site"
+msgstr "Su questo sito"
+
+msgid "In the backup"
+msgstr "Nel backup"
+
+msgid "Unchanged:"
+msgstr "Uguali:"
+
+msgid "Free"
+msgstr "Libera"
+
+msgid "You will have this"
+msgstr "Avrai questo"
+
+msgid "Not used"
+msgstr "Non usato"
+
+msgid "Only on this site"
+msgstr "Solo su questo sito"
+
+msgid "Only in the backup"
+msgstr "Solo nel backup"
+
+msgid "Changed"
+msgstr "Modificato"
+
+msgid "Same"
+msgstr "Uguale"
+
+msgid "Only internal details change: nothing you see on its page is different."
+msgstr "Cambiano solo dati interni: niente di quello che vedi nella sua pagina è diverso."
+
+msgid "Highlighted"
+msgstr "Evidenziato"
+
+msgid "= what is different"
+msgstr "= cosa è diverso"
+
+msgid "Show also what is the same"
+msgstr "Mostra anche ciò che è uguale"
+
+msgid "Information"
+msgstr "Informazioni"
+
+msgid "Detail"
+msgstr "Dato"
+
+msgid "Nothing changes on this site."
+msgstr "Su questo sito non cambia nulla."
+
+msgid "What is on this site is replaced by the backup."
+msgstr "I dati di questo sito vengono sostituiti con quelli del backup."
+
+msgid "You will have both: the backup one is added as a new one."
+msgstr "Avrai entrambi: quello del backup viene aggiunto come nuovo."
+
+msgid "It is added from the backup."
+msgstr "Viene aggiunto dal backup."
+
+msgid "The backup one is not used."
+msgstr "Quello del backup non viene usato."
+
+msgid "What do you want to do?"
+msgstr "Cosa vuoi fare?"
+
+msgid "Quick choice"
+msgstr "Scelta rapida"
+
+msgid "Below is only what is different between this site and the backup."
+msgstr "Qui sotto trovi solo ciò che è diverso tra questo sito e il backup."
+
+msgid "For each one, choose what to do. If you are not sure, keep the one on this site: nothing of yours is touched."
+msgstr "Per ogni voce, scegli cosa fare. Se non sei sicuro, tieni quello di questo sito: niente di tuo viene toccato."
+
+msgid "Press Continue at the bottom of the page."
+msgstr "Premi Continua in fondo alla pagina."
+
+msgid "A clearer backup restore"
+msgstr "Un ripristino del backup più chiaro"
+
+msgid "When you restore a backup, you see side by side what you have on this site and what is in the backup. What changes is highlighted, and each choice says what will happen."
+msgstr "Quando ripristini un backup, vedi affiancato ciò che hai su questo sito e ciò che c'è nel backup. Quello che cambia è evidenziato, e ogni scelta spiega cosa succederà."

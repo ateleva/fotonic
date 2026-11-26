@@ -58,6 +58,14 @@ class Fotonic_Whats_New {
 	private static function free_entries(): array {
 		return [
 			[
+				'id'      => '1.8.1:restore-differences',
+				'plugin'  => 'free',
+				'since'   => '1.8.1',
+				'section' => 'dashboard',
+				'title'   => __( 'A clearer backup restore', 'eleva-crm-for-photographers' ),
+				'body'    => __( 'When you restore a backup, you see side by side what you have on this site and what is in the backup. What changes is highlighted, and each choice says what will happen.', 'eleva-crm-for-photographers' ),
+			],
+			[
 				'id'      => '1.8.0:help-guide',
 				'plugin'  => 'free',
 				'since'   => '1.8.0',

@@ -5343,3 +5343,215 @@ msgstr ""
 #: includes/class-whats-new.php:75
 msgid "When a new version of Eleva CRM is available, an Update available button appears in the sidebar. Press it and you are taken to the page where you update."
 msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:27
+msgid "To be paid"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:29
+msgid "In the Bin"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:45
+msgid "One that is only in the backup"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:46
+msgid "A payment type this site does not have"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:48
+msgid "Document"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:62
+msgid "Where the customer came from"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:63
+msgid "Who referred the customer"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:75
+msgid "Sent to Google Calendar"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:77
+msgid "Delivery link"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:79
+msgid "Delivery password"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:80
+msgid "Delivery link expiry"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:97
+msgid "Tax code"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:102
+msgid "Main contact"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:124
+msgid "Amount"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:126
+msgid "Payment type"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:129
+msgid "Surcharge"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:131
+msgid "Total to collect"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:140
+msgid "Kind"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:147
+msgid "Card"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:154
+msgid "Location"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:190
+msgid "Other detail"
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:246
+msgid "One of the two cannot be read, so they cannot be shown side by side."
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:250
+msgid "They are not the same (the details are not shown here)."
+msgstr ""
+
+#: src/src/features/restore/restoreCompare.js:283
+msgid "The same entries, in a different order or written in a different way."
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:5
+msgid "Not there"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:38
+msgid "On this site"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:39
+msgid "In the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:53
+msgid "Unchanged:"
+msgstr ""
+
+#: src/src/features/restore/restoreDiff.js:33
+msgid "Free"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:22
+msgid "You will have this"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:22
+msgid "Not used"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:75
+msgid "Only on this site"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:76
+msgid "Only in the backup"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:76
+msgid "Changed"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:83
+msgid "Same"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:141
+msgid "Only internal details change: nothing you see on its page is different."
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:147
+msgid "Highlighted"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:148
+msgid "= what is different"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:153
+msgid "Show also what is the same"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:159
+msgid "Information"
+msgstr ""
+
+#: src/src/features/restore/RestoreCompare.jsx:159
+msgid "Detail"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:15
+msgid "Nothing changes on this site."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:16
+msgid "What is on this site is replaced by the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:17
+msgid "You will have both: the backup one is added as a new one."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:18
+msgid "It is added from the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:19
+msgid "The backup one is not used."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:58
+msgid "What do you want to do?"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:94
+msgid "Quick choice"
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:158
+msgid "Below is only what is different between this site and the backup."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:159
+msgid "For each one, choose what to do. If you are not sure, keep the one on this site: nothing of yours is touched."
+msgstr ""
+
+#: src/src/features/restore/RestoreConflicts.jsx:160
+msgid "Press Continue at the bottom of the page."
+msgstr ""
+
+#: includes/class-whats-new.php:65
+msgid "A clearer backup restore"
+msgstr ""
+
+#: includes/class-whats-new.php:66
+msgid "When you restore a backup, you see side by side what you have on this site and what is in the backup. What changes is highlighted, and each choice says what will happen."
+msgstr ""

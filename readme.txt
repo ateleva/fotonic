@@ -4,7 +4,7 @@ Tags: crm, photographer, photography, gestionale, wedding
 Requires at least: 6.0
 Tested up to: 7.2
 Requires PHP: 7.4
-Stable tag: 1.8.0
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -182,6 +182,12 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 
 == Changelog ==
 
+= 1.8.1 =
+* New: when you restore a backup, the differences are shown in two columns, On this site and In the backup, with names, dates and amounts written in full, and what changes is highlighted.
+* Change: each choice of the restore is now a box that says what happens, and the column you are going to keep is coloured.
+* Compatibility: tested with WordPress 7.2.
+* Compatibility: works with Eleva CRM Pro 1.8.3.
+
 = 1.8.0 =
 * New: a Help page inside the app, with short answers to the questions photographers ask most. Open Help in the sidebar, or press See the guides next to the title of a page. You can search by typing a few words.
 * New: an Update available button appears in the sidebar when a new version of Eleva CRM is waiting. A window explains what to do and takes you to the Plugins page. Only people who can update plugins see it.
@@ -350,6 +356,9 @@ The in-browser PDF preview is built on pdf.js by Mozilla (https://mozilla.github
 Entries for versions older than 1.4.0 were removed from this list to keep it short.
 
 == Upgrade Notice ==
+
+= 1.8.1 =
+Restoring a backup now shows clearly what changes, and Eleva CRM is ready for WordPress 7.2. Update Eleva CRM Pro to 1.8.3 together with it.
 
 = 1.8.0 =
 A Help page inside the app, an Update available button in the sidebar, and memory cards that follow one work at a time. Update Eleva CRM Pro to 1.8.1 together with it.

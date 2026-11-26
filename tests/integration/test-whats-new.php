@@ -30,7 +30,8 @@ t_true( in_array( '1.6.5:works-payment-types', $ids( $v ), true ), 'such a site 
 t_true( $v['overview']['show'], 'and the overview' );
 $newest = array_reduce( array_column( $v['entries'], 'since' ), function ( $carry, $since ) { return version_compare( $since, $carry, '>' ) ? $since : $carry; }, '0' );
 t_equals( 'overview:' . $newest, $v['overview']['id'], 'the overview id carries the newest version' );
-t_equals( $newest, $v['entries'][0]['since'], 'every entry says which version brought it' );
+// The two plugins have their own version numbers and Pro may be ahead of free: each entry carries its own.
+t_equals( [], array_filter( $v['entries'], function ( $e ) { return empty( $e['since'] ); } ), 'every entry says which version brought it' );
 
 // Pro may be active here and brings its own entries: a fresh install has both baselines.
 Fotonic_Whats_New::set_baseline( 'free', $newest );
