@@ -51,7 +51,7 @@ class Fotonic_Whats_New {
 
 	/**
 	 * Entries of this plugin. Section keys: dashboard, customers, works, services, kanban, analytics, expenses,
-	 * suppliers, quotes (the sidebar entry each one is shown next to).
+	 * suppliers, collaborators, quotes, settings (the sidebar entry each one is shown next to).
 	 *
 	 * @return array<int, array{id:string,plugin:string,since:string,section:string,title:string,body:string,banner?:bool}>
 	 */
@@ -61,7 +61,7 @@ class Fotonic_Whats_New {
 				'id'      => '1.8.1:restore-differences',
 				'plugin'  => 'free',
 				'since'   => '1.8.1',
-				'section' => 'dashboard',
+				'section' => 'settings',
 				'title'   => __( 'A clearer backup restore', 'eleva-crm-for-photographers' ),
 				'body'    => __( 'When you restore a backup, you see side by side what you have on this site and what is in the backup. What changes is highlighted, and each choice says what will happen.', 'eleva-crm-for-photographers' ),
 			],

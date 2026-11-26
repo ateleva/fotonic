@@ -19,7 +19,7 @@ const features = window.FotonicApp?.features ?? {}
 // The "What's new" section each sidebar item stands for (Pro adds its entries under the same keys).
 const SECTION_OF = {
   '/dashboard': 'dashboard', '/customers': 'customers', '/services': 'services', '/works': 'works', '/storage': 'storage', '/quotes': 'quotes',
-  '/kanban': 'kanban', '/analytics': 'analytics', '/suppliers': 'suppliers', '/expenses': 'expenses', '/settings': 'settings',
+  '/kanban': 'kanban', '/analytics': 'analytics', '/collaborators': 'collaborators', '/suppliers': 'suppliers', '/expenses': 'expenses', '/settings': 'settings',
 }
 
 // `.ftnc-navlink` owns display / grid-template-columns / align-items / gap / transition

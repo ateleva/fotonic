@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Sparkles, X, LayoutDashboard, Users, Briefcase, Camera, FileText, Kanban, BarChart2, Store, Receipt, ArrowRight, HardDrive, Settings } from 'lucide-react'
+import { Sparkles, X, LayoutDashboard, Users, Briefcase, Camera, FileText, Kanban, BarChart2, Store, Receipt, ArrowRight, HardDrive, Settings, UserCheck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import Modal from './Modal'
 import Button from './Button'
@@ -23,6 +23,7 @@ const SECTION_ICON = {
   kanban: Kanban,
   analytics: BarChart2,
   suppliers: Store,
+  collaborators: UserCheck,
   expenses: Receipt,
   settings: Settings,
 }
