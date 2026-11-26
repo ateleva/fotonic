@@ -284,7 +284,9 @@ t_equals( 'different', $it['status'] ?? '', 'the item is different' );
 t_equals( 1012, $it['site_id'] ?? 0, 'with its site id' );
 t_equals( '_ftnc_people', $it['diff'][0]['field'] ?? '', 'the field is named' );
 t_true( true === ( $it['diff'][0]['personal'] ?? false ), 'and marked personal' );
-t_true( false !== strpos( (string) ( $it['diff'][0]['backup'] ?? '' ), 'Gianni' ) && false !== strpos( (string) ( $it['diff'][0]['site'] ?? '' ), '0212345678' ), 'both values are shown in plain text' );
+t_true( is_array( $it['diff'][0]['backup'] ?? null ) && is_array( $it['diff'][0]['site'] ?? null ), 'a list is sent as its rows' );
+t_true( false !== strpos( wp_json_encode( $it['diff'][0]['backup'] ), 'Gianni' ) && false !== strpos( wp_json_encode( $it['diff'][0]['site'] ), '0212345678' ), 'both values are shown in plain text' );
+t_true( isset( $it['names'] ) && is_array( $it['names'] ), 'the names of the records pointed to are listed' );
 $R::close( $sid );
 
 // ---------------------------------------------------------------------------

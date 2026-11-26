@@ -125,7 +125,7 @@ export default function Layout() {
   const proNavItems = [
     { to: '/quotes',        label: __('Quotes', 'eleva-crm-for-photographers'),         icon: FileText,     feature: 'quotes', alsoActive: ['/quote-settings'] },
     { to: '/kanban',         label: __('Kanban', 'eleva-crm-for-photographers'),         icon: Kanban,       feature: 'kanban' },
-    { to: '/analytics',     label: __('Analytics', 'eleva-crm-for-photographers'),      icon: BarChart2,    feature: 'analytics' },
+    { to: '/analytics',     label: __('Analytics', 'eleva-crm-for-photographers'),      icon: BarChart2,    feature: 'analytics', alsoActive: ['/analytics-compare'] },
     { to: '/collaborators', label: __('Collaborators', 'eleva-crm-for-photographers'),  icon: UserCheck,    feature: 'collaborators' },
     { to: '/products',      label: __('Products', 'eleva-crm-for-photographers'),       icon: Package,      feature: 'products' },
     { to: '/suppliers',     label: __('Suppliers', 'eleva-crm-for-photographers'),      icon: Store,        feature: 'suppliers' },

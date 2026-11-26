@@ -181,7 +181,7 @@ class Fotonic_Restore_Preview {
 					$claimed[] = (int) $result['site_id'];
 				}
 				if ( Fotonic_Restore_Matcher::IDENTICAL !== $result['status'] ) {
-					$items[] = self::item( $current, $bid, $bview, $result, $site );
+					$items[] = self::item( $current, $bid, $bview, $result, $site, $rules, $site_key );
 				}
 			}
 			if ( '' !== $lines ) {
@@ -403,13 +403,14 @@ class Fotonic_Restore_Preview {
 	public static function flush_cache(): void {
 		self::$site_cache = array();
 		self::$id_cache   = array();
+		self::$name_cache = array();
 	}
 
 	// ---------------------------------------------------------------------------
 	// What the screen shows
 	// ---------------------------------------------------------------------------
 
-	private static function item( string $dataset, int $bid, array $bview, array $result, array $site ): array {
+	private static function item( string $dataset, int $bid, array $bview, array $result, array $site, array $rules, ?string $site_key ): array {
 		$item = array(
 			'dataset'    => $dataset,
 			'backup_id'  => $bid,
@@ -419,6 +420,7 @@ class Fotonic_Restore_Preview {
 			'site_title' => null,
 			'candidates' => array(),
 			'diff'       => $result['diff'],
+			'names'      => self::names( $result['diff'], $rules, $site_key ),
 		);
 		if ( null !== $result['site_id'] ) {
 			$sv                 = call_user_func( $site['load'], $result['site_id'] );
@@ -429,5 +431,69 @@ class Fotonic_Restore_Preview {
 			$item['candidates'][] = array( 'id' => (int) $cid, 'title' => $cv['title'] );
 		}
 		return $item;
+	}
+
+	/**
+	 * The names behind the record ids of a difference (the service of a payment row, the customer of a work), so the
+	 * screen never shows a number. Only records of this site have a name here; a record that exists only in the
+	 * backup stays an id like 'new:12' and the screen says so.
+	 *
+	 * @return array<string,array<string,string>> field => id => name.
+	 */
+	private static function names( array $diff, array $rules, ?string $site_key ): array {
+		$refs = array_merge( (array) $rules['refs'], (array) ( $rules['name_refs'] ?? array() ) );
+		$out  = array();
+		foreach ( $diff as $entry ) {
+			$field = $entry['field'];
+			if ( empty( $refs[ $field ] ) || ! is_array( $refs[ $field ] ) ) {
+				continue;
+			}
+			list( $target, $column ) = $refs[ $field ];
+			foreach ( array( $entry['site'], $entry['backup'] ) as $value ) {
+				$ids = array();
+				if ( '' === $column ) {
+					$ids[] = $value;
+				} elseif ( is_array( $value ) ) {
+					foreach ( $value as $row ) {
+						$ids[] = is_array( $row ) ? ( $row[ $column ] ?? '' ) : '';
+					}
+				}
+				foreach ( $ids as $id ) {
+					if ( ! is_string( $id ) || ! ctype_digit( $id ) ) {
+						continue;
+					}
+					$name = self::record_name( (string) $target, (int) $id, $site_key );
+					if ( '' !== $name ) {
+						$out[ $field ][ $id ] = $name;
+					}
+				}
+			}
+		}
+		return $out;
+	}
+
+	/** @var array<string,string> Request cache of record names, 'dataset:id' => name. */
+	private static $name_cache = array();
+
+	private static function record_name( string $key, int $id, ?string $site_key ): string {
+		$cache = $key . ':' . $id;
+		if ( isset( self::$name_cache[ $cache ] ) ) {
+			return self::$name_cache[ $cache ];
+		}
+		$registry = Fotonic_Backup_Registry::datasets();
+		$post     = isset( $registry[ $key ] ) ? get_post( $id ) : null;
+		if ( ! $post || ( $post->post_type ?? '' ) !== $registry[ $key ]['post_type'] ) {
+			return '';
+		}
+		$dataset = array_merge( $registry[ $key ], array( 'meta_keys' => array(), 'taxonomies' => array() ) );
+		$view    = Fotonic_Restore_Matcher::view(
+			self::site_record( $id, $dataset ),
+			$dataset,
+			Fotonic_Restore_Matcher::rules( $key, $registry[ $key ] ),
+			Fotonic_Restore_Matcher::field_specs( (string) $dataset['post_type'] ),
+			$site_key
+		);
+		self::$name_cache[ $cache ] = (string) $view['title'];
+		return self::$name_cache[ $cache ];
 	}
 }

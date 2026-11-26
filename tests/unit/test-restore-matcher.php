@@ -143,6 +143,14 @@ $r = run( $site_f, customer( 9, '', 'Bianchi', array( array( 'first_name' => 'Ri
 t_equals( 'different', $r['status'], 'any person email matches (found, content differs)' );
 t_equals( 200, $r['site_id'], 'matched on the second person' );
 
+$many = array();
+for ( $i = 0; $i < 150; $i++ ) {
+	$many[] = array( 'first_name' => 'P' . $i, 'last_name' => str_repeat( 'x', 1200 ), 'is_main' => 0 === $i );
+}
+$r = run( $site, customer( 7, 'uid-a', 'Verdi', $many, $old_key ), $old_key );
+t_equals( 100, count( $r['diff'][0]['backup'] ), 'a long list is limited by rows, never cut in the middle' );
+t_equals( 1003, mb_strlen( $r['diff'][0]['backup'][0]['last_name'] ), 'one cell is limited in length' );
+
 echo "Customers: uids that disagree, claims, several candidates\n";
 $site_u = make_site( 'ftnc_customer', array( customer( 100, 'uid-site', 'Verdi', $ann, $site_key ) ), $site_key );
 $r = run( $site_u, customer( 7, 'uid-other', 'Verdi', $ann, $old_key ), $old_key );

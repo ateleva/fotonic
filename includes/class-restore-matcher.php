@@ -38,11 +38,14 @@ class Fotonic_Restore_Matcher {
 	/** What stands for a value that cannot be read inside a view. */
 	const UNREADABLE = "\0unreadable";
 
-	/** Longest value shown in a difference. */
-	const DISPLAY_MAX = 300;
+	/** Longest single value (notes) shown in a difference. */
+	const DISPLAY_MAX = 5000;
 
-	/** A list (people, services, payments) is shown in words by the screen, which needs it whole to read it. */
-	const DISPLAY_MAX_LIST = 6000;
+	/** Most rows of a list (people, services, payments) shown in a difference. */
+	const DISPLAY_MAX_ROWS = 100;
+
+	/** Longest value of one cell of such a row. */
+	const DISPLAY_MAX_CELL = 1000;
 
 	// ---------------------------------------------------------------------------
 	// Rules
@@ -67,6 +70,8 @@ class Fotonic_Restore_Matcher {
 			'handlers'   => array(),
 			// Datasets that must be compared and written before this one even when no single field points to them.
 			'after'      => array(),
+			// Fields written by a handler whose ids the screen shows as names: meta key => array( dataset key, row column ).
+			'name_refs'  => array(),
 		);
 		$own = isset( $dataset['identity'] ) && is_array( $dataset['identity'] ) ? $dataset['identity'] : array();
 		$all = apply_filters( 'ftnc_restore_identity_rules', array( $dataset_key => array_merge( $base, $own ) ) );
@@ -669,9 +674,30 @@ class Fotonic_Restore_Matcher {
 		return $out;
 	}
 
-	private static function display( $value ): string {
-		$text = is_array( $value ) ? (string) wp_json_encode( $value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) : (string) $value;
-		$max  = ( '' !== $text && ( '[' === $text[0] || '{' === $text[0] ) ) ? self::DISPLAY_MAX_LIST : self::DISPLAY_MAX;
+	/**
+	 * A value for the screen: a text, or the rows of a list as they are, so the screen can name every detail.
+	 * Limited by number of rows and by length of one cell, never by cutting a list in the middle.
+	 *
+	 * @return string|array
+	 */
+	private static function display( $value ) {
+		if ( ! is_array( $value ) ) {
+			return self::shorten( (string) $value, self::DISPLAY_MAX );
+		}
+		return self::display_list( array_slice( $value, 0, self::DISPLAY_MAX_ROWS, true ) );
+	}
+
+	private static function display_list( array $list ): array {
+		$out = array();
+		foreach ( $list as $name => $value ) {
+			$out[ $name ] = is_array( $value )
+				? self::display_list( $value )
+				: self::shorten( self::UNREADABLE === $value ? '' : (string) $value, self::DISPLAY_MAX_CELL );
+		}
+		return $out;
+	}
+
+	private static function shorten( string $text, int $max ): string {
 		return mb_strlen( $text ) > $max ? mb_substr( $text, 0, $max ) . '...' : $text;
 	}
 }

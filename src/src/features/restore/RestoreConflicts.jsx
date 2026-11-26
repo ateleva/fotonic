@@ -1,63 +1,81 @@
 import { useMemo, useState } from 'react'
+import { usePaymentTypes } from '../../api/paymentTypes'
+import RestoreCompare from './RestoreCompare'
+import { tint } from './tint'
 import Button from '../../components/Button'
 import { __, sprintf } from '../../utils/i18n'
-import { datasetLabel, fieldLabel, friendlyValue, isLinkField } from './restoreUtils'
+import { datasetLabel } from './restoreUtils'
 import {
   PAGE_SIZE, itemKey, groupItems, defaultChoice, optionsFor, resolveBulk, countMissing,
 } from './restoreChoices'
 
-const selectClass = 'w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm'
+// What each choice does, in one sentence under its name.
+function hintFor(value) {
+  const kind = value.split(':')[0]
+  if (kind === 'keep') return __('Nothing changes on this site.', 'eleva-crm-for-photographers')
+  if (kind === 'backup') return __('What is on this site is replaced by the backup.', 'eleva-crm-for-photographers')
+  if (kind === 'copy') return __('You will have both: the backup one is added as a new one.', 'eleva-crm-for-photographers')
+  if (kind === 'import') return __('It is added from the backup.', 'eleva-crm-for-photographers')
+  return __('The backup one is not used.', 'eleva-crm-for-photographers')
+}
 
-function DiffLines({ item }) {
-  if (item.status === 'possible') {
-    if (item.candidates.length === 0) {
-      return <p className="text-xs text-gray-500">{__('It points to something that may be a duplicate, so it needs your decision too.', 'eleva-crm-for-photographers')}</p>
-    }
-    return (
-      <p className="text-xs text-gray-500">
-        {sprintf(__('This site has something similar: %s', 'eleva-crm-for-photographers'), item.candidates.map((c) => c.title ?? '').join(', '))}
-      </p>
-    )
+// The sides the current choice leaves on the site.
+function keptSides(value) {
+  const kind = value.split(':')[0]
+  if (kind === 'backup' || kind === 'import') return ['backup']
+  if (kind === 'copy') return ['site', 'backup']
+  return kind === '' ? [] : ['site']
+}
+
+function Possible({ item }) {
+  if (item.candidates.length === 0) {
+    return <p className="m-0 text-xs text-gray-500">{__('It points to something that may be a duplicate, so it needs your decision too.', 'eleva-crm-for-photographers')}</p>
   }
   return (
-    <ul className="text-xs text-gray-600 space-y-1.5 mt-1">
-      {item.diff.map((d) => {
-        const here = friendlyValue(d.site)
-        const there = friendlyValue(d.backup)
-        const link = isLinkField(d.field)
-        return (
-          <li key={d.field}>
-            <span className="font-medium">{fieldLabel(d.field)}</span>
-            {d.unreadable && <span>{': '}{__('one of the two cannot be read', 'eleva-crm-for-photographers')}</span>}
-            {!d.unreadable && (link || here === there) && <span>{': '}{__('they are not the same (the details are not shown here)', 'eleva-crm-for-photographers')}</span>}
-            {!d.unreadable && !link && here !== there && (
-              <span className="block pl-3 text-gray-500">
-                <span className="block break-words">{sprintf(__('On this site: %s', 'eleva-crm-for-photographers'), here || __('empty', 'eleva-crm-for-photographers'))}</span>
-                <span className="block break-words">{sprintf(__('In the backup: %s', 'eleva-crm-for-photographers'), there || __('empty', 'eleva-crm-for-photographers'))}</span>
-              </span>
-            )}
-          </li>
-        )
-      })}
-    </ul>
+    <p className="m-0 text-xs text-gray-500">
+      {sprintf(__('This site has something similar: %s', 'eleva-crm-for-photographers'), item.candidates.map((c) => c.title ?? '').join(', '))}
+    </p>
   )
+}
+
+// The payment types are read here so a payment shows the name of its type, not its code.
+function Differences({ item, kept }) {
+  const { data = [] } = usePaymentTypes()
+  const paymentTypes = Object.fromEntries(data.map((t) => [t.slug, t.label]))
+  return <RestoreCompare diff={item.diff} names={item.names} paymentTypes={paymentTypes} kept={kept} />
 }
 
 function Row({ item, choice, onChoice }) {
   const value = choice ?? defaultChoice(item) ?? ''
   const id = `ftnc-restore-${item.dataset}-${item.backup_id}`
   return (
-    <li className="px-3 py-3 grid gap-2 sm:grid-cols-2">
-      <div className="min-w-0">
-        <p className="text-sm font-medium text-gray-900 break-words">{item.title || __('(no name)', 'eleva-crm-for-photographers')}</p>
-        <DiffLines item={item} />
-      </div>
-      <div>
-        <label htmlFor={id} className="sr-only">{__('What to do with this record', 'eleva-crm-for-photographers')}</label>
-        <select id={id} value={value} onChange={(e) => onChoice(e.target.value)} className={`${selectClass} ${value === '' ? 'border-amber-400' : ''}`}>
-          {value === '' && <option value="" disabled>{__('Choose…', 'eleva-crm-for-photographers')}</option>}
-          {optionsFor(item).map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
+    <li className="list-none m-0 rounded-lg border-2 bg-white overflow-hidden" style={{ borderColor: value === '' ? '#fbbf24' : tint(35) }}>
+      <p className="m-0 px-4 py-2.5 text-base font-semibold text-gray-900 break-words" style={{ background: tint(10) }}>
+        {item.title || __('(no name)', 'eleva-crm-for-photographers')}
+      </p>
+      <div className="p-4 space-y-4">
+        <fieldset className="m-0 p-0 border-0">
+          <legend className="p-0 mb-2 text-sm font-semibold text-gray-900">{__('What do you want to do?', 'eleva-crm-for-photographers')}</legend>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {optionsFor(item).map((o) => {
+              const on = value === o.value
+              return (
+                <label
+                  key={o.value}
+                  className="flex items-start gap-2 rounded-md border-2 p-2.5 cursor-pointer"
+                  style={on ? { borderColor: 'var(--fotonic-primary, #2563eb)', background: tint(10) } : { borderColor: '#e5e7eb' }}
+                >
+                  <input type="radio" className="mt-0.5" name={id} value={o.value} checked={on} onChange={() => onChoice(o.value)} />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-medium text-gray-900 break-words">{o.label}</span>
+                    <span className="block text-xs text-gray-500">{hintFor(o.value)}</span>
+                  </span>
+                </label>
+              )
+            })}
+          </div>
+        </fieldset>
+        {item.status === 'possible' ? <Possible item={item} /> : <Differences item={item} kept={keptSides(value)} />}
       </div>
     </li>
   )
@@ -69,21 +87,24 @@ function Section({ title, items, choices, onChoice, onBulk, bulkOptions, bulkLab
   const shown = items.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
   return (
     <div className="space-y-2">
-      <div className="flex flex-wrap items-center gap-2 justify-between">
-        <p className="text-sm font-medium text-gray-800">{title}</p>
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-500">{bulkLabel}</label>
+      <p className="m-0 text-sm font-medium text-gray-800">{title}</p>
+      {items.length > 1 && (
+        <div className="flex flex-wrap items-center gap-2 rounded-md border border-dashed p-3" style={{ borderColor: 'var(--fotonic-primary, #2563eb)', background: tint(6) }}>
+          <label className="text-sm text-gray-800">
+            <span className="font-semibold">{__('Quick choice', 'eleva-crm-for-photographers')}</span>
+            {' '}{bulkLabel}
+          </label>
           <select
             value=""
             onChange={(e) => { if (e.target.value) onBulk(e.target.value) }}
-            className="rounded-md border border-gray-300 bg-white px-2 py-1 text-xs"
+            className="rounded-md border border-gray-300 bg-white px-2 py-1.5 text-sm"
           >
             <option value="">{__('Choose…', 'eleva-crm-for-photographers')}</option>
             {bulkOptions.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         </div>
-      </div>
-      <ul className="divide-y divide-gray-100 rounded-md border border-gray-200">
+      )}
+      <ul className="m-0 p-0 space-y-4">
         {shown.map((item) => (
           <Row key={itemKey(item)} item={item} choice={choices[itemKey(item)]} onChoice={(v) => onChoice(item, v)} />
         ))}
@@ -132,9 +153,13 @@ export default function RestoreConflicts({ items, choices, onChoices, newBulk, o
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-600">
-        {__('Anything that is the same on both sides is left alone and is not listed here. For the rest, decide what to do. If you are not sure, keep the ones on this site: nothing of yours is touched.', 'eleva-crm-for-photographers')}
-      </p>
+      <div className="rounded-md p-3 text-sm text-gray-800" style={{ background: tint(8) }}>
+        <ol className="m-0 pl-5 list-decimal space-y-1">
+          <li className="m-0">{__('Below is only what is different between this site and the backup.', 'eleva-crm-for-photographers')}</li>
+          <li className="m-0">{__('For each one, choose what to do. If you are not sure, keep the one on this site: nothing of yours is touched.', 'eleva-crm-for-photographers')}</li>
+          <li className="m-0">{__('Press Continue at the bottom of the page.', 'eleva-crm-for-photographers')}</li>
+        </ol>
+      </div>
 
       {error && (
         <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">{error.message}</p>
